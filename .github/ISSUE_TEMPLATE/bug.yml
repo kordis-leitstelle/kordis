@@ -1,0 +1,33 @@
+name: Bug
+description: "Report a potential bug"
+labels: ["type:bug", "status:needs-triage"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The version of Kordis you are running
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: A description of the problem including expected versus actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        A minimal but complete recreation of the problem. Helpful tools are [Scribe](https://scribehow.com/) and [Loom](https://www.loom.com/)
+    validations:
+      required: true
+  - type: textarea
+    id: logs 
+    attributes:
+      label: Logs
+      description: Any relevant log messages or snippets
+    validations:
+      required: false
