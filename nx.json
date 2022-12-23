@@ -48,17 +48,17 @@
 	},
 	"generators": {
 		"@nrwl/angular:application": {
-			"style": "scss",
+			"style": "css",
 			"linter": "eslint",
 			"unitTestRunner": "jest",
-			"e2eTestRunner": "cypress"
+			"e2eTestRunner": "playwright"
 		},
 		"@nrwl/angular:library": {
 			"linter": "eslint",
 			"unitTestRunner": "jest"
 		},
 		"@nrwl/angular:component": {
-			"style": "scss"
+			"style": "css"
 		}
 	}
 }
