@@ -5,9 +5,7 @@
 	"printWidth": 80,
 	"overrides": [
 		{
-			"files": [
-				"*.ts"
-			],
+			"files": ["*.ts"],
 			"options": {
 				"parser": "typescript"
 			}
