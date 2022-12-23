@@ -1,0 +1,19 @@
+{
+	"extends": ["config:base"],
+	"schedule": ["after 8pm every weekday", "before 7pm on Sunday"],
+	"packageRules": [
+		{
+			"matchUpdateTypes": ["major"],
+			"labels": ["status:needs-triage"]
+		},
+		{
+			"matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+			"automerge": true
+		}
+	],
+	"platformAutomerge": true,
+	"labels": ["type:dependencies", "renovate"],
+	"vulnerabilityAlerts": {
+		"labels": ["type:security", "priority:critical"]
+	}
+}
