@@ -5,7 +5,9 @@
   "scripts": {
     "ng": "nx",
     "postinstall": "node ./decorate-angular-cli.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "tests:all": "npx nx run-many --all --target=test --parallel",
+    "e2e:all": "nx run-many --all --target=e2e --parallel"
   },
   "private": true,
   "devDependencies": {
