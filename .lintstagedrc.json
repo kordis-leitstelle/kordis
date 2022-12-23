@@ -1,0 +1,6 @@
+{
+  "*.{js,json,md,ts,scss}": [
+    "nx affected:lint --fix --files",
+    "nx format:write --files"
+  ]
+}
