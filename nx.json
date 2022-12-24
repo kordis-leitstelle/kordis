@@ -58,7 +58,10 @@
 			"unitTestRunner": "jest"
 		},
 		"@nrwl/angular:component": {
-			"style": "css"
+			"style": "css",
+			"changeDetection": "OnPush",
+			"standalone": true,
+			"inlineStyle": true
 		}
 	}
 }
