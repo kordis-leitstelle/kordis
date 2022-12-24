@@ -15,7 +15,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@kordis/ui": ["libs/ui/src/index.ts"]
+			"@kordis/frontend/shared/ui": ["libs/frontend/shared/ui/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]
