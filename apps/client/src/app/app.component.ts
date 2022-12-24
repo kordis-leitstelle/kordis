@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'kordis-root',
+	selector: 'krd-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css'],
 })

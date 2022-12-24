@@ -3,7 +3,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 /* eslint-disable */
 
 @Component({
-	selector: 'kordis-nx-welcome',
+	selector: 'krd-nx-welcome',
 	template: `
 		<!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
