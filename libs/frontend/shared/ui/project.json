@@ -22,35 +22,6 @@
 					"libs/frontend/shared/ui/**/*.html"
 				]
 			}
-		},
-		"storybook": {
-			"executor": "@storybook/angular:start-storybook",
-			"options": {
-				"port": 4400,
-				"configDir": "libs/frontend/shared/ui/.storybook",
-				"browserTarget": "frontend-shared-ui:build-storybook",
-				"compodoc": false
-			},
-			"configurations": {
-				"ci": {
-					"quiet": true
-				}
-			}
-		},
-		"build-storybook": {
-			"executor": "@storybook/angular:build-storybook",
-			"outputs": ["{options.outputDir}"],
-			"options": {
-				"outputDir": "dist/storybook/frontend-shared-ui",
-				"configDir": "libs/frontend/shared/ui/.storybook",
-				"browserTarget": "frontend-shared-ui:build-storybook",
-				"compodoc": false
-			},
-			"configurations": {
-				"ci": {
-					"quiet": true
-				}
-			}
 		}
 	},
 	"tags": []
