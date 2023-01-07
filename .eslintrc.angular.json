@@ -1,0 +1,12 @@
+{
+	"overrides": [
+		{
+			"parserOptions": {
+				"project": ["./tsconfig*.json"]
+			},
+			"files": ["*.ts"],
+			"extends": ["plugin:rxjs/recommended"],
+			"rules": {}
+		}
+	]
+}

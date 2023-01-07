@@ -5,13 +5,7 @@
 		"default": {
 			"runner": "nx/tasks-runners/default",
 			"options": {
-				"cacheableOperations": [
-					"build",
-					"lint",
-					"test",
-					"e2e",
-					"build-storybook"
-				]
+				"cacheableOperations": ["build", "lint", "test", "e2e"]
 			}
 		}
 	},
@@ -28,9 +22,6 @@
 		},
 		"lint": {
 			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
-		},
-		"build-storybook": {
-			"inputs": ["default", "^production", "{workspaceRoot}/.storybook/**/*"]
 		}
 	},
 	"namedInputs": {
@@ -40,9 +31,7 @@
 			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
 			"!{projectRoot}/tsconfig.spec.json",
 			"!{projectRoot}/jest.config.[jt]s",
-			"!{projectRoot}/.eslintrc.json",
-			"!{projectRoot}/.storybook/**/*",
-			"!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)"
+			"!{projectRoot}/.eslintrc.json"
 		],
 		"sharedGlobals": []
 	},
@@ -51,11 +40,13 @@
 			"style": "css",
 			"linter": "eslint",
 			"unitTestRunner": "jest",
-			"e2eTestRunner": "playwright"
+			"e2eTestRunner": "playwright",
+			"prefix": "krd"
 		},
 		"@nrwl/angular:library": {
 			"linter": "eslint",
-			"unitTestRunner": "jest"
+			"unitTestRunner": "jest",
+			"prefix": "krd"
 		},
 		"@nrwl/angular:component": {
 			"style": "css",

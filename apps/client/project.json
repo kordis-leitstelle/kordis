@@ -16,7 +16,10 @@
 				"tsConfig": "apps/client/tsconfig.app.json",
 				"inlineStyleLanguage": "css",
 				"assets": ["apps/client/src/favicon.ico", "apps/client/src/assets"],
-				"styles": ["apps/client/src/styles.css"],
+				"styles": [
+					"apps/client/src/styles.css",
+					"libs/frontend/shared/ui/src/styles/main.css"
+				],
 				"scripts": []
 			},
 			"configurations": {
