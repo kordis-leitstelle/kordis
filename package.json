@@ -21,7 +21,7 @@
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@commitlint/config-nx-scopes": "^17.2.0",
-    "@mands/nx-playwright": "^0.1.21",
+    "@mands/nx-playwright": "^0.2.0",
     "@nrwl/eslint-plugin-nx": "15.4.2",
     "@nrwl/jest": "15.4.2",
     "@nrwl/linter": "15.4.2",
