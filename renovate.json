@@ -9,6 +9,10 @@
 		{
 			"matchUpdateTypes": ["minor", "patch", "pin", "digest"],
 			"automerge": true
+		},
+		{
+			"packagePatterns": ["^@nrlw/", "^@angular/", "typescript"],
+			"enabled": false
 		}
 	],
 	"nvm": {
