@@ -11,7 +11,7 @@
 			"automerge": true
 		},
 		{
-			"packagePatterns": ["^@nrlw/", "^@angular/", "typescript"],
+			"packagePatterns": ["^@nrlw/", "^@angular", "typescript"],
 			"enabled": false
 		}
 	],
