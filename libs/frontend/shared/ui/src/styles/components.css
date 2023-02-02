@@ -1,0 +1,3 @@
+.krd-basic-autocomplete-item {
+	@apply rounded-md shadow-sm border px-2 py-1;
+}

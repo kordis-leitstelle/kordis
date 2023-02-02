@@ -1,0 +1,52 @@
+<div (keydown)="handleKeyDown($event)" class="relative">
+	<div class="relative">
+		<krd-input [formControl]="control" [placeholder]="placeholder"></krd-input>
+
+		<button
+			(click)="control.reset()"
+			*ngIf="showResetButton"
+			class="absolute text-gray-600 hover:text-blue-600 inset-y-0 right-0 flex items-center px-2 focus:outline-none"
+		>
+			<svg
+				class="w-5 h-5"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M6 18L18 6M6 6l12 12"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
+			</svg>
+		</button>
+	</div>
+
+	<ul
+		*ngIf="suggestions.length > 0"
+		class="mt-1 bg-white p-1 overflow-auto rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
+		id="options"
+		role="listbox"
+	>
+		<li
+			(click)='submitSelectedItem()'
+			(mouseenter)="handleItemHoverIn(i)"
+			(mouseleave)="handleItemHoverOut()"
+			*ngFor="let suggestion of suggestions; let i = index; let isLast = last"
+			[class.mb-1]="!isLast"
+			class="relative cursor-pointer select-none"
+			role="option"
+			tabindex="-1"
+		>
+			<ng-template
+				[ngTemplateOutletContext]="{
+					$implicit: suggestion,
+					isSelected: i === (selectedItemIndex$ | async)
+				}"
+				[ngTemplateOutlet]="templateRef"
+			></ng-template>
+		</li>
+	</ul>
+</div>
