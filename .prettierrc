@@ -10,5 +10,7 @@
 				"parser": "typescript"
 			}
 		}
-	]
+	],
+	"plugins": ["prettier-plugin-tailwindcss"],
+	"tailwindConfig": "./apps/client/tailwind.config.js"
 }

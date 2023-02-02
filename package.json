@@ -47,7 +47,8 @@
     "nx": "15.4.1",
     "playwright": "^1.26.0",
     "postcss": "^8.4.5",
-    "prettier": "^2.6.2",
+    "prettier": "^2.8.3",
+    "prettier-plugin-tailwindcss": "^0.2.2",
     "tailwindcss": "^3.0.2",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
@@ -64,6 +65,7 @@
     "@angular/platform-browser-dynamic": "~15.0.0",
     "@angular/router": "~15.0.0",
     "@nrwl/angular": "15.4.1",
+    "ngx-infinite-scroll": "^15.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
