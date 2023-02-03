@@ -1,14 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
+	merge,
 	Observable,
 	ReplaySubject,
 	scan,
 	shareReplay,
-	skip,
 	startWith,
 	Subject,
 	takeUntil,
 } from 'rxjs';
+
+const LS_DARK_MODE_KEY = 'krd-dark-mode';
 
 @Injectable({
 	providedIn: 'root',
@@ -20,11 +22,35 @@ export class ThemeService implements OnDestroy {
 	private readonly ngDestroySubject = new ReplaySubject(1);
 
 	constructor() {
-		this.isDark$ = this.toggleDarkModeSubject.pipe(
-			scan((isDarkMode) => !isDarkMode, false),
-			startWith(false),
+		const watchMediaQuery$ = new Observable<boolean>(function (observer) {
+			const listener: (
+				this: MediaQueryList,
+				ev: MediaQueryListEvent,
+			) => unknown = (event) => observer.next(event.matches);
+			const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+
+			mediaQueryList.addEventListener('change', listener);
+
+			return () => {
+				mediaQueryList.removeEventListener('change', listener);
+			};
+		});
+		const lsValue = localStorage.getItem(LS_DARK_MODE_KEY);
+		const startSeed =
+			lsValue === 'true' ||
+			(window.matchMedia &&
+				window.matchMedia('(prefers-color-scheme: dark)').matches &&
+				lsValue !== 'false');
+		this.isDark$ = merge(
+			this.toggleDarkModeSubject.pipe(
+				scan((isDarkMode) => !isDarkMode, startSeed),
+			),
+			watchMediaQuery$,
+		).pipe(
+			startWith(startSeed),
 			shareReplay({ bufferSize: 1, refCount: true }),
 		);
+
 		this.startWatchingDarkModeState();
 	}
 
@@ -38,17 +64,14 @@ export class ThemeService implements OnDestroy {
 	}
 
 	private startWatchingDarkModeState(): void {
-		const htmlTag = document
-			.getElementsByTagName('html')
-			.item(0) as HTMLHtmlElement;
-		this.isDark$
-			.pipe(skip(1), takeUntil(this.ngDestroySubject))
-			.subscribe((isDark) => {
-				if (isDark) {
-					htmlTag.classList.add('dark');
-				} else {
-					htmlTag.classList.remove('dark');
-				}
-			});
+		this.isDark$.pipe(takeUntil(this.ngDestroySubject)).subscribe((isDark) => {
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+
+			localStorage.setItem(LS_DARK_MODE_KEY, isDark.toString());
+		});
 	}
 }
