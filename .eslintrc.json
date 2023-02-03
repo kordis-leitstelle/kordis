@@ -4,9 +4,6 @@
 	"plugins": ["@nrwl/nx"],
 	"overrides": [
 		{
-			"files": ["*.ts"]
-		},
-		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"rules": {
 				"@nrwl/nx/enforce-module-boundaries": [
@@ -21,13 +18,21 @@
 							}
 						]
 					}
-				]
+				],
+				"no-console": "error"
 			}
 		},
 		{
 			"files": ["*.ts", "*.tsx"],
 			"extends": ["plugin:@nrwl/nx/typescript"],
-			"rules": {}
+			"rules": {
+				"@typescript-eslint/explicit-function-return-type": [
+					"error",
+					{
+						"allowExpressions": true
+					}
+				]
+			}
 		},
 		{
 			"files": ["*.js", "*.jsx"],
@@ -39,7 +44,9 @@
 			"env": {
 				"jest": true
 			},
-			"rules": {}
+			"rules": {
+				"no-console": "off"
+			}
 		}
 	]
 }
