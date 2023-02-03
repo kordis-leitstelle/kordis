@@ -75,7 +75,7 @@ export class AutocompleteInputComponent {
 	);
 
 	private readonly submitSelectedItemSubject = new Subject<void>();
-	@Output() itemSelected = this.submitSelectedItemSubject.pipe(
+	@Output() readonly itemSelected = this.submitSelectedItemSubject.pipe(
 		withLatestFrom(this.selectedItemIndex$),
 		map(([, selectedIndex]) => selectedIndex),
 		filter((selectedIndex) => selectedIndex >= 0),

@@ -5,7 +5,7 @@
 		<button
 			(click)="control.reset()"
 			*ngIf="showResetButton"
-			class="absolute text-gray-600 hover:text-blue-600 inset-y-0 right-0 flex items-center px-2 focus:outline-none"
+			class="absolute text-gray-600 hover:text-blue-600 dark:text-gray-400 hover:dark:text-blue-400 inset-y-0 right-0 flex items-center px-2 focus:outline-none"
 		>
 			<svg
 				class="w-5 h-5"
@@ -26,7 +26,7 @@
 
 	<ul
 		*ngIf="suggestions.length > 0"
-		class="mt-1 bg-white p-1 overflow-auto rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
+		class="mt-1 bg-white dark:bg-gray-500 p-1 overflow-auto rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
 		id="options"
 		role="listbox"
 	>

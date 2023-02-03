@@ -1,3 +1,7 @@
-.krd-basic-autocomplete-item {
-	@apply rounded-md shadow-sm border px-2 py-1;
+.krd-autocomplete-suggestion {
+	@apply rounded-md border bg-white px-2 py-1 shadow-sm dark:bg-gray-400;
+}
+
+.krd-autocomplete-suggestion-selected {
+	@apply bg-blue-400 text-white dark:bg-gray-300 dark:text-black;
 }
