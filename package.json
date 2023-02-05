@@ -28,7 +28,7 @@
     "@nrwl/workspace": "15.4.2",
     "@playwright/test": "^1.26.0",
     "@types/jest": "28.1.8",
-    "@types/node": "16.18.11",
+    "@types/node": "16.18.12",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "autoprefixer": "^10.4.0",
