@@ -8,6 +8,9 @@
     }
   ],
   "compilerOptions": {
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@kordis/api": ["apps/api/src/app/app.module.ts"]
+    }
   }
 }
