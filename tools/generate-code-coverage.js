@@ -10,7 +10,7 @@ const { readFileSync } = require('fs');
 const { getInputDataFromArgs } = require('cobertura-merge/build/src/input');
 const { writeOutput } = require('cobertura-merge/build/src/output');
 
-const OUTPUT_FILE_PATH = 'coverage/coverage-complete.xml';
+const OUTPUT_FILE_PATH = 'coverage-complete.xml';
 
 const coverageFiles = glob.sync('coverage/**/cobertura-coverage.xml');
 if (coverageFiles.length <= 0) {

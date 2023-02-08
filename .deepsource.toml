@@ -14,9 +14,3 @@ name = "javascript"
 
   [analyzers.meta]
   plugins = ["angular"]
-
-[[analyzers]]
-name = "test-coverage"
-
-[[analyzers]]
-name = "docker"

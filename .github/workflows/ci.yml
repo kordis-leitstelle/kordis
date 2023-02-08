@@ -25,13 +25,11 @@ jobs:
       - name: Lint
         run: npx nx affected --target=lint --parallel=3
       - name: Run Tests with Code Coverage
-        run: npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=cobertura
-      - name: Merge
-        run: node tools/generate-code-coverage.js
-      - name: Report test coverage to DeepSource
-        env:
-          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
-        run: if [[ -z $(node tools/generate-code-coverage.js) ]]; then echo "executed" && curl https://deepsource.io/cli | sh && ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/coverage-complete.xml; else echo "not executed"; fi
+        run: |
+          npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=cobertura
+          node tools/generate-code-coverage.js
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
       - name: Build
         run: npx nx affected --target=build --parallel=3
       - name: Run e2es
