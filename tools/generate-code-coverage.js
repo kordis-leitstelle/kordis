@@ -19,7 +19,6 @@ if (coverageFiles.length <= 0) {
 }
 
 const projectPathPackageNames = getJestProjects().reduce((acc, configPath) => {
-	console.log('configPath', configPath);
 	configPath = configPath.replace('<rootDir>/', '');
 	const packagePath = path.dirname(configPath);
 	const configContent = readFileSync(configPath, 'utf8');
@@ -30,7 +29,7 @@ const projectPathPackageNames = getJestProjects().reduce((acc, configPath) => {
 
 	return acc;
 }, {});
-console.log('projectPathPackageNames', projectPathPackageNames);
+
 const projectArgs = coverageFiles.map((filePath) => {
 	const coverageFileDirname = path.dirname(filePath);
 	const projectPath = coverageFileDirname.substring(
@@ -39,7 +38,6 @@ const projectArgs = coverageFiles.map((filePath) => {
 
 	return `${projectPathPackageNames[projectPath]}=${filePath}`;
 }, {});
-console.log('projectArgs', projectArgs);
 
 const result = mergeInputs(
 	getInputDataFromArgs(parseArgs(['', '', ...projectArgs])), // expects 2 args before project args
