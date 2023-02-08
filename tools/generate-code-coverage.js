@@ -14,11 +14,12 @@ const OUTPUT_FILE_PATH = 'coverage/coverage-complete.xml';
 
 const coverageFiles = glob.sync('coverage/**/cobertura-coverage.xml');
 if (coverageFiles.length <= 0) {
-	console.log('NoCoverageFiles');
+	console.log('No coverage files found, skipping merge.');
 	process.exit();
 }
 
 const projectPathPackageNames = getJestProjects().reduce((acc, configPath) => {
+	console.log('configPath', configPath);
 	configPath = configPath.replace('<rootDir>/', '');
 	const packagePath = path.dirname(configPath);
 	const configContent = readFileSync(configPath, 'utf8');
@@ -29,7 +30,7 @@ const projectPathPackageNames = getJestProjects().reduce((acc, configPath) => {
 
 	return acc;
 }, {});
-
+console.log('projectPathPackageNames', projectPathPackageNames);
 const projectArgs = coverageFiles.map((filePath) => {
 	const coverageFileDirname = path.dirname(filePath);
 	const projectPath = coverageFileDirname.substring(
@@ -38,6 +39,7 @@ const projectArgs = coverageFiles.map((filePath) => {
 
 	return `${projectPathPackageNames[projectPath]}=${filePath}`;
 }, {});
+console.log('projectArgs', projectArgs);
 
 const result = mergeInputs(
 	getInputDataFromArgs(parseArgs(['', '', ...projectArgs])), // expects 2 args before project args
