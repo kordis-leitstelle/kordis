@@ -26,6 +26,8 @@ jobs:
         run: npx nx affected --target=lint --parallel=3
       - name: Run Tests with Code Coverage
         run: npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=cobertura
+      - name: Merge
+        run: node tools/generate-code-coverage.js
       - name: Report test coverage to DeepSource
         env:
           DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
