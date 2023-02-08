@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { NxWelcomeComponent } from './nx-welcome.component';
 
-describe('AppComponent', () => {
+describe('AppComponent test', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [AppComponent, NxWelcomeComponent],
@@ -18,6 +18,7 @@ describe('AppComponent', () => {
 	it(`should have as title 'client'`, () => {
 		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.componentInstance;
+
 		expect(app.title).toEqual('client');
 	});
 
