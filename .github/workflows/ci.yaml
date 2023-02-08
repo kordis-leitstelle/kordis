@@ -12,12 +12,29 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci
-
       - run: npx nx workspace-lint
-      - run: npx nx format:check
-      - run: npx nx affected --target=lint --parallel=3
-      - run: npx nx affected --target=test --parallel=3 --ci --code-coverage
-      - run: npx nx affected --target=e2e
-      - run: npx nx affected --target=build --parallel=3
+      - name: Check Formatting
+        run: npx nx format:check
+      - name: Lint
+        run: npx nx affected --target=lint --parallel=3
+      - name: Run Tests with Code Coverage
+        run: |
+          npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=cobertura
+          node tools/generate-code-coverage.js
+      - name: Report test coverage to DeepSource
+        uses: deepsourcelabs/test-coverage-action@master
+        with:
+          key: javascript
+          coverage-file: coverage/coverage-complete.xml
+          dsn: ${{ secrets.DEEPSOURCE_DSN }}
+      - name: Run e2es
+        run: npx nx affected --target=e2e
+      - name: Build
+        run: npx nx affected --target=build --parallel=3
