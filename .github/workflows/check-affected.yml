@@ -1,0 +1,26 @@
+name: Affected App Check
+
+on:
+  workflow_call:
+    inputs:
+      APP_NAME:
+        required: true
+        type: string
+
+jobs:
+  set-is-affected:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
+      - name: Check if API is affected
+        shell: bash
+        run: affected_api=`npx nx print-affected --type=app --select=projects | grep '${{ inputs.APP_NAME }}'`; if [ -n $affected_api ]; then echo ::set-env name=IS_AFFECTED::true; else echo ::set-env name=IS_AFFECTED::false; fi
