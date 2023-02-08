@@ -1,0 +1,21 @@
+version = 1
+
+test_patterns = [
+  "**/*.spec.ts"
+]
+
+exclude_patterns = [
+  "**/decorate-angular-cli.js"
+]
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = ["angular"]
+
+[[analyzers]]
+name = "test-coverage"
+
+[[analyzers]]
+name = "docker"
