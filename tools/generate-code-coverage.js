@@ -39,8 +39,6 @@ const projectArgs = coverageFiles.map((filePath) => {
 	return `${projectPathPackageNames[projectPath]}=${filePath}`;
 }, {});
 
-console.log(projectArgs);
-
 const result = mergeInputs(
 	getInputDataFromArgs(parseArgs(['', '', ...projectArgs])), // expects 2 args before project args
 );

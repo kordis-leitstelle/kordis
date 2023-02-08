@@ -29,10 +29,7 @@ jobs:
       - name: Report test coverage to DeepSource
         env:
           DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
-        run: |
-          node tools/generate-code-coverage.js
-          curl https://deepsource.io/cli | sh
-          ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/coverage-complete.xml
+        run: if [[ -z $(node tools/generate-code-coverage.js) ]]; then  curl https://deepsource.io/cli | sh &&   ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/coverage-complete.xml; fi
       - name: Build
         run: npx nx affected --target=build --parallel=3
       - name: Run e2es
