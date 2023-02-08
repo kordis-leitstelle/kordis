@@ -27,8 +27,12 @@ jobs:
       - name: Run Tests with Code Coverage
         run: |
           npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+          ./node_modules/.bin/lcov-result-merger coverage/**/lcov.info ./coverage/lcov.info
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Build
         run: npx nx affected --target=build --parallel=3
       - name: Run e2es
