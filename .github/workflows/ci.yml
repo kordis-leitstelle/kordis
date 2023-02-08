@@ -26,8 +26,7 @@ jobs:
         run: npx nx affected --target=lint --parallel=3
       - name: Run Tests with Code Coverage
         run: |
-          npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=cobertura
-          node tools/generate-code-coverage.js
+          npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
       - name: Build
