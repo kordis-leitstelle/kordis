@@ -12,7 +12,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
      Delete this file and get started with your project!
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      -->
-		test
 		<style>
 			html {
 				-webkit-text-size-adjust: 100%;
