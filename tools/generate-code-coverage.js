@@ -13,27 +13,33 @@ const { writeOutput } = require('cobertura-merge/build/src/output');
 const OUTPUT_FILE_PATH = 'coverage/coverage-complete.xml';
 
 const coverageFiles = glob.sync('coverage/**/cobertura-coverage.xml');
-const coverageProjectPath = coverageFiles.reduce((acc, filePath) => {
-	const coverageFileDirname = path.dirname(filePath);
-	const projectPath = coverageFileDirname.substring(
-		coverageFileDirname.indexOf('/') + 1,
-	);
-	acc[projectPath] = filePath;
+if (coverageFiles.length <= 0) {
+	console.log('NoCoverageFiles');
+	process.exit();
+}
+
+const projectPathPackageNames = getJestProjects().reduce((acc, configPath) => {
+	configPath = configPath.replace('<rootDir>/', '');
+	const packagePath = path.dirname(configPath);
+	const configContent = readFileSync(configPath, 'utf8');
+	acc[packagePath] = configContent
+		.split("displayName: '")[1]
+		.split('\n')[0]
+		.slice(0, -2);
 
 	return acc;
 }, {});
 
-const projectArgs = getJestProjects().map((configPath) => {
-	configPath = configPath.replace('<rootDir>/', '');
-	const packagePath = path.dirname(configPath);
-	const configContent = readFileSync(configPath, 'utf8');
-	const packageName = configContent
-		.split("displayName: '")[1]
-		.split('\n')[0]
-		.slice(0, -2);
-	const resolvedPath = path.resolve(coverageProjectPath[packagePath]);
-	return `${packageName}=${resolvedPath}`;
-});
+const projectArgs = coverageFiles.map((filePath) => {
+	const coverageFileDirname = path.dirname(filePath);
+	const projectPath = coverageFileDirname.substring(
+		coverageFileDirname.indexOf('/') + 1,
+	);
+
+	return `${projectPathPackageNames[projectPath]}=${filePath}`;
+}, {});
+
+console.log(projectArgs);
 
 const result = mergeInputs(
 	getInputDataFromArgs(parseArgs(['', '', ...projectArgs])), // expects 2 args before project args
