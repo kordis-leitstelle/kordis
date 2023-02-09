@@ -1,0 +1,12 @@
+name: Feature Request
+description: Request a new feature
+labels: ["type:feature-request", "status:needs-triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        Please give us as much context as possible about the feature. This should be done in a user story.
+    validations:
+      required: true

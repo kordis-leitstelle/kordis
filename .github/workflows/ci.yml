@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
+      - run: npx nx workspace-lint
+      - name: Check Formatting
+        run: npx nx format:check
+      - name: Lint
+        run: npx nx affected --target=lint --parallel=3
+      - name: Run Tests with Code Coverage
+        run: |
+          npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
+          ./node_modules/.bin/lcov-result-merger coverage/**/lcov.info ./coverage/lcov.info
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Build
+        run: npx nx affected --target=build --parallel=3
+      - name: Run e2es
+        run: npx nx affected --target=e2e
