@@ -88,13 +88,13 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Build and Deploy API
         id: api-deployment
-        uses: .github/workflows/parts/api-build-deploy.yml
+        uses: ./.github/workflows/parts/api-build-deploy.yml
         with:
           slot: "pr-${{ github.event.pull_request.number }}"
           publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
       - name: Build and Deploy Webapp
         id: webapp-deployment
-        uses: .github/workflows/parts/webapp-build.yml
+        uses: ./.github/workflows/parts/webapp-build.yml
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "pr-${{ github.event.pull_request.number }}"
