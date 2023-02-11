@@ -1,0 +1,10 @@
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ github.event.pull_request.sender.type }}"
+      - run: echo "${{ github.event.pull_request.sender.login }}"
+      - run: echo "${{ toJson(github.event.pull_request) }}"
