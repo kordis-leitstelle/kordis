@@ -1,0 +1,44 @@
+name: Deploy to Stage
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.webapp-deployment.outputs.url }}
+    environment:
+      name: Stage
+      url: ${{ steps.swa-deployment.outputs.static_web_app_url }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - name: Azure Login
+        uses: Azure/login@v1.4.3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Build and Deploy API
+        id: api-deployment
+        uses: ./.github/actions/build-and-deploy-api
+        with:
+          slot: "commit-${{ github.sha }}"
+          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
+      - name: Build and Deploy Webapp
+        id: webapp-deployment
+        uses: ./.github/actions/build-and-deploy-webapp
+        with:
+          apiUrl: ${{ steps.api-deployment.outputs.url }}
+          deploymentName: "commit-${{ github.sha }}"
+          angularEnvironment: "stage"
+          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}

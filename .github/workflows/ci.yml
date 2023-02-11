@@ -17,8 +17,8 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - uses: nrwl/nx-set-shas@v3
       - run: npm ci
+      - uses: nrwl/nx-set-shas@v3
       - run: npx nx workspace-lint
       - name: Check Formatting
         run: npx nx format:check
