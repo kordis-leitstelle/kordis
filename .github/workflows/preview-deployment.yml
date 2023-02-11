@@ -1,12 +1,68 @@
-name: Deploy to Preview
+name: Preview Deployment
 on:
   pull_request:
-    types: [ opened, closed, synchronize ]
+    types: [ closed, synchronize ]
+  issue_comment:
+    types: [ created ]
+
 jobs:
-  deployment:
-    if: contains(github.event.pull_request.labels.*.name, 'deploy-preview') && github-event.action == 'opened'
+  verify-admin:
+    if: github.event_name == 'issue_comment' && github.event.issue.pull_request == true && startsWith(github.event.comment.body, '/deploy-preview')
+    runs-on: ubuntu-latest
+    outputs:
+      is-admin: ${{ steps.is-admin-check.outputs.require-result }}
+    steps:
+      - uses: actions-cool/check-user-permission@v2
+        id: is-admin-check
+        with:
+          require: 'admin'
+
+  has-deployment:
+    if: github.event_name == 'pull_request'
+    outputs:
+      has-swa: ${{ steps.has-swa.outputs.has-swa }}
+      has-wa: ${{ steps.has-wa.outputs.has-wa }}
     runs-on: ubuntu-latest
     steps:
+      - name: Install Azure CLI
+        run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - name: Check if Webapp Environment exists
+        id: has-swa
+        uses: azure/CLI@v1
+        with:
+          inlineScript: >
+            namePresence=$(az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"');
+            if [ -n "$namePresence" ]; then
+                echo "has-swa=true";
+            else
+                echo "has-swa=false";
+            fi
+            >> $GITHUB_OUTPUT
+      - name: Check if API Environment exists
+        id: has-wa
+        uses: azure/CLI@v1
+        with:
+          inlineScript: >
+            namePresence=$(az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep '"name": "pr-${{ github.event.pull_request.number }}"');
+            if [ -n "$namePresence" ]; then
+              echo "has-wa=true";
+            else
+              echo "has-wa=false";
+            fi
+            >> $GITHUB_OUTPUT
+
+  deployment:
+    needs: verify-admin
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request == true && startsWith(github.event.comment.body, '/deploy-preview')) &&
+      (needs.verify-admin.outputs.is-admin == true)
+    steps:
+      - name: Remove Comment
+        uses: izhangzhihao/delete-comment@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_number: ${{ github.event.issue.number }}
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -33,13 +89,13 @@ jobs:
       - name: Create PR Deployment Slot
         uses: Azure/cli@v1
         with:
-          inlineScript: az webapp deployment slot create --name kordis-api --resource-group KORDIS --slot preview-pr-${{ github.event.pull_request.number }}
+          inlineScript: az webapp deployment slot create --name kordis-api --resource-group KORDIS --slot pr-${{ github.event.pull_request.number }}
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr-${{ github.event.pull_request.number }}"
-          publishProfile:  ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
+          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
       - name: Build and Deploy Webapp
         id: webapp-deployment
         uses: ./.github/actions/build-and-deploy-webapp
@@ -59,9 +115,13 @@ jobs:
             Backend: ${{ steps.api-deployment.outputs.url }}
             Commit SHA: ${{ github.sha }}
           reactions: "rocket"
+
   update-deployment:
-    if: contains(github.event.pull_request.labels.*.name, 'deploy-preview') && github-event.action == 'synchronize'
+    needs: has-deployment
     runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.action = 'synchronize') &&
+      (needs.has-deployment.outputs.has-swa == true || needs.has-deployment.outputs.has-wa == true)
     steps:
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v1
@@ -111,19 +171,26 @@ jobs:
             Backend: ${{ steps.api-deployment.outputs.url }}
             Commit SHA: ${{ github.sha }}
           reactions: "rocket"
+
   delete-deployment:
-    if: contains(github.event.pull_request.labels.*.name, 'deploy-preview') && github-event.action == 'closed'
+    needs: has-deployment
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.action = 'closed') &&
+      (needs.has-deployment.outputs.has-swa == true || needs.has-deployment.outputs.has-wa == true)
     steps:
       - name: Azure Login
         uses: Azure/login@v1.4.3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Delete PR Deployment Slot
         uses: Azure/cli@v1
         with:
           inlineScript: |
             az webapp deployment slot delete --name kordis-api --resource-group KORDIS --slot pr-${{ github.event.pull_request.number }} -y
-            az staticwebapp environment delete -n kordis-webapp --environment-name pr-${{ github.event.pull_request.number }} -y
+            az staticwebapp environment delete --name kordis-webapp --environment-name pr-${{ github.event.pull_request.number }} -y
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v1
         id: deploy-preview-comment
@@ -141,3 +208,4 @@ jobs:
             ### Deployment Preview
             🏁 This PR has been closed. No deployment preview is available.
           reactions: "hooray"
+
