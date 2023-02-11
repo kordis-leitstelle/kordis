@@ -102,6 +102,7 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "pr-${{ github.event.pull_request.number }}"
+          deploymentEnv: "pr-${{ github.event.pull_request.number }}"
           angularEnvironment: "stage"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
       - name: Update PR Preview Comment
@@ -158,6 +159,7 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "pr-${{ github.event.pull_request.number }}"
+          deploymentEnv: "pr-${{ github.event.pull_request.number }}"
           angularEnvironment: "stage"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
       - name: Update PR Preview Comment

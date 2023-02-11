@@ -33,7 +33,7 @@ jobs:
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
-          slot: "commit-${{ github.sha }}"
+          slot: "stage"
           publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
       - name: Build and Deploy Webapp
         id: webapp-deployment
@@ -42,4 +42,5 @@ jobs:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "commit-${{ github.sha }}"
           angularEnvironment: "stage"
+          deploymentEnv: "stage"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}

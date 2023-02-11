@@ -8,6 +8,9 @@ inputs:
   deploymentName:
     required: true
     description: "Unique identifier for the deployment"
+  deploymentEnv:
+    required: true
+    description: "Azure SWA Deployment Environment"
   angularEnvironment:
     required: true
     description: "Angular environment to use from the project.json"
@@ -40,6 +43,6 @@ runs:
         output_location: ''
         skip_app_build: true
         skip_api_build: true
-        deployment_environment: ${{ inputs.deploymentName }}
+        deployment_environment: ${{ inputs.deploymentEnv }}
 
 
