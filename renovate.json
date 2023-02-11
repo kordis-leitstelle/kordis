@@ -1,5 +1,5 @@
 {
-	"extends": ["config:base"],
+	"extends": ["config:base", ":semanticCommits"],
 	"schedule": ["after 8pm every weekday", "before 7pm on Sunday"],
 	"packageRules": [
 		{
