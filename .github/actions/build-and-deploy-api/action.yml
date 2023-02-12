@@ -26,6 +26,6 @@ runs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'kordis-api'
-        slot: ${{ inputs.slot }}
+        slot-name: ${{ inputs.slot }}
         publish-profile: ${{ inputs.publishProfile }}
         package: dist/apps/api/
