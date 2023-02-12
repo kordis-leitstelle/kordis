@@ -19,8 +19,7 @@ runs:
     - run: |
         npx nx build api --prod
         cd dist/apps/api
-        npm i
-        npm prune --omit=dev
+        npm i --omit=dev
       shell: bash
     - name: Deploy Backend
       id: wa-deployment
