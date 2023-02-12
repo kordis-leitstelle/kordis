@@ -119,7 +119,7 @@ jobs:
     needs: has-deployment
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'pull_request' && github.event.action = 'synchronize') &&
+      (github.event_name == 'pull_request' && github.event.action == 'synchronize') &&
       (needs.has-deployment.outputs.has-swa == true || needs.has-deployment.outputs.has-wa == true)
     steps:
       - uses: actions/checkout@v3
@@ -182,7 +182,7 @@ jobs:
     needs: has-deployment
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'pull_request' && github.event.action = 'closed') &&
+      (github.event_name == 'pull_request' && github.event.action == 'closed') &&
       (needs.has-deployment.outputs.has-swa == true || needs.has-deployment.outputs.has-wa == true)
     steps:
       - name: Azure Login
