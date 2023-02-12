@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Ensure Conventional Commits
-      - uses: webiny/action-conventional-commits@v1.1.0
+        uses: webiny/action-conventional-commits@v1.1.0
       - name: Setup node
         uses: actions/setup-node@v3
         with:
