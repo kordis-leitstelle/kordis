@@ -24,8 +24,12 @@ jobs:
       has-wa: ${{ steps.has-wa.outputs.has-wa }}
     runs-on: ubuntu-latest
     steps:
-      - name: Install Azure CLI
-        run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - name: Azure Login
+        uses: Azure/login@v1.4.3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Check if Webapp Environment exists
         id: has-swa
         uses: azure/CLI@v1
