@@ -43,14 +43,14 @@ jobs:
         run: npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
       - name: Merge Coverage files
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Build
         run: |
           touch apps/client/src/environments/environment.prod.ts
           npx nx affected --target=build --parallel=3
       - name: Run e2es
         run: npx nx affected --target=e2e
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
