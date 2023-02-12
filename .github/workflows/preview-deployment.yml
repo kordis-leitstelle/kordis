@@ -31,12 +31,15 @@ jobs:
       - name: Check if Webapp Environment exists
         id: has-swa
         run: >
+          az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"';
           namePresence=$(az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"');
+          echo $namePresence;
           if [ -n "$namePresence" ]; then
           echo "has-swa=true";
           else
           echo "has-swa=false";
-          fi
+          fi;
+          echo $?;
           >> $GITHUB_OUTPUT
       - name: Check if API Environment exists
         id: has-wa
