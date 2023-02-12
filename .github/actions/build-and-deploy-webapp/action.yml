@@ -1,0 +1,48 @@
+name: 'build-and-deploy-webapp'
+description: 'Builds Webapp Project for Production and Deploys it to a given SWA Environment'
+
+inputs:
+  apiUrl:
+    required: true
+    description: "Base URL of the API"
+  deploymentName:
+    required: true
+    description: "Unique identifier for the deployment"
+  deploymentEnv:
+    required: true
+    description: "Azure SWA Deployment Environment"
+  angularEnvironment:
+    required: true
+    description: "Angular environment to use from the project.json"
+  publishToken:
+    required: true
+    description: "Azure Static Web App Deployment Token"
+outputs:
+  url:
+    description: "Frontend URL"
+    value: ${{ steps.swa-deployment.outputs.static_web_app_url  }}
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        envsubst < apps/client/src/environments/environment.template > apps/client/src/environments/environment.${{ inputs.angularEnvironment }}.ts
+        npx nx build client --prod --configuration=${{ inputs.angularEnvironment }}
+      shell: bash
+      env:
+        IS_PRODUCTION: true
+        DEPLOYMENT_NAME: ${{ inputs.deploymentName }}
+        API_URL: ${{ inputs.apiUrl }}
+    - name: Deploy Webapp
+      id: swa-deployment
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ inputs.publishToken }}
+        action: "upload"
+        app_location: "dist/apps/client/"
+        output_location: ''
+        skip_app_build: true
+        skip_api_build: true
+        deployment_environment: ${{ inputs.deploymentEnv }}
+
+
