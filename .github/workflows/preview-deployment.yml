@@ -64,8 +64,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           issue_number: ${{ github.event.issue.number }}
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
@@ -124,6 +122,12 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action = 'synchronize') &&
       (needs.has-deployment.outputs.has-swa == true || needs.has-deployment.outputs.has-wa == true)
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v1
         id: deploy-preview-comment
