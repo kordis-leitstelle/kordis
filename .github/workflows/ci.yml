@@ -6,12 +6,21 @@ on:
   pull_request:
 
 jobs:
+  check-pr-title:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aslafy-z/conventional-pr-title-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Ensure Conventional Commits
+      - uses: webiny/action-conventional-commits@v1.1.0
       - name: Setup node
         uses: actions/setup-node@v3
         with:
