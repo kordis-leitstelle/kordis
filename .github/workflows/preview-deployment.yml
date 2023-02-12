@@ -33,9 +33,9 @@ jobs:
         run: >
           namePresence=$(az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"');
           if [ -n "$namePresence" ]; then
-              echo "has-swa=true";
+          echo "has-swa=true";
           else
-              echo "has-swa=false";
+          echo "has-swa=false";
           fi
           >> $GITHUB_OUTPUT
       - name: Check if API Environment exists
