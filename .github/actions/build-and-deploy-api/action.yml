@@ -27,5 +27,4 @@ runs:
       with:
         app-name: 'kordis-api'
         slot-name: ${{ inputs.slot }}
-        publish-profile: ${{ inputs.publishProfile }}
         package: dist/apps/api/
