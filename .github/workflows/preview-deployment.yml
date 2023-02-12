@@ -38,12 +38,9 @@ jobs:
       - name: Check if API Environment exists
         id: has-wa
         run: >
-          namePresence=$(az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep '"name": "pr-${{ github.event.pull_request.number }}"');
-          if [ -n "$namePresence" ]; then
-            echo "has-wa=true";
-          else
-            echo "has-wa=false";
-          fi
+          az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep -q '"name": "pr-${{ github.event.pull_request.number }}"'
+          && echo "has-swa=true"
+          || echo "has-swa=false"
           >> $GITHUB_OUTPUT
 
   deployment:
