@@ -28,17 +28,13 @@ jobs:
         uses: Azure/login@v1.4.6
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - run: >
-          az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"'
       - name: Check if Webapp Environment exists
         id: has-swa
         run: >
-          namePresence=$(az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"');
-          if [ -n "$namePresence" ]; then
-          echo "has-swa=true";
-          else
-          echo "has-swa=false";
-          fi;
+          az staticwebapp environment list --name kordis-webapp | grep -q '"name": "pr-${{ github.event.pull_request.number }}"'
+          && echo "has-swa=true"
+          || echo "has-swa=false"
+          >> $GITHUB_OUTPUT
       - name: Check if API Environment exists
         id: has-wa
         run: >
