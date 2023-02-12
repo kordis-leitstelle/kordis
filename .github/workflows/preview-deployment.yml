@@ -25,9 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Azure Login
-        uses: Azure/login@v1.4.3
+        uses: Azure/login@v1.4.6
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - run: az staticwebapp environment list --name kordis-webapp
       - name: Check if Webapp Environment exists
         id: has-swa
         uses: azure/CLI@v1
@@ -81,7 +82,7 @@ jobs:
             A preview of this Pull Request is being created. Hold tight while it's building ⚒️
             This comment will be automatically updated when the preview is ready.
       - name: Azure Login
-        uses: Azure/login@v1.4.3
+        uses: Azure/login@v1.4.6
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Create PR Deployment Slot
@@ -146,7 +147,7 @@ jobs:
             The Pull Request preview is being updated. Hold tight while it's building ⚒️
             This comment will be automatically updated when the new version is ready.
       - name: Azure Login
-        uses: Azure/login@v1.4.3
+        uses: Azure/login@v1.4.6
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
@@ -184,7 +185,7 @@ jobs:
       (needs.has-deployment.outputs.has-swa == true || needs.has-deployment.outputs.has-wa == true)
     steps:
       - name: Azure Login
-        uses: Azure/login@v1.4.3
+        uses: Azure/login@v1.4.6
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Delete PR Deployment Slot
