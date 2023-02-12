@@ -28,31 +28,26 @@ jobs:
         uses: Azure/login@v1.4.6
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - run: az staticwebapp environment list --name kordis-webapp
       - name: Check if Webapp Environment exists
         id: has-swa
-        uses: azure/CLI@v1
-        with:
-          inlineScript: >
-            namePresence=$(az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"');
-            if [ -n "$namePresence" ]; then
-                echo "has-swa=true";
-            else
-                echo "has-swa=false";
-            fi
-            >> $GITHUB_OUTPUT
+        run: >
+          namePresence=$(az staticwebapp environment list --name kordis-webapp | grep '"name": "pr-${{ github.event.pull_request.number }}"');
+          if [ -n "$namePresence" ]; then
+              echo "has-swa=true";
+          else
+              echo "has-swa=false";
+          fi
+          >> $GITHUB_OUTPUT
       - name: Check if API Environment exists
         id: has-wa
-        uses: azure/CLI@v1
-        with:
-          inlineScript: >
-            namePresence=$(az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep '"name": "pr-${{ github.event.pull_request.number }}"');
-            if [ -n "$namePresence" ]; then
-              echo "has-wa=true";
-            else
-              echo "has-wa=false";
-            fi
-            >> $GITHUB_OUTPUT
+        run: >
+          namePresence=$(az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep '"name": "pr-${{ github.event.pull_request.number }}"');
+          if [ -n "$namePresence" ]; then
+            echo "has-wa=true";
+          else
+            echo "has-wa=false";
+          fi
+          >> $GITHUB_OUTPUT
 
   deployment:
     needs: verify-admin
@@ -86,9 +81,7 @@ jobs:
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Create PR Deployment Slot
-        uses: Azure/cli@v1
-        with:
-          inlineScript: az webapp deployment slot create --name kordis-api --resource-group KORDIS --slot pr-${{ github.event.pull_request.number }}
+        run: az webapp deployment slot create --name kordis-api --resource-group KORDIS --slot pr-${{ github.event.pull_request.number }}
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -189,11 +182,9 @@ jobs:
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Delete PR Deployment Slot
-        uses: Azure/cli@v1
-        with:
-          inlineScript: |
-            az webapp deployment slot delete --name kordis-api --resource-group KORDIS --slot pr-${{ github.event.pull_request.number }} -y
-            az staticwebapp environment delete --name kordis-webapp --environment-name pr-${{ github.event.pull_request.number }} -y
+        run: |
+          az webapp deployment slot delete --name kordis-api --resource-group KORDIS --slot pr-${{ github.event.pull_request.number }} -y
+          az staticwebapp environment delete --name kordis-webapp --environment-name pr-${{ github.event.pull_request.number }} -y
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v1
         id: deploy-preview-comment
