@@ -19,13 +19,12 @@ runs:
     - run: |
         npx nx build api --prod
         cd dist/apps/api
-        npm i --omit=dev
+        npm i --omit=dev --ignore-scripts
       shell: bash
     - name: Deploy Backend
       id: wa-deployment
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'kordis-api'
-        slot: ${{ inputs.slot }}
-        publish-profile: ${{ inputs.publishProfile }}
+        slot-name: ${{ inputs.slot }}
         package: dist/apps/api/

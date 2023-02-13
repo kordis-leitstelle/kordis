@@ -1,5 +1,5 @@
-name: 'build-and-deploy-webapp'
-description: 'Builds Webapp Project for Production and Deploys it to a given SWA Environment'
+name: 'build-and-deploy-spa'
+description: 'Builds SPA Project for Production and Deploys it to a given SWA Environment'
 
 inputs:
   apiUrl:
@@ -7,20 +7,20 @@ inputs:
     description: "Base URL of the API"
   deploymentName:
     required: true
-    description: "Unique identifier for the deployment"
+    description: "Unique identifier for the Deployment"
   deploymentEnv:
     required: true
     description: "Azure SWA Deployment Environment"
   angularEnvironment:
     required: true
-    description: "Angular environment to use from the project.json"
+    description: "Angular Environment to use from the project.json"
   publishToken:
     required: true
     description: "Azure Static Web App Deployment Token"
 outputs:
   url:
-    description: "Frontend URL"
-    value: ${{ steps.swa-deployment.outputs.static_web_app_url  }}
+    description: "SPA URL"
+    value: ${{ steps.spa-deployment.outputs.static_web_app_url  }}
 
 runs:
   using: "composite"
@@ -33,8 +33,8 @@ runs:
         IS_PRODUCTION: true
         DEPLOYMENT_NAME: ${{ inputs.deploymentName }}
         API_URL: ${{ inputs.apiUrl }}
-    - name: Deploy Webapp
-      id: swa-deployment
+    - name: Deploy SPA
+      id: spa-deployment
       uses: Azure/static-web-apps-deploy@v1
       with:
         azure_static_web_apps_api_token: ${{ inputs.publishToken }}
@@ -44,5 +44,3 @@ runs:
         skip_app_build: true
         skip_api_build: true
         deployment_environment: ${{ inputs.deploymentEnv }}
-
-
