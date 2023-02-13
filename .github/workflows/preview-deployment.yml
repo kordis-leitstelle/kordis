@@ -106,8 +106,8 @@ jobs:
           edit-mode: replace
           body: |
             ### 🚀 Deployment Preview
-            Webapp: ${{ steps.spa-deployment.outputs.url }}
-            Backend: ${{ steps.api-deployment.outputs.url }}
+            SPA: ${{ steps.spa-deployment.outputs.url }}
+            API: ${{ steps.api-deployment.outputs.url }}
             Commit SHA: ${{ github.sha }}
           reactions: "rocket"
 
@@ -167,8 +167,8 @@ jobs:
           edit-mode: replace
           body: |
             ### 🚀 Deployment Preview
-            Webapp: ${{ steps.spa-deployment.outputs.url }}
-            Backend: ${{ steps.api-deployment.outputs.url }}
+            SPA: ${{ steps.spa-deployment.outputs.url }}
+            API: ${{ steps.api-deployment.outputs.url }}
             Commit SHA: ${{ github.sha }}
           reactions: "rocket"
 
