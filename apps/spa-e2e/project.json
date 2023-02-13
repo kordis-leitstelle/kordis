@@ -1,19 +1,19 @@
 {
-	"name": "client-e2e",
+	"name": "spa-e2e",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "apps/client-e2e/src",
+	"sourceRoot": "apps/spa-e2e/src",
 	"projectType": "application",
 	"targets": {
 		"e2e": {
 			"executor": "@mands/nx-playwright:playwright-executor",
 			"options": {
-				"e2eFolder": "apps/client-e2e",
-				"devServerTarget": "client:serve",
+				"e2eFolder": "apps/spa-e2e",
+				"devServerTarget": "spa:serve",
 				"packageRunner": "yarn"
 			},
 			"configurations": {
 				"production": {
-					"devServerTarget": "client:serve:production"
+					"devServerTarget": "spa:serve:production"
 				}
 			}
 		},
@@ -22,7 +22,7 @@
 			"options": {
 				"commands": [
 					{
-						"command": "tsc --build --force --verbose apps/client-e2e/tsconfig.json"
+						"command": "tsc --build --force --verbose apps/spa-e2e/tsconfig.json"
 					}
 				]
 			}
@@ -31,10 +31,10 @@
 			"executor": "@nrwl/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["apps/client-e2e/**/*.{ts,tsx,js,jsx}"]
+				"lintFilePatterns": ["apps/spa-e2e/**/*.{ts,tsx,js,jsx}"]
 			}
 		}
 	},
 	"tags": [],
-	"implicitDependencies": ["client"]
+	"implicitDependencies": ["spa"]
 }

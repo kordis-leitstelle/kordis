@@ -27,7 +27,7 @@ runs:
   steps:
     - run: |
         envsubst < apps/client/src/environments/environment.template > apps/client/src/environments/environment.${{ inputs.angularEnvironment }}.ts
-        npx nx build client --prod --configuration=${{ inputs.angularEnvironment }}
+        npx nx build spa --prod --configuration=${{ inputs.angularEnvironment }}
       shell: bash
       env:
         IS_PRODUCTION: true
@@ -39,7 +39,7 @@ runs:
       with:
         azure_static_web_apps_api_token: ${{ inputs.publishToken }}
         action: "upload"
-        app_location: "dist/apps/client/"
+        app_location: "dist/apps/spa/"
         output_location: ''
         skip_app_build: true
         skip_api_build: true
