@@ -11,7 +11,7 @@ on:
 
 jobs:
   check-pr-title:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && (github.event.action == 'edited' || github.event.action == 'opened')
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@v5
@@ -19,7 +19,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   main:
-    if: github.event.action != 'edited'
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronized')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
