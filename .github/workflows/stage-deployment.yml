@@ -9,8 +9,6 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    outputs:
-      url: ${{ steps.spa-deployment.outputs.url }}
     environment:
       name: Stage
       url: ${{ steps.spa-deployment.outputs.url }}

@@ -26,7 +26,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        envsubst < apps/client/src/environments/environment.template > apps/client/src/environments/environment.${{ inputs.angularEnvironment }}.ts
+        envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.${{ inputs.angularEnvironment }}.ts
         npx nx build spa --prod --configuration=${{ inputs.angularEnvironment }}
       shell: bash
       env:
