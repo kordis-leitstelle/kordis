@@ -34,7 +34,6 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - uses: nrwl/nx-set-shas@v3
-      - run: npx nx workspace-lint
       - name: Check Formatting
         run: npx nx format:check
       - name: Lint
