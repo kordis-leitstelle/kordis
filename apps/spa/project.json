@@ -41,14 +41,6 @@
 					],
 					"outputHashing": "all"
 				},
-				"stage": {
-					"fileReplacements": [
-						{
-							"replace": "apps/spa/src/environments/environment.ts",
-							"with": "apps/spa/src/environments/environment.stage.ts"
-						}
-					]
-				},
 				"development": {
 					"buildOptimizer": false,
 					"optimization": false,

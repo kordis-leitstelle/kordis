@@ -10,7 +10,7 @@ inputs:
     description: "Azure Web App Publisher Profile"
 outputs:
   url:
-    description: "Backend URL"
+    description: "API URL"
     value: ${{ steps.wa-deployment.outputs.webapp-url }}
 
 runs:
@@ -21,7 +21,7 @@ runs:
         cd dist/apps/api
         npm i --omit=dev --ignore-scripts
       shell: bash
-    - name: Deploy Backend
+    - name: Deploy API
       id: wa-deployment
       uses: azure/webapps-deploy@v2
       with:

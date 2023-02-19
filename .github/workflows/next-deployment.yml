@@ -1,5 +1,5 @@
-name: Stage Deployment
-concurrency: staging_environment
+name: Next Deployment
+concurrency: next_environment
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     environment:
-      name: Stage
+      name: Next
       url: ${{ steps.spa-deployment.outputs.url }}
     steps:
       - uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
-          slot: "stage"
+          slot: "next"
           publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
       - name: Build and Deploy SPA
         id: spa-deployment
@@ -35,6 +35,6 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "main.${{ github.sha }}"
-          angularEnvironment: "stage"
-          deploymentEnv: "stage"
+          angularEnvironment: "production"
+          deploymentEnv: "next"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}

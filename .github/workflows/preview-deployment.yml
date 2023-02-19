@@ -81,7 +81,7 @@ jobs:
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Create PR Deployment Slot
-        run: az webapp deployment slot create --name kordis-api --resource-group KORDIS --configuration-source stage --slot pr${{ github.event.issue.number }}
+        run: az webapp deployment slot create --name kordis-api --resource-group KORDIS --configuration-source next --slot pr${{ github.event.issue.number }}
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -95,7 +95,7 @@ jobs:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "pr-${{ github.event.issue.number }}"
           deploymentEnv: "pr-${{github.event.issue.number }}"
-          angularEnvironment: "stage"
+          angularEnvironment: "production"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
       - name: Update PR Preview Comment
         uses: peter-evans/create-or-update-comment@v2.1.1
@@ -156,7 +156,7 @@ jobs:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "PR-${{ github.event.pull_request.number }}.{{ github.sha }}"
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
-          angularEnvironment: "stage"
+          angularEnvironment: "production"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
       - name: Update PR Preview Comment
         uses: peter-evans/create-or-update-comment@v2.1.1
