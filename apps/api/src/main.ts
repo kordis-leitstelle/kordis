@@ -5,6 +5,7 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import '@total-typescript/ts-reset';
 
 import { AppModule } from './app/app.module';
 
