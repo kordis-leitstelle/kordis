@@ -35,6 +35,5 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           deploymentName: "main.${{ github.sha }}"
-          angularEnvironment: "production"
           deploymentEnv: "next"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}

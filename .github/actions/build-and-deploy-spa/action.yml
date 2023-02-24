@@ -11,9 +11,6 @@ inputs:
   deploymentEnv:
     required: true
     description: "Azure SWA Deployment Environment"
-  angularEnvironment:
-    required: true
-    description: "Angular Environment to use from the project.json"
   publishToken:
     required: true
     description: "Azure Static Web App Deployment Token"
@@ -26,8 +23,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.${{ inputs.angularEnvironment }}.ts
-        npx nx build spa --prod --configuration=${{ inputs.angularEnvironment }}
+        envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
+        npx nx build spa --prod
       shell: bash
       env:
         IS_PRODUCTION: true
