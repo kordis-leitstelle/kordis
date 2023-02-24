@@ -4,7 +4,7 @@
 	"packageRules": [
 		{
 			"matchUpdateTypes": ["major"],
-			"labels": ["status:needs-triage"]
+			"labels": ["status:needs-triage", "type:dependencies"]
 		},
 		{
 			"matchUpdateTypes": ["minor", "patch", "pin", "digest"],

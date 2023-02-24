@@ -4,22 +4,36 @@ on:
     branches:
       - main
   pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
 
 jobs:
+  check-pr-title:
+    if: github.event_name == 'pull_request' && (github.event.action == 'edited' || github.event.action == 'opened')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   main:
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Ensure Conventional Commits
+        uses: webiny/action-conventional-commits@v1.1.0
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - uses: nrwl/nx-set-shas@v3
       - run: npm ci
-      - run: npx nx workspace-lint
+      - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
         run: npx nx format:check
       - name: Lint
@@ -28,12 +42,14 @@ jobs:
         run: npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
       - name: Merge Coverage files
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
+      - name: Build
+        run: |
+          touch apps/spa/src/environments/environment.prod.ts
+          npx nx affected --target=build --parallel=3
+      - name: Run e2es
+        run: npx nx affected --target=e2e
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Build
-        run: npx nx affected --target=build --parallel=3
-      - name: Run e2es
-        run: npx nx affected --target=e2e

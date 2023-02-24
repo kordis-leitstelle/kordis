@@ -1,26 +1,32 @@
 {
-	"name": "client",
+	"name": "spa",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"projectType": "application",
-	"sourceRoot": "apps/client/src",
+	"sourceRoot": "apps/spa/src",
 	"prefix": "kordis",
 	"targets": {
 		"build": {
 			"executor": "@angular-devkit/build-angular:browser",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/apps/client",
-				"index": "apps/client/src/index.html",
-				"main": "apps/client/src/main.ts",
+				"outputPath": "dist/apps/spa",
+				"index": "apps/spa/src/index.html",
+				"main": "apps/spa/src/main.ts",
 				"polyfills": ["zone.js"],
-				"tsConfig": "apps/client/tsconfig.app.json",
+				"tsConfig": "apps/spa/tsconfig.app.json",
 				"inlineStyleLanguage": "scss",
-				"assets": ["apps/client/src/favicon.ico", "apps/client/src/assets"],
-				"styles": ["apps/client/src/styles.scss"],
+				"assets": ["apps/spa/src/favicon.ico", "apps/spa/src/assets"],
+				"styles": ["apps/spa/src/styles.scss"],
 				"scripts": []
 			},
 			"configurations": {
 				"production": {
+					"fileReplacements": [
+						{
+							"replace": "apps/spa/src/environments/environment.ts",
+							"with": "apps/spa/src/environments/environment.prod.ts"
+						}
+					],
 					"budgets": [
 						{
 							"type": "initial",
@@ -50,10 +56,10 @@
 			"executor": "@angular-devkit/build-angular:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "client:build:production"
+					"browserTarget": "spa:build:production"
 				},
 				"development": {
-					"browserTarget": "client:build:development"
+					"browserTarget": "spa:build:development"
 				}
 			},
 			"defaultConfiguration": "development"
@@ -61,21 +67,21 @@
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
 			"options": {
-				"browserTarget": "client:build"
+				"browserTarget": "spa:build"
 			}
 		},
 		"lint": {
 			"executor": "@nrwl/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["apps/client/**/*.ts", "apps/client/**/*.html"]
+				"lintFilePatterns": ["apps/spa/**/*.ts", "apps/spa/**/*.html"]
 			}
 		},
 		"test": {
 			"executor": "@nrwl/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "apps/client/jest.config.ts",
+				"jestConfig": "apps/spa/jest.config.ts",
 				"passWithNoTests": true
 			}
 		}

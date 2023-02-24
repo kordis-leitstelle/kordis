@@ -1,0 +1,30 @@
+name: 'build-and-deploy-api'
+description: 'Builds API Project for Production and Deploys it to a given WA Slot'
+
+inputs:
+  slot:
+    required: true
+    description: "Slot Identifier"
+  publishProfile:
+    required: true
+    description: "Azure Web App Publisher Profile"
+outputs:
+  url:
+    description: "API URL"
+    value: ${{ steps.wa-deployment.outputs.webapp-url }}
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        npx nx build api --prod
+        cd dist/apps/api
+        npm i --omit=dev --ignore-scripts
+      shell: bash
+    - name: Deploy API
+      id: wa-deployment
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'kordis-api'
+        slot-name: ${{ inputs.slot }}
+        package: dist/apps/api/

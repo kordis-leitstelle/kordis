@@ -1,0 +1,40 @@
+name: Next Deployment
+concurrency: next_environment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment:
+      name: Next
+      url: ${{ steps.spa-deployment.outputs.url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci --ignore-scripts
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Build and Deploy API
+        id: api-deployment
+        uses: ./.github/actions/build-and-deploy-api
+        with:
+          slot: "next"
+          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
+      - name: Build and Deploy SPA
+        id: spa-deployment
+        uses: ./.github/actions/build-and-deploy-spa
+        with:
+          apiUrl: ${{ steps.api-deployment.outputs.url }}
+          deploymentName: "main.${{ github.sha }}"
+          angularEnvironment: "production"
+          deploymentEnv: "next"
+          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}

@@ -1,0 +1,204 @@
+name: Preview Deployment
+concurrency: ${{ github.ref }}_environment
+
+on:
+  pull_request:
+    types: [ closed, synchronize ]
+  issue_comment:
+    types: [ created ]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  has-deployment:
+    if: github.event.issue.pull_request || github.event_name == 'pull_request'
+    outputs:
+      has-swa: ${{ steps.has-swa.outputs.has-swa }}
+      has-wa: ${{ steps.has-wa.outputs.has-wa }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Check if Webapp Environment exists
+        id: has-swa
+        run: >
+          az staticwebapp environment list --name kordis-spa | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
+          && echo "has-swa=true" >> $GITHUB_OUTPUT
+          || echo "has-swa=false" >> $GITHUB_OUTPUT
+      - name: Check if API Environment exists
+        id: has-wa
+        run: >
+          az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
+          && echo "has-wa=true" >> $GITHUB_OUTPUT
+          || echo "has-wa=false" >> $GITHUB_OUTPUT
+
+  comment-handler:
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-preview')) &&
+      (needs.has-deployment.outputs.has-swa == 'false' && needs.has-deployment.outputs.has-wa == 'false')
+    needs: has-deployment
+    runs-on: ubuntu-latest
+    outputs:
+      is-admin: ${{ steps.is-admin-check.outputs.require-result }}
+    steps:
+      - name: Check Permission
+        uses: actions-cool/check-user-permission@v2
+        id: is-admin-check
+        with:
+          require: 'admin'
+      - name: Remove Comment
+        uses: actions/github-script@v6
+        with:
+          script: 'github.rest.issues.deleteComment({ comment_id: context.payload.comment.id, owner: context.repo.owner, repo: context.repo.repo })'
+
+  deployment:
+    needs: comment-handler
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-preview')) &&
+      (needs.comment-handler.outputs.is-admin == 'true')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci --ignore-scripts
+      - name: Initial Deployment Preview Comment
+        uses: peter-evans/create-or-update-comment@v2.1.1
+        id: pr-preview-comment
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ### 🚧 Building Deployment Preview..
+            A preview of this Pull Request is being created. Hold tight while it's building ⚒️
+            This comment will be automatically updated when the preview is ready.
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Create PR Deployment Slot
+        run: az webapp deployment slot create --name kordis-api --resource-group KORDIS --configuration-source next --slot pr${{ github.event.issue.number }}
+      - name: Build and Deploy API
+        id: api-deployment
+        uses: ./.github/actions/build-and-deploy-api
+        with:
+          slot: "pr${{ github.event.issue.number }}"
+          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
+      - name: Build and Deploy SPA
+        id: spa-deployment
+        uses: ./.github/actions/build-and-deploy-spa
+        with:
+          apiUrl: ${{ steps.api-deployment.outputs.url }}
+          deploymentName: "PR-${{ github.event.issue.number }}.{{ github.sha }}"
+          deploymentEnv: "pr${{github.event.issue.number }}"
+          angularEnvironment: "production"
+          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+      - name: Update PR Preview Comment
+        uses: peter-evans/create-or-update-comment@v2.1.1
+        with:
+          comment-id: ${{ steps.pr-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### 🚀 Deployment Preview
+            SPA: ${{ steps.spa-deployment.outputs.url }}
+            API: ${{ steps.api-deployment.outputs.url }}
+            Commit SHA: ${{ github.sha }}
+          reactions: "rocket"
+
+  update-deployment:
+    needs: has-deployment
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.action == 'synchronize') &&
+      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci --ignore-scripts
+      - name: Find PR Preview Comment
+        uses: peter-evans/find-comment@v2
+        id: deploy-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Deployment Preview
+      - name: Update PR Preview Comment
+        if: steps.deploy-preview-comment.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v2.1.1
+        with:
+          comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### 🚧 Building Deployment Preview..
+            The Pull Request preview is being updated. Hold tight while it's building ⚒️
+            This comment will be automatically updated when the new version is ready.
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Build and Deploy API
+        id: api-deployment
+        uses: ./.github/actions/build-and-deploy-api
+        with:
+          slot: "pr${{ github.event.pull_request.number }}"
+          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
+      - name: Build and Deploy SPA
+        id: spa-deployment
+        uses: ./.github/actions/build-and-deploy-spa
+        with:
+          apiUrl: ${{ steps.api-deployment.outputs.url }}
+          deploymentName: "PR-${{ github.event.pull_request.number }}.{{ github.sha }}"
+          deploymentEnv: "pr${{ github.event.pull_request.number }}"
+          angularEnvironment: "production"
+          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+      - name: Update PR Preview Comment
+        uses: peter-evans/create-or-update-comment@v2.1.1
+        with:
+          comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### 🚀 Deployment Preview
+            SPA: ${{ steps.spa-deployment.outputs.url }}
+            API: ${{ steps.api-deployment.outputs.url }}
+            Commit SHA: ${{ github.sha }}
+          reactions: "rocket"
+
+  delete-deployment:
+    needs: has-deployment
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.action == 'closed') &&
+      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+    steps:
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Delete API Deployment and Resources
+        run: az webapp deployment slot delete --name kordis-api --resource-group KORDIS --slot pr${{ github.event.pull_request.number }}
+      - name: Delete SPA Deployment and Resources
+        run: az staticwebapp environment delete --name kordis-spa --resource-group KORDIS --environment-name pr${{ github.event.pull_request.number }} --yes
+      - name: Find PR Preview Comment
+        uses: peter-evans/find-comment@v2
+        id: deploy-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Deployment Preview
+      - name: Update PR Preview Comment
+        if: steps.deploy-preview-comment.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v2.1.1
+        with:
+          comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### Deployment Preview
+            🏁 This PR has been closed. No deployment preview is available.
+          reactions: "hooray"
