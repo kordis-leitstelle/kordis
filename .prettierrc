@@ -3,6 +3,10 @@
 	"semi": true,
 	"trailingComma": "all",
 	"printWidth": 80,
+	"importOrder": ["^@kordis/(.*)$", "^[./]"],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true,
+	"importOrderParserPlugins": ["classProperties", "decorators-legacy"],
 	"overrides": [
 		{
 			"files": ["*.ts"],
