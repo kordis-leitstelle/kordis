@@ -93,8 +93,8 @@ jobs:
         uses: ./.github/actions/build-and-deploy-spa
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
-          deploymentName: "pr-${{ github.event.issue.number }}"
-          deploymentEnv: "pr-${{github.event.issue.number }}"
+          deploymentName: "PR-${{ github.event.issue.number }}.{{ github.sha }}"
+          deploymentEnv: "pr${{github.event.issue.number }}"
           angularEnvironment: "production"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
       - name: Update PR Preview Comment
