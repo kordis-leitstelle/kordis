@@ -1,9 +1,14 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ViewEncapsulation,
+} from '@angular/core';
 
 /* eslint-disable */
 
 @Component({
 	selector: 'kordis-nx-welcome',
+	standalone: true,
 	template: `
 		<!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -842,5 +847,6 @@ nx affected:e2e</pre>
 	`,
 	styles: [],
 	encapsulation: ViewEncapsulation.None,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxWelcomeComponent {}

@@ -40,14 +40,20 @@
 			"style": "css",
 			"linter": "eslint",
 			"unitTestRunner": "jest",
-			"e2eTestRunner": "cypress"
+			"e2eTestRunner": "playwright",
+			"prefix": "krd"
 		},
 		"@nrwl/angular:library": {
 			"linter": "eslint",
-			"unitTestRunner": "jest"
+			"unitTestRunner": "jest",
+			"prefix": "krd"
 		},
 		"@nrwl/angular:component": {
-			"style": "css"
+			"style": "css",
+			"changeDetection": "OnPush",
+			"standalone": true,
+			"inlineStyle": true,
+			"inlineTemplate": true
 		}
 	}
 }
