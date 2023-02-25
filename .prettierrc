@@ -6,7 +6,7 @@
 	"importOrder": ["^@kordis/(.*)$", "^[./]"],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,
-	"importOrderParserPlugins": ["classProperties", "decorators-legacy"],
+	"importOrderParserPlugins": ["classProperties", "decorators-legacy", "typescript"],
 	"overrides": [
 		{
 			"files": ["*.ts"],
