@@ -20,7 +20,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Azure Login
-        uses: Azure/login@v1.4.6
+        uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
