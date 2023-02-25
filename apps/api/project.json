@@ -16,7 +16,8 @@
 				"assets": ["apps/api/src/assets"],
 				"webpackConfig": "apps/api/webpack.config.js",
 				"generatePackageJson": true,
-				"isolatedConfig": true
+				"isolatedConfig": true,
+				"babelUpwardRootMode": true
 			},
 			"configurations": {
 				"production": {
