@@ -14,5 +14,7 @@
 				"parser": "typescript"
 			}
 		}
-	]
+	],
+	"plugins": ["prettier-plugin-tailwindcss"],
+	"tailwindConfig": "./apps/spa/tailwind.config.js"
 }
