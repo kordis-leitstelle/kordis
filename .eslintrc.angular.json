@@ -1,0 +1,17 @@
+{
+	"overrides": [
+		{
+			"parserOptions": {
+				"project": ["./tsconfig*.json"]
+			},
+			"files": ["*.ts"],
+			"extends": ["plugin:rxjs/recommended"],
+			"rules": {
+				"rxjs/finnish": "error",
+				"rxjs/no-exposed-subjects": "error",
+				"rxjs/no-subject-value": "error",
+				"rxjs/suffix-subjects": "error"
+			}
+		}
+	]
+}
