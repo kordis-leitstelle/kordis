@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Azure Login
-        uses: Azure/login@v1.4.6
+        uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Check if Webapp Environment exists
@@ -77,7 +77,7 @@ jobs:
             A preview of this Pull Request is being created. Hold tight while it's building ⚒️
             This comment will be automatically updated when the preview is ready.
       - name: Azure Login
-        uses: Azure/login@v1.4.6
+        uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Create PR Deployment Slot
@@ -141,7 +141,7 @@ jobs:
             The Pull Request preview is being updated. Hold tight while it's building ⚒️
             This comment will be automatically updated when the new version is ready.
       - name: Azure Login
-        uses: Azure/login@v1.4.6
+        uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
@@ -178,7 +178,7 @@ jobs:
       (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
     steps:
       - name: Azure Login
-        uses: Azure/login@v1.4.6
+        uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Delete API Deployment and Resources
