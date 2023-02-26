@@ -35,7 +35,7 @@
     "@nrwl/webpack": "15.7.2",
     "@nrwl/workspace": "15.7.2",
     "@playwright/test": "^1.26.0",
-    "@schematics/angular": "~15.1.0",
+    "@schematics/angular": "~15.2.0",
     "@total-typescript/ts-reset": "^0.3.7",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jest": "28.1.8",
