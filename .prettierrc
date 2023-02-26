@@ -3,15 +3,19 @@
 	"semi": true,
 	"trailingComma": "all",
 	"printWidth": 80,
-	"importOrder": ["^@kordis/(.*)$", "^[./]"],
-	"importOrderSeparation": true,
-	"importOrderSortSpecifiers": true,
-	"importOrderParserPlugins": ["classProperties", "decorators-legacy", "typescript"],
 	"overrides": [
 		{
 			"files": ["*.ts"],
 			"options": {
-				"parser": "typescript"
+				"parser": "typescript",
+				"importOrder": ["^@kordis/(.*)$", "^[./]"],
+				"importOrderSeparation": true,
+				"importOrderSortSpecifiers": true,
+				"importOrderParserPlugins": [
+					"classProperties",
+					"decorators-legacy",
+					"typescript"
+				]
 			}
 		}
 	],
