@@ -11,7 +11,12 @@
 			"automerge": true
 		},
 		{
-			"packagePatterns": ["^@nrlw/", "^@angular", "typescript"],
+			"packagePatterns": [
+				"^@nrlw/",
+				"^@angular",
+				"@schematics/angular",
+				"^@nestjs/"
+			],
 			"enabled": false
 		}
 	],
