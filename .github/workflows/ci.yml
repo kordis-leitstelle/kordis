@@ -44,7 +44,7 @@ jobs:
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
       - name: Build
         run: |
-          touch apps/spa/src/environments/environment.prod.ts
+          cp apps/spa/src/environments/environment.ts apps/spa/src/environments/environment.prod.ts
           npx nx affected --target=build --parallel=3
       - name: Run e2es
         run: npx nx affected --target=e2e
