@@ -12,10 +12,18 @@
 		},
 		{
 			"packagePatterns": [
-				"^@nrlw/",
-				"^@angular",
+				"^@angular/",
+				"^@angular-devkit/",
 				"@schematics/angular",
-				"^@nestjs/"
+				"@types/jest",
+				"jest",
+				"jest-environment-jsdom",
+				"jest-preset-angular",
+				"ts-jest",
+				"typescript",
+				"^@nrlw/",
+				"^@nestjs/",
+				"zone.js"
 			],
 			"enabled": false
 		}
