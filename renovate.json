@@ -11,7 +11,20 @@
 			"automerge": true
 		},
 		{
-			"packagePatterns": ["^@nrlw/", "^@angular", "typescript"],
+			"packagePatterns": [
+				"^@angular/",
+				"^@angular-devkit/",
+				"@schematics/angular",
+				"@types/jest",
+				"jest",
+				"jest-environment-jsdom",
+				"jest-preset-angular",
+				"ts-jest",
+				"typescript",
+				"^@nrlw/",
+				"^@nestjs/",
+				"zone.js"
+			],
 			"enabled": false
 		}
 	],
