@@ -36,11 +36,11 @@ describe('AuthService', () => {
 		const mockOauth = spectator.inject(OAuthService);
 
 		jest.spyOn(mockOauth, 'loadDiscoveryDocument').mockResolvedValue(null);
-		jest.spyOn(mockOauth, 'hasValidAccessToken').mockResolvedValueOnce(false);
+		jest.spyOn(mockOauth, 'hasValidAccessToken').mockReturnValue(false);
 
 		spectator.service.init({}, '');
 
-		expect(firstValueFrom(spectator.service.user$)).resolves.toEqual(null);
+		expect(firstValueFrom(spectator.service.user$)).resolves.toBe(null);
 	});
 
 	it('should set claims as user', () => {
