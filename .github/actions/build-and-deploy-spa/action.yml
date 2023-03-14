@@ -5,6 +5,9 @@ inputs:
   apiUrl:
     required: true
     description: "Base URL of the API"
+  oauthConfig:
+    required: true
+    description: "OAuthConfig from the angular-oauth2-oidc package"
   deploymentName:
     required: true
     description: "Unique identifier for the Deployment"
@@ -30,6 +33,7 @@ runs:
         IS_PRODUCTION: true
         DEPLOYMENT_NAME: ${{ inputs.deploymentName }}
         API_URL: ${{ inputs.apiUrl }}
+        OAUTH_CONFIG: ${{ inputs.oauthConfig }}
     - name: Deploy SPA
       id: spa-deployment
       uses: Azure/static-web-apps-deploy@v1
