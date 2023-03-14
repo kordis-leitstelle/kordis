@@ -2,4 +2,5 @@ export const environment = {
 	production: $IS_PRODUCTION,
 	deploymentName: '$DEPLOYMENT_NAME',
 	apiUrl: '$API_URL',
+	oauth: $OAUTH_CONFIG,
 };

@@ -1,31 +1,35 @@
-import { TestBed } from '@angular/core/testing';
+import {
+	Spectator,
+	createComponentFactory,
+	mockProvider,
+} from '@ngneat/spectator/jest';
+import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { of } from 'rxjs';
+
+import { AuthService } from '@kordis/spa/auth';
 
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({}).compileComponents();
+	let spectator: Spectator<AppComponent>;
+	const createComponent = createComponentFactory({
+		component: AppComponent,
+		providers: [mockProvider(OAuthService)],
+		componentProviders: [
+			mockProvider(AuthService, {
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				init(config: AuthConfig, discoveryDocumentUrl: string) {
+					return;
+				},
+				isDoneLoading$: of(false),
+				isAuthenticated$: of(false),
+			}),
+		],
 	});
 
-	it('should create the app', () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		const app = fixture.componentInstance;
-		expect(app).toBeTruthy();
-	});
+	beforeEach(() => (spectator = createComponent()));
 
-	it(`should have as title 'client'`, () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		const app = fixture.componentInstance;
-
-		expect(app.title).toEqual('client');
-	});
-
-	it('should render title', () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		fixture.detectChanges();
-		const compiled = fixture.nativeElement as HTMLElement;
-		expect(compiled.querySelector('h1')?.textContent).toContain(
-			'Welcome client',
-		);
+	it('should show loading indicator during auth init', async () => {
+		expect(spectator.query("[data-testid='loading-indicator']")).toBeTruthy();
 	});
 });
