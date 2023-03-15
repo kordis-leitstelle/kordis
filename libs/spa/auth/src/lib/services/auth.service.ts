@@ -61,6 +61,8 @@ export class AuthService {
 			this.isAuthenticatedSubject$.next(
 				this.oauthService.hasValidAccessToken(),
 			);
+			// eslint-disable-next-line no-console
+			console.log(this.oauthService?.getAccessToken());
 		});
 	}
 

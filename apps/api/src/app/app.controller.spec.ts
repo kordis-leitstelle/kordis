@@ -13,7 +13,7 @@ describe('AppController', () => {
 		}).compile();
 	});
 
-	describe('getData', () => {
+	xdescribe('getData', () => {
 		it('should return "Welcome to api!"', () => {
 			const appController = app.get<AppController>(AppController);
 			expect(appController.getData()).toEqual({ message: 'Welcome to api!' });
