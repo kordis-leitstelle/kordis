@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import { AuthUser } from '@kordis/shared/auth';
 
 export abstract class AuthUserExtractorStrategy {
@@ -8,12 +10,15 @@ export class ExtractUserFromMsPrincipleHeader
 	implements AuthUserExtractorStrategy
 {
 	getUserFromRequest(req: Request): AuthUser | null {
-		const headerValue = req.headers.get('authentication');
+		const headerValue = req.headers['authentication'];
 
 		if (!headerValue) {
 			return null;
 		}
-		const payloadBuffer = Buffer.from(headerValue.split('.')[1], 'base64');
+		const payloadBuffer = Buffer.from(
+			(headerValue as string).split('.')[1],
+			'base64',
+		);
 		const decodedToken = JSON.parse(payloadBuffer.toString());
 
 		return {
