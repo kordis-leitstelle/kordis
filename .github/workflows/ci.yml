@@ -33,6 +33,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
+      - run: ls -d node_modules/@nrwl/nx*
       - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
         run: npx nx format:check
