@@ -10,6 +10,8 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+    env:
+      NX_NON_NATIVE_HASHER: true
     steps:
       - uses: actions/checkout@v3
         with:
@@ -25,7 +27,7 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
-        run: NX_NON_NATIVE_HASHER=true && npx nx format:check
+        run: npx nx format:check
       - name: Lint
         run: npx nx affected --target=lint --parallel=3
 
