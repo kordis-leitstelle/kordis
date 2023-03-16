@@ -8,7 +8,7 @@ import {
 	shareReplay,
 } from 'rxjs';
 
-import AuthUser from '../models/auth-user.model';
+import { AuthUser } from '@kordis/shared/auth';
 
 @Injectable({
 	providedIn: 'root',
@@ -33,14 +33,16 @@ export class AuthService {
 				}
 
 				const claims = this.oauthService.getIdentityClaims();
+
 				if (Object.values(claims).length <= 0) {
 					return null;
 				}
 
 				return {
+					id: claims['oid'] || claims['sub'],
 					firstName: claims['given_name'],
 					lastName: claims['family_name'],
-					email: claims['emails'][0],
+					email: claims['emails']?.[0],
 				} as AuthUser;
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),
@@ -61,8 +63,6 @@ export class AuthService {
 			this.isAuthenticatedSubject$.next(
 				this.oauthService.hasValidAccessToken(),
 			);
-			// eslint-disable-next-line no-console
-			console.log(this.oauthService?.getAccessToken());
 		});
 	}
 
