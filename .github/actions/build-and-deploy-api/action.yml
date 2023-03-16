@@ -21,6 +21,8 @@ runs:
         cd dist/apps/api
         npm i --omit=dev --ignore-scripts
       shell: bash
+      env:
+        NX_NON_NATIVE_HASHER: true # todo: workaround until https://github.com/nrwl/nx/issues/15452 is fixed
     - name: Deploy API
       id: wa-deployment
       uses: azure/webapps-deploy@v2
