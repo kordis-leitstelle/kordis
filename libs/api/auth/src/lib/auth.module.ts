@@ -7,13 +7,6 @@ import {
 } from './auth-user-extractor-strategies/auth-user-extractor.strategy';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
-const SHARED_PROVIDERS = [
-	{
-		provide: AuthUserExtractorStrategy,
-		useClass: ExtractUserFromMsPrincipleHeader,
-	},
-];
-
 @Module({
 	providers: [
 		{
