@@ -10,8 +10,6 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
-    env:
-      NX_NON_NATIVE_HASHER: true # todo: workaround until https://github.com/nrwl/nx/issues/15452 is fixed
     steps:
       - uses: actions/checkout@v3
         with:
