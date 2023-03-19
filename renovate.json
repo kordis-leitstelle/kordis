@@ -21,8 +21,9 @@
 				"jest-preset-angular",
 				"ts-jest",
 				"typescript",
-				"^@nrlw/",
+				"^@nrwl/",
 				"^@nestjs/",
+				"nx",
 				"zone.js"
 			],
 			"enabled": false
