@@ -13,7 +13,7 @@ async function bootstrap(): Promise<void> {
 	const config = app.get(ConfigService);
 
 	const envPort = config.get('PORT');
-	const port = envPort ? +envPort : 3333;
+	const port = envPort ? +envPort : 3000;
 	await app.listen(port);
 
 	Logger.log(`🚀 Application is running on: http://localhost:${port}}`);

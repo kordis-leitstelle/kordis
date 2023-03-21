@@ -7,7 +7,7 @@ on:
     types:
       - opened
       - synchronize
-
+jobs:
   main:
     runs-on: ubuntu-latest
     steps:
@@ -47,10 +47,8 @@ on:
       - name: Build
         run: npx nx affected --target=build --parallel=3
 
-      - name: Start Backend and Frontend for E2Es
-        run: nx run-many --target=serve --projects=spa,api --prod
-      - name: Run SPA E2Es
-        run: nx e2e spa-e2e
+      - name: E2Es
+        run: npm run e2e
         env:
           E2E_BASE_URL: http://localhost:4200/
 
