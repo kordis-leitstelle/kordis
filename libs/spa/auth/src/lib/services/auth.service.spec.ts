@@ -1,19 +1,20 @@
 import { SpectatorService } from '@ngneat/spectator';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { firstValueFrom, of } from 'rxjs';
+import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
+import { Subject, firstValueFrom } from 'rxjs';
 
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
 	let spectator: SpectatorService<AuthService>;
+	const mockEventSubject$ = new Subject<OAuthEvent>();
 
 	const createService = createServiceFactory({
 		service: AuthService,
 		providers: [
 			mockProvider(OAuthService, {
-				// eslint-disable-next-line rxjs/finnish
-				events: of({}),
+				// eslint-disable-next-line rxjs/finnish,rxjs/suffix-subjects
+				events: mockEventSubject$,
 			}),
 		],
 	});
@@ -26,19 +27,10 @@ describe('AuthService', () => {
 		);
 	});
 
-	it('should have isDoneLoading initially on false', () => {
-		expect(firstValueFrom(spectator.service.isDoneLoading$)).resolves.toBe(
-			false,
-		);
-	});
-
 	it('should not have claims when unauthorized', () => {
 		const mockOauth = spectator.inject(OAuthService);
 
-		jest.spyOn(mockOauth, 'loadDiscoveryDocument').mockResolvedValue(null);
 		jest.spyOn(mockOauth, 'hasValidAccessToken').mockReturnValue(false);
-
-		spectator.service.init({}, '');
 
 		expect(firstValueFrom(spectator.service.user$)).resolves.toBe(null);
 	});
@@ -52,10 +44,9 @@ describe('AuthService', () => {
 			emails: ['testmail', 'irrelevant testmail'],
 		});
 
-		jest.spyOn(mockOauth, 'loadDiscoveryDocument').mockResolvedValue(null);
 		jest.spyOn(mockOauth, 'hasValidAccessToken').mockResolvedValueOnce(true); // isAuthenticated$ => true trigger
 
-		spectator.service.init({}, ''); // start listening to events which sets the isAuthenticated flag with hasValidAccessToken()
+		mockEventSubject$.next({} as OAuthEvent);
 
 		expect(firstValueFrom(spectator.service.user$)).resolves.toEqual({
 			firstName: 'firstname',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
 import {
 	BehaviorSubject,
 	Observable,
@@ -16,16 +16,21 @@ import { AuthUser } from '@kordis/shared/auth';
 export class AuthService {
 	readonly user$: Observable<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
-	readonly isDoneLoading$: Observable<boolean>;
 	private readonly isAuthenticatedSubject$ = new BehaviorSubject<boolean>(
 		false,
 	);
-	private readonly isDoneLoadingSubject$ = new BehaviorSubject<boolean>(false);
 
 	constructor(private readonly oauthService: OAuthService) {
 		this.isAuthenticated$ = this.isAuthenticatedSubject$
 			.asObservable()
 			.pipe(distinctUntilChanged());
+
+		this.oauthService.events.subscribe(() => {
+			this.isAuthenticatedSubject$.next(
+				this.oauthService.hasValidAccessToken(),
+			);
+		});
+
 		this.user$ = this.isAuthenticated$.pipe(
 			map((isAuthenticated) => {
 				if (!isAuthenticated) {
@@ -33,7 +38,6 @@ export class AuthService {
 				}
 
 				const claims = this.oauthService.getIdentityClaims();
-
 				if (Object.values(claims).length <= 0) {
 					return null;
 				}
@@ -47,23 +51,6 @@ export class AuthService {
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),
 		);
-		this.isDoneLoading$ = this.isDoneLoadingSubject$.asObservable();
-	}
-
-	init(config: AuthConfig, discoveryDocumentUrl: string): void {
-		this.oauthService.configure(config);
-		this.oauthService.setupAutomaticSilentRefresh();
-		this.oauthService
-			.loadDiscoveryDocument(discoveryDocumentUrl)
-			.then(() => this.oauthService.tryLoginCodeFlow())
-			.then(() => this.isDoneLoadingSubject$.next(true))
-			.catch(() => this.isDoneLoadingSubject$.next(true));
-
-		this.oauthService.events.subscribe(() => {
-			this.isAuthenticatedSubject$.next(
-				this.oauthService.hasValidAccessToken(),
-			);
-		});
 	}
 
 	login(): void {

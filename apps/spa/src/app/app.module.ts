@@ -1,11 +1,17 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule, Routes } from '@angular/router';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { Router, RouterModule, Routes } from '@angular/router';
+import { switchMap } from 'rxjs';
 
-import { AuthGuard } from '@kordis/spa/auth';
+import {
+	AuthComponent,
+	AuthModule,
+	AuthService,
+	authGuard,
+} from '@kordis/spa/auth';
 
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { ProtectedComponent } from './protected.component';
 
@@ -17,13 +23,24 @@ const routes: Routes = [
 	},
 	{
 		path: 'auth',
-		loadComponent: () =>
-			import('@kordis/spa/auth').then((mod) => mod.AuthComponent),
+		component: AuthComponent,
+		canActivate: [
+			() => {
+				const auth = inject(AuthService);
+				const router = inject(Router);
+
+				return auth.isAuthenticated$.pipe(
+					switchMap(async (isAuthenticated) =>
+						isAuthenticated ? router.navigate(['/protected']) : true,
+					),
+				);
+			},
+		],
 	},
 	{
 		path: 'protected',
 		component: ProtectedComponent,
-		canActivate: [AuthGuard],
+		canActivate: [authGuard],
 	},
 	{ path: '**', redirectTo: 'protected' },
 ];
@@ -32,9 +49,12 @@ const routes: Routes = [
 	declarations: [AppComponent, ProtectedComponent],
 	imports: [
 		BrowserModule,
-		OAuthModule.forRoot(),
 		HttpClientModule,
 		RouterModule.forRoot(routes),
+		AuthModule.forRoot(
+			environment.oauth.config,
+			environment.oauth.discoveryDocumentUrl,
+		),
 	],
 	providers: [],
 	bootstrap: [AppComponent],

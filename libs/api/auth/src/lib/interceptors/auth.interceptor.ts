@@ -5,6 +5,7 @@ import {
 	NestInterceptor,
 	UnauthorizedException,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Observable, throwError } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
@@ -18,7 +19,9 @@ export class AuthInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 		const req: KordisRequest = context.switchToHttp().getRequest();
 
-		const possibleAuthUser = this.authUserExtractor.getUserFromRequest(req);
+		const possibleAuthUser = this.authUserExtractor.getUserFromRequest(
+			req as Request,
+		);
 
 		if (!possibleAuthUser) {
 			// This is just intended to be a fallback, as we currently only aim to support running the API behind an OAuth Proxy

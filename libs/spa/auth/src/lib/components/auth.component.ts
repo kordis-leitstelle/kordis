@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
@@ -7,8 +6,6 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
 	selector: 'krd-auth',
-	standalone: true,
-	imports: [CommonModule],
 	template: `
 		<div class="flex h-screen">
 			<div
