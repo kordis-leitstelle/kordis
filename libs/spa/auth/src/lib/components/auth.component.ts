@@ -27,6 +27,7 @@ import { AuthService } from '../services/auth.service';
 					</span>
 					<button
 						(click)="login()"
+						data-testid="login-btn"
 						type="button"
 						class="inline-flex items-center gap-x-2 rounded-md bg-indigo-600 py-2.5 px-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 					>
