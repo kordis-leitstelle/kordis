@@ -6,20 +6,9 @@ on:
   pull_request:
     types:
       - opened
-      - edited
       - synchronize
-
 jobs:
-  check-pr-title:
-    if: github.event_name == 'pull_request' && (github.event.action == 'edited' || github.event.action == 'opened')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: amannn/action-semantic-pull-request@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   main:
-    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,21 +22,34 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
+
       - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
         run: npx nx format:check
       - name: Lint
         run: npx nx affected --target=lint --parallel=3
+
       - name: Run Tests with Code Coverage
         run: npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
       - name: Merge Coverage files
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
+
+      - name: Create SPA Environment File
+        run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
+        env:
+          IS_PRODUCTION: true
+          DEPLOYMENT_NAME: E2E Runner
+          API_URL: http://localhost:3000/
+      - name: Create API Environment File
+        run: envsubst < apps/api/src/.env.template > apps/api/src/.env
+        env:
+          PORT: 3000
       - name: Build
-        run: |
-          touch apps/spa/src/environments/environment.prod.ts
-          npx nx affected --target=build --parallel=3
-      - name: Run e2es
-        run: npx nx affected --target=e2e
+        run: npx nx affected --target=build --parallel=3
+
+      - name: Run E2Es
+        run: npm run e2e
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:

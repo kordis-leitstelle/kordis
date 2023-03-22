@@ -7,7 +7,10 @@
     "postinstall": "node ./decorate-angular-cli.js",
     "prepare": "husky install",
     "tests:all": "npx nx run-many --all --target=test --parallel",
-    "lint:all": "npx nx run-many --all --target=lint --parallel"
+    "lint:all": "npx nx run-many --all --target=lint --parallel",
+    "serve:all:prod": "npx nx run-many --target=serve --projects=spa,api --prod",
+    "serve:all": "npx nx run-many --target=serve --projects=spa,api",
+    "e2e": "export E2E_BASE_URL=http://localhost:4200/ && npm run serve:all:prod & (wait-on http://localhost:3000 && wait-on http://localhost:4200 && npx nx e2e spa-e2e)"
   },
   "private": true,
   "devDependencies": {
@@ -62,7 +65,8 @@
     "tailwindcss": "^3.0.2",
     "ts-jest": "29.0.5",
     "ts-node": "10.9.1",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "@angular/animations": "15.2.2",
@@ -74,6 +78,7 @@
     "@angular/platform-browser-dynamic": "15.2.2",
     "@angular/router": "15.2.2",
     "@nestjs/common": "9.3.9",
+    "@nestjs/config": "^2.3.1",
     "@nestjs/core": "9.3.9",
     "@nestjs/platform-express": "9.3.9",
     "axios": "^1.0.0",

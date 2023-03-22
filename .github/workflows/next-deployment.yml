@@ -12,6 +12,8 @@ jobs:
     environment:
       name: Next
       url: ${{ steps.spa-deployment.outputs.url }}
+    outputs:
+      spaUrl: ${{ steps.spa-deployment.outputs.url }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -37,3 +39,18 @@ jobs:
           deploymentName: "main.${{ github.sha }}"
           deploymentEnv: "next"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+
+    e2e:
+      needs: deployment
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-node@v3
+          with:
+            node-version-file: '.nvmrc'
+            cache: 'npm'
+        - run: npm ci
+        - name: Run SPA E2Es
+          run: npx nx e2e spa-e2e
+          env:
+            E2E_BASE_URL: ${{ needs.deployment.spaUrl }}

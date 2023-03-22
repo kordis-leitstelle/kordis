@@ -41,3 +41,7 @@ Thumbs.db
 **/test-results
 **/playwright-report
 **/playwright/.cache
+
+# Environments
+apps/api/src/.env
+apps/spa/src/environments/environment.prod.ts

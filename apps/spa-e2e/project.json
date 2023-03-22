@@ -8,13 +8,7 @@
 			"executor": "@mands/nx-playwright:playwright-executor",
 			"options": {
 				"e2eFolder": "apps/spa-e2e",
-				"devServerTarget": "spa:serve",
-				"packageRunner": "yarn"
-			},
-			"configurations": {
-				"production": {
-					"devServerTarget": "spa:serve:production"
-				}
+				"packageRunner": "npx"
 			}
 		},
 		"ts-check": {
