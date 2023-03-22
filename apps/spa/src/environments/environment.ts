@@ -6,15 +6,15 @@ export const environment = {
 	apiUrl: 'https://localhost:3333',
 	oauth: {
 		config: {
-			redirectUri: 'http://localhost:4200/auth',
+			redirectUri: window.origin + '/auth',
 			oidc: true,
 			responseType: 'code',
-			clientId: 'd3c8c4e6-ef97-4878-935e-167ef9b68f41',
+			clientId: '6b5aa2b3-6237-44ba-8448-252052e73831',
 			issuer:
 				'https://kordisleitstelle.b2clogin.com/5b974891-a530-4e68-ac04-e26a18c3bd46/v2.0/',
 			tokenEndpoint:
 				'https://kordisleitstelle.b2clogin.com/kordisleitstelle.onmicrosoft.com/b2c_1_signin/oauth2/v2.0/token',
-			scope: 'openid offline_access d3c8c4e6-ef97-4878-935e-167ef9b68f41',
+			scope: 'openid offline_access 6b5aa2b3-6237-44ba-8448-252052e73831',
 			strictDiscoveryDocumentValidation: false,
 		} as AuthConfig,
 		discoveryDocumentUrl:
