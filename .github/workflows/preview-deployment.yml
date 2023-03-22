@@ -78,7 +78,7 @@ jobs:
             ### 🚧 Building Deployment Preview..
             A preview of this Pull Request is being created. Hold tight while it's building ⚒️
             This comment will be automatically updated when the preview is ready.
-      - name: Azure Login
+      - name: Azure DLRG HH Tenant Login
         uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
@@ -112,6 +112,18 @@ jobs:
             API: ${{ steps.api-deployment.outputs.url }}
             Commit SHA: ${{ github.sha }}
           reactions: "rocket"
+      - name: AZ B2C Tenant Login
+        uses: azure/login@v1.4.7
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          tenant-id: '${{ secrets.AZURE_AADB2C_TENANT_ID }}'
+          allow-no-subscriptions: true
+      - name: Update Redirect URL on B2C Tenant
+        run: |
+          $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
+          $currentConfig.spa.redirectUris += "${{ steps.spa-deployment.outputs.url }}"
+          $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json
+          az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body "$updatePayload"
 
   update-deployment:
     needs: has-deployment
@@ -205,3 +217,15 @@ jobs:
             ### Deployment Preview
             🏁 This PR has been closed. No deployment preview is available.
           reactions: "hooray"
+      - name: AZ B2C Tenant Login
+        uses: azure/login@v1.4.7
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          tenant-id: '${{ secrets.AZURE_AADB2C_TENANT_ID }}'
+          allow-no-subscriptions: true
+      - name: Update Redirect URL on B2C Tenant
+        run: |
+          $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
+          $currentConfig.spa.redirectUris = = $currentConfig.spa.redirectUris  | Where-Object { $_ –ne "${{ steps.spa-deployment.outputs.url }}" }
+          $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json
+          az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body "$updatePayload"
