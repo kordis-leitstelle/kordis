@@ -1,7 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '@kordis/api';
 import request from 'supertest';
+
+import { AppModule } from '@kordis/api';
 
 describe('GET /', () => {
 	let app: INestApplication;

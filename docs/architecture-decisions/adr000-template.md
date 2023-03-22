@@ -4,7 +4,9 @@
 
 ## Status
 
-What is the status, such as accepted, deprecated, superseded? (Should be _accepted_ when merging a PR; Should include a reference to the ADR superseding it; Should contain a short explanation why it is deprecated)
+What is the status, such as accepted, deprecated, superseded? (Should be
+_accepted_ when merging a PR; Should include a reference to the ADR superseding
+it; Should contain a short explanation why it is deprecated)
 
 ## Context
 
