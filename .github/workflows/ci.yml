@@ -47,10 +47,8 @@ jobs:
       - name: Build
         run: npx nx affected --target=build --parallel=3
 
-      - name: E2Es
+      - name: Run E2Es
         run: npm run e2e
-        env:
-          E2E_BASE_URL: http://localhost:4200/
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master

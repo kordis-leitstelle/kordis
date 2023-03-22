@@ -51,6 +51,6 @@ jobs:
             cache: 'npm'
         - run: npm ci
         - name: Run SPA E2Es
-          run: nx e2e spa-e2e
+          run: npx nx e2e spa-e2e
           env:
             E2E_BASE_URL: ${{ needs.deployment.spaUrl }}

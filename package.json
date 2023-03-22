@@ -10,7 +10,7 @@
     "lint:all": "npx nx run-many --all --target=lint --parallel",
     "serve:all:prod": "npx nx run-many --target=serve --projects=spa,api --prod",
     "serve:all": "npx nx run-many --target=serve --projects=spa,api",
-    "e2e": "npm run serve:all:prod & wait-on http://localhost:3000 && wait-on http://localhost:4200 && npx nx e2e spa-e2e"
+    "e2e": "export E2E_BASE_URL=http://localhost:4200/ && npm run serve:all:prod & (wait-on http://localhost:3000 && wait-on http://localhost:4200 && npx nx e2e spa-e2e)"
   },
   "private": true,
   "devDependencies": {
