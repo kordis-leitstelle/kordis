@@ -18,7 +18,6 @@ const config: PlaywrightTestConfig = {
 		},
 	],
 	use: {
-		headless: false,
 		baseURL,
 		screenshot: 'only-on-failure',
 		video: 'retry-with-video',

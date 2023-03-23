@@ -16,7 +16,7 @@ import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/aut
 export class AuthInterceptor implements NestInterceptor {
 	constructor(private readonly authUserExtractor: AuthUserExtractorStrategy) {}
 
-	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
 		const req: KordisRequest = context.switchToHttp().getRequest();
 
 		const possibleAuthUser = this.authUserExtractor.getUserFromRequest(
