@@ -54,5 +54,5 @@ jobs:
       - name: Run SPA E2Es
         run: npx nx e2e spa-e2e
         env:
-          E2E_BASE_URL: ${{ needs.deployment.spaUrl }}
+          E2E_BASE_URL: ${{ needs.deployment.outputs.spaUrl }}
           TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
