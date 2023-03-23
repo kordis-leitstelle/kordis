@@ -2,7 +2,7 @@ export const environment = {
 	production: $IS_PRODUCTION,
 	deploymentName: '$DEPLOYMENT_NAME',
 	apiUrl: '$API_URL',
-	oauth: { // todo: replace this with $OAUTH_CONFIG before merge into main
+	oauth: { // todo: replace this with /$/OAUTH_CONFIG before merge into main
          		config: {
          			redirectUri: window.origin + '/auth',
          			oidc: true,
