@@ -44,8 +44,12 @@
 			"env": {
 				"jest": true
 			},
+			"plugins": ["jest"],
+			"extends": ["plugin:jest/recommended"],
 			"rules": {
-				"no-console": "off"
+				"no-console": "off",
+				"@typescript-eslint/no-empty-function": "off",
+				"@typescript-eslint/explicit-function-return-type": "off"
 			}
 		}
 	]
