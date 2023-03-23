@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { APP_INITIALIZER, ModuleWithProviders, NgModule } from '@angular/core';
-import { AuthConfig, OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import {
+	AuthConfig,
+	OAuthModule,
+	OAuthService,
+	OAuthStorage,
+} from 'angular-oauth2-oidc';
 
 import { AuthComponent } from './components/auth.component';
 import { AuthService } from './services/auth.service';
@@ -22,6 +27,10 @@ export class AuthModule {
 			ngModule: AuthModule,
 			providers: [
 				...PROVIDERS,
+				{
+					provide: OAuthStorage,
+					useFactory: () => localStorage,
+				},
 				{
 					provide: APP_INITIALIZER,
 					useFactory: (oauthService: OAuthService) => {

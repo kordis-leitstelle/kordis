@@ -1,11 +1,16 @@
 # SPA Auth
 
-This Library contains all Services, Guards and Components regarding AuthN. The Library requiers the `OAuthModule` from _angular-oauth2-oidc_ to be present.
+This Library contains all Services, Guards, Components and dependencies
+regarding AuthN.
 
-# Usage
-
-The `AuthService` contains an init function that takes the auth configuration and a discovery document url for the OAuth metadata document. This should be called from the application bootstrap components constructor.
-When the document has been loaded, the `isDoneLoading$` will emit `true` and the consumer can safely listen to `isAuthenticated$`.
+The `AuthModule` has to be initialized in the bootstrap module with the given
+configurations in the `forRoot` method. The OAuthService will be initialized
+with the given configurations through the `APP_INITIALIZER` provider. You can
+safely consume the `isAuthenticated$`and `user$` observables through the
+`AuthService` at any lifecycle level. The `login` method will start the Code
+Flow and redirect to the given OAuth Provider. As a session store we choose
+_localStorage_ over the _sessionStorage_ due to its persistence and easier
+testing via Playwrights `sessionStorage`.
 
 ## Running unit tests
 

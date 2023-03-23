@@ -223,7 +223,7 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
           tenant-id: '${{ secrets.AZURE_AADB2C_TENANT_ID }}'
           allow-no-subscriptions: true
-      - name: Update Redirect URL on B2C Tenant
+      - name: Remove Redirect URL on B2C Tenant
         run: |
           $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
           $currentConfig.spa.redirectUris = = $currentConfig.spa.redirectUris  | Where-Object { $_ –ne "${{ steps.spa-deployment.outputs.url }}" }

@@ -14,11 +14,11 @@ const config: PlaywrightTestConfig = {
 			use: {
 				...devices['Desktop Chrome'],
 			},
-			//	testMatch: /.*\.spec\.ts/,
 			dependencies: ['setup'],
 		},
 	],
 	use: {
+		headless: false,
 		baseURL,
 		screenshot: 'only-on-failure',
 		video: 'retry-with-video',
