@@ -1,6 +1,7 @@
 # Usage
 
-You can use the `@User` decorator, to get the current authenticated user object (`AuthUser`).
+You can use the `@User` decorator, to get the current authenticated user object
+(`AuthUser`).
 
 ## Running unit tests
 
