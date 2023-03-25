@@ -41,8 +41,8 @@ describe('AuthGuard', () => {
 
 	it('should return true', () => {
 		isAuthenticatedSubject$.next(true);
-		TestBed.runInInjectionContext(() => {
-			expect(
+		TestBed.runInInjectionContext(async () => {
+			await expect(
 				firstValueFrom(
 					authGuard(
 						null as unknown as ActivatedRouteSnapshot,
@@ -55,8 +55,8 @@ describe('AuthGuard', () => {
 
 	it('should return false and navigate to auth', () => {
 		isAuthenticatedSubject$.next(false);
-		TestBed.runInInjectionContext(() => {
-			expect(
+		TestBed.runInInjectionContext(async () => {
+			await expect(
 				firstValueFrom(
 					authGuard(
 						null as unknown as ActivatedRouteSnapshot,

@@ -21,21 +21,21 @@ describe('AuthService', () => {
 
 	beforeEach(() => (spectator = createService()));
 
-	it('should not be authenticated', () => {
-		expect(firstValueFrom(spectator.service.isAuthenticated$)).resolves.toBe(
-			false,
-		);
+	it('should not be authenticated', async () => {
+		await expect(
+			firstValueFrom(spectator.service.isAuthenticated$),
+		).resolves.toBe(false);
 	});
 
-	it('should not have claims when unauthorized', () => {
+	it('should not have claims when unauthorized', async () => {
 		const mockOauth = spectator.inject(OAuthService);
 
 		jest.spyOn(mockOauth, 'hasValidAccessToken').mockReturnValue(false);
 
-		expect(firstValueFrom(spectator.service.user$)).resolves.toBe(null);
+		await expect(firstValueFrom(spectator.service.user$)).resolves.toBe(null);
 	});
 
-	it('should set claims as user', () => {
+	it('should set claims as user', async () => {
 		const mockOauth = spectator.inject(OAuthService);
 
 		jest.spyOn(mockOauth, 'getIdentityClaims').mockReturnValue({
@@ -48,7 +48,7 @@ describe('AuthService', () => {
 
 		mockEventSubject$.next({} as OAuthEvent);
 
-		expect(firstValueFrom(spectator.service.user$)).resolves.toEqual({
+		await expect(firstValueFrom(spectator.service.user$)).resolves.toEqual({
 			firstName: 'firstname',
 			lastName: 'lastname',
 			email: 'testmail',

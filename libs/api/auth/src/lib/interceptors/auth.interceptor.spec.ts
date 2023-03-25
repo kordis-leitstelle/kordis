@@ -45,7 +45,7 @@ describe('AuthInterceptor', () => {
 		).rejects.toThrow(UnauthorizedException);
 	});
 
-	it('should continue request pipeline', () => {
+	it('should continue request pipeline', async () => {
 		jest.spyOn(mockAuthUserExtractor, 'getUserFromRequest').mockReturnValue({
 			id: '123',
 			firstName: 'foo',
@@ -59,7 +59,7 @@ describe('AuthInterceptor', () => {
 			},
 		});
 
-		expect(
+		await expect(
 			firstValueFrom(
 				service.intercept(createMock<ExecutionContext>(), handler),
 			),
