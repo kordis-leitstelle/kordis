@@ -115,15 +115,18 @@ jobs:
       - name: AZ B2C Tenant Login
         uses: azure/login@v1.4.7
         with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-          tenant-id: '${{ secrets.AZURE_AADB2C_TENANT_ID }}'
+          creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
-      - name: Update Redirect URL on B2C Tenant
-        run: |
-          $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
-          $currentConfig.spa.redirectUris += "${{ steps.spa-deployment.outputs.url }}"
-          $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json
-          az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body "$updatePayload"
+          enable-AzPSSession: true
+      - name: Run Azure PowerShell script
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
+            $currentConfig.spa.redirectUris += "${{ steps.spa-deployment.outputs.url }}"
+            $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json -Compress
+            az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body $updatePayload
+          azPSVersion: "latest"
 
   update-deployment:
     needs: has-deployment
@@ -220,12 +223,15 @@ jobs:
       - name: AZ B2C Tenant Login
         uses: azure/login@v1.4.7
         with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-          tenant-id: '${{ secrets.AZURE_AADB2C_TENANT_ID }}'
+          creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
+          enable-AzPSSession: true
       - name: Remove Redirect URL on B2C Tenant
-        run: |
-          $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
-          $currentConfig.spa.redirectUris = = $currentConfig.spa.redirectUris  | Where-Object { $_ –ne "${{ steps.spa-deployment.outputs.url }}" }
-          $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json
-          az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body "$updatePayload"
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
+            $currentConfig.spa.redirectUris = $currentConfig.spa.redirectUris  | Where-Object { $_ –ne "${{ steps.spa-deployment.outputs.url }}" }
+            $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json -Compress
+            az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body $updatePayload
+          azPSVersion: "latest"
