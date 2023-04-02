@@ -118,7 +118,7 @@ jobs:
           creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
           enable-AzPSSession: true
-      - name: Run Azure PowerShell script
+      - name: Add redirect URL to Azure AD tenant
         uses: azure/powershell@v1
         with:
           inlineScript: |
@@ -226,7 +226,7 @@ jobs:
           creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
           enable-AzPSSession: true
-      - name: Remove Redirect URL on B2C Tenant
+      - name: Remove redirect URL from Azure AD tenant
         uses: azure/powershell@v1
         with:
           inlineScript: |
