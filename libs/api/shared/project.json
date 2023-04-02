@@ -1,0 +1,16 @@
+{
+	"name": "api-shared",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/api/shared/src",
+	"projectType": "library",
+	"targets": {
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["libs/api/shared/**/*.ts"]
+			}
+		}
+	},
+	"tags": []
+}

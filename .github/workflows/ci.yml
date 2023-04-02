@@ -25,7 +25,12 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
-        run: npx nx format:check
+        run: |
+          if [[ $(npx nx format:check) ]]; then
+              npx prettier -w .
+              git diff --color | cat
+              exit 1
+          fi
       - name: Lint
         run: npx nx affected --target=lint --parallel=3
 
@@ -40,6 +45,7 @@ jobs:
           IS_PRODUCTION: true
           DEPLOYMENT_NAME: E2E Runner
           API_URL: http://localhost:3000/
+          OAUTH_CONFIG: ${{ secrets.DEV_OAUTH_CONFIG }}
       - name: Create API Environment File
         run: envsubst < apps/api/src/.env.template > apps/api/src/.env
         env:
@@ -49,6 +55,8 @@ jobs:
 
       - name: Run E2Es
         run: npm run e2e
+        env:
+          TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
