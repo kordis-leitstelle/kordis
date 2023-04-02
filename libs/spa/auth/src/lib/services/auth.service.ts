@@ -32,7 +32,7 @@ export class AuthService {
 		});
 
 		this.user$ = this.isAuthenticated$.pipe(
-			map((isAuthenticated) => {
+			map((isAuthenticated): AuthUser | null => {
 				if (!isAuthenticated) {
 					return null;
 				}
@@ -47,7 +47,7 @@ export class AuthService {
 					firstName: claims['given_name'],
 					lastName: claims['family_name'],
 					email: claims['emails']?.[0],
-				} as AuthUser;
+				};
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),
 		);
