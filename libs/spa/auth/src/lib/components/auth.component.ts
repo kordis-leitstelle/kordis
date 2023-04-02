@@ -59,7 +59,6 @@ import { AuthService } from '../services/auth.service';
 			</div>
 		</div>
 	`,
-	styles: [],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
