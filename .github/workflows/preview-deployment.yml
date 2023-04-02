@@ -78,7 +78,7 @@ jobs:
             ### 🚧 Building Deployment Preview..
             A preview of this Pull Request is being created. Hold tight while it's building ⚒️
             This comment will be automatically updated when the preview is ready.
-      - name: Azure Login
+      - name: Azure DLRG HH Tenant Login
         uses: Azure/login@v1.4.7
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
@@ -97,6 +97,7 @@ jobs:
         uses: ./.github/actions/build-and-deploy-spa
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
+          oauthConfig: ${{ secrets.OAUTH_CONFIG }}
           deploymentName: "PR-${{ github.event.issue.number }}.{{ github.sha }}"
           deploymentEnv: "pr${{github.event.issue.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
@@ -111,6 +112,21 @@ jobs:
             API: ${{ steps.api-deployment.outputs.url }}
             Commit SHA: ${{ github.sha }}
           reactions: "rocket"
+      - name: AZ B2C Tenant Login
+        uses: azure/login@v1.4.7
+        with:
+          creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
+          allow-no-subscriptions: true
+          enable-AzPSSession: true
+      - name: Add redirect URL to Azure AD tenant
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
+            $currentConfig.spa.redirectUris += "${{ steps.spa-deployment.outputs.url }}"
+            $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json -Compress
+            az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body $updatePayload
+          azPSVersion: "latest"
 
   update-deployment:
     needs: has-deployment
@@ -204,3 +220,18 @@ jobs:
             ### Deployment Preview
             🏁 This PR has been closed. No deployment preview is available.
           reactions: "hooray"
+      - name: AZ B2C Tenant Login
+        uses: azure/login@v1.4.7
+        with:
+          creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
+          allow-no-subscriptions: true
+          enable-AzPSSession: true
+      - name: Remove redirect URL from Azure AD tenant
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            $currentConfig = az ad app show --id ${{ secrets.AADB2C_DEV_APP_OBJ_ID }} | ConvertFrom-Json  -AsHashtable
+            $currentConfig.spa.redirectUris = $currentConfig.spa.redirectUris  | Where-Object { $_ –ne "${{ steps.spa-deployment.outputs.url }}" }
+            $updatePayload = $currentConfig | Select-Object -Property spa | ConvertTo-Json -Compress
+            az rest --method PATCH --uri 'https://graph.microsoft.com/v1.0/applications/${{ secrets.AADB2C_DEV_APP_OBJ_ID }}' --headers 'Content-Type=application/json' --body $updatePayload
+          azPSVersion: "latest"

@@ -1,0 +1,16 @@
+{
+	"projects": {
+		"shared/auth": {
+			"type": "library",
+			"root": "libs/shared/auth",
+			"entryFile": "index",
+			"sourceRoot": "libs/shared/auth/src",
+			"compilerOptions": {
+				"tsConfigPath": "libs/shared/auth/tsconfig.lib.json"
+			}
+		}
+	},
+	"compilerOptions": {
+		"webpack": true
+	}
+}

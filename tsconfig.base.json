@@ -14,7 +14,12 @@
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
-		"paths": {}
+		"paths": {
+			"@kordis/api/auth": ["libs/api/auth/src/index.ts"],
+			"@kordis/api/shared": ["libs/api/shared/src/index.ts"],
+			"@kordis/shared/auth": ["libs/shared/auth/src/index.ts"],
+			"@kordis/spa/auth": ["libs/spa/auth/src/index.ts"]
+		}
 	},
 	"exclude": ["node_modules", "tmp"]
 }
