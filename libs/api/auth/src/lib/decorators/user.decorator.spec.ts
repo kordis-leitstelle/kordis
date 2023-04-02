@@ -8,10 +8,9 @@ import { AuthUser } from '@kordis/shared/auth';
 import { User } from './user.decorator';
 
 describe('User Decorator', () => {
-	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 	function getParamDecoratorFactory(decorator: () => ParameterDecorator) {
 		class TestDecorator {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			public test(@decorator() value): void {}
 		}
 
