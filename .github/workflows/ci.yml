@@ -25,8 +25,7 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v3
 
-      - run: npx prettier -w .
-      - run: git diff --color | cat
+      - run: npx prettier -c .
 
       - name: Check Formatting
         run: npx nx format:check
