@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 	template: `
 		<div class="flex h-screen">
 			<div
-				class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
+				class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
 			>
 				<div class="mx-auto w-full lg:w-[400px]">
 					<div class="mb-8 ">
@@ -29,7 +29,7 @@ import { AuthService } from '../services/auth.service';
 						(click)="login()"
 						data-testid="login-btn"
 						type="button"
-						class="inline-flex items-center gap-x-2 rounded-md bg-indigo-600 py-2.5 px-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						class="inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
