@@ -1,0 +1,16 @@
+{
+	"name": "api-test-helpers",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/api/test-helpers/src",
+	"projectType": "library",
+	"targets": {
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["libs/api/test-helpers/**/*.ts"]
+			}
+		}
+	},
+	"tags": []
+}
