@@ -1,8 +1,10 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { KordisRequest } from '@kordis/api/shared';
+import { KordisGqlContext } from '@kordis/api/shared';
 
-export const User = createParamDecorator((ctx: ExecutionContext) => {
-	const { user } = ctx.switchToHttp().getRequest<KordisRequest>();
-	return user;
+export const User = createParamDecorator((_: never, ctx: ExecutionContext) => {
+	const req =
+		GqlExecutionContext.create(ctx).getContext<KordisGqlContext>().req;
+	return req.user;
 });

@@ -4,6 +4,7 @@
 dist
 tmp
 /out-tsc
+/apps/api/src/schema.gql
 
 # dependencies
 node_modules
