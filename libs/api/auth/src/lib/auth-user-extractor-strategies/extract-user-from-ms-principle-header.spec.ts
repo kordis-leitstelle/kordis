@@ -14,7 +14,7 @@ describe('ExtractUserFromMsPrincipleHeader', () => {
 		extractStrat = new ExtractUserFromMsPrincipleHeader();
 	});
 
-	it('should return null if the authentication header is not present', () => {
+	it('should return null if the authorization header is not present', () => {
 		const req = createMock<Omit<KordisRequest, 'user'>>({
 			headers: {},
 		});
@@ -28,7 +28,7 @@ describe('ExtractUserFromMsPrincipleHeader', () => {
 			'Bearer eyJhbGciOiJIUzI1NiJ9.eyJvaWQiOiJjMGNjNDQwNC03OTA3LTQ0ODAtODZkMy1iYTRiZmM1MTNjNmQiLCJzdWIiOiJjMGNjNDQwNC03OTA3LTQ0ODAtODZkMy1iYTRiZmM1MTNjNmQiLCJnaXZlbl9uYW1lIjoiVGVzdCIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlscyI6WyJ0ZXN0QHRpbW9ubWFzYmVyZy5jb20iXX0.9FXjgT037QkeE0KptQo3MzMriuXGzqCNfBDVEkWbJaA';
 
 		const req = createMock<Omit<KordisRequest, 'user'>>({
-			headers: { authentication: headerValue },
+			headers: { authorization: headerValue },
 		});
 
 		expect(extractStrat.getUserFromRequest(req)).toEqual({

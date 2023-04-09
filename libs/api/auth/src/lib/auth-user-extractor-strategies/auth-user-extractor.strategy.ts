@@ -8,7 +8,7 @@ export abstract class AuthUserExtractorStrategy {
 
 export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy {
 	getUserFromRequest(req: Request): AuthUser | null {
-		const headerValue = req.headers['authentication'];
+		const headerValue = req.headers['authorization'];
 
 		if (!headerValue) {
 			return null;
