@@ -1,12 +1,9 @@
 import { createMock } from '@golevelup/ts-jest';
-import {
-	CallHandler,
-	ExecutionContext,
-	UnauthorizedException,
-} from '@nestjs/common';
+import { CallHandler, UnauthorizedException } from '@nestjs/common';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
+import { createContextForRequest } from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
@@ -17,7 +14,7 @@ describe('AuthInterceptor', () => {
 	let service: AuthInterceptor;
 
 	beforeEach(() => {
-		mockAuthUserExtractor = new (class implements AuthUserExtractorStrategy {
+		mockAuthUserExtractor = new (class extends AuthUserExtractorStrategy {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			getUserFromRequest(req: KordisRequest): AuthUser | null {
 				return undefined;
@@ -38,7 +35,7 @@ describe('AuthInterceptor', () => {
 		await expect(
 			firstValueFrom(
 				service.intercept(
-					createMock<ExecutionContext>(),
+					createContextForRequest(createMock<KordisRequest>()),
 					createMock<CallHandler>(),
 				),
 			),
@@ -59,10 +56,10 @@ describe('AuthInterceptor', () => {
 			},
 		});
 
+		const ctxMock = createContextForRequest(createMock<KordisRequest>());
+
 		await expect(
-			firstValueFrom(
-				service.intercept(createMock<ExecutionContext>(), handler),
-			),
+			firstValueFrom(service.intercept(ctxMock, handler)),
 		).resolves.toBeTruthy();
 	});
 });

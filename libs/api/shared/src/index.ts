@@ -1,1 +1,1 @@
-export { default as KordisRequest } from './lib/models/request.model';
+export * from './lib/models/request.model';
