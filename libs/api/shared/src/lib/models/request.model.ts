@@ -6,6 +6,6 @@ export interface KordisGqlContext {
 	req: KordisRequest;
 }
 
-export default interface KordisRequest extends Request {
+export interface KordisRequest extends Request {
 	user: AuthUser;
 }
