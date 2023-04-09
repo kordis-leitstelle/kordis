@@ -2,13 +2,11 @@ import { Request } from 'express';
 
 import { AuthUser } from '@kordis/shared/auth';
 
-export interface AuthUserExtractorStrategy {
-	getUserFromRequest(req: Request): AuthUser | null;
+export abstract class AuthUserExtractorStrategy {
+	abstract getUserFromRequest(req: Request): AuthUser | null;
 }
 
-export class ExtractUserFromMsPrincipleHeader
-	implements AuthUserExtractorStrategy
-{
+export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy {
 	getUserFromRequest(req: Request): AuthUser | null {
 		const headerValue = req.headers['authorization'];
 

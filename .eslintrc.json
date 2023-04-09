@@ -40,7 +40,13 @@
 			"rules": {}
 		},
 		{
-			"files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+			"files": [
+				"*.spec.ts",
+				"*.spec.tsx",
+				"*.spec.js",
+				"*.test-helper.ts",
+				"*.spec.jsx"
+			],
 			"env": {
 				"jest": true
 			},
@@ -49,7 +55,8 @@
 			"rules": {
 				"no-console": "off",
 				"@typescript-eslint/no-empty-function": "off",
-				"@typescript-eslint/explicit-function-return-type": "off"
+				"@typescript-eslint/explicit-function-return-type": "off",
+				"@typescript-eslint/no-explicit-any": "off"
 			}
 		}
 	]
