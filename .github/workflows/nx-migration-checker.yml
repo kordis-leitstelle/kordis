@@ -1,0 +1,18 @@
+name: Check for new NX version
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # every day at midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - uses: timonmasberg/nx-migration-gh-action@v1.0.0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          commitMessage: 'chore(deps): migrate nx to $VERSION'
+          prTitle: 'chore(deps): migrate nx to $VERSION'
