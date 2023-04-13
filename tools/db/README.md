@@ -1,0 +1,30 @@
+# DB Tools
+
+With the DB tools you are able to get a MongoDB instance up and running to
+develop and test Kordis. You should have an active Docker instance up and
+running on your maschine.
+
+## Test Data
+
+The data for the test database is within the `data` folder. If you want to
+create a new collection, use the `template.ts` as a starter for your file. The
+naming of the file should be `<collection name>.data.ts`.
+
+## USAGE:
+
+Every script checks whether you have a MongoDB container up and running. If not
+it will pull and start the mongo image at port `27017`.
+
+**Starting a local dev database for development or for testing/e2es:**  
+`./kordis-db.sh init <database name>`  
+This will bootstrap the a database with the given name and the test data. Make
+sure that the database does not exist, otherwise it will just push the data into
+the existing database! A MongoDB connection uri will be emitted by the script.
+You can use it for local development.
+
+**Starting a local database with a clone of the remote databases:**  
+You will need a MongoDB connection URI from the remote database! Make sure to
+include the database in the URI!
+`./kordis-db.sh from-remote "<remote MongoDB connection uri>" <database name>`  
+This will clone the remote database into a local database. A MongoDB connection
+uri will be emitted by the script. You can use it for local development.

@@ -50,9 +50,12 @@ jobs:
         run: envsubst < apps/api/src/.env.template > apps/api/src/.env
         env:
           PORT: 3000
+          MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
       - name: Build
         run: npx nx affected --target=build --parallel=3
 
+      - name: Import dev data into MongoDB for E2Es
+        run: ./tools/db/kordis-db.sh init e2edb
       - name: Run E2Es
         run: npm run e2e
         env:
