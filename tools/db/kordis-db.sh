@@ -4,6 +4,7 @@ set -e
 MONGO_CONTAINER_NAME="kordis-dev-db"
 MONGO_DB_IMAGE_NAME="mongo:4.2"
 LOCAL_MONGO_URI="mongodb://127.0.0.1:27017"
+EXEC_PATH=$(dirname "${BASH_SOURCE[0]}")
 
 ensure_running() {
 	if docker ps -a --format '{{.Names}}' | grep -q "^${MONGO_CONTAINER_NAME}\$"; then
@@ -54,7 +55,7 @@ init() {
 	ensure_clean_db "$db_name"
 
 	echo "Importing dev data into local MongoDB..."
-	"$(dirname "${BASH_SOURCE[0]}")/data/import.ts" "$conn_uri"
+	"$EXEC_PATH/data/import.ts" "$conn_uri"
 
 	echo "Ready at $conn_uri"
 }
@@ -92,6 +93,19 @@ if [ "$1" == "from-remote" ]; then
 	from_remote "$2" "$3"
 elif [ "$1" == "init" ]; then
 	init "$2"
+elif [ "$1" == "new-migration" ]; then
+		if [ -z "$2" ]; then
+  		"$EXEC_PATH/migrations/cli.ts" new
+		else
+			"$EXEC_PATH/migrations/cli.ts" new -n "$2"
+  	fi
+  	echo "Create new migration in $EXEC_PATH/migrations"
+elif [ "$1" == "revert-last-migration" ]; then
+	"$EXEC_PATH/migrations/cli.ts" down -l
+	"$EXEC_PATH/migrations/cli.ts" status
+elif [ "$1" == "apply-pending-migrations" ]; then
+	"$EXEC_PATH/migrations/cli.ts" up
+	"$EXEC_PATH/migrations/cli.ts" status
 else
-	echo "Please provide a valid argument (from-remote, init)"
+	echo "Please provide a valid argument (from-remote, init, new-migration)"
 fi

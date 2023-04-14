@@ -54,7 +54,7 @@ jobs:
       - name: Build
         run: npx nx affected --target=build --parallel=3
 
-      - name: Import dev data into MongoDB for E2Es
+      - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Run E2Es
         run: npm run e2e
