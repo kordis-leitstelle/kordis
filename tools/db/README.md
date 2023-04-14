@@ -6,19 +6,19 @@ running on your maschine.
 
 ### Test Data
 
-The data for the test database is within the `data` folder. If you want to
-create a new collection, use the `template.ts` as a starter for your file. The
-naming of the file should be `<collection name>.data.ts`.  
+The data for the test database is within the [`data`](./data/) folder. If you
+want to create a new collection, use the `template.ts` as a starter for your
+file. The naming of the file should be `<collection name>.data.ts`.  
 Please adjust the test data in your branch if you introduce migrations!
 
 ### Start
 
 Every script checks whether you have a MongoDB container up and running. If not
-it will pull and start the mongo image at port `27017`.
+it will pull and start the Mongo image at port `27017`.
 
 **Starting a local dev database for development or for testing/e2es:**  
 `./kordis-db.sh init <database name>`  
-This will bootstrap the a database with the given name and the test data. Make
+This will bootstrap the database with the given name and the test data. Make
 sure that the database does not exist, otherwise it will just push the data into
 the existing database! A MongoDB connection uri will be emitted by the script.
 You can use it for local development.
@@ -35,6 +35,6 @@ uri will be emitted by the script. You can use it for local development.
 If necessary, you can introduce migration scripts that will directly modify the
 database. We use the Node Package
 [Mongo Migrate](https://www.npmjs.com/package/mongo-migrate-ts). You can create
-new migrations scripts by running
+new migration scripts by running
 `./kordis-db.sh new-migration <optional name of migration>`, keep in mind to
 only introduce a single migration script per change request into `main`.
