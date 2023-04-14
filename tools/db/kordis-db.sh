@@ -54,7 +54,7 @@ init() {
 	ensure_clean_db "$db_name"
 
 	echo "Importing dev data into local MongoDB..."
-	"$(dirname "${BASH_SOURCE[0]}")/import.ts" "$conn_uri"
+	"$(dirname "${BASH_SOURCE[0]}")/data/import.ts" "$conn_uri"
 
 	echo "Ready at $conn_uri"
 }

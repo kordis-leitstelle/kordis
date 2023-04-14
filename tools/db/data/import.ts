@@ -4,27 +4,27 @@
 		This script imports all the data from the `data` folder into a MongoDB database.
 		This is mainly used to bootstrap a database for e2es or to start developing on a clean database with just the minimal required data to run Kordis.
 
-		Usage: ts-node import.ts "<MONGO DB CONNECTION URI WITH DB>"
+		Usage: ./import.ts "<MONGO DB CONNECTION URI WITH DB>"
  */
 import * as fs from 'fs';
 import { Collection, MongoClient } from 'mongodb';
 import * as path from 'path';
 
-import { CollectionData } from './data/collection-data.model';
+import { CollectionData } from './collection-data.model';
 
 async function loadDataToMongoDB(connUri: string) {
 	try {
 		const client = await MongoClient.connect(connUri);
 
 		const db = client.db();
-		const dataFolderPath = path.join(__dirname, 'data');
+
 		const filenames = fs
-			.readdirSync(dataFolderPath)
+			.readdirSync(__dirname)
 			.filter((filename) => filename.endsWith('.data.ts'));
 
 		await Promise.all(
 			filenames.map(async (filename) => {
-				const module = await import(path.join(dataFolderPath, filename));
+				const module = await import(path.join(__dirname, filename));
 				const dataModule: CollectionData = module.default;
 				const collection: Collection = db.collection(dataModule.collectionName);
 
@@ -46,10 +46,15 @@ async function loadDataToMongoDB(connUri: string) {
 
 		console.log('Done importing.');
 	} catch (err) {
-		console.error('Failed to connect to MongoDB:', err);
+		console.error('Import failed:', err);
 		process.exit(1);
 	}
 }
 
 const mongoDBConnectionQuery = process.argv[2];
+if (!mongoDBConnectionQuery) {
+	console.error('A MongoDB connection URI is required as argument!');
+	process.exit(1);
+}
+
 loadDataToMongoDB(mongoDBConnectionQuery);
