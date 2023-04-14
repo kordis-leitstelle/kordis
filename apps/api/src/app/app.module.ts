@@ -12,7 +12,11 @@ import { AppService } from './app.service';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({ isGlobal: true, cache: true }),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			cache: true,
+			envFilePath: path.resolve(__dirname, '.env'),
+		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
 			autoSchemaFile:
@@ -26,8 +30,8 @@ import { AppService } from './app.service';
 		}),
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
-			useFactory: async (config: ConfigService) => ({
-				uri: config.get<string>('MONGODB_URI'),
+			useFactory: (config: ConfigService) => ({
+				uri: config.getOrThrow<string>('MONGODB_URI'),
 			}),
 			inject: [ConfigService],
 		}),
