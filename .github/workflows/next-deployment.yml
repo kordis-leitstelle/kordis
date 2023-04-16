@@ -31,6 +31,11 @@ jobs:
         with:
           slot: "next"
           publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
+      - name: Apply Database Migrations
+        run: ./tools/db/kordis-db.sh apply-pending-migrations
+        env:
+          MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
+
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa

@@ -1,5 +1,9 @@
 {
 	"extends": "../tsconfig.base.json",
+	"ts-node": {
+		"transpileOnly": true,
+		"files": true
+	},
 	"compilerOptions": {
 		"outDir": "../dist/out-tsc/tools",
 		"rootDir": ".",
