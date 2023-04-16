@@ -7,7 +7,7 @@ running on your maschine.
 ### Test Data
 
 The data for the test database is within the [`data`](./data/) folder. If you
-want to create a new collection, use the `template.ts` as a starter for your
+want to create a new collection, use the [`template.ts`](./data/template.ts) as a starter for your
 file. The naming of the file should be `<collection name>.data.ts`.  
 Please adjust the test data in your branch if you introduce migrations!
 
