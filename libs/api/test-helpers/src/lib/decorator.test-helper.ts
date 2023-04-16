@@ -4,7 +4,8 @@ export function createParamDecoratorFactory(
 	decorator: () => ParameterDecorator,
 ) {
 	class TestDecorator {
-		public test(@decorator() value): void {}
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		public test(@decorator() value: unknown): void {}
 	}
 
 	const args = Reflect.getMetadata(ROUTE_ARGS_METADATA, TestDecorator, 'test');
