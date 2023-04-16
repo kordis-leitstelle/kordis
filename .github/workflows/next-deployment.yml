@@ -35,6 +35,7 @@ jobs:
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:
           MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
+          MONGODB_DB: dev
 
       - name: Build and Deploy SPA
         id: spa-deployment
