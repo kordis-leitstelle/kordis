@@ -23,6 +23,17 @@ describe('ExtractUserFromMsPrincipleHeader', () => {
 		expect(result).toBeNull();
 	});
 
+	it('should return null if the authorization header is incorrect', () => {
+		const req = createMock<Omit<KordisRequest, 'user'>>({
+			headers: {
+				authorization: '1234',
+			},
+		});
+		const result = extractStrat.getUserFromRequest(req);
+
+		expect(result).toBeNull();
+	});
+
 	it('should extract user correctly from signed access token', () => {
 		const headerValue =
 			'Bearer eyJhbGciOiJIUzI1NiJ9.eyJvaWQiOiJjMGNjNDQwNC03OTA3LTQ0ODAtODZkMy1iYTRiZmM1MTNjNmQiLCJzdWIiOiJjMGNjNDQwNC03OTA3LTQ0ODAtODZkMy1iYTRiZmM1MTNjNmQiLCJnaXZlbl9uYW1lIjoiVGVzdCIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlscyI6WyJ0ZXN0QHRpbW9ubWFzYmVyZy5jb20iXX0.9FXjgT037QkeE0KptQo3MzMriuXGzqCNfBDVEkWbJaA';
