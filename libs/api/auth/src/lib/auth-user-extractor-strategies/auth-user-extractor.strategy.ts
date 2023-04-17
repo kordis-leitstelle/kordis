@@ -13,10 +13,13 @@ export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy 
 		if (!headerValue) {
 			return null;
 		}
-		const payloadBuffer = Buffer.from(
-			(headerValue as string).split('.')[1],
-			'base64',
-		);
+
+		const bearerParts = (headerValue as string).split('.');
+		if (bearerParts.length < 2) {
+			return null;
+		}
+
+		const payloadBuffer = Buffer.from(bearerParts[1], 'base64');
 		const decodedToken = JSON.parse(payloadBuffer.toString());
 
 		return {
