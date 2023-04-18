@@ -84,8 +84,11 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Create PR Deployment Slot
         run: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az webapp deployment slot create --name kordis-api --resource-group KORDIS --configuration-source next --slot pr${{ github.event.issue.number }}
           az webapp update --https-only true --name kordis-api --resource-group KORDIS --slot pr${{ github.event.issue.number }}
+          az webapp auth openid-connect add --provider-name aadb2c --client-id ${{ secrets.DEV_AADB2C_CLIENT_ID }} --client-secret-setting-name aadb2c_AUTHENTICATION_SECRET --openid-configuration ${{ secrets.DEV_AADB2C_CONF_URL }} --name kordis-api --slot pr${{ github.event.issue.number }} --resource-group KORDIS --yes
+          az webapp auth update --name kordis-api --slot pr${{ github.event.issue.number }} --resource-group KORDIS --action Return401
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
