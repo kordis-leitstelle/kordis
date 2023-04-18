@@ -17,6 +17,7 @@ export class AuthInterceptor implements NestInterceptor {
 	constructor(private readonly authUserExtractor: AuthUserExtractorStrategy) {}
 
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+		return next.handle();
 		const ctx = GqlExecutionContext.create(context);
 		const req = ctx.getContext<KordisGqlContext>().req;
 
