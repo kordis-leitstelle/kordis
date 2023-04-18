@@ -176,6 +176,7 @@ jobs:
         uses: ./.github/actions/build-and-deploy-spa
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
+          oauthConfig: ${{ secrets.OAUTH_CONFIG }}
           deploymentName: "PR-${{ github.event.pull_request.number }}.{{ github.sha }}"
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
