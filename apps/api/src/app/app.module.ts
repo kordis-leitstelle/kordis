@@ -34,6 +34,7 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 			}),
 			inject: [ConfigService],
 		}),
+		SharedKernel,
 		AuthModule,
 	],
 	providers: [AppService, AppResolver],

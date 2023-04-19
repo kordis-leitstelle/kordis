@@ -91,6 +91,7 @@
     "@nestjs/common": "9.3.9",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "9.3.9",
+    "@nestjs/cqrs": "^9.0.3",
     "@nestjs/graphql": "^11.0.4",
     "@nestjs/mongoose": "^9.2.2",
     "@nestjs/platform-express": "9.3.9",
