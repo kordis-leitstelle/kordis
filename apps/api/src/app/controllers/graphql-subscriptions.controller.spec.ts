@@ -2,6 +2,9 @@ import { createMock } from '@golevelup/ts-jest';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Response } from 'express';
+
+import { KordisRequest } from '@kordis/api/shared';
 
 import { GraphqlSubscriptionsController } from './graphql-subscriptions.controller';
 
@@ -35,5 +38,22 @@ describe('GraphqlSubscriptionsController', () => {
 		expect(requestEmuFn).toThrow(
 			'GraphQL Subscription handler not ready yet. Try again.',
 		);
+	});
+
+	it('should allow subscriptions if handler ready', async () => {
+		controller.onModuleInit();
+
+		const fn = jest.fn();
+		fn.mockReturnValue(Promise.resolve(true));
+
+		(controller as any).handler = fn;
+
+		await expect(
+			controller.subscriptionHandler(
+				createMock<KordisRequest>(),
+				createMock<Response>(),
+			),
+		).resolves.toBeTruthy();
+		expect(fn).toHaveBeenCalled();
 	});
 });
