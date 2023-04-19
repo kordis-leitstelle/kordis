@@ -47,7 +47,9 @@ jobs:
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: ${{ secrets.DEV_OAUTH_CONFIG }}
       - name: Create API Environment File
-        run: envsubst < apps/api/src/.env.template > apps/api/src/.env
+        run: |
+          envsubst < apps/api/src/.env.template > apps/api/src/.env
+          echo "PORT=3000" >> .env
         env:
           PORT: 3000
           MONGODB_URI: mongodb://127.0.0.1:27017/e2edb

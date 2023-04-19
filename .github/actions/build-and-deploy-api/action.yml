@@ -8,6 +8,9 @@ inputs:
   publishProfile:
     required: true
     description: "Azure Web App Publisher Profile"
+  mongoUri:
+    required: true
+    description: "Mongo Connection URI"
 outputs:
   url:
     description: "API URL"
@@ -16,6 +19,10 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - run: envsubst < apps/api/src/.env.template > apps/api/src/.env
+      env:
+        MONGODB_URI: ${{ inputs.mongoUri }}
+      shell: bash
     - run: |
         npx nx build api --prod
         cd dist/apps/api
