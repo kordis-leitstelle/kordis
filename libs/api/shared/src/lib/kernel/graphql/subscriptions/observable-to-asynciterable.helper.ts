@@ -94,10 +94,6 @@ export function observableToAsyncIterable<T>(
 			emptyQueue();
 			return Promise.resolve({ value: undefined, done: true });
 		},
-		throw(error) {
-			emptyQueue();
-			return Promise.reject(error);
-		},
 		[Symbol.asyncIterator]() {
 			return this;
 		},
