@@ -8,14 +8,14 @@ import {
 } from '@nestjs/common';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import type { Response } from 'express';
-import { Request } from 'express';
 import { createHandler } from 'graphql-sse/lib/use/express';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 
 @Controller('graphql-stream')
 export class GraphqlSubscriptionsController implements OnModuleInit {
-	private handler?: (req: Request, res: Response) => Promise<void>;
+	private handler?: (req: KordisRequest, res: Response) => Promise<void>;
+
 	constructor(private readonly graphQLSchemaHost: GraphQLSchemaHost) {}
 
 	onModuleInit(): void {

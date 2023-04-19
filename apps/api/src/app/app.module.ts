@@ -6,10 +6,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
+import { SharedKernel } from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
-import { GraphqlSubscriptionsController } from './graphql-subscriptions.controller';
+import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 
 @Module({
 	imports: [
