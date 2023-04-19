@@ -10,6 +10,7 @@ class TestEvent {
 class TestEvent2 {
 	constructor(public readonly someProperty: string) {}
 }
+
 describe('GraphQLSubscriptionService', () => {
 	let service: GraphQLSubscriptionService;
 	let eventBus: EventBus;
@@ -72,24 +73,31 @@ describe('GraphQLSubscriptionService', () => {
 				},
 			});
 		});
+
+		it('should filter event with filter operator', async () => {
+			const filter = (payload: TestEvent) => payload.someProperty.length > 3;
+
+			const subscriptionIterator = service.getSubscriptionIteratorForEvent(
+				TestEvent,
+				{ filter },
+			);
+
+			eventBus.publish(new TestEvent('foo'));
+			eventBus.publish(new TestEvent('foobar'));
+
+			await expect(subscriptionIterator.next()).resolves.toEqual({
+				done: false,
+				value: {
+					someProperty: 'foobar',
+				},
+			});
+		});
 	});
 
-	it('should filter event with filter operator', async () => {
-		const filter = (payload: TestEvent) => payload.someProperty.length > 3;
-
-		const subscriptionIterator = service.getSubscriptionIteratorForEvent(
-			TestEvent,
-			{ filter },
-		);
-
-		eventBus.publish(new TestEvent('foo'));
-		eventBus.publish(new TestEvent('foobar'));
-
-		await expect(subscriptionIterator.next()).resolves.toEqual({
-			done: false,
-			value: {
-				someProperty: 'foobar',
-			},
-		});
+	it('should complete iterator on module destroy', async () => {
+		const subscriptionIterator =
+			service.getSubscriptionIteratorForEvent(TestEvent);
+		service.onModuleDestroy();
+		await expect(subscriptionIterator.next()).resolves.toEqual({ done: true });
 	});
 });
