@@ -47,7 +47,7 @@
     "@total-typescript/ts-reset": "^0.3.7",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jest": "29.4.4",
-    "@types/node": "18.15.11",
+    "@types/node": "18.15.13",
     "@typescript-eslint/eslint-plugin": "5.52.0",
     "@typescript-eslint/parser": "5.52.0",
     "autoprefixer": "^10.4.0",
