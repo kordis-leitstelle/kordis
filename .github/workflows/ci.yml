@@ -62,7 +62,7 @@ jobs:
           TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
 
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v1.8
+        uses: sonarsource/sonarcloud-github-action@v1.9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
