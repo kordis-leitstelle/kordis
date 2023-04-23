@@ -68,7 +68,7 @@
     "nx": "15.9.2",
     "playwright": "^1.26.0",
     "postcss": "^8.4.5",
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.3",
     "supertest": "^6.3.3",
     "tailwindcss": "^3.0.2",
