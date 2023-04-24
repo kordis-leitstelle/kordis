@@ -13,15 +13,18 @@ export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy 
 		if (!headerValue) {
 			return null;
 		}
-		const payloadBuffer = Buffer.from(
-			(headerValue as string).split('.')[1],
-			'base64',
-		);
-		const decodedToken = JSON.parse(payloadBuffer.toString());
+		const payloadBuffer = Buffer.from(headerValue.split('.')[1], 'base64');
+		const decodedToken = JSON.parse(payloadBuffer.toString()) as {
+			oid?: string;
+			sub: string;
+			emails: string[];
+			given_name: string;
+			family_name: string;
+		};
 
 		return {
 			id: decodedToken['oid'] || decodedToken['sub'],
-			email: decodedToken['emails']?.[0],
+			email: decodedToken['emails'][0],
 			firstName: decodedToken['given_name'],
 			lastName: decodedToken['family_name'],
 		};

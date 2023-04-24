@@ -54,6 +54,9 @@
 			"standalone": true,
 			"inlineStyle": true,
 			"inlineTemplate": true
+		},
+		"@nrwl/nest:library": {
+			"strict": true
 		}
 	}
 }
