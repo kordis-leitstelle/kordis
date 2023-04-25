@@ -17,7 +17,7 @@ describe('AuthInterceptor', () => {
 		mockAuthUserExtractor = new (class extends AuthUserExtractorStrategy {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			getUserFromRequest(req: KordisRequest): AuthUser | null {
-				return undefined;
+				return null;
 			}
 		})();
 		service = new AuthInterceptor(mockAuthUserExtractor);
