@@ -51,7 +51,6 @@ jobs:
           envsubst < apps/api/src/.env.template > apps/api/src/.env
           echo "PORT=3000" >> .env
         env:
-          PORT: 3000
           MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
       - name: Build
         run: npx nx affected --target=build --parallel=3
