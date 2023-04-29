@@ -11,9 +11,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
       - run: npm ci
-      - uses: timonmasberg/nx-migration-gh-action@v1.0.0
+      - uses: timonmasberg/nx-migration-gh-action@v1.1.0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           commitMessage: 'chore(deps): migrate nx to $VERSION'
           prTitle: 'chore(deps): migrate nx to $VERSION'
+          legacyPeerDeps: 'true'
