@@ -34,7 +34,6 @@
     "@nestjs/testing": "9.3.9",
     "@ngneat/spectator": "^14.0.0",
     "@nrwl/angular": "16.0.1",
-    "@nrwl/eslint-plugin-nx": "16.0.1",
     "@nrwl/jest": "16.0.1",
     "@nrwl/nest": "16.0.1",
     "@nrwl/node": "16.0.1",
@@ -75,7 +74,8 @@
     "wait-on": "^7.0.1",
     "@nx/workspace": "16.0.1",
     "@nx/js": "16.0.1",
-    "@nx/linter": "16.0.1"
+    "@nx/linter": "16.0.1",
+    "@nx/eslint-plugin": "16.0.1"
   },
   "dependencies": {
     "@angular/animations": "15.2.2",
