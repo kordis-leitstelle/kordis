@@ -33,7 +33,11 @@ describe('GraphqlSubscriptionsController', () => {
 	});
 
 	it('should throw ServiceUnavailableException if handler not ready', () => {
-		const requestEmuFn = () => controller.subscriptionHandler(null, null);
+		const requestEmuFn = () =>
+			controller.subscriptionHandler(
+				createMock<KordisRequest>(),
+				createMock<Response>(),
+			);
 		expect(requestEmuFn).toThrow(ServiceUnavailableException);
 		expect(requestEmuFn).toThrow(
 			'GraphQL Subscription handler not ready yet. Try again.',
