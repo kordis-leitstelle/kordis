@@ -2,12 +2,18 @@ name: 'build-and-deploy-api'
 description: 'Builds API Project for Production and Deploys it to a given WA Slot'
 
 inputs:
+  releaseVersion:
+    required: true
+    description: "Release Version (Commit or Tag)"
   slot:
     required: true
     description: "Slot Identifier"
   mongoUri:
     required: true
     description: "Mongo Connection URI"
+  sentryKey:
+    required: false
+    description: "Sentry DSN Key"
 outputs:
   url:
     description: "API URL"
@@ -19,6 +25,9 @@ runs:
     - run: envsubst < apps/api/src/.env.template > apps/api/src/.env
       env:
         MONGODB_URI: ${{ inputs.mongoUri }}
+        ENVIRONMENT_NAME: ${{ inputs.slot }}
+        RELEASE_VERSION: ${{ inputs.releaseVersion }}
+        SENTRY_KEY: ${{ inputs.sentryKey }}
       shell: bash
     - run: |
         npx nx build api --prod

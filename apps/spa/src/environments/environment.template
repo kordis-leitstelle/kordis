@@ -2,7 +2,8 @@ import { Environment } from './environment.model';
 
 export const environment: Environment = {
 	production: $IS_PRODUCTION,
-	deploymentName: '$DEPLOYMENT_NAME',
+	environmentName: '$ENVIRONMENT_NAME',
 	apiUrl: '$API_URL',
+	releaseVersion: '$RELEASE_VERSION',
 	oauth: $OAUTH_CONFIG as any,
 };

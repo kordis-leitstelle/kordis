@@ -30,7 +30,10 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "next"
+          releaseVersion: ${{ github.sha }}
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
+          sentryKey: ${{ secrets.API_SENTRY_KEY }}
+
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:
@@ -43,9 +46,10 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
-          deploymentName: "main.${{ github.sha }}"
+          releaseVersion: ${{ github.sha }}
           deploymentEnv: "next"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
 
   e2e:
     needs: deployment

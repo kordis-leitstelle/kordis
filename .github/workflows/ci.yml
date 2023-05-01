@@ -43,7 +43,8 @@ jobs:
         run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
         env:
           IS_PRODUCTION: true
-          DEPLOYMENT_NAME: E2E Runner
+          DEPLOYMENT_NAME: 'e2e-runner'
+          RELEASE_VERSION: "e2e-${{ github.sha }}"
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: undefined
       - name: Create API Environment File
@@ -52,6 +53,10 @@ jobs:
           echo "PORT=3000" >> .env
         env:
           MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
+          ENVIRONMENT_NAME: 'e2e-runner'
+          RELEASE_VERSION: "e2e-${{ github.sha }}"
+          SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
+
       - name: Build
         run: npx nx affected --target=build --parallel=3
 
