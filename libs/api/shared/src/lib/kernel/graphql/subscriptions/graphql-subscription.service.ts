@@ -28,12 +28,12 @@ export class GraphQLSubscriptionService implements OnModuleDestroy {
 	}
 
 	/**
-			This method creates an AsyncIterator of the EventBus event stream filtered by the event type.
-			@template TEvent The event type.
-			@template TReturn The return type of the AsyncIterableIterator. This is the type passed to the subscription handler (potentially user facing).
-			@param {TEvent} event The event type to subscribe to.
-			@param {SubscriptionOperators<TEvent, TReturn>} [operators] Optional operators to apply to the event stream.
-			@returns {AsyncIterableIterator<TReturn>} An AsyncIterableIterator of events for the specified event type with the operators applied where TReturn is the type of each emitted item.
+		This method creates an AsyncIterator of the EventBus event stream filtered by the event type.
+		@template TEvent The event type.
+		@template TReturn The return type of the AsyncIterableIterator. This is the type passed to the subscription handler (potentially user facing).
+		@param {TEvent} event The event type to subscribe to.
+		@param {SubscriptionOperators<TEvent, TReturn>} [operators] Optional operators to apply to the event stream.
+		@returns {AsyncIterableIterator<TReturn>} An AsyncIterableIterator of events for the specified event type with the operators applied where TReturn is the type of each emitted item.
 	 **/
 	getSubscriptionIteratorForEvent<TEvent extends Type, TReturn>(
 		event: TEvent,

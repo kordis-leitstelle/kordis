@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 export interface Observer<T> {
 	next: (value: T) => void;
 	error: (error: Error) => void;
@@ -25,6 +23,7 @@ export function observableToAsyncIterable<T>(
 
 	const pushValue = (value: T): void => {
 		if (callbackQueue.length > 0) {
+			/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
 			callbackQueue.shift()!.resolve({ value, done: false });
 		} else {
 			resultQueue.push({ value, done: false });
@@ -33,6 +32,7 @@ export function observableToAsyncIterable<T>(
 
 	const pushDone = (): void => {
 		if (callbackQueue.length > 0) {
+			/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
 			callbackQueue.shift()!.resolve({ value: undefined, done: true });
 		} else {
 			resultQueue.push({ value: undefined, done: true });
@@ -42,6 +42,7 @@ export function observableToAsyncIterable<T>(
 	const pullValue = (): Promise<IteratorResult<T>> =>
 		new Promise((resolve, reject) => {
 			if (resultQueue.length > 0) {
+				/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
 				const element = resultQueue.shift()!;
 				if (element instanceof Error) {
 					emptyQueue();
@@ -56,6 +57,7 @@ export function observableToAsyncIterable<T>(
 
 	const pushError = (error: Error): void => {
 		if (callbackQueue.length > 0) {
+			/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
 			callbackQueue.shift()!.reject(error);
 		} else {
 			resultQueue.push(error);
@@ -88,6 +90,7 @@ export function observableToAsyncIterable<T>(
 
 	return {
 		next() {
+			/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
 			return listening ? pullValue() : this.return!();
 		},
 		return() {
