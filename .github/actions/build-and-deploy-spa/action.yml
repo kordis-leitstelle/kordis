@@ -50,3 +50,16 @@ runs:
         skip_app_build: true
         skip_api_build: true
         deployment_environment: ${{ inputs.deploymentEnv }}
+    - name: Build SPA with source maps
+      run: npx nx build spa --prod --source-map=true
+      shell: bash
+    - name: Create Sentry release
+      uses: getsentry/action-release@v1
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: kordis-leitstelle
+        SENTRY_PROJECT: kordis-spa
+      with:
+        environment: ${{ inputs.deploymentEnv }}
+        version: ${{ inputs.releaseVersion }}
+        sourcemaps: ./dist/apps/spa

@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
 
+import { TraceComponent } from '@kordis/spa/observability';
+
 import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 
 @Component({
@@ -61,6 +63,7 @@ import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@TraceComponent()
 export class AuthComponent {
 	readonly hasAuthError$: Observable<boolean>;
 

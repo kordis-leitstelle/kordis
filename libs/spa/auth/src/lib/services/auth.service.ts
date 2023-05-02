@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import {
 	BehaviorSubject,
@@ -9,6 +9,10 @@ import {
 } from 'rxjs';
 
 import { AuthUser } from '@kordis/shared/auth';
+import {
+	OBSERVABILITY_SERVICE,
+	ObservabilityService,
+} from '@kordis/spa/observability';
 
 import { AuthService } from './auth-service';
 
@@ -20,7 +24,10 @@ export class ProdAuthService implements AuthService {
 		false,
 	);
 
-	constructor(private readonly oauthService: OAuthService) {
+	constructor(
+		private readonly oauthService: OAuthService,
+		@Inject(OBSERVABILITY_SERVICE) observabilityService: ObservabilityService,
+	) {
 		this.isAuthenticated$ = this.isAuthenticatedSubject$
 			.asObservable()
 			.pipe(distinctUntilChanged());
@@ -50,6 +57,14 @@ export class ProdAuthService implements AuthService {
 				};
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),
+		);
+
+		this.user$.subscribe((user) =>
+			observabilityService.setUser(
+				user?.id,
+				user?.email,
+				`${user?.firstName} ${user?.lastName}`,
+			),
 		);
 	}
 
