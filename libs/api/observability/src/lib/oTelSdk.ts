@@ -2,10 +2,10 @@ import {
 	NoopOTelSDKFactory,
 	OTelSDKFactory,
 	SentryOTelSDKFactory,
-} from './otel.factory';
+} from './oTel.factory';
 
 const sdkFactory: OTelSDKFactory =
-	process.env.NODE_ENV === 'production'
+	process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
 		? new SentryOTelSDKFactory()
 		: new NoopOTelSDKFactory();
 const oTelSDK = sdkFactory.makeSdk();

@@ -44,7 +44,7 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 		}),
 		SharedKernel,
 		AuthModule,
-		...(process.env.NODE_ENV !== 'production'
+		...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
 			? [SentryObservabilityModule]
 			: []),
 	],

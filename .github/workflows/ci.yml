@@ -43,7 +43,7 @@ jobs:
         run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
         env:
           IS_PRODUCTION: true
-          DEPLOYMENT_NAME: 'ci'
+          ENVIRONMENT_NAME: 'ci'
           RELEASE_VERSION: ${{ github.sha }}
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: undefined
