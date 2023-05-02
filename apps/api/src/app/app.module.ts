@@ -6,9 +6,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
+import { SharedKernel } from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
+import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 
 @Module({
 	imports: [
@@ -23,9 +25,6 @@ import { AppService } from './app.service';
 				process.env.NODE_ENV !== 'production'
 					? path.join(process.cwd(), 'apps/api/src/schema.gql')
 					: true,
-			subscriptions: {
-				'graphql-ws': true,
-			},
 			playground: process.env.NODE_ENV !== 'production',
 		}),
 		MongooseModule.forRootAsync({
@@ -35,8 +34,10 @@ import { AppService } from './app.service';
 			}),
 			inject: [ConfigService],
 		}),
+		SharedKernel,
 		AuthModule,
 	],
 	providers: [AppService, AppResolver],
+	controllers: [GraphqlSubscriptionsController],
 })
 export class AppModule {}

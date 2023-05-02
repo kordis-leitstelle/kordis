@@ -30,7 +30,6 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "next"
-          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations

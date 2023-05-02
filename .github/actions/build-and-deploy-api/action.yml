@@ -5,9 +5,6 @@ inputs:
   slot:
     required: true
     description: "Slot Identifier"
-  publishProfile:
-    required: true
-    description: "Azure Web App Publisher Profile"
   mongoUri:
     required: true
     description: "Mongo Connection URI"

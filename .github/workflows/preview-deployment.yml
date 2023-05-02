@@ -94,7 +94,6 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.issue.number }}"
-          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
@@ -170,12 +169,12 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.pull_request.number }}"
-          publishProfile: ${{ secrets.AZURE_WEBAPP_API_PUBLISH_PROFILE }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
+          oauthConfig: ${{ secrets.OAUTH_CONFIG }}
           deploymentName: "PR-${{ github.event.pull_request.number }}.{{ github.sha }}"
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
