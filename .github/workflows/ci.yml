@@ -21,13 +21,13 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: mkdir node_modules && npm ci
 
       - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
         run: |
           if [[ $(npx nx format:check) ]]; then
-              npx prettier -w . || true
+              npx prettier -w .
               git diff --color | cat
               exit 1
           fi
