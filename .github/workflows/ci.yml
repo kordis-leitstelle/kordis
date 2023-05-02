@@ -48,6 +48,10 @@ jobs:
           RELEASE_VERSION: ${{ github.sha }}
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: undefined
+      - uses: actions/upload-artifact@v3
+        with:
+          name: env-spa-prod
+          path: apps/spa/src/environments/environment.prod.ts
       - name: Create API Environment File
         run: |
           envsubst < apps/api/src/.env.template > apps/api/src/.env
