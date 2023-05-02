@@ -99,9 +99,9 @@
 		{
 			"cli": "nx",
 			"version": "16.0.0-beta.1",
-			"description": "Replace @nrwl/nest with @nx/nest",
+			"description": "Replace @nx/nest with @nx/nest",
 			"implementation": "./src/migrations/update-16-0-0-add-nx-packages/update-16-0-0-add-nx-packages",
-			"package": "@nrwl/nest",
+			"package": "@nx/nest",
 			"name": "update-16-0-0-add-nx-packages"
 		},
 		{
