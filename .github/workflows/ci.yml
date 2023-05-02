@@ -27,7 +27,7 @@ jobs:
       - name: Check Formatting
         run: |
           if [[ $(npx nx format:check) ]]; then
-              npx prettier -w .
+              npx prettier -w . || true
               git diff --color | cat
               exit 1
           fi
