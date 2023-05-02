@@ -34,7 +34,6 @@
     "@nestjs/testing": "9.3.9",
     "@ngneat/spectator": "^14.0.0",
     "@nrwl/angular": "16.0.1",
-    "@nrwl/webpack": "16.0.1",
     "@playwright/test": "^1.26.0",
     "@schematics/angular": "15.2.4",
     "@total-typescript/ts-reset": "^0.3.7",
@@ -75,7 +74,8 @@
     "@nx/jest": "16.0.1",
     "@nx/linter": "16.0.1",
     "@nx/node": "16.0.1",
-    "@nx/nest": "16.0.1"
+    "@nx/nest": "16.0.1",
+    "@nx/webpack": "16.0.1"
   },
   "dependencies": {
     "@angular/animations": "15.2.2",
