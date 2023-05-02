@@ -26,10 +26,11 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       - name: Check Formatting
         run: |
-          if [[ $(npx nx format:check) ]]; then
-              npx prettier -w --list-different .
-              git diff --color | cat
-              exit 1
+          npx prettier --check . || exit_status=$?
+          if [ $exit_status -ne 0 ]; then
+            npx prettier -w --list-different .
+            git diff --color | cat
+            exit 1
           fi
       - name: Lint
         run: npx nx affected --target=lint --parallel=3
