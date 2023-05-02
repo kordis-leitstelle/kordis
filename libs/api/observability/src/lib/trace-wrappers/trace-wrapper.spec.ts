@@ -31,6 +31,8 @@ describe('TraceWrapper', () => {
 		traceWrapper = new TestableTraceWrapper(modulesContainer);
 	});
 
+	afterEach(() => jest.clearAllMocks());
+
 	it('should start and end a span for the original method', () => {
 		class TestClass {
 			originalMethod() {}
@@ -42,6 +44,8 @@ describe('TraceWrapper', () => {
 		);
 
 		const { startSpanSpy, endSpanSpy } = createTraceMocks();
+
+		TestClass.prototype.originalMethod();
 
 		expect(startSpanSpy).toHaveBeenCalledTimes(1);
 		expect(endSpanSpy).toHaveBeenCalledTimes(1);
