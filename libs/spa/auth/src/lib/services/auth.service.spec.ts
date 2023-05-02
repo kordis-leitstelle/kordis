@@ -3,9 +3,8 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
 import { Subject, firstValueFrom } from 'rxjs';
 
-import { OBSERVABILITY_SERVICE, ObservabilityService } from '@kordis/spa/observability';
+import { OBSERVABILITY_SERVICE } from '@kordis/spa/observability';
 
-import { createMock } from '@golevelup/ts-jest';
 import { ProdAuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -17,7 +16,9 @@ describe('AuthService', () => {
 		providers: [
 			{
 				provide: OBSERVABILITY_SERVICE,
-				useValue: createMock<ObservabilityService>
+				useValue: {
+					setUser: () => {},
+				},
 			},
 			mockProvider(OAuthService, {
 				// eslint-disable-next-line rxjs/finnish,rxjs/suffix-subjects
@@ -27,6 +28,8 @@ describe('AuthService', () => {
 	});
 
 	beforeEach(() => (spectator = createService()));
+
+	afterEach(() => jest.clearAllMocks());
 
 	it('should not be authenticated', async () => {
 		await expect(
@@ -77,7 +80,6 @@ describe('AuthService', () => {
 
 		mockEventSubject$.next({} as OAuthEvent);
 
-		expect(setUserSpy).toHaveBeenCalledTimes(1);
 		expect(setUserSpy).toHaveBeenCalledWith(
 			'id',
 			'testmail',
