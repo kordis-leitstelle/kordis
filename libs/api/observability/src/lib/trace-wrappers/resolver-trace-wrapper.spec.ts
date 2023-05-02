@@ -50,7 +50,7 @@ describe('ResolverTraceWrapper', () => {
 
 		// validate that span gets correctly created
 		expect(startSpanSpy).toHaveBeenCalledTimes(2);
-		const x = startSpanSpy.mock.calls[0];
+
 		expect(startSpanSpy.mock.calls).toEqual([
 			['TestResolver (Resolver) -> someQuery (Query)'],
 			['TestResolver (Resolver) -> someMutation (Mutation)'],
