@@ -28,8 +28,8 @@ export class SentryObservabilityModule implements OnModuleInit {
 			tracesSampleRate: 1.0,
 			profilesSampleRate: 1.0,
 			instrumenter: 'otel',
-			environment: this.config.get('ENVIRONMENT_NAME') || 'local-dev',
-			release: this.config.get('RELEASE_VERSION') || '0.0.0-development',
+			environment: this.config.get('ENVIRONMENT_NAME') ?? 'local-dev',
+			release: this.config.get('RELEASE_VERSION') ?? '0.0.0-development',
 			integrations: [new ProfilingIntegration()],
 		});
 		wrapProvidersWithTracingSpans(this.modulesContainer);

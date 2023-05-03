@@ -15,31 +15,7 @@ export class ResolverTraceWrapper extends TraceWrapper {
 	wrapWithSpans(): void {
 		for (const provider of this.getProviders()) {
 			if (this.isResolver(provider)) {
-				const methods = Object.getOwnPropertyNames(provider.metatype.prototype);
-
-				for (const methodName of methods) {
-					if (methodName === 'constructor') {
-						continue;
-					}
-
-					const type = Reflect.getMetadata(
-						RESOLVER_TYPE_METADATA,
-						provider.metatype.prototype[methodName],
-					);
-
-					if (!type || (type !== 'Query' && type !== 'Mutation')) {
-						continue;
-					}
-
-					provider.metatype.prototype[methodName] = this.asWrapped(
-						provider.metatype.prototype[methodName],
-						`${provider.metatype.name} (Resolver) -> ${methodName} (${type})`,
-						{
-							resolver: provider.name,
-							method: methodName,
-						},
-					);
-				}
+				this.wrapResolver(provider);
 			}
 		}
 	}
@@ -54,5 +30,33 @@ export class ResolverTraceWrapper extends TraceWrapper {
 		return metadataKeys.some(
 			(key) => key === RESOLVER_TYPE_METADATA || key === RESOLVER_NAME_METADATA,
 		);
+	}
+
+	private wrapResolver(provider: InstanceWrapper): void {
+		const methods = Object.getOwnPropertyNames(provider.metatype.prototype);
+
+		for (const methodName of methods) {
+			if (methodName === 'constructor') {
+				continue;
+			}
+
+			const type = Reflect.getMetadata(
+				RESOLVER_TYPE_METADATA,
+				provider.metatype.prototype[methodName],
+			);
+
+			if (!type || (type !== 'Query' && type !== 'Mutation')) {
+				continue;
+			}
+
+			provider.metatype.prototype[methodName] = this.asWrapped(
+				provider.metatype.prototype[methodName],
+				`${provider.metatype.name} (Resolver) -> ${methodName} (${type})`,
+				{
+					resolver: provider.name,
+					method: methodName,
+				},
+			);
+		}
 	}
 }

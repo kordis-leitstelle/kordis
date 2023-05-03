@@ -48,7 +48,7 @@ export abstract class TraceWrapper {
 	protected *getProviders(): Generator<InstanceWrapper, void, unknown> {
 		for (const module of this.modulesContainer.values()) {
 			for (const provider of module.providers.values()) {
-				if (provider && provider.metatype?.prototype) {
+				if (provider?.metatype?.prototype) {
 					yield provider;
 				}
 			}
