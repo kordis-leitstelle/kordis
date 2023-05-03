@@ -96,6 +96,7 @@ jobs:
           slot: "pr${{ github.event.issue.number }}"
           releaseVersion: ${{ github.sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
@@ -106,6 +107,7 @@ jobs:
           deploymentEnv: "pr${{ github.event.issue.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
         uses: peter-evans/create-or-update-comment@v3.0.1
         with:
@@ -174,6 +176,7 @@ jobs:
           slot: "pr${{ github.event.pull_request.number }}"
           releaseVersion: ${{ github.sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
@@ -184,6 +187,7 @@ jobs:
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
         uses: peter-evans/create-or-update-comment@v3.0.1
         with:
