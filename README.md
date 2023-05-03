@@ -1,3 +1,73 @@
-# Kordis
+<br />
+<div align="center">
 
-tbd
+<h1 align="center">Kordis</h3>
+
+Koordinierungssoftware für Einsatzleitstellen/ Software for rescue operations
+control centres
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
+
+</div>
+
+## About The Project
+
+Kordis is a software for the coordination of rescue stations and units, for
+logging operations and radio traffic, and for information processing in the
+domain of emergency services.
+
+## For Users
+
+If you want to use Kordis, <a href="mailto:infor@kordis-leitstelle.de">please
+reach out to us</a>. You can also self-host Kordis, please keep the
+<a href="#license">license</a> in mind. To self-host you manually have to set up
+the [Kordis Landscape](docs/landscape.md) and adapt some .
+
+If you found a bug or have a feature request, please
+[open an issue](https://github.com/kordis-leitstelle/kordis/issues/new/choose).
+
+## For Developers/Contributors
+
+We greatly appreciate contributions of any kind. We understand that it is a big
+project to join. Therefor we have weekly developer meetings, Sundays at 8pm
+(German Timezone). You can join via
+[Google Meet](https://meet.google.com/tqc-mccd-pur) or via
+[phone](https://meet.google.com/tel/tqc-mccd-pur?pin=5845379842628&hs=7).
+
+**Please understand, that the language for this project is English. The program
+itself is in German language.** This is due to the fact that we are using this
+repository also to apply for OSS sponsorships and as a reference for job
+applications. The programm itself is mainly used by German Organizations.
+
+For further information on how to contribute, please read the
+[contribution guide](./CONTRIBUTING.md).
+
+### Architecture
+
+We have [Architecture Decision Records](https://adr.github.io/) for every major
+project decision we make. You can see why we choose what, under
+`docs/architecture-decisions`. General Architecture information can be found in
+the given subproject READMEs or and the `docs` folder.
+
+## License
+
+Distributed under the AGPL-3.0 License. See [`LICENSE.md`](./LICENSE.md) for
+more information.
+
+## Contact
+
+General Contact - info@kordis-leitstelle.de  
+Jasper Herzberg (Maintainer) -
+[LinkedIn](https://www.linkedin.com/in/jasperherzberg/), **TBD!**  
+Timon Masberg (Maintainer) -
+[LinkedIn](https://www.linkedin.com/in/timon-masberg/), contact@timonmasberg.com
+
+## Acknowledgments
+
+We receive support from the following companies:
+
+- [Cartesius](https://cartesius.io/) (Sponsorship)
+- [Microsoft Azure](https://azure.microsoft.com/) (Sponsorship)
+- [Sentry](https://sentry.com/) (Sponsorship)
