@@ -8,6 +8,7 @@ import { SentryOTelUserContextInterceptor } from './interceptors/sentry-otel-use
 import oTelSDK from './oTelSdk';
 import { wrapProvidersWithTracingSpans } from './trace-wrapper';
 
+// This Module must come after the AuthModule, because it depends on the use set by the AuthInterceptor
 @Module({
 	providers: [
 		{

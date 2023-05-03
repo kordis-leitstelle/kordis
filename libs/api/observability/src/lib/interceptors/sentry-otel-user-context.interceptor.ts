@@ -32,9 +32,3 @@ export class SentryOTelUserContextInterceptor implements NestInterceptor {
 		return next.handle();
 	}
 }
-
-export class NoopOTelUserContextInterceptor implements NestInterceptor {
-	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-		return next.handle();
-	}
-}

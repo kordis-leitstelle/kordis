@@ -7,6 +7,7 @@ import {
 	TraceWrapper,
 } from './trace-wrappers';
 
+// this has to be called from a NestJS import (main.ts or any provider/module) context, otherwise prototypes are not correctly patched
 export function wrapProvidersWithTracingSpans(
 	modulesContainer: ModulesContainer,
 ): void {
