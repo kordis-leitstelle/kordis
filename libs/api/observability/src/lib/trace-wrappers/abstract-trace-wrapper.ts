@@ -15,19 +15,23 @@ export abstract class TraceWrapper {
 		traceName: string,
 		attributes = {},
 	): unknown {
-		const isAsync = prototype.constructor.name === 'AsyncFunction';
 		const method = {
 			[prototype.name]: function (...args: unknown[]) {
 				const tracer = trace.getTracer('default');
 				const currentSpan = tracer.startSpan(traceName);
 				currentSpan.setAttributes(attributes);
 
-				if (isAsync) {
-					return prototype.apply(this, args).finally(() => currentSpan.end());
-				} else {
-					try {
-						return prototype.apply(this, args);
-					} finally {
+				let hasAsyncResponse = false;
+
+				try {
+					const res = prototype.apply(this, args);
+					if (res instanceof Promise) {
+						hasAsyncResponse = true;
+						return res.finally(() => currentSpan.end());
+					}
+					return res;
+				} finally {
+					if (!hasAsyncResponse) {
 						currentSpan.end();
 					}
 				}

@@ -33,20 +33,34 @@ describe('TraceWrapper', () => {
 
 	afterEach(() => jest.clearAllMocks());
 
-	it('should start and end a span for the original method', () => {
+	it('should start and end a span for wrapped methods', async () => {
 		class TestClass {
-			originalMethod() {}
+			async asyncMethod() {
+				return Promise.resolve();
+			}
+			syncMethod() {}
 		}
 
-		TestClass.prototype.originalMethod = traceWrapper.proxyAsWrapped(
-			TestClass.prototype.originalMethod,
+		TestClass.prototype.syncMethod = traceWrapper.proxyAsWrapped(
+			TestClass.prototype.syncMethod,
+			'traceName',
+		);
+
+		TestClass.prototype.asyncMethod = traceWrapper.proxyAsWrapped(
+			TestClass.prototype.asyncMethod,
 			'traceName',
 		);
 
 		const { startSpanSpy, endSpanSpy } = createTraceMocks();
 
-		TestClass.prototype.originalMethod();
+		TestClass.prototype.syncMethod();
+		expect(startSpanSpy).toHaveBeenCalledTimes(1);
+		expect(endSpanSpy).toHaveBeenCalledTimes(1);
 
+		startSpanSpy.mockClear();
+		endSpanSpy.mockClear();
+
+		await TestClass.prototype.asyncMethod();
 		expect(startSpanSpy).toHaveBeenCalledTimes(1);
 		expect(endSpanSpy).toHaveBeenCalledTimes(1);
 	});
@@ -70,7 +84,7 @@ describe('TraceWrapper', () => {
 	it('should call the original method', async () => {
 		class TestClass {
 			async asyncMethod() {
-				return 'async';
+				return Promise.resolve('async');
 			}
 
 			syncMethod() {
