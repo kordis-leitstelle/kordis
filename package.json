@@ -37,7 +37,6 @@
     "@nrwl/jest": "16.1.0",
     "@nrwl/linter": "16.1.0",
     "@nrwl/nest": "16.1.0",
-    "@nrwl/node": "16.1.0",
     "@nrwl/webpack": "16.1.0",
     "@playwright/test": "^1.26.0",
     "@schematics/angular": "16.0.0",
@@ -75,7 +74,8 @@
     "wait-on": "^7.0.1",
     "@nx/workspace": "16.1.0",
     "@nx/js": "16.1.0",
-    "@nx/eslint-plugin": "16.1.0"
+    "@nx/eslint-plugin": "16.1.0",
+    "@nx/node": "16.1.0"
   },
   "dependencies": {
     "@angular/animations": "16.0.0",
