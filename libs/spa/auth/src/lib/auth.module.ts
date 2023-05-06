@@ -10,13 +10,10 @@ import {
 import { AuthComponent } from './components/auth.component';
 import { AuthService } from './services/auth.service';
 
-const PROVIDERS = Object.freeze([AuthService]);
-
 @NgModule({
 	declarations: [AuthComponent],
 	imports: [CommonModule, OAuthModule.forRoot()],
 	exports: [AuthComponent],
-	providers: [...PROVIDERS],
 })
 export class AuthModule {
 	static forRoot(
@@ -26,7 +23,7 @@ export class AuthModule {
 		return {
 			ngModule: AuthModule,
 			providers: [
-				...PROVIDERS,
+				AuthService,
 				{
 					provide: OAuthStorage,
 					useFactory: () => localStorage,

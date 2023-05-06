@@ -10,9 +10,7 @@ import {
 
 import { AuthUser } from '@kordis/shared/auth';
 
-@Injectable({
-	providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
 	readonly user$: Observable<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
