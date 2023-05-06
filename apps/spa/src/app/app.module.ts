@@ -24,7 +24,7 @@ import routes from './routes';
 			  )
 			: DevAuthModule.forRoot(),
 		// for now, we accept that we have the sentry module and dependencies in our dev bundle as well
-		...(environment.production && environment.releaseVersion !== 'ci'
+		...(environment.production && environment.environmentName !== 'ci'
 			? [
 					SentryObservabilityModule.forRoot(
 						environment.sentryKey,
