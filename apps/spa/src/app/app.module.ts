@@ -4,11 +4,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
+import {
+	NoopObservabilityModule,
+	SentryObservabilityModule,
+} from '@kordis/spa/observability';
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
 import { ProtectedComponent } from './component/protected.component';
-import { SentryObservabilityModule } from '@kordis/api/observability';
 import routes from './routes';
 
 @NgModule({
@@ -32,7 +35,7 @@ import routes from './routes';
 						environment.releaseVersion,
 					),
 			  ]
-			: []),
+			: [NoopObservabilityModule.forRoot()]),
 	],
 	providers: [],
 	bootstrap: [AppComponent],

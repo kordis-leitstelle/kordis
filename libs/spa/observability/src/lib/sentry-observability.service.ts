@@ -23,3 +23,10 @@ export class SentryObservabilityService implements ObservabilityService {
 		}
 	}
 }
+
+@Injectable()
+export class NoopObservabilityService implements ObservabilityService {
+	setUser(): void {
+		// noop
+	}
+}
