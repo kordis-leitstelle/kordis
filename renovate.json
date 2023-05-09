@@ -17,11 +17,10 @@
 				"@schematics/angular",
 				"@types/jest",
 				"jest",
-				"jest-environment-jsdom",
-				"jest-preset-angular",
 				"ts-jest",
 				"typescript",
 				"^@nrwl/",
+				"^@nx/",
 				"^@nestjs/",
 				"nx",
 				"zone.js"
