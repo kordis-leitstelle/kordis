@@ -36,26 +36,26 @@
 		"sharedGlobals": ["{workspaceRoot}/babel.config.json"]
 	},
 	"generators": {
-		"@nrwl/angular:application": {
+		"@nx/angular:application": {
 			"style": "css",
 			"linter": "eslint",
 			"unitTestRunner": "jest",
 			"e2eTestRunner": "playwright",
 			"prefix": "krd"
 		},
-		"@nrwl/angular:library": {
+		"@nx/angular:library": {
 			"linter": "eslint",
 			"unitTestRunner": "jest",
 			"prefix": "krd"
 		},
-		"@nrwl/angular:component": {
+		"@nx/angular:component": {
 			"style": "css",
 			"changeDetection": "OnPush",
 			"standalone": true,
 			"inlineStyle": true,
 			"inlineTemplate": true
 		},
-		"@nrwl/nest:library": {
+		"@nx/nest:library": {
 			"strict": true
 		}
 	}
