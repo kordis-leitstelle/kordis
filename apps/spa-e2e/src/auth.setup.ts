@@ -8,7 +8,7 @@ import { TestUsernames, getAuthStoragePath, testUsernames } from './test-users';
 setup('authenticate as testusers', async ({ browser }) => {
 	/**
 	 * 	If Active Directory B2C Users are set, we use them (e.g. in Next Deployment E2Es),
-	 * 	otherwise we fall back to our preset users that have the same claims and usernames.
+	 * 	otherwise we fall back to our preset users for the DevAuthModule that have the same claims and usernames.
 	 */
 	if (process.env.AADB2C_TEST_USERS) {
 		const testUserPasswords: ReadonlyMap<TestUsernames, string> = new Map(
