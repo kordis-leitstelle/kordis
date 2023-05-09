@@ -61,6 +61,12 @@ jobs:
         run: npm run serve:all:prod & (npx wait-on tcp:3000 && npx wait-on http://localhost:4200 && npx nx e2e spa-e2e)
         env:
           E2E_BASE_URL: http://localhost:4200/
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-test-results
+          path: test-results/
+          if-no-files-found: ignore
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master

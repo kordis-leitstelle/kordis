@@ -62,3 +62,9 @@ jobs:
         env:
           E2E_BASE_URL: ${{ needs.deployment.outputs.spaUrl }}
           AADB2C_TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-test-results
+          path: test-results/
+          if-no-files-found: ignore
