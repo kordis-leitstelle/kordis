@@ -3,14 +3,14 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
 import { Subject, firstValueFrom } from 'rxjs';
 
-import { AuthService } from './auth.service';
+import { OAuth } from './auth.service';
 
 describe('AuthService', () => {
-	let spectator: SpectatorService<AuthService>;
+	let spectator: SpectatorService<OAuth>;
 	const mockEventSubject$ = new Subject<OAuthEvent>();
 
 	const createService = createServiceFactory({
-		service: AuthService,
+		service: OAuth,
 		providers: [
 			mockProvider(OAuthService, {
 				// eslint-disable-next-line rxjs/finnish,rxjs/suffix-subjects

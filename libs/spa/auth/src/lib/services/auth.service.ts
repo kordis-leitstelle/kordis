@@ -10,8 +10,10 @@ import {
 
 import { AuthUser } from '@kordis/shared/auth';
 
+import { AuthService } from './auth-service';
+
 @Injectable()
-export class AuthService {
+export class ProdAuthService implements AuthService {
 	readonly user$: Observable<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
 	private readonly isAuthenticatedSubject$ = new BehaviorSubject<boolean>(

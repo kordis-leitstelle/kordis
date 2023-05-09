@@ -8,7 +8,7 @@ import {
 import { createMock } from '@golevelup/ts-jest';
 import { Observable, ReplaySubject, Subject, firstValueFrom } from 'rxjs';
 
-import { AuthService } from '../services/auth.service';
+import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 import { authGuard } from './auth.guard';
 
 describe('AuthGuard', () => {
@@ -33,7 +33,7 @@ describe('AuthGuard', () => {
 
 		TestBed.configureTestingModule({
 			providers: [
-				{ provide: AuthService, useValue: authServiceMock },
+				{ provide: AUTH_SERVICE, useValue: authServiceMock },
 				{ provide: Router, useValue: routerMock },
 			],
 		});
