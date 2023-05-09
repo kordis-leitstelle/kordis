@@ -1,6 +1,6 @@
 // @formatter:off otelSdk has to imported on the very top!
 // until https://github.com/open-telemetry/opentelemetry-js/issues/3450 is fixed, we have to import the oTel sdk via a relative path
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import '../../../libs/api/observability/src/lib/oTelSdk';
 
 import {Logger} from '@nestjs/common';
