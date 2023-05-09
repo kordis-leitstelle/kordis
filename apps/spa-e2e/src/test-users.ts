@@ -1,21 +1,12 @@
-import { config as configEnv } from 'dotenv';
-import * as path from 'path';
+import { test } from '@playwright/test';
 
-export type testUsernames = 'testuser';
+export const testUsernames = ['testuser'] as const;
+export type TestUsernames = (typeof testUsernames)[number];
 
-if (!process.env.CI) {
-	configEnv({
-		path: path.resolve(__dirname, '../../.env'),
-	});
+export function getAuthStoragePath(username: TestUsernames): string {
+	return `playwright/.auth/${username}.json`;
 }
 
-/*
-		You should take a close look at what test user runs what test, so you do not use any user that might execute test that have side effects on your test!
- */
-export const testUserPasswords: ReadonlyMap<testUsernames, string> = new Map(
-	JSON.parse(process.env.TEST_USERS),
-);
-
-export function getAuthStoragePath(username: testUsernames): string {
-	return `playwright/.auth/${username}.json`;
+export function asUser(username: TestUsernames): void {
+	test.use({ storageState: getAuthStoragePath(username) });
 }
