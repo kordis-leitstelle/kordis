@@ -58,9 +58,10 @@ jobs:
       - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Run E2Es
-        run: npm run e2e
+        run: npm run serve:all:prod & (wait-on tcp:3000 && wait-on http://localhost:4200 && npx nx e2e spa-e2e)
         env:
           TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
+          E2E_BASE_URL: http://localhost:4200/
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
