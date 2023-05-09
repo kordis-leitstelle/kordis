@@ -1,13 +1,19 @@
+import { createMock } from '@golevelup/ts-jest';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 
-import { ProdAuthService } from '../services/auth.service';
+import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 import { AuthComponent } from './auth.component';
 
 describe('AuthComponent', () => {
 	let spectator: SpectatorRouting<AuthComponent>;
 	const createComponent = createRoutingFactory({
 		component: AuthComponent,
-		componentMocks: [ProdAuthService],
+		componentProviders: [
+			{
+				provide: AUTH_SERVICE,
+				useValue: createMock<AuthService>(),
+			},
+		],
 	});
 
 	beforeEach(() => (spectator = createComponent()));

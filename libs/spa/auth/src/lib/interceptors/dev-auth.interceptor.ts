@@ -1,4 +1,3 @@
-// auth.interceptor.ts
 import {
 	HttpEvent,
 	HttpHandler,
