@@ -2,7 +2,7 @@ import { createMock } from '@golevelup/ts-jest';
 
 import { KordisRequest } from '@kordis/api/shared';
 import {
-	createContextForRequest,
+	createGqlContextForRequest,
 	createParamDecoratorFactory,
 } from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/auth';
@@ -20,7 +20,7 @@ describe('User Decorator', () => {
 		const req = createMock<KordisRequest>({
 			user,
 		});
-		const context = createContextForRequest(req);
+		const context = createGqlContextForRequest(req);
 		const factory = createParamDecoratorFactory(User);
 		const result = factory(null, context);
 		expect(result).toEqual(user);
