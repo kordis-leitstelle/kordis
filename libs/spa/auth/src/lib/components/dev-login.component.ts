@@ -10,9 +10,9 @@ import { DevAuthService } from '../services/dev-auth.service';
 const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 	{
 		firstName: 'Test',
-		lastName: 'User 1',
+		lastName: 'User',
 		email: 'testuser@test.com',
-		id: '1234',
+		id: 'testuser@kordis-leitstelle.de',
 	},
 ]);
 
