@@ -4,15 +4,15 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "ng": "nx",
-    "serve:api": "npx nx serve api",
-    "serve:spa": "npx nx serve spa",
+    "serve:api": "nx serve api",
+    "serve:spa": "nx serve spa",
     "postinstall": "node ./decorate-angular-cli.js",
     "prepare": "husky install",
-    "test:all": "npx nx run-many --all --target=test --parallel",
-    "lint:all": "npx nx run-many --all --target=lint --parallel",
-    "serve:all:prod": "npx nx run-many --target=serve --projects=spa,api --parallel --prod",
-    "serve:all": "npx nx run-many --target=serve --projects=spa,api --parallel",
-    "e2e": "npx nx e2e spa-e2e"
+    "test:all": "nx run-many --all --target=test --parallel",
+    "lint:all": "nx run-many --all --target=lint --parallel",
+    "serve:all:prod": "nx run-many --target=serve --projects=spa,api --parallel --prod",
+    "serve:all": "nx run-many --target=serve --projects=spa,api --parallel",
+    "e2e": "nx e2e spa-e2e"
   },
   "private": true,
   "devDependencies": {
