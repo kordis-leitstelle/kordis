@@ -1,15 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule, inject } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Router, RouterModule, Routes } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { RouterModule, Routes } from '@angular/router';
 
-import {
-	AuthComponent,
-	AuthModule,
-	AuthService,
-	authGuard,
-} from '@kordis/spa/auth';
+import { AuthModule, DevAuthModule, authGuard } from '@kordis/spa/auth';
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -20,22 +14,6 @@ const routes: Routes = [
 		path: '',
 		redirectTo: 'protected',
 		pathMatch: 'full',
-	},
-	{
-		path: 'auth',
-		component: AuthComponent,
-		canActivate: [
-			() => {
-				const auth = inject(AuthService);
-				const router = inject(Router);
-
-				return auth.isAuthenticated$.pipe(
-					switchMap(async (isAuthenticated) =>
-						isAuthenticated ? router.navigate(['/protected']) : true,
-					),
-				);
-			},
-		],
 	},
 	{
 		path: 'protected',
@@ -51,10 +29,12 @@ const routes: Routes = [
 		BrowserModule,
 		HttpClientModule,
 		RouterModule.forRoot(routes),
-		AuthModule.forRoot(
-			environment.oauth.config,
-			environment.oauth.discoveryDocumentUrl,
-		),
+		environment.oauth
+			? AuthModule.forRoot(
+					environment.oauth.config,
+					environment.oauth.discoveryDocumentUrl,
+			  )
+			: DevAuthModule.forRoot(),
 	],
 	providers: [],
 	bootstrap: [AppComponent],

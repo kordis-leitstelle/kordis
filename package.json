@@ -8,11 +8,11 @@
     "serve:spa": "nx serve spa",
     "postinstall": "node ./decorate-angular-cli.js",
     "prepare": "husky install",
-    "test:all": "npx nx run-many --all --target=test --parallel",
-    "lint:all": "npx nx run-many --all --target=lint --parallel",
-    "serve:all:prod": "npx nx run-many --target=serve --projects=spa,api --prod",
-    "serve:all": "npx nx run-many --target=serve --projects=spa,api",
-    "e2e": "export E2E_BASE_URL=http://localhost:4200/ && npm run serve:all:prod & (wait-on tcp:3000 && wait-on http://localhost:4200 && npx nx e2e spa-e2e)"
+    "test:all": "nx run-many --all --target=test --parallel",
+    "lint:all": "nx run-many --all --target=lint --parallel",
+    "serve:all:prod": "nx run-many --target=serve --projects=spa,api --parallel --prod",
+    "serve:all": "nx run-many --target=serve --projects=spa,api --parallel",
+    "e2e": "nx e2e spa-e2e"
   },
   "private": true,
   "devDependencies": {
