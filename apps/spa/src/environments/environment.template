@@ -1,4 +1,6 @@
-export const environment = {
+import { Environment } from './environment.model';
+
+export const environment: Environment = {
 	production: $IS_PRODUCTION,
 	deploymentName: '$DEPLOYMENT_NAME',
 	apiUrl: '$API_URL',

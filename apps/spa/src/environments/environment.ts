@@ -1,11 +1,6 @@
-import { AuthConfig } from 'angular-oauth2-oidc';
+import { Environment } from './environment.model';
 
-export const environment: {
-	production: boolean;
-	apiUrl: string;
-	deploymentName: string;
-	oauth?: { discoveryDocumentUrl: string; config: AuthConfig };
-} = {
+export const environment: Environment = {
 	production: false,
 	deploymentName: 'Dev Local',
 	apiUrl: 'https://localhost:3000',
