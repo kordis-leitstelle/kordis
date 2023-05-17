@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/node';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
-import { createContextForRequest } from '@kordis/api/test-helpers';
+import { createGqlContextForRequest } from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/auth';
 
 import { SentryOTelUserContextInterceptor } from './sentry-otel-user-context.interceptor';
@@ -29,7 +29,7 @@ describe('SentryOTelUserContextInterceptor', () => {
 			lastName: 'Doe',
 		};
 
-		const ctx = createContextForRequest(
+		const ctx = createGqlContextForRequest(
 			createMock<KordisRequest>({
 				user,
 			}),
