@@ -1,7 +1,7 @@
-import { createMock } from '@golevelup/ts-jest';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 
-import { AUTH_SERVICE, AuthService } from '../services/auth-service';
+import { AUTH_SERVICE } from '../services/auth-service';
+import { DevAuthService } from '../services/dev-auth.service';
 import { AuthComponent } from './auth.component';
 
 describe('AuthComponent', () => {
@@ -11,7 +11,7 @@ describe('AuthComponent', () => {
 		componentProviders: [
 			{
 				provide: AUTH_SERVICE,
-				useValue: createMock<AuthService>(),
+				useClass: DevAuthService,
 			},
 		],
 	});

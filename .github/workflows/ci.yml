@@ -43,17 +43,26 @@ jobs:
         run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
         env:
           IS_PRODUCTION: true
-          DEPLOYMENT_NAME: E2E Runner
+          ENVIRONMENT_NAME: 'ci'
+          RELEASE_VERSION: ${{ github.sha }}
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: undefined
+      - uses: actions/upload-artifact@v3
+        with:
+          name: env-spa-prod
+          path: apps/spa/src/environments/environment.prod.ts
       - name: Create API Environment File
         run: |
           envsubst < apps/api/src/.env.template > apps/api/src/.env
           echo "PORT=3000" >> .env
         env:
           MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
+          ENVIRONMENT_NAME: 'ci'
+          RELEASE_VERSION: ${{ github.sha }}
+          SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
+
       - name: Build
-        run: npx nx affected --target=build --parallel=3
+        run: npx nx run-many -t build --all --parallel=3
 
       - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb

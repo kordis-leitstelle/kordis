@@ -21,6 +21,8 @@ describe('AuthService', () => {
 
 	beforeEach(() => (spectator = createService()));
 
+	afterEach(() => jest.clearAllMocks());
+
 	it('should not be authenticated', async () => {
 		await expect(
 			firstValueFrom(spectator.service.isAuthenticated$),

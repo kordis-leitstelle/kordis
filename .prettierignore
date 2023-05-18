@@ -4,3 +4,7 @@
 /coverage
 package-lock.json
 .github
+
+.angular
+
+apps/api/src/main.ts
