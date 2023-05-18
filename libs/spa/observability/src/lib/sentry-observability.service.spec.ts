@@ -1,15 +1,25 @@
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 import * as SentryAngularIvy from '@sentry/angular-ivy';
+
+import { AUTH_SERVICE, DevAuthService } from '@kordis/spa/auth';
 
 import { SentryObservabilityService } from './sentry-observability.service';
 
 const sentrySetUser = jest.spyOn(SentryAngularIvy, 'setUser');
 
 describe('SentryObservabilityService', () => {
-	let service: SentryObservabilityService;
-
-	beforeEach(() => {
-		service = new SentryObservabilityService();
+	let spectator: SpectatorService<SentryObservabilityService>;
+	const createService = createServiceFactory({
+		service: SentryObservabilityService,
+		providers: [
+			{
+				provide: AUTH_SERVICE,
+				useClass: DevAuthService,
+			},
+		],
 	});
+
+	beforeEach(() => (spectator = createService()));
 
 	afterEach(() => {
 		sentrySetUser.mockClear();
@@ -20,9 +30,9 @@ describe('SentryObservabilityService', () => {
 		const email = 'test@example.com';
 		const username = 'testuser';
 
-		service.setUser(id, email, username);
+		spectator.service.setUser(id, email, username);
 
-		expect(sentrySetUser).toHaveBeenCalledTimes(1);
+		expect(sentrySetUser).toHaveBeenCalledTimes(2);
 		expect(sentrySetUser).toHaveBeenCalledWith({
 			id,
 			email,
@@ -31,9 +41,25 @@ describe('SentryObservabilityService', () => {
 	});
 
 	it('should set the user to null when no id is provided', () => {
-		service.setUser();
+		spectator.service.setUser();
 
-		expect(sentrySetUser).toHaveBeenCalledTimes(1);
+		expect(sentrySetUser).toHaveBeenCalledTimes(2);
 		expect(sentrySetUser).toHaveBeenCalledWith(null);
+	});
+
+	it('should set observability user on auth user change', async () => {
+		const authService = spectator.inject<DevAuthService>(AUTH_SERVICE);
+		authService.setSession({
+			id: '1',
+			firstName: 'firstname',
+			lastName: 'lastname',
+			email: 'testmail',
+		});
+		expect(sentrySetUser).toHaveBeenCalledTimes(2);
+		expect(sentrySetUser).toHaveBeenCalledWith({
+			id: '1',
+			email: 'testmail',
+			username: 'firstname lastname',
+		});
 	});
 });

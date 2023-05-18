@@ -7,7 +7,9 @@ import {
 
 import { TraceWrapper } from './abstract-trace-wrapper';
 
-// Wraps all NestJS Resolvers `Query` and `Mutation` methods with OpenTelemetry spans
+/**
+ * Wraps all NestJS Resolvers `Query` and `Mutation` methods with OpenTelemetry spans
+ */
 export class ResolverTraceWrapper extends TraceWrapper {
 	constructor(modulesContainer: ModulesContainer) {
 		super(modulesContainer);

@@ -4,7 +4,9 @@ import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { SPAN_ACTIVE, TRACE_NAME } from '../decorators/trace.decorator';
 import { TraceWrapper } from './abstract-trace-wrapper';
 
-// Wraps all Methods of Providers with OpenTelemetry spans that are marked with the `Trace` decorator
+/**
+ * Wraps all Methods of Providers with OpenTelemetry spans that are marked with the `Trace` decorator
+ */
 export class TraceDecoratorTraceWrapper extends TraceWrapper {
 	constructor(modulesContainer: ModulesContainer) {
 		super(modulesContainer);

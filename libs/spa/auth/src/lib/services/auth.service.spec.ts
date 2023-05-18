@@ -3,8 +3,6 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
 import { Subject, firstValueFrom } from 'rxjs';
 
-import { OBSERVABILITY_SERVICE } from '@kordis/spa/observability';
-
 import { ProdAuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -14,12 +12,6 @@ describe('AuthService', () => {
 	const createService = createServiceFactory({
 		service: ProdAuthService,
 		providers: [
-			{
-				provide: OBSERVABILITY_SERVICE,
-				useValue: {
-					setUser: () => {},
-				},
-			},
 			mockProvider(OAuthService, {
 				// eslint-disable-next-line rxjs/finnish,rxjs/suffix-subjects
 				events: mockEventSubject$,
@@ -63,27 +55,5 @@ describe('AuthService', () => {
 			lastName: 'lastname',
 			email: 'testmail',
 		});
-	});
-
-	it('should set observability user on user change', async () => {
-		const mockOauth = spectator.inject(OAuthService);
-		const mockObservabilityService = spectator.inject(OBSERVABILITY_SERVICE);
-		const setUserSpy = jest.spyOn(mockObservabilityService, 'setUser');
-
-		jest.spyOn(mockOauth, 'getIdentityClaims').mockReturnValue({
-			sub: 'id',
-			given_name: 'firstname',
-			family_name: 'lastname',
-			emails: ['testmail', 'irrelevant testmail'],
-		});
-		jest.spyOn(mockOauth, 'hasValidAccessToken').mockResolvedValueOnce(true); // isAuthenticated$ => true trigger
-
-		mockEventSubject$.next({} as OAuthEvent);
-
-		expect(setUserSpy).toHaveBeenCalledWith(
-			'id',
-			'testmail',
-			'firstname lastname',
-		);
 	});
 });

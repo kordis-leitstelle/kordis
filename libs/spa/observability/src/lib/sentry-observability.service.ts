@@ -1,5 +1,7 @@
-import { Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { setUser as sentrySetUser } from '@sentry/angular-ivy';
+
+import { AUTH_SERVICE, AuthService } from '@kordis/spa/auth';
 
 export interface ObservabilityService {
 	setUser(id?: string, email?: string, name?: string): void;
@@ -11,6 +13,10 @@ export const OBSERVABILITY_SERVICE = new InjectionToken<ObservabilityService>(
 
 @Injectable()
 export class SentryObservabilityService implements ObservabilityService {
+	constructor(@Inject(AUTH_SERVICE) private readonly authService: AuthService) {
+		this.subscribeToUserChanges();
+	}
+
 	setUser(id?: string, email?: string, username?: string): void {
 		if (!id) {
 			sentrySetUser(null);
@@ -21,6 +27,16 @@ export class SentryObservabilityService implements ObservabilityService {
 				username,
 			});
 		}
+	}
+
+	private subscribeToUserChanges(): void {
+		this.authService.user$.subscribe((user) => {
+			this.setUser(
+				user?.id,
+				user?.email,
+				`${user?.firstName} ${user?.lastName}`,
+			);
+		});
 	}
 }
 
