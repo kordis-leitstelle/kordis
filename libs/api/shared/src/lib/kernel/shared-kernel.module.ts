@@ -6,5 +6,6 @@ import { GraphQLSubscriptionService } from './graphql/subscriptions/graphql-subs
 @Module({
 	imports: [CqrsModule],
 	providers: [GraphQLSubscriptionService],
+	exports: [GraphQLSubscriptionService],
 })
 export class SharedKernel {}
