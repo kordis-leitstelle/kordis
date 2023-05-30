@@ -5,6 +5,7 @@
 		"module": "commonjs",
 		"types": ["node"],
 		"emitDecoratorMetadata": true,
+		"lib": ["ES2018"],
 		"target": "es2015"
 	},
 	"exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],

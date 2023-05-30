@@ -13,6 +13,7 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 		lastName: 'User',
 		email: 'testuser@test.com',
 		id: 'testuser@kordis-leitstelle.de',
+		organization: 'testorganization',
 	},
 ]);
 

@@ -3,15 +3,20 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import '../../../libs/api/observability/src/lib/oTelSdk';
 
-import {Logger} from '@nestjs/common';
+import {Logger, ValidationPipe} from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
 import {NestFactory} from '@nestjs/core';
 
 import {AppModule} from './app/app.module';
+import {PresentableValidationException} from '@kordis/api/shared';
 
 
 async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule, { cors: true });
+	app.useGlobalPipes(new ValidationPipe({
+		exceptionFactory: (errors) => PresentableValidationException.fromClassValidationErrors(errors),
+		})
+	);
 	const config = app.get(ConfigService);
 	const envPort = config.get('PORT');
 
