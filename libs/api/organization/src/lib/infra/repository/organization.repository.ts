@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { UpdatableEntity } from '@kordis/api/shared';
+import { UpdatableEntity, WithId } from '@kordis/api/shared';
 
 import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
 import { OrganizationRepository } from '../../core/repository/organization.repository';
@@ -26,17 +26,17 @@ export class ImplOrganizationRepository implements OrganizationRepository {
 			.exec();
 	}
 
-	async findById(id: string): Promise<OrganizationEntity | null> {
+	async findById(id: string): Promise<WithId<OrganizationEntity> | null> {
 		const orgDoc = await this.organizationModel.findById(id).exec();
 
 		if (!orgDoc) {
 			return null;
 		}
 
-		return this.mapper.mapAsync(
+		return (await this.mapper.mapAsync(
 			orgDoc.toObject(),
 			OrganizationSchema,
 			OrganizationEntity,
-		);
+		)) as WithId<OrganizationEntity>;
 	}
 }

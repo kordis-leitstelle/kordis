@@ -7,8 +7,12 @@ export type UpdatableEntity<T extends BaseEntityModel> = Partial<T> & {
 	id: T['id'];
 };
 
+export type WithId<T extends BaseEntityModel> = Omit<T, 'id'> & {
+	id: string;
+};
+
 export abstract class BaseEntityModel {
-	id: string | undefined;
+	id?: string;
 
 	async validOrThrow(): Promise<void | never> {
 		const errors = await validate(this);
