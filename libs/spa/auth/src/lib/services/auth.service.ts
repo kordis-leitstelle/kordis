@@ -47,6 +47,7 @@ export class ProdAuthService implements AuthService {
 					firstName: claims['given_name'],
 					lastName: claims['family_name'],
 					email: claims['emails']?.[0],
+					organization: claims['organization'],
 				};
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),

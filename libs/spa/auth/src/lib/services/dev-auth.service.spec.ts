@@ -34,6 +34,7 @@ describe('DevAuthService', () => {
 				lastName: 'Doe',
 				email: 'johndoe@example.com',
 				id: '1234',
+				organization: 'testorg',
 			};
 			spectator.service.setSession(user);
 			expect(localStorage.getItem('krdDevUser')).toBe(JSON.stringify(user));

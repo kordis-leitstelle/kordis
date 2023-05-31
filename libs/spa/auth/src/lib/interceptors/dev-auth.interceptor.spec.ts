@@ -45,6 +45,7 @@ describe('DevAuthInterceptor', () => {
 			firstName: 'John',
 			lastName: 'Doe',
 			email: 'john.doe@example.com',
+			organization: 'testorg',
 		});
 
 		httpClient.get('/test').subscribe();

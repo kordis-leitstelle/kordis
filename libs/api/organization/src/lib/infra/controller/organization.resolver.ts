@@ -56,7 +56,7 @@ export class OrganizationResolver {
 				);
 			} else if (error instanceof OrganizationNotFoundException) {
 				throw new NotFoundException(
-					`Die Organisation mit der ID ${id} wurde nicht gefunden.`,
+					`Die Organisation mit der ID ${error.orgId} wurde nicht gefunden.`,
 				);
 			}
 
