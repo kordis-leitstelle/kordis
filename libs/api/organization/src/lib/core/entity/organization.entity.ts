@@ -1,4 +1,4 @@
-import { ArgsType, Field, Float, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, Float, InputType, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import {
 	IsLatitude,
@@ -10,7 +10,7 @@ import {
 
 import { BaseEntityModel } from '@kordis/api/shared';
 
-@ObjectType('CoordinateType')
+@ObjectType()
 @InputType('CoordinateInput')
 export class Coordinate {
 	@IsLatitude({ message: 'Der Wert muss ein gültiger Längengrad sein.' })
@@ -22,7 +22,7 @@ export class Coordinate {
 	lon: number;
 }
 
-@ObjectType('BBoxType')
+@ObjectType()
 @InputType('BBoxInput')
 export class BBox {
 	@ValidateNested()
@@ -36,9 +36,8 @@ export class BBox {
 	bottomRight: Coordinate;
 }
 
-@ObjectType('OrganizationGeoSettingsType')
+@ObjectType()
 @InputType('OrganizationGeoSettingsInput')
-@ArgsType()
 export class OrganizationGeoSettings {
 	@ValidateNested()
 	@Type(() => Coordinate)
