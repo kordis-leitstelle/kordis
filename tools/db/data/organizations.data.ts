@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 import { Organization } from '../../../libs/api/organization/src/lib/infra/schema/organization.schema';
 import { CollectionData } from './collection-data.model';
 
-const collectionData: CollectionData<Organization> = {
+const collectionData: CollectionData<Partial<Organization>> = {
 	collectionName: 'organizations',
 	entries: [
 		{
