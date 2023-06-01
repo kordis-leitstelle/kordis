@@ -14,7 +14,7 @@ export type WithId<T extends BaseEntityModel> = Omit<T, 'id'> & {
 export abstract class BaseEntityModel {
 	id?: string;
 
-	async validOrThrow(): Promise<void | never> {
+	async validOrThrow(): Promise<void> {
 		const errors = await validate(this);
 
 		if (errors.length > 0) {
