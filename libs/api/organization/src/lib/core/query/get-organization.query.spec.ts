@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
-import { NotFoundException } from '@kordis/api/shared';
+import { NotFoundException, WithId } from '@kordis/api/shared';
 
 import { Organization } from '../entity/organization.entity';
 import {
@@ -43,7 +43,9 @@ describe('CreateOrganizationHandler', () => {
 		const org = new Organization();
 		org.id = '123';
 
-		jest.spyOn(organizationRepository, 'findById').mockResolvedValueOnce(org);
+		jest
+			.spyOn(organizationRepository, 'findById')
+			.mockResolvedValueOnce(org as WithId<Organization>);
 
 		const query = new GetOrganizationQuery('validId');
 
