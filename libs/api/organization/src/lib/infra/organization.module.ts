@@ -8,12 +8,15 @@ import { ORGANIZATION_REPOSITORY } from '../core/repository/organization.reposit
 import { OrganizationResolver } from './controller/organization.resolver';
 import { OrganizationProfile } from './organization.mapper-profile';
 import { ImplOrganizationRepository } from './repository/organization.repository';
-import { Organization, OrganizationSchema } from './schema/organization.schema';
+import {
+	OrganizationDocument,
+	OrganizationSchema,
+} from './schema/organization.schema';
 
 @Module({
 	imports: [
 		MongooseModule.forFeature([
-			{ name: Organization.name, schema: OrganizationSchema },
+			{ name: OrganizationDocument.name, schema: OrganizationSchema },
 		]),
 		CqrsModule,
 	],

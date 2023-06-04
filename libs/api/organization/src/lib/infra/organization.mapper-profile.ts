@@ -4,7 +4,7 @@ import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { Organization as OrganizationEntity } from '../core/entity/organization.entity';
-import { Organization as OrganizationSchema } from './schema/organization.schema';
+import { OrganizationDocument } from './schema/organization.schema';
 
 @Injectable()
 export class OrganizationProfile extends AutomapperProfile {
@@ -16,7 +16,7 @@ export class OrganizationProfile extends AutomapperProfile {
 		return (mapper: Mapper): void => {
 			createMap(
 				mapper,
-				OrganizationSchema,
+				OrganizationDocument,
 				OrganizationEntity,
 				forMember(
 					(d) => d.name,

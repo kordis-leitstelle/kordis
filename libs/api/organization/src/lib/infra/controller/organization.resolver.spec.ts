@@ -50,12 +50,12 @@ describe('OrganizationResolver', () => {
 			org.settings = {
 				geo: {
 					bbox: {
-						bottomRight: { lon: 12, lat: 34 },
-						topLeft: { lon: 12, lat: 34 },
+						bottomRight: { lon: 9.993682, lat: 53.551086 },
+						topLeft: { lon: 9.993682, lat: 53.551086 },
 					},
 					centroid: {
-						lon: 12,
-						lat: 34,
+						lon: 9.993682,
+						lat: 53.551086,
 					},
 				},
 			};
@@ -82,12 +82,12 @@ describe('OrganizationResolver', () => {
 			);
 			const geoSettings: OrganizationGeoSettings = {
 				bbox: {
-					bottomRight: { lon: 12, lat: 34 },
-					topLeft: { lon: 12, lat: 34 },
+					bottomRight: { lon: 9.993682, lat: 53.551086 },
+					topLeft: { lon: 9.993682, lat: 53.551086 },
 				},
 				centroid: {
-					lon: 12,
-					lat: 34,
+					lon: 9.993682,
+					lat: 53.551086,
 				},
 			};
 			await expect(

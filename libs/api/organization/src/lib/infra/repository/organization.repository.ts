@@ -8,15 +8,12 @@ import { UpdatableEntity, WithId } from '@kordis/api/shared';
 
 import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
 import { OrganizationRepository } from '../../core/repository/organization.repository';
-import {
-	Organization,
-	Organization as OrganizationSchema,
-} from '../schema/organization.schema';
+import { OrganizationDocument } from '../schema/organization.schema';
 
 export class ImplOrganizationRepository implements OrganizationRepository {
 	constructor(
-		@InjectModel(OrganizationEntity.name)
-		private organizationModel: Model<Organization>,
+		@InjectModel(OrganizationDocument.name)
+		private organizationModel: Model<OrganizationDocument>,
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
@@ -28,15 +25,16 @@ export class ImplOrganizationRepository implements OrganizationRepository {
 
 	async findById(id: string): Promise<WithId<OrganizationEntity> | null> {
 		const orgDoc = await this.organizationModel.findById(id).exec();
-
 		if (!orgDoc) {
 			return null;
 		}
 
-		return (await this.mapper.mapAsync(
+		const orgEntity = await this.mapper.mapAsync(
 			orgDoc.toObject(),
-			OrganizationSchema,
+			OrganizationDocument,
 			OrganizationEntity,
-		)) as WithId<OrganizationEntity>;
+		);
+
+		return orgEntity as WithId<OrganizationEntity>;
 	}
 }

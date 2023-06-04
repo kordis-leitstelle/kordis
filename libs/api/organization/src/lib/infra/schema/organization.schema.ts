@@ -32,7 +32,7 @@ export class OrganizationSettings {
 }
 
 @Schema()
-export class Organization extends Document {
+export class OrganizationDocument extends Document {
 	@Prop({ unique: true })
 	name: string;
 
@@ -40,4 +40,5 @@ export class Organization extends Document {
 	settings: OrganizationSettings;
 }
 
-export const OrganizationSchema = SchemaFactory.createForClass(Organization);
+export const OrganizationSchema =
+	SchemaFactory.createForClass(OrganizationDocument);
