@@ -13,7 +13,7 @@ import { OrganizationDocument } from '../schema/organization.schema';
 export class ImplOrganizationRepository implements OrganizationRepository {
 	constructor(
 		@InjectModel(OrganizationDocument.name)
-		private organizationModel: Model<OrganizationDocument>,
+		private readonly organizationModel: Model<OrganizationDocument>,
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 

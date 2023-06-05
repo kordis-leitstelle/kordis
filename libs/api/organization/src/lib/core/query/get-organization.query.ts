@@ -3,9 +3,11 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { NotFoundException } from '@kordis/api/shared';
 
-import { ImplOrganizationRepository } from '../../infra/repository/organization.repository';
 import { Organization } from '../entity/organization.entity';
-import { ORGANIZATION_REPOSITORY } from '../repository/organization.repository';
+import {
+	ORGANIZATION_REPOSITORY,
+	OrganizationRepository,
+} from '../repository/organization.repository';
 
 export class GetOrganizationQuery {
 	constructor(public readonly id: string) {}
@@ -17,7 +19,7 @@ export class GetOrganizationHandler
 {
 	constructor(
 		@Inject(ORGANIZATION_REPOSITORY)
-		private readonly repository: ImplOrganizationRepository,
+		private readonly repository: OrganizationRepository,
 	) {}
 
 	async execute({ id }: GetOrganizationQuery): Promise<Organization> {

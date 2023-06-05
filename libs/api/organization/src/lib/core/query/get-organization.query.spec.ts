@@ -39,7 +39,6 @@ describe('CreateOrganizationHandler', () => {
 	});
 
 	it('should return an organization', async () => {
-		// Mock the findById method of the organization repository
 		const org = new Organization();
 		org.id = '123';
 
@@ -47,7 +46,7 @@ describe('CreateOrganizationHandler', () => {
 			.spyOn(organizationRepository, 'findById')
 			.mockResolvedValueOnce(org as WithId<Organization>);
 
-		const query = new GetOrganizationQuery('validId');
+		const query = new GetOrganizationQuery('123');
 
 		const result = await getOrganizationHandler.execute(query);
 

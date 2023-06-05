@@ -1,8 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
-import { NotFoundException } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 
-import { WithId } from '@kordis/api/shared';
+import { NotFoundException, WithId } from '@kordis/api/shared';
 
 import {
 	Organization,

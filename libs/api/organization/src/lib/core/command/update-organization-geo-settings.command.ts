@@ -1,5 +1,7 @@
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+
+import { NotFoundException } from '@kordis/api/shared';
 
 import {
 	Organization,

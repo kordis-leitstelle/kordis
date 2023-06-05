@@ -54,12 +54,14 @@ export class DevAuthService implements AuthService {
 		oid: string;
 		given_name: string;
 		family_name: string;
+		extension_Organisation: string;
 	} {
 		return {
 			oid: authUser.id,
 			emails: [authUser.email],
 			given_name: authUser.firstName,
 			family_name: authUser.lastName,
+			extension_Organisation: authUser.organization,
 		};
 	}
 

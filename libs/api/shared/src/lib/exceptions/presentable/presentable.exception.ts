@@ -23,4 +23,5 @@ export default abstract class PresentableException
 		};
 	}
 }
-type Mutable<T> = { -readonly [k in keyof T]: T[k] };
+
+export type Mutable<T> = { -readonly [k in keyof T]: T[k] };
