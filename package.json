@@ -96,7 +96,7 @@
     "@nestjs/mongoose": "^9.2.2",
     "@opentelemetry/instrumentation-graphql": "^0.34.1",
     "@opentelemetry/instrumentation-mongoose": "^0.32.2",
-    "@opentelemetry/sdk-node": "^0.39.1",
+    "@opentelemetry/sdk-node": "^0.40.0",
     "@opentelemetry/tracing": "^0.24.0",
     "@sentry/angular-ivy": "^7.50.0",
     "@sentry/node": "^7.52.1",
