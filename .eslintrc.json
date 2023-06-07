@@ -45,7 +45,6 @@
 				"*.spec.tsx",
 				"*.spec.js",
 				"*.test-helper.ts",
-				"*.test-helpers.ts",
 				"*.spec.jsx"
 			],
 			"env": {

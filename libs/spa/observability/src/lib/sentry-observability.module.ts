@@ -18,7 +18,7 @@ import {
 import {
 	OBSERVABILITY_SERVICE,
 	SentryObservabilityService,
-} from './sentry-observability.service';
+} from './services/sentry-observability.service';
 
 @NgModule({
 	imports: [CommonModule],

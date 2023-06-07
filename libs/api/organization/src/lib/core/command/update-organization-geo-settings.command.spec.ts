@@ -1,8 +1,6 @@
 import { createMock } from '@golevelup/ts-jest';
 import { EventBus } from '@nestjs/cqrs';
 
-import { PresentableNotFoundException } from '@kordis/api/shared';
-
 import {
 	Organization,
 	OrganizationGeoSettings,
