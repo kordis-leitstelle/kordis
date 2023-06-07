@@ -101,7 +101,7 @@
     "@sentry/angular-ivy": "^7.50.0",
     "@sentry/node": "^7.52.1",
     "@sentry/opentelemetry-node": "^7.52.1",
-    "@sentry/profiling-node": "^0.3.0",
+    "@sentry/profiling-node": "^1.0.0",
     "@nestjs/platform-express": "9.4.0",
     "angular-oauth2-oidc": "^15.0.1",
     "axios": "^1.0.0",
