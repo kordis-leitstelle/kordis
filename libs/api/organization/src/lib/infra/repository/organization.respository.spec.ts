@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
@@ -69,16 +69,23 @@ describe('ImplOrganizationRepository', () => {
 					lat: 53.551086,
 				},
 			};
+			const createdAt = new Date();
+			const updatedAt = new Date();
 
-			const orgDoc = createMock<OrganizationDocument>();
+			const orgDoc: Mutable<DeepMocked<OrganizationDocument>> =
+				createMock<OrganizationDocument>();
 			orgDoc._id = orgId;
 			orgDoc.name = orgName;
 			orgDoc.geoSettings = geoSettings;
+			orgDoc.createdAt = createdAt;
+			orgDoc.updatedAt = updatedAt;
 
 			const mappedOrg: Mutable<OrganizationEntity> = new OrganizationEntity();
 			mappedOrg.id = orgId;
 			mappedOrg.name = orgName;
 			mappedOrg.geoSettings = geoSettings;
+			mappedOrg.createdAt = createdAt;
+			mappedOrg.updatedAt = updatedAt;
 
 			mockModelMethodResult(organizationModel, orgDoc, 'findById');
 

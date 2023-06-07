@@ -1,14 +1,14 @@
 import { createMock } from '@golevelup/ts-jest';
 import { EventBus } from '@nestjs/cqrs';
 
-import { NotFoundException, WithId } from '@kordis/api/shared';
+import { PresentableNotFoundException } from '@kordis/api/shared';
 
 import {
 	Organization,
 	OrganizationGeoSettings,
-	OrganizationSettings,
 } from '../entity/organization.entity';
 import { OrganizationGeoSettingsUpdatedEvent } from '../event/organization-geo-settings-updated.event';
+import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
 import { OrganizationRepository } from '../repository/organization.repository';
 import {
 	UpdateOrganizationGeoSettingsCommand,
@@ -43,14 +43,13 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 				lat: 53.551086,
 			},
 		};
-		const org = new Organization();
-		org.id = '123';
+		const org: { -readonly [K in keyof Organization]: Organization[K] } =
+			new Organization();
+		org.id = orgId;
 		org.name = 'org name';
-		org.settings = {
-			geo: {} as OrganizationGeoSettings,
-		} as OrganizationSettings;
+		org.geoSettings = {} as OrganizationGeoSettings;
 
-		repositoryMock.findById.mockResolvedValueOnce(org as WithId<Organization>);
+		repositoryMock.findById.mockResolvedValueOnce(org);
 		repositoryMock.update.mockResolvedValueOnce(undefined);
 
 		const eventPublishSpy = jest.spyOn(eventBusMock, 'publish');
@@ -65,7 +64,7 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 		expect(eventPublishSpy).toHaveBeenCalledWith(
 			new OrganizationGeoSettingsUpdatedEvent(org.id, geoSettings),
 		);
-		expect(result.settings.geo).toEqual(geoSettings);
+		expect(result.geoSettings).toEqual(geoSettings);
 	});
 
 	it('should throw NotFoundException if organization is not found', async () => {
@@ -86,6 +85,8 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 			orgId,
 			geoSettings,
 		);
-		await expect(handler.execute(command)).rejects.toThrow(NotFoundException);
+		await expect(handler.execute(command)).rejects.toThrow(
+			OrganizationNotFoundException,
+		);
 	});
 });

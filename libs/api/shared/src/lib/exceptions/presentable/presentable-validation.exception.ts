@@ -6,13 +6,14 @@ import {
 	ValidationExceptionEntry,
 } from '../core/validation.exception';
 import { flattenValidationErrors } from '../flatten-class-validation-errors';
-import PresentableException from './presentable.exception';
+import { PresentableException } from './presentable.exception';
 
 export class PresentableValidationException extends PresentableException {
 	readonly code = 'VALIDATION_EXCEPTION';
 	readonly graphqlError = {
 		test: 123,
 	};
+
 	constructor(
 		message: string,
 		private readonly errors: ValidationExceptionEntry[],

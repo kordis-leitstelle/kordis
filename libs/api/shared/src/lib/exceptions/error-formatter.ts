@@ -1,8 +1,8 @@
 import { GraphQLFormattedError } from 'graphql/error';
 
 import GraphqlErrorConvertable from './graphql-error-convertable';
-import PresentableException from './presentable/presentable.exception';
-import { UnknownException } from './presentable/unknown.exception';
+import { PresentableUnknownException } from './presentable/presentable-unknown.exception';
+import { PresentableException } from './presentable/presentable.exception';
 
 /**
  * This acts as a safeguard for unhandled errors, since they get populated over graphql.
@@ -28,7 +28,7 @@ export const errorFormatterFactory = (sanitizeErrors?: boolean) => {
 
 		if (sanitizeErrors) {
 			// sanitize all unknown errors
-			return new UnknownException().asGraphQLError();
+			return new PresentableUnknownException().asGraphQLError();
 		}
 
 		return formattedError;

@@ -5,10 +5,13 @@ import {
 	IsLongitude,
 	IsNotEmpty,
 	IsString,
+	Validate,
 	ValidateNested,
 } from 'class-validator';
 
 import { BaseEntityModel } from '@kordis/api/shared';
+
+import { IsBBox } from './bbox.validator';
 
 @ObjectType()
 @InputType('CoordinateInput')
@@ -45,17 +48,12 @@ export class OrganizationGeoSettings {
 	centroid: Coordinate;
 
 	@ValidateNested()
+	@Validate(IsBBox, {
+		message: 'Wrong post title',
+	})
 	@Type(() => BBox)
 	@Field()
 	bbox: BBox;
-}
-
-@ObjectType()
-export class OrganizationSettings {
-	@ValidateNested()
-	@Type(() => OrganizationGeoSettings)
-	@Field()
-	geo: OrganizationGeoSettings;
 }
 
 @ObjectType()
@@ -66,7 +64,7 @@ export class Organization extends BaseEntityModel {
 	name: string;
 
 	@ValidateNested()
-	@Type(() => OrganizationSettings)
+	@Type(() => OrganizationGeoSettings)
 	@Field()
-	settings: OrganizationSettings;
+	geoSettings: OrganizationGeoSettings;
 }

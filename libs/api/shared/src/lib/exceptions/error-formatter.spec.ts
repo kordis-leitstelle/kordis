@@ -1,5 +1,5 @@
 import { errorFormatterFactory } from './error-formatter';
-import PresentableException from './presentable/presentable.exception';
+import { PresentableException } from './presentable/presentable.exception';
 
 describe('errorFormatterFactory', () => {
 	class MockPresentableException extends PresentableException {

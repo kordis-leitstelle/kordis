@@ -1,9 +1,10 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
-import { NotFoundException, WithId } from '@kordis/api/shared';
+import { Mutable } from '@kordis/api/shared';
 
 import { Organization } from '../entity/organization.entity';
+import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
 import {
 	ORGANIZATION_REPOSITORY,
 	OrganizationRepository,
@@ -39,12 +40,10 @@ describe('CreateOrganizationHandler', () => {
 	});
 
 	it('should return an organization', async () => {
-		const org = new Organization();
+		const org: Mutable<Organization> = new Organization();
 		org.id = '123';
 
-		jest
-			.spyOn(organizationRepository, 'findById')
-			.mockResolvedValueOnce(org as WithId<Organization>);
+		jest.spyOn(organizationRepository, 'findById').mockResolvedValueOnce(org);
 
 		const query = new GetOrganizationQuery('123');
 
@@ -53,13 +52,13 @@ describe('CreateOrganizationHandler', () => {
 		expect(result).toEqual(org);
 	});
 
-	it('should throw NotFoundException', async () => {
+	it('should throw OrganizationNotFoundException', async () => {
 		jest.spyOn(organizationRepository, 'findById').mockResolvedValueOnce(null);
 
 		const query = new GetOrganizationQuery('invalidId');
 
 		await expect(getOrganizationHandler.execute(query)).rejects.toThrow(
-			NotFoundException,
+			OrganizationNotFoundException,
 		);
 	});
 });

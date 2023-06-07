@@ -1,18 +1,25 @@
+import { AutoMap } from '@automapper/classes';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { validate } from 'class-validator';
 
 import { ValidationException } from '../exceptions';
 import { flattenValidationErrors } from '../exceptions/flatten-class-validation-errors';
 
-export type UpdatableEntity<T extends BaseEntityModel> = Partial<T> & {
-	id: T['id'];
-};
+export interface BaseModel {
+	readonly createdAt: Date;
+	readonly updatedAt: Date;
+}
 
-export type WithId<T extends BaseEntityModel> = Omit<T, 'id'> & {
-	id: string;
-};
-
-export abstract class BaseEntityModel {
-	id?: string;
+@ObjectType()
+export abstract class BaseEntityModel implements BaseModel {
+	@Field()
+	readonly id: string;
+	@Field(() => String)
+	@AutoMap()
+	readonly createdAt: Date = new Date();
+	@Field(() => String)
+	@AutoMap()
+	readonly updatedAt: Date;
 
 	async validOrThrow(): Promise<void> {
 		const errors = await validate(this);

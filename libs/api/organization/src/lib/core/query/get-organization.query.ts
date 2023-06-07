@@ -1,9 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { NotFoundException } from '@kordis/api/shared';
-
 import { Organization } from '../entity/organization.entity';
+import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
 import {
 	ORGANIZATION_REPOSITORY,
 	OrganizationRepository,
@@ -26,7 +25,7 @@ export class GetOrganizationHandler
 		const org = await this.repository.findById(id);
 
 		if (!org) {
-			throw new NotFoundException();
+			throw new OrganizationNotFoundException(id);
 		}
 
 		return org;

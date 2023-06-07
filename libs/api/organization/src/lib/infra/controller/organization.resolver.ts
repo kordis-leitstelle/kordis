@@ -2,7 +2,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import {
-	NotFoundException,
+	PresentableNotFoundException,
 	PresentableValidationException,
 	ValidationException,
 } from '@kordis/api/shared';
@@ -31,7 +31,7 @@ export class OrganizationResolver {
 			);
 		} catch (error) {
 			if (error instanceof OrganizationNotFoundException) {
-				throw new NotFoundException(
+				throw new PresentableNotFoundException(
 					`Die Organisation mit der ID ${id} wurde nicht gefunden.`,
 				);
 			}
@@ -52,11 +52,11 @@ export class OrganizationResolver {
 		} catch (error) {
 			if (error instanceof ValidationException) {
 				throw PresentableValidationException.fromCoreValidationException(
-					'Die Einstellungen enthalten falsche Werte.',
+					'Die Einstellungen enthalten invalide Werte.',
 					error,
 				);
 			} else if (error instanceof OrganizationNotFoundException) {
-				throw new NotFoundException(
+				throw new PresentableNotFoundException(
 					`Die Organisation mit der ID ${error.orgId} wurde nicht gefunden.`,
 				);
 			}

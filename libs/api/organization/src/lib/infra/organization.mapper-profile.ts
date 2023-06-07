@@ -23,8 +23,8 @@ export class OrganizationProfile extends AutomapperProfile {
 					mapFrom((s) => s.name),
 				),
 				forMember(
-					(d) => d.settings,
-					mapFrom((s) => s.settings),
+					(d) => d.geoSettings,
+					mapFrom((s) => s.geoSettings),
 				),
 				forMember(
 					(d) => d.id,

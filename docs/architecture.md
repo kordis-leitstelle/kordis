@@ -1,8 +1,8 @@
 # Architecture
 
 This document introduces the general architecture of Kordis with a focus on the
-backend system. In general, we want to follow the Clean Architecture Principle,
-which tries to achieve a state where:
+API. In general, we want to follow the Clean Architecture Principle, which tries
+to achieve a state where:
 
 1. we are independent of frameworks,
 2. we ensure testability of our business logic,

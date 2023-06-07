@@ -1,13 +1,12 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 
-import { NotFoundException } from '@kordis/api/shared';
-
 import {
 	Organization,
 	OrganizationGeoSettings,
 } from '../entity/organization.entity';
 import { OrganizationGeoSettingsUpdatedEvent } from '../event/organization-geo-settings-updated.event';
+import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
 import {
 	ORGANIZATION_REPOSITORY,
 	OrganizationRepository,
@@ -36,17 +35,17 @@ export class UpdateOrganizationGeoSettingsHandler
 		const org = await this.repository.findById(command.orgId);
 
 		if (!org) {
-			throw new NotFoundException();
+			throw new OrganizationNotFoundException(command.orgId);
 		}
 
-		org.settings.geo = command.geoSettings;
+		org.geoSettings = command.geoSettings;
 
 		await org.validOrThrow();
 
 		await this.repository.update(org);
 
 		this.eventBus.publish(
-			new OrganizationGeoSettingsUpdatedEvent(org.id, org.settings.geo),
+			new OrganizationGeoSettingsUpdatedEvent(org.id, org.geoSettings),
 		);
 
 		return org;

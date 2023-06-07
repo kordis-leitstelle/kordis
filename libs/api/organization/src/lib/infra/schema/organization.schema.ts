@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+
+import { BaseDocument } from '@kordis/api/shared';
 
 @Schema({ id: false })
 export class Coordinate {
@@ -25,19 +26,13 @@ export class OrganizationGeoSettings {
 	bbox: BBox;
 }
 
-@Schema({ id: false })
-export class OrganizationSettings {
-	@Prop()
-	geo: OrganizationGeoSettings;
-}
-
-@Schema()
-export class OrganizationDocument extends Document {
+@Schema({ timestamps: true, collection: 'organizations' })
+export class OrganizationDocument extends BaseDocument {
 	@Prop({ unique: true })
 	name: string;
 
 	@Prop()
-	settings: OrganizationSettings;
+	geoSettings: OrganizationGeoSettings;
 }
 
 export const OrganizationSchema =

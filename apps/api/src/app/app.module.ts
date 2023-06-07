@@ -19,10 +19,10 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 const FEATURE_MODULES = [OrganizationModule];
 const UTILITY_MODULES = [
 	SharedKernel,
+	AuthModule,
 	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
 		? [SentryObservabilityModule]
 		: []),
-	AuthModule,
 ];
 
 @Module({
