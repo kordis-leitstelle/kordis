@@ -5,7 +5,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import { UpdatableEntity, WithId } from '@kordis/api/shared';
+import { Mutable } from '@kordis/api/shared';
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
@@ -44,12 +44,12 @@ describe('ImplOrganizationRepository', () => {
 
 	describe('update', () => {
 		it('should update the organization', async () => {
-			const org = new OrganizationEntity();
+			const org: Mutable<OrganizationEntity> = new OrganizationEntity();
 			org.id = 'org-id';
 			org.name = 'org-name';
 			const updateOneSpy = jest.spyOn(organizationModel, 'updateOne');
 
-			await repository.update(org as UpdatableEntity<OrganizationEntity>);
+			await repository.update(org);
 
 			expect(updateOneSpy).toHaveBeenCalledWith({ _id: org.id }, { $set: org });
 		});
@@ -59,28 +59,26 @@ describe('ImplOrganizationRepository', () => {
 		it('should return mapped organization entity', async () => {
 			const orgId = 'org-id';
 			const orgName = 'org-name';
-			const orgSettings = {
-				geo: {
-					bbox: {
-						bottomRight: { lon: 9.993682, lat: 53.551086 },
-						topLeft: { lon: 9.993682, lat: 53.551086 },
-					},
-					centroid: {
-						lon: 9.993682,
-						lat: 53.551086,
-					},
+			const geoSettings = {
+				bbox: {
+					bottomRight: { lon: 9.993682, lat: 53.551086 },
+					topLeft: { lon: 9.993682, lat: 53.551086 },
+				},
+				centroid: {
+					lon: 9.993682,
+					lat: 53.551086,
 				},
 			};
 
 			const orgDoc = createMock<OrganizationDocument>();
 			orgDoc._id = orgId;
 			orgDoc.name = orgName;
-			orgDoc.settings = orgSettings;
+			orgDoc.geoSettings = geoSettings;
 
-			const mappedOrg = new OrganizationEntity() as WithId<OrganizationEntity>;
+			const mappedOrg: Mutable<OrganizationEntity> = new OrganizationEntity();
 			mappedOrg.id = orgId;
 			mappedOrg.name = orgName;
-			mappedOrg.settings = orgSettings;
+			mappedOrg.geoSettings = geoSettings;
 
 			mockModelMethodResult(organizationModel, orgDoc, 'findById');
 

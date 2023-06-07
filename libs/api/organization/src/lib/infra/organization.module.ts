@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { CreateOrganizationHandler } from '../core/command/create-organization.command';
 import { UpdateOrganizationGeoSettingsHandler } from '../core/command/update-organization-geo-settings.command';
 import { GetOrganizationHandler } from '../core/query/get-organization.query';
 import { ORGANIZATION_REPOSITORY } from '../core/repository/organization.repository';
@@ -29,6 +30,7 @@ import {
 		OrganizationResolver,
 		UpdateOrganizationGeoSettingsHandler,
 		GetOrganizationHandler,
+		CreateOrganizationHandler,
 	],
 })
 export class OrganizationModule {}

@@ -3,11 +3,13 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-	NotFoundException,
+	Mutable,
+	PresentableNotFoundException,
 	PresentableValidationException,
 	ValidationException,
 } from '@kordis/api/shared';
 
+import { CreateOrganizationCommand } from '../../core/command/create-organization.command';
 import { UpdateOrganizationGeoSettingsCommand } from '../../core/command/update-organization-geo-settings.command';
 import {
 	Organization,
@@ -44,19 +46,17 @@ describe('OrganizationResolver', () => {
 
 	describe('organization', () => {
 		it('should resolve organization', async () => {
-			const org = new Organization();
+			const org: Mutable<Organization> = new Organization();
 			org.id = 'testorg';
 			org.name = 'testorg';
-			org.settings = {
-				geo: {
-					bbox: {
-						bottomRight: { lon: 9.993682, lat: 53.551086 },
-						topLeft: { lon: 9.993682, lat: 53.551086 },
-					},
-					centroid: {
-						lon: 9.993682,
-						lat: 53.551086,
-					},
+			org.geoSettings = {
+				bbox: {
+					bottomRight: { lon: 9.993682, lat: 53.551086 },
+					topLeft: { lon: 9.993682, lat: 53.551086 },
+				},
+				centroid: {
+					lon: 9.993682,
+					lat: 53.551086,
 				},
 			};
 
@@ -70,7 +70,7 @@ describe('OrganizationResolver', () => {
 				new OrganizationNotFoundException('testorg'),
 			);
 			await expect(resolver.organization('testorg')).rejects.toThrow(
-				NotFoundException,
+				PresentableNotFoundException,
 			);
 		});
 	});
@@ -104,13 +104,41 @@ describe('OrganizationResolver', () => {
 			);
 			await expect(
 				resolver.updateOrganizationGeoSettings('testorg', null),
-			).rejects.toThrow(NotFoundException);
+			).rejects.toThrow(PresentableNotFoundException);
 		});
 
 		it('should throw PresentableValidationException', async () => {
 			commandBusMock.execute.mockRejectedValueOnce(new ValidationException([]));
 			await expect(
 				resolver.updateOrganizationGeoSettings('testorg', null),
+			).rejects.toThrow(PresentableValidationException);
+		});
+	});
+
+	describe('createOrganization', () => {
+		it('should dispatch create command', async () => {
+			const geoSettings: OrganizationGeoSettings = {
+				bbox: {
+					bottomRight: { lon: 9.993682, lat: 53.551086 },
+					topLeft: { lon: 9.993682, lat: 53.551086 },
+				},
+				centroid: {
+					lon: 9.993682,
+					lat: 53.551086,
+				},
+			};
+			await expect(
+				resolver.createOrganization('testorg', geoSettings),
+			).resolves.toBeTruthy();
+			expect(commandBusMock.execute).toHaveBeenCalledWith(
+				new CreateOrganizationCommand('testorg', geoSettings),
+			);
+		});
+
+		it('should throw PresentableValidationException', async () => {
+			commandBusMock.execute.mockRejectedValueOnce(new ValidationException([]));
+			await expect(
+				resolver.createOrganization('testorg', null),
 			).rejects.toThrow(PresentableValidationException);
 		});
 	});

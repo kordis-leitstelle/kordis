@@ -7,6 +7,7 @@ import {
 	ValidationException,
 } from '@kordis/api/shared';
 
+import { CreateOrganizationCommand } from '../../core/command/create-organization.command';
 import { UpdateOrganizationGeoSettingsCommand } from '../../core/command/update-organization-geo-settings.command';
 import {
 	Organization,
@@ -57,6 +58,27 @@ export class OrganizationResolver {
 			} else if (error instanceof OrganizationNotFoundException) {
 				throw new NotFoundException(
 					`Die Organisation mit der ID ${error.orgId} wurde nicht gefunden.`,
+				);
+			}
+
+			throw error;
+		}
+	}
+
+	@Mutation(() => Organization)
+	async createOrganization(
+		@Args('name') name: string,
+		@Args('geoSettings') geoSettings: OrganizationGeoSettings,
+	): Promise<Organization> {
+		try {
+			return await this.commandBus.execute(
+				new CreateOrganizationCommand(name, geoSettings),
+			);
+		} catch (error) {
+			if (error instanceof ValidationException) {
+				throw PresentableValidationException.fromCoreValidationException(
+					'Die Organisationsdaten enthalten invalide Werte.',
+					error,
 				);
 			}
 
