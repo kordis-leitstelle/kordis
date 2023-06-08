@@ -1,14 +1,14 @@
 {
-	"name": "shared-auth",
+	"name": "shared-models",
 	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/shared/auth/src",
+	"sourceRoot": "libs/shared/models/src",
 	"projectType": "library",
 	"targets": {
 		"lint": {
 			"executor": "@nx/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["libs/shared/auth/**/*.ts"]
+				"lintFilePatterns": ["libs/shared/models/**/*.ts"]
 			}
 		}
 	},
