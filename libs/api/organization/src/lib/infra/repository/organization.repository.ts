@@ -40,7 +40,7 @@ export class ImplOrganizationRepository implements OrganizationRepository {
 			return null;
 		}
 
-		return await this.mapper.mapAsync(
+		return this.mapper.mapAsync(
 			orgDoc.toObject(),
 			OrganizationDocument,
 			OrganizationEntity,
