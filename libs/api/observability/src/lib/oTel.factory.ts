@@ -1,6 +1,7 @@
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
 import { MongooseInstrumentation } from '@opentelemetry/instrumentation-mongoose';
+import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import {
 	SentryPropagator,
@@ -11,8 +12,10 @@ export abstract class OTelSDKFactory {
 	protected readonly defaultInstrumentations = [
 		new GraphQLInstrumentation(),
 		new MongooseInstrumentation(),
+		new PinoInstrumentation(),
 	] as const;
 	protected readonly serviceName = 'kordis-api';
+
 	abstract makeSdk(): NodeSDK;
 }
 

@@ -1,5 +1,7 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+
+import { KordisLogger } from '@kordis/api/observability';
 
 import {
 	Organization,
@@ -23,6 +25,10 @@ export class UpdateOrganizationGeoSettingsCommand {
 export class UpdateOrganizationGeoSettingsHandler
 	implements ICommandHandler<UpdateOrganizationGeoSettingsCommand>
 {
+	private readonly logger: KordisLogger = new Logger(
+		UpdateOrganizationGeoSettingsHandler.name,
+	);
+
 	constructor(
 		@Inject(ORGANIZATION_REPOSITORY)
 		private readonly repository: OrganizationRepository,
@@ -44,6 +50,7 @@ export class UpdateOrganizationGeoSettingsHandler
 
 		await this.repository.update(org);
 
+		this.logger.log('Organization geo settings updated', { updatedOrg: org });
 		this.eventBus.publish(
 			new OrganizationGeoSettingsUpdatedEvent(org.id, org.geoSettings),
 		);

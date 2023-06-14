@@ -1,5 +1,7 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+
+import type { KordisLogger } from '@kordis/api/observability';
 
 import {
 	Organization,
@@ -22,6 +24,10 @@ export class CreateOrganizationCommand {
 export class CreateOrganizationHandler
 	implements ICommandHandler<CreateOrganizationCommand>
 {
+	private readonly logger: KordisLogger = new Logger(
+		CreateOrganizationHandler.name,
+	);
+
 	constructor(
 		@Inject(ORGANIZATION_REPOSITORY)
 		private readonly repository: OrganizationRepository,
@@ -36,6 +42,7 @@ export class CreateOrganizationHandler
 		await org.validOrThrow();
 
 		org = await this.repository.create(org);
+		this.logger.log('Organization created', { org });
 
 		this.eventBus.publish(new OrganizationCreatedEvent(org));
 

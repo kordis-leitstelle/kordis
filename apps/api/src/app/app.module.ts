@@ -8,7 +8,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
-import { SentryObservabilityModule } from '@kordis/api/observability';
+import {
+	DevObservabilityModule,
+	SentryObservabilityModule,
+} from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 
@@ -22,7 +25,7 @@ const UTILITY_MODULES = [
 	AuthModule,
 	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
 		? [SentryObservabilityModule]
-		: []),
+		: [DevObservabilityModule]),
 ];
 
 @Module({
