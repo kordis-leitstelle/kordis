@@ -3,7 +3,7 @@ import { CallHandler, UnauthorizedException } from '@nestjs/common';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
-import { createContextForRequest } from '@kordis/api/test-helpers';
+import { createGqlContextForRequest } from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
@@ -35,7 +35,7 @@ describe('AuthInterceptor', () => {
 		await expect(
 			firstValueFrom(
 				service.intercept(
-					createContextForRequest(createMock<KordisRequest>()),
+					createGqlContextForRequest(createMock<KordisRequest>()),
 					createMock<CallHandler>(),
 				),
 			),
@@ -56,10 +56,16 @@ describe('AuthInterceptor', () => {
 			},
 		});
 
-		const ctxMock = createContextForRequest(createMock<KordisRequest>());
+		const gqlCtx = createGqlContextForRequest(createMock<KordisRequest>());
 
 		await expect(
-			firstValueFrom(service.intercept(ctxMock, handler)),
+			firstValueFrom(service.intercept(gqlCtx, handler)),
+		).resolves.toBeTruthy();
+
+		const httpCtx = createGqlContextForRequest(createMock<KordisRequest>());
+
+		await expect(
+			firstValueFrom(service.intercept(httpCtx, handler)),
 		).resolves.toBeTruthy();
 	});
 });

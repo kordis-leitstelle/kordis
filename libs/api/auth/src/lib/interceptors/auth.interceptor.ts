@@ -5,10 +5,10 @@ import {
 	NestInterceptor,
 	UnauthorizedException,
 } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Observable, throwError } from 'rxjs';
 
-import { KordisGqlContext } from '@kordis/api/shared';
+import { KordisGqlContext, KordisRequest } from '@kordis/api/shared';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
 
@@ -17,8 +17,13 @@ export class AuthInterceptor implements NestInterceptor {
 	constructor(private readonly authUserExtractor: AuthUserExtractorStrategy) {}
 
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-		const ctx = GqlExecutionContext.create(context);
-		const req = ctx.getContext<KordisGqlContext>().req;
+		let req: KordisRequest;
+		if (context.getType<GqlContextType>() === 'graphql') {
+			const ctx = GqlExecutionContext.create(context);
+			req = ctx.getContext<KordisGqlContext>().req;
+		} else {
+			req = context.switchToHttp().getRequest<KordisRequest>();
+		}
 
 		const possibleAuthUser = this.authUserExtractor.getUserFromRequest(req);
 

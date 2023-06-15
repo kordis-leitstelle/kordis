@@ -2,10 +2,10 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
-import { AuthService } from '../services/auth.service';
+import { AUTH_SERVICE } from '../services/auth-service';
 
 export const authGuard: CanActivateFn = () => {
-	const authService = inject(AuthService);
+	const authService = inject(AUTH_SERVICE);
 	const router = inject(Router);
 
 	return authService.isAuthenticated$.pipe(

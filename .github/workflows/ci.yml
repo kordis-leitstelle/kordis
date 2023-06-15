@@ -43,24 +43,39 @@ jobs:
         run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
         env:
           IS_PRODUCTION: true
-          DEPLOYMENT_NAME: E2E Runner
+          ENVIRONMENT_NAME: 'ci'
+          RELEASE_VERSION: ${{ github.sha }}
           API_URL: http://localhost:3000/
-          OAUTH_CONFIG: ${{ secrets.DEV_OAUTH_CONFIG }}
+          OAUTH_CONFIG: undefined
+      - uses: actions/upload-artifact@v3
+        with:
+          name: env-spa-prod
+          path: apps/spa/src/environments/environment.prod.ts
       - name: Create API Environment File
         run: |
           envsubst < apps/api/src/.env.template > apps/api/src/.env
           echo "PORT=3000" >> .env
         env:
           MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
+          ENVIRONMENT_NAME: 'ci'
+          RELEASE_VERSION: ${{ github.sha }}
+          SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
+
       - name: Build
-        run: npx nx affected --target=build --parallel=3
+        run: npx nx run-many -t build --all --parallel=3
 
       - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Run E2Es
-        run: npm run e2e
+        run: npm run serve:all:prod & (npx wait-on tcp:3000 && npx wait-on http://localhost:4200 && npx nx e2e spa-e2e)
         env:
-          TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
+          E2E_BASE_URL: http://localhost:4200/
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-test-results
+          path: test-results/
+          if-no-files-found: ignore
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master

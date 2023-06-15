@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
 
-import { AuthService } from '../services/auth.service';
+import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 
 @Component({
 	selector: 'krd-auth',
@@ -66,7 +66,7 @@ export class AuthComponent {
 
 	constructor(
 		private readonly activatedRoute: ActivatedRoute,
-		private readonly authService: AuthService,
+		@Inject(AUTH_SERVICE) private readonly authService: AuthService,
 	) {
 		this.hasAuthError$ = this.activatedRoute.queryParams.pipe(
 			map((params) => !!params['error']),

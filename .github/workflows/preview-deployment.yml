@@ -70,7 +70,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Initial Deployment Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.1
+        uses: peter-evans/create-or-update-comment@v3.0.2
         id: pr-preview-comment
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -94,17 +94,22 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.issue.number }}"
+          releaseVersion: ${{ github.sha }}
+          sentryKey: ${{ secrets.API_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
-          oauthConfig: ${{ secrets.OAUTH_CONFIG }}
-          deploymentName: "PR-${{ github.event.issue.number }}.{{ github.sha }}"
-          deploymentEnv: "pr${{github.event.issue.number }}"
+          oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
+          releaseVersion: ${{ github.sha }}
+          deploymentEnv: "pr${{ github.event.issue.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.1
+        uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ steps.pr-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -152,7 +157,7 @@ jobs:
           body-includes: Deployment Preview
       - name: Update PR Preview Comment
         if: steps.deploy-preview-comment.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v3.0.1
+        uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -169,17 +174,22 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.pull_request.number }}"
+          releaseVersion: ${{ github.sha }}
+          sentryKey: ${{ secrets.API_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
-          oauthConfig: ${{ secrets.OAUTH_CONFIG }}
-          deploymentName: "PR-${{ github.event.pull_request.number }}.{{ github.sha }}"
+          oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
+          releaseVersion: ${{ github.sha }}
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
+          sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.1
+        uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -214,7 +224,7 @@ jobs:
           body-includes: Deployment Preview
       - name: Update PR Preview Comment
         if: steps.deploy-preview-comment.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v3.0.1
+        uses: peter-evans/create-or-update-comment@v3.0.2
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace

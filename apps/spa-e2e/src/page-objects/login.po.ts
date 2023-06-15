@@ -13,11 +13,8 @@ export class LoginPo {
 	};
 	constructor(private readonly page: Page) {}
 
-	async login(username: string, password: string): Promise<void> {
-		await this.page.goto('/auth');
-
-		const loginBtn = await this.page.waitForSelector(this.selectors.loginBtn);
-		await loginBtn.click();
+	async loginWithB2C(username: string, password: string): Promise<void> {
+		await this.gotoLoginPage();
 
 		const usernameInput = await this.page.waitForSelector(
 			this.selectors.b2c.userIdInput,
@@ -32,5 +29,20 @@ export class LoginPo {
 		await usernameInput.type(username);
 		await passwordInput.type(password);
 		await b2cLoginBtn.click();
+	}
+
+	async loginViaDevAuth(username: string): Promise<void> {
+		await this.gotoLoginPage();
+		const testUserLoginBtn = await this.page.waitForSelector(
+			`button[data-username="${username}"]`,
+		);
+		await testUserLoginBtn.click();
+	}
+
+	private async gotoLoginPage(): Promise<void> {
+		await this.page.goto('/auth');
+
+		const loginBtn = await this.page.waitForSelector(this.selectors.loginBtn);
+		await loginBtn.click();
 	}
 }

@@ -1,22 +1,55 @@
 import { CommonModule } from '@angular/common';
-import { APP_INITIALIZER, ModuleWithProviders, NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+	APP_INITIALIZER,
+	ModuleWithProviders,
+	NgModule,
+	inject,
+} from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import {
 	AuthConfig,
+	DefaultOAuthInterceptor,
 	OAuthModule,
 	OAuthService,
 	OAuthStorage,
 } from 'angular-oauth2-oidc';
+import { switchMap } from 'rxjs';
 
 import { AuthComponent } from './components/auth.component';
-import { AuthService } from './services/auth.service';
-
-const PROVIDERS = Object.freeze([AuthService]);
+import { AUTH_SERVICE } from './services/auth-service';
+import { ProdAuthService } from './services/auth.service';
 
 @NgModule({
+	imports: [
+		CommonModule,
+		RouterModule.forChild([
+			{
+				path: 'auth',
+				component: AuthComponent,
+				canActivate: [
+					() => {
+						const auth = inject(AUTH_SERVICE);
+						const router = inject(Router);
+
+						return auth.isAuthenticated$.pipe(
+							switchMap(async (isAuthenticated) =>
+								isAuthenticated ? router.navigate(['/protected']) : true,
+							),
+						);
+					},
+				],
+			},
+		]),
+	],
 	declarations: [AuthComponent],
-	imports: [CommonModule, OAuthModule.forRoot()],
-	exports: [AuthComponent],
-	providers: [...PROVIDERS],
+	exports: [AuthComponent, RouterModule],
+})
+export class BaseAuthModule {}
+
+@NgModule({
+	imports: [CommonModule, BaseAuthModule, OAuthModule.forRoot()],
+	exports: [RouterModule],
 })
 export class AuthModule {
 	static forRoot(
@@ -26,7 +59,10 @@ export class AuthModule {
 		return {
 			ngModule: AuthModule,
 			providers: [
-				...PROVIDERS,
+				{
+					provide: AUTH_SERVICE,
+					useClass: ProdAuthService,
+				},
 				{
 					provide: OAuthStorage,
 					useFactory: () => localStorage,
@@ -41,7 +77,12 @@ export class AuthModule {
 							await oauthService.tryLoginCodeFlow();
 						};
 					},
-					deps: [OAuthService, AuthService],
+					deps: [OAuthService, AUTH_SERVICE],
+					multi: true,
+				},
+				{
+					provide: HTTP_INTERCEPTORS,
+					useClass: DefaultOAuthInterceptor,
 					multi: true,
 				},
 			],

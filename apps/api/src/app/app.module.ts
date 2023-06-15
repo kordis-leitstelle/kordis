@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
+import { SentryObservabilityModule } from '@kordis/api/observability';
 import { SharedKernel } from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';
@@ -19,13 +20,20 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 			cache: true,
 			envFilePath: path.resolve(__dirname, '.env'),
 		}),
-		GraphQLModule.forRoot<ApolloDriverConfig>({
+		GraphQLModule.forRootAsync<ApolloDriverConfig>({
+			imports: [ConfigModule],
 			driver: ApolloDriver,
-			autoSchemaFile:
-				process.env.NODE_ENV !== 'production'
-					? path.join(process.cwd(), 'apps/api/src/schema.gql')
-					: true,
-			playground: process.env.NODE_ENV !== 'production',
+			useFactory: (config: ConfigService) => ({
+				autoSchemaFile:
+					config.get('NODE_ENV') !== 'production'
+						? path.join(process.cwd(), 'apps/api/src/schema.gql')
+						: true,
+				subscriptions: {
+					'graphql-ws': true,
+				},
+				playground: config.get('NODE_ENV') !== 'production',
+			}),
+			inject: [ConfigService],
 		}),
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
@@ -36,6 +44,9 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 		}),
 		SharedKernel,
 		AuthModule,
+		...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
+			? [SentryObservabilityModule]
+			: []),
 	],
 	providers: [AppService, AppResolver],
 	controllers: [GraphqlSubscriptionsController],

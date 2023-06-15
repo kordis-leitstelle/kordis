@@ -1,49 +1,18 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule, inject } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Router, RouterModule, Routes } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
+import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
 import {
-	AuthComponent,
-	AuthModule,
-	AuthService,
-	authGuard,
-} from '@kordis/spa/auth';
+	NoopObservabilityModule,
+	SentryObservabilityModule,
+} from '@kordis/spa/observability';
 
 import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
-import { ProtectedComponent } from './protected.component';
-
-const routes: Routes = [
-	{
-		path: '',
-		redirectTo: 'protected',
-		pathMatch: 'full',
-	},
-	{
-		path: 'auth',
-		component: AuthComponent,
-		canActivate: [
-			() => {
-				const auth = inject(AuthService);
-				const router = inject(Router);
-
-				return auth.isAuthenticated$.pipe(
-					switchMap(async (isAuthenticated) =>
-						isAuthenticated ? router.navigate(['/protected']) : true,
-					),
-				);
-			},
-		],
-	},
-	{
-		path: 'protected',
-		component: ProtectedComponent,
-		canActivate: [authGuard],
-	},
-	{ path: '**', redirectTo: 'protected' },
-];
+import { AppComponent } from './component/app.component';
+import { ProtectedComponent } from './component/protected.component';
+import routes from './routes';
 
 @NgModule({
 	declarations: [AppComponent, ProtectedComponent],
@@ -51,10 +20,20 @@ const routes: Routes = [
 		BrowserModule,
 		HttpClientModule,
 		RouterModule.forRoot(routes),
-		AuthModule.forRoot(
-			environment.oauth.config,
-			environment.oauth.discoveryDocumentUrl,
-		),
+		environment.oauth
+			? AuthModule.forRoot(
+					environment.oauth.config,
+					environment.oauth.discoveryDocumentUrl,
+			  )
+			: DevAuthModule.forRoot(),
+		// for now, we accept that we have the sentry module and dependencies in our dev bundle as well
+		environment.sentryKey
+			? SentryObservabilityModule.forRoot(
+					environment.sentryKey,
+					environment.environmentName,
+					environment.releaseVersion,
+			  )
+			: NoopObservabilityModule.forRoot(),
 	],
 	providers: [],
 	bootstrap: [AppComponent],

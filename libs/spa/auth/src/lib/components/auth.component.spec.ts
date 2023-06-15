@@ -1,13 +1,19 @@
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 
-import { AuthService } from '../services/auth.service';
+import { AUTH_SERVICE } from '../services/auth-service';
+import { DevAuthService } from '../services/dev-auth.service';
 import { AuthComponent } from './auth.component';
 
 describe('AuthComponent', () => {
 	let spectator: SpectatorRouting<AuthComponent>;
 	const createComponent = createRoutingFactory({
 		component: AuthComponent,
-		componentMocks: [AuthService],
+		componentProviders: [
+			{
+				provide: AUTH_SERVICE,
+				useClass: DevAuthService,
+			},
+		],
 	});
 
 	beforeEach(() => (spectator = createComponent()));
