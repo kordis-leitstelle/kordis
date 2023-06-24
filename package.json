@@ -22,7 +22,7 @@
     "@angular-eslint/eslint-plugin": "16.0.3",
     "@angular-eslint/eslint-plugin-template": "16.0.3",
     "@angular-eslint/template-parser": "16.0.3",
-    "@angular/cli": "~16.0.0",
+    "@angular/cli": "~16.1.0",
     "@angular/compiler-cli": "16.1.2",
     "@angular/language-service": "16.1.2",
     "@commitlint/cli": "^17.6.3",
@@ -115,4 +115,3 @@
     "zone.js": "0.13.0"
   }
 }
-
