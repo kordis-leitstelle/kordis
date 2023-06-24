@@ -1,42 +1,42 @@
 {
-  "migrations": [
-    {
-      "cli": "nx",
-      "version": "16.4.0-beta.8",
-      "description": "Replace @nx/node:node with @nx/js:node for all project targets",
-      "implementation": "./src/migrations/update-16-4-0/replace-node-executor",
-      "package": "@nx/node",
-      "name": "update-16-4-0-replace-node-executor"
-    },
-    {
-      "cli": "nx",
-      "version": "16.4.0-beta.16",
-      "description": "Update TsConfig target to es2021 and CacheModule if being used. Read more at https://docs.nestjs.com/migration-guide",
-      "implementation": "./src/migrations/update-16-4-0-cache-manager/nestjs-10-updates",
-      "package": "@nx/nest",
-      "name": "update-16-4-0-support-nestjs-10"
-    },
-    {
-      "cli": "nx",
-      "version": "16.4.0-beta.6",
-      "requires": {
-        "@angular-eslint/eslint-plugin-template": ">=16.0.0"
-      },
-      "description": "Remove the 'accessibility-' prefix from '@angular-eslint/eslint-plugin-template' rules.",
-      "factory": "./src/migrations/update-16-4-0/rename-angular-eslint-accesibility-rules",
-      "package": "@nx/angular",
-      "name": "rename-angular-eslint-accesibility-rules"
-    },
-    {
-      "cli": "nx",
-      "version": "16.4.0-beta.11",
-      "requires": {
-        "@angular/core": ">=16.1.0"
-      },
-      "description": "Update the @angular/cli package version to ~16.1.0.",
-      "factory": "./src/migrations/update-16-4-0/update-angular-cli",
-      "package": "@nx/angular",
-      "name": "update-angular-cli-version-16-1-0"
-    }
-  ]
+	"migrations": [
+		{
+			"cli": "nx",
+			"version": "16.4.0-beta.8",
+			"description": "Replace @nx/node:node with @nx/js:node for all project targets",
+			"implementation": "./src/migrations/update-16-4-0/replace-node-executor",
+			"package": "@nx/node",
+			"name": "update-16-4-0-replace-node-executor"
+		},
+		{
+			"cli": "nx",
+			"version": "16.4.0-beta.16",
+			"description": "Update TsConfig target to es2021 and CacheModule if being used. Read more at https://docs.nestjs.com/migration-guide",
+			"implementation": "./src/migrations/update-16-4-0-cache-manager/nestjs-10-updates",
+			"package": "@nx/nest",
+			"name": "update-16-4-0-support-nestjs-10"
+		},
+		{
+			"cli": "nx",
+			"version": "16.4.0-beta.6",
+			"requires": {
+				"@angular-eslint/eslint-plugin-template": ">=16.0.0"
+			},
+			"description": "Remove the 'accessibility-' prefix from '@angular-eslint/eslint-plugin-template' rules.",
+			"factory": "./src/migrations/update-16-4-0/rename-angular-eslint-accesibility-rules",
+			"package": "@nx/angular",
+			"name": "rename-angular-eslint-accesibility-rules"
+		},
+		{
+			"cli": "nx",
+			"version": "16.4.0-beta.11",
+			"requires": {
+				"@angular/core": ">=16.1.0"
+			},
+			"description": "Update the @angular/cli package version to ~16.1.0.",
+			"factory": "./src/migrations/update-16-4-0/update-angular-cli",
+			"package": "@nx/angular",
+			"name": "update-angular-cli-version-16-1-0"
+		}
+	]
 }
