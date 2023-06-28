@@ -21,4 +21,3 @@ jobs:
         with:
           repoToken: ${{ secrets.WORKFLOW_PAT }}
           prTitle: 'chore(deps): migrate nx to $VERSION'
-          legacyPeerDeps: 'true'

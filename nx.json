@@ -56,7 +56,8 @@
 			"inlineTemplate": true
 		},
 		"@nx/nest:library": {
-			"strict": true
+			"strict": true,
+			"target": "es2021"
 		}
 	}
 }
