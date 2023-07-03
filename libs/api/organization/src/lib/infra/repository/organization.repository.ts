@@ -1,7 +1,7 @@
 import { Mapper } from '@automapper/core';
-import { getMapperToken } from '@automapper/nestjs';
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { getMapperToken } from '@timonmasberg/automapper-nestjs';
 import { Model } from 'mongoose';
 
 import {
