@@ -22,7 +22,7 @@ powerful set of features comparable with commercial solutions.
 
 ## For Users
 
-If you want to use Kordis, <a href="mailto:infor@kordis-leitstelle.de">please
+If you want to use Kordis, <a href="mailto:info@kordis-leitstelle.de">please
 reach out to us</a>. You can also self-host Kordis, please keep the
 <a href="#license">license</a> in mind. To self-host you manually have to set up
 the [Kordis Landscape](docs/landscape.md) or adapt the codebase to your needs.
@@ -65,9 +65,9 @@ more information.
 
 General Contact - [info@kordis-leitstelle.de](mailto:info@kordis-leitstelle.de)
 Jasper Herzberg (Owner, Maintainer) -
-[LinkedIn](https://www.linkedin.com/in/jasperherzberg/), **TBD!**  
-Timon Masberg (Owner, Maintainer) -
-[LinkedIn](https://www.linkedin.com/in/timon-masberg/),
+[LinkedIn](https://www.linkedin.com/in/jasperherzberg/),
+[jhrzbrg@outlook.com](mailto:jhrzbrg@outlook.com) Timon Masberg (Owner,
+Maintainer) - [LinkedIn](https://www.linkedin.com/in/timon-masberg/),
 [contact@timonmasberg.com](mailto:contact@timonmasberg.com)
 
 ## Acknowledgments
