@@ -12,7 +12,7 @@ Fixes # (issue)  <!-- or Related to # (issue) -->
 - [ ] My changes generate no new warnings, SonarCloud reports no Vulnerabilities, Bugs or Code Smells.
 - [ ] I have added tests (unit and E2E if user-facing) that prove my fix is effective or that my feature works,
 	Coverage > 80% and not less than the current coverage of the main branch.
-- [ ] The PR branch is up-to-date with the base branch
+- [ ] The PR branch is up-to-date with the base branch. In case you merged `main` into your feature branch, make sure you have run the latest NX migrations (`nx migrate --run-migrations`).
 
 <!-- Uncomment the following lines if you introduced a new API library -->
 <!--
