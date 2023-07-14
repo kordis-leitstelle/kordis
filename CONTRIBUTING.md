@@ -1,10 +1,8 @@
 # Contributing to Kordis
 
 We would love for you to contribute to Kordis! This document will help you get
-started. We understand that it is a big project to join. Therefor we have weekly
-developer meetings, **Sundays at 8pm (German Timezone)**. You can join via
-[Google Meet](https://meet.google.com/tqc-mccd-pur) or via
-[phone](https://meet.google.com/tel/tqc-mccd-pur?pin=5845379842628&hs=7).
+started. We understand that it is a big project to join. Therefore, we encourage
+you to get familiar with the project by checking out the [docs](./docs/).
 
 **Please understand, that the language for this project is English. The program
 itself is in German language.**
@@ -41,12 +39,11 @@ below.
 Kordis is an Event Driven System with
 [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 and [Domain Driven Design](https://en.wikipedia.org/wiki/Domain-driven_design)
-principles in mind. If you are new to this, read about it
-[here](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html).
-We have [Architecture Decision Records](https://adr.github.io/) for every major
-project decision we make. The best way to get to know our architecture is to
-check the documents in the [`docs`](docs) folders and to look at the code and
-structure of one of our feature modules (i.e.
+principles in mind. We have
+[Architecture Decision Records](https://adr.github.io/) for every major project
+decision we make. The best way to get to know our architecture is to check the
+documents in the [`docs`](docs) folders and to look at the code and structure of
+one of our feature modules (i.e.
 [`libs/api/organization`](libs/api/organization).
 
 ## Development
@@ -80,7 +77,7 @@ will set a JWT in the local storage.
 
 The API is a NestJS application serving a GraphQL API. Please use the NX CLI to
 generate files. You can simply run` nx g <lib,controller,service...>`. Make sure
-to use the `@nrwl/nest` generator and not the NestJS schematics! For more
+to use the `@nrwl/nest` generator and **not** the NestJS schematics! For more
 information, check out the
 [NX documentation for NestJS](https://nx.dev/packages/nest). For more
 information about the folder and code structure please also read the

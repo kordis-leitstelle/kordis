@@ -35,10 +35,7 @@ Security Issues can be reported via Email to
 ## For Developers/Contributors
 
 We greatly appreciate contributions of any kind. We understand that it is a big
-project to join. Therefor we have weekly developer meetings, Sundays at 8pm
-(German Timezone). You can join via
-[Google Meet](https://meet.google.com/tqc-mccd-pur) or via
-[phone](https://meet.google.com/tel/tqc-mccd-pur?pin=5845379842628&hs=7).
+project to join.
 
 **Please understand, that the language for this project is English. The program
 itself is in German language.** This is due to the fact that we are using this
