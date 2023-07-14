@@ -27,13 +27,13 @@ provides.
 Contains the business logic, entities, events and domain exceptions. Everything
 in here is something business relevant, that should not be touched and
 influenced by changes not related to the business logic, such as changes to the
-Database or the Framework. Therefore, the layer should not have any dependency
+database or the framework. Therefore, the layer should not have any dependency
 on other layers or components from outside its scope. This ensures that we can
 easily test the logic and that we can change the infrastructure without having
 to change the business logic. Nevertheless, we made some tradeoffs in the core
-layer. We allow the use of NestJS framework specific CQRS Handler Annotations,
-Class Validator Annotations and Annotations in the Entity Model for GraphQL
-Input and Argument Models. This is due to the fact, that maintaining another
+layer. We allow the use of NestJS framework specific CQRS handler annotations,
+class validator annotations and annotations in the entity model for GraphQL
+input and argument models. This is due to the fact, that maintaining another
 layer on top of these decorators would be pure overhead, that would
 overcomplicate the codebase and does not outweigh the value of simpler changes
 in the infrastructure layer. Also, maintaining Input Models for GraphQL that
@@ -46,7 +46,7 @@ GraphQL API and the structure is equal.
 The infrastructure layer defines every external component the system interacts
 with. It provides concert implementations such as the repositories (data
 access), logging, external APIs, etc. The idea behind this is that all
-dependencies point towards the Core Layer. At no time should the core layer be
+dependencies point towards the core layer. At no time should the core layer be
 based on any concrete implementation, framework or other specification. This
 ensures that we are flexible with changes in our infrastructure and we allow our
 domain to define what interfaces it requires. This should also result in easier
