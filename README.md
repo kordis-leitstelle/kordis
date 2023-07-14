@@ -34,8 +34,7 @@ Security Issues can be reported via Email to
 
 ## For Developers/Contributors
 
-We greatly appreciate contributions of any kind. We understand that it is a big
-project to join.
+We greatly appreciate contributions of any kind.
 
 **Please understand, that the language for this project is English. The program
 itself is in German language.** This is due to the fact that we are using this
