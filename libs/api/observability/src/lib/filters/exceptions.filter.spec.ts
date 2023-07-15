@@ -6,14 +6,14 @@ import { SentryExceptionsFilter } from './sentry-exceptions.filter';
 
 describe('ExceptionsFilter', () => {
 	let sentryExceptionsFilter: SentryExceptionsFilter;
-	let captureMessageMock: jest.Mock;
+	let addBreadcrumbMock: jest.Mock;
 	let captureExceptionMock: jest.Mock;
 
 	beforeEach(() => {
-		captureMessageMock = jest.fn();
+		addBreadcrumbMock = jest.fn();
 		captureExceptionMock = jest.fn();
 
-		(Sentry.captureMessage as jest.Mock) = captureMessageMock;
+		(Sentry.addBreadcrumb as jest.Mock) = addBreadcrumbMock;
 		(Sentry.captureException as jest.Mock) = captureExceptionMock;
 
 		sentryExceptionsFilter = new SentryExceptionsFilter();
@@ -36,14 +36,14 @@ describe('ExceptionsFilter', () => {
 
 		sentryExceptionsFilter.catch(presentableException);
 
-		expect(captureMessageMock).toHaveBeenCalledTimes(1);
-		expect(captureMessageMock).toHaveBeenCalledWith('code: message', {
-			level: 'info',
-			tags: {
+		expect(addBreadcrumbMock).toHaveBeenCalledTimes(1);
+		expect(addBreadcrumbMock).toHaveBeenCalledWith({
+			level: 'error',
+			message: 'message',
+			data: {
+				name: 'Error',
 				code: 'code',
-				name: presentableException.name,
-				message: 'message',
-				stack: presentableException.stack,
+				stack: expect.any(String),
 			},
 		});
 		expect(captureExceptionMock).not.toHaveBeenCalled();
@@ -58,6 +58,6 @@ describe('ExceptionsFilter', () => {
 		expect(captureExceptionMock).toHaveBeenCalledWith(exception, {
 			level: 'error',
 		});
-		expect(captureMessageMock).not.toHaveBeenCalled();
+		expect(addBreadcrumbMock).not.toHaveBeenCalled();
 	});
 });
