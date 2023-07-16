@@ -49,7 +49,8 @@ export class OrganizationGeoSettings {
 
 	@ValidateNested()
 	@Validate(IsBBox, {
-		message: 'Wrong post title',
+		message:
+			'Für das Begrenzungsrechteck müssen die Ecken oben links und unten rechts angegeben werden.',
 	})
 	@Type(() => BBox)
 	@Field()
