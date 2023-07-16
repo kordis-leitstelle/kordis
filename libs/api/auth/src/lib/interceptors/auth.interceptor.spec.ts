@@ -48,6 +48,7 @@ describe('AuthInterceptor', () => {
 			firstName: 'foo',
 			lastName: 'bar',
 			email: 'foo@bar.de',
+			organization: 'testorg',
 		});
 
 		const handler = createMock<CallHandler>({

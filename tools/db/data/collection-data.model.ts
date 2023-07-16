@@ -1,6 +1,10 @@
-import { Document, OptionalId } from 'mongodb';
+import { Types } from 'mongoose';
 
-export interface CollectionData {
+import { BaseModel } from '../../../libs/api/shared/src';
+
+type OptionalId<T> = T & { _id?: Types.ObjectId };
+
+export interface CollectionData<T = any> {
 	collectionName: string;
-	entries: OptionalId<Document>[];
+	entries: OptionalId<T & Partial<BaseModel>>[];
 }

@@ -28,10 +28,6 @@ describe('GraphqlSubscriptionsController', () => {
 		);
 	});
 
-	it('should be defined', () => {
-		expect(controller).toBeDefined();
-	});
-
 	it('should throw ServiceUnavailableException if handler not ready', () => {
 		const requestEmuFn = () =>
 			controller.subscriptionHandler(

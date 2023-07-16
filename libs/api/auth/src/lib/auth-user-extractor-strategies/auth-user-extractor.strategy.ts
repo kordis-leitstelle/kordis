@@ -20,6 +20,7 @@ export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy 
 			emails: string[];
 			given_name: string;
 			family_name: string;
+			organization: string;
 		};
 
 		return {
@@ -27,6 +28,7 @@ export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy 
 			email: decodedToken['emails'][0],
 			firstName: decodedToken['given_name'],
 			lastName: decodedToken['family_name'],
+			organization: decodedToken['organization'],
 		};
 	}
 }

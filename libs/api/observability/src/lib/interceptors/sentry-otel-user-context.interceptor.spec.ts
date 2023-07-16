@@ -27,6 +27,7 @@ describe('SentryOTelUserContextInterceptor', () => {
 			email: 'test@example.com',
 			firstName: 'John',
 			lastName: 'Doe',
+			organization: 'testorg',
 		};
 
 		const ctx = createGqlContextForRequest(

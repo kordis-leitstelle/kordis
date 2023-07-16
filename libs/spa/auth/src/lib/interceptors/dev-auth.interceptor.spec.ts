@@ -39,12 +39,13 @@ describe('DevAuthInterceptor', () => {
 
 	it('should add an Authorization header with Bearer token when token is present', () => {
 		const token =
-			'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJvaWQiOiIxYTJiM2M0ZCIsImVtYWlscyI6WyJqb2huLmRvZUBleGFtcGxlLmNvbSJdLCJnaXZlbl9uYW1lIjoiSm9obiIsImZhbWlseV9uYW1lIjoiRG9lIn0.';
+			'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJvaWQiOiIxYTJiM2M0ZCIsImVtYWlscyI6WyJqb2huLmRvZUBleGFtcGxlLmNvbSJdLCJnaXZlbl9uYW1lIjoiSm9obiIsImZhbWlseV9uYW1lIjoiRG9lIiwiZXh0ZW5zaW9uX09yZ2FuaXNhdGlvbiI6InRlc3RvcmcifQ.';
 		authService.setSession({
 			id: '1a2b3c4d',
 			firstName: 'John',
 			lastName: 'Doe',
 			email: 'john.doe@example.com',
+			organization: 'testorg',
 		});
 
 		httpClient.get('/test').subscribe();

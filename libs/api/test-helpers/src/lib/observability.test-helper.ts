@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Span, trace } from '@opentelemetry/api';
-import { Tracer } from '@opentelemetry/tracing';
+import { Tracer } from '@opentelemetry/sdk-trace-base';
 
 export function getComparablePrototypeSnapshot(prototype: Record<any, any>) {
 	return JSON.stringify(

@@ -4,7 +4,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
 	NoopObservabilityService,
 	OBSERVABILITY_SERVICE,
-} from './sentry-observability.service';
+} from './services/sentry-observability.service';
 
 @NgModule({
 	imports: [CommonModule],

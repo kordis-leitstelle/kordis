@@ -16,6 +16,7 @@ describe('User Decorator', () => {
 			email: 'someemail@gmail.com',
 			firstName: 'somefirstname',
 			lastName: 'somelastname',
+			organization: 'someorganization',
 		};
 		const req = createMock<KordisRequest>({
 			user,
