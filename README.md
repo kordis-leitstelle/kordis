@@ -59,11 +59,13 @@ more information.
 
 ## Contact
 
-General Contact - [info@kordis-leitstelle.de](mailto:info@kordis-leitstelle.de)
+General Contact -
+[info@kordis-leitstelle.de](mailto:info@kordis-leitstelle.de)  
 Jasper Herzberg (Owner, Maintainer) -
 [LinkedIn](https://www.linkedin.com/in/jasperherzberg/),
-[jhrzbrg@outlook.com](mailto:jhrzbrg@outlook.com) Timon Masberg (Owner,
-Maintainer) - [LinkedIn](https://www.linkedin.com/in/timon-masberg/),
+[jhrzbrg@outlook.com](mailto:jhrzbrg@outlook.com)  
+Timon Masberg (Owner, Maintainer) -
+[LinkedIn](https://www.linkedin.com/in/timon-masberg/),
 [contact@timonmasberg.com](mailto:contact@timonmasberg.com)
 
 ## Acknowledgments
