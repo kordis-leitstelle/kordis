@@ -24,9 +24,10 @@ describe('PresentableValidationException', () => {
 
 		expect(exception).toBeInstanceOf(PresentableValidationException);
 		expect(exception.message).toBe(message);
-		expect(
-			(exception.asGraphQLError().extensions!.errors as []).sort(),
-		).toEqual(errors.sort());
+		const gqlExtensionErrors = exception.asGraphQLError().extensions!
+			.errors as [];
+		expect(gqlExtensionErrors).toHaveLength(2);
+		expect(gqlExtensionErrors).toEqual(expect.arrayContaining(errors));
 	});
 
 	it('should create a PresentableValidationException from ClassValidationErrors', () => {
@@ -42,8 +43,9 @@ describe('PresentableValidationException', () => {
 
 		expect(exception).toBeInstanceOf(PresentableValidationException);
 		expect(exception.message).toBe('Validierungsfehler');
-		expect(
-			(exception.asGraphQLError().extensions!.errors as []).sort(),
-		).toEqual(errors.sort());
+		const gqlExtensionErrors = exception.asGraphQLError().extensions!
+			.errors as [];
+		expect(gqlExtensionErrors).toHaveLength(2);
+		expect(gqlExtensionErrors).toEqual(expect.arrayContaining(errors));
 	});
 });
