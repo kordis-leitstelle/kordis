@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
+import { GraphqlModule } from '@kordis/spa/graphql';
 import {
 	NoopObservabilityModule,
 	SentryObservabilityModule,
@@ -26,7 +27,10 @@ import routes from './routes';
 					environment.oauth.discoveryDocumentUrl,
 			  )
 			: DevAuthModule.forRoot(),
-		// for now, we accept that we have the sentry module and dependencies in our dev bundle as well
+		GraphqlModule.forRoot(
+			environment.apiUrl + '/graphql',
+			environment.apiUrl + '/graphql-stream',
+		),
 		environment.sentryKey
 			? SentryObservabilityModule.forRoot(
 					environment.sentryKey,
@@ -35,7 +39,6 @@ import routes from './routes';
 			  )
 			: NoopObservabilityModule.forRoot(),
 	],
-	providers: [],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

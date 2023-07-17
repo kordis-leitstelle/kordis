@@ -78,6 +78,8 @@
     "@nx/angular": "16.5.2"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.17",
+    "@nestjs/axios": "^3.0.0",
     "@angular/animations": "16.1.2",
     "@angular/common": "16.1.2",
     "@angular/compiler": "16.1.2",
@@ -109,11 +111,12 @@
     "@sentry/profiling-node": "^1.0.0",
     "@timonmasberg/automapper-nestjs": "^0.0.0",
     "angular-oauth2-oidc": "^15.0.1",
+    "apollo-angular": "^5.0.0",
     "axios": "^1.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
-    "graphql": "^16.6.0",
-    "graphql-sse": "^2.1.1",
+    "graphql": "^16.7.1",
+    "graphql-sse": "^2.2.0",
     "mongoose": "^7.0.3",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
