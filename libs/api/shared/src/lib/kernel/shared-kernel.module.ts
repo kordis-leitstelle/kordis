@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 import { GraphQLSubscriptionService } from './graphql/subscriptions/graphql-subscription.service';
 
-@Global() // todo: is this smat? can we reexport the cqrs module?
+@Global()
 @Module({
 	imports: [CqrsModule],
 	providers: [GraphQLSubscriptionService],

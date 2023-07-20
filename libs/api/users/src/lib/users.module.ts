@@ -1,6 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 import { registerEnumType } from '@nestjs/graphql';
 
 import { SharedKernel } from '@kordis/api/shared';
@@ -36,7 +35,7 @@ class BaseUsersModule {
 }
 
 @Module({
-	imports: [HttpModule, CqrsModule, SharedKernel],
+	imports: [HttpModule, SharedKernel],
 	providers: [
 		{
 			provide: USER_SERVICE,
