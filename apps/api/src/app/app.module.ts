@@ -14,12 +14,13 @@ import {
 } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
+import { UsersModule } from '@kordis/api/users';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 
-const FEATURE_MODULES = [OrganizationModule];
+const FEATURE_MODULES = [OrganizationModule, UsersModule];
 const UTILITY_MODULES = [
 	SharedKernel,
 	AuthModule,
@@ -43,9 +44,6 @@ const UTILITY_MODULES = [
 					config.get('NODE_ENV') !== 'production'
 						? path.join(process.cwd(), 'apps/api/src/schema.gql')
 						: true,
-				subscriptions: {
-					'graphql-ws': true,
-				},
 				playground: config.get('NODE_ENV') !== 'production',
 				formatError: errorFormatterFactory(
 					config.get('NODE_ENV') === 'production',

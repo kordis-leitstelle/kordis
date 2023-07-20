@@ -4,21 +4,29 @@ import {
 	Injectable,
 	Logger,
 	NestInterceptor,
-	UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Observable, throwError } from 'rxjs';
 
 import { KordisLogger } from '@kordis/api/observability';
 import { KordisGqlContext, KordisRequest } from '@kordis/api/shared';
+import { Role } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
+import { METADATA_ROLE_KEY } from '../decorators/minimum-role.decorator';
+import { PresentableInsufficientPermissionException } from '../errors/presentable-insufficient-permission.exception';
+import { PresentableUnauthorizedException } from '../errors/presentable-unauthorized.exception';
+import { isRoleAllowed } from '../roles';
 
 @Injectable()
 export class AuthInterceptor implements NestInterceptor {
 	private readonly logger: KordisLogger = new Logger(AuthInterceptor.name);
 
-	constructor(private readonly authUserExtractor: AuthUserExtractorStrategy) {}
+	constructor(
+		private readonly authUserExtractor: AuthUserExtractorStrategy,
+		private readonly reflector: Reflector,
+	) {}
 
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
 		let req: KordisRequest;
@@ -39,7 +47,15 @@ export class AuthInterceptor implements NestInterceptor {
 			});
 			// This is just intended to be a fallback, as we currently only aim to support running the API behind an OAuth Proxy
 			// You could write a custom auth user strategy which handles your auth process and return null if unauthorized
-			return throwError(() => new UnauthorizedException());
+			return throwError(() => new PresentableUnauthorizedException());
+		}
+
+		const minimumRole = this.reflector.get<Role | undefined>(
+			METADATA_ROLE_KEY,
+			context.getHandler(),
+		);
+		if (minimumRole && !isRoleAllowed(possibleAuthUser.role, minimumRole)) {
+			return throwError(() => new PresentableInsufficientPermissionException());
 		}
 
 		req.user = possibleAuthUser;

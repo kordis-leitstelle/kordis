@@ -19,10 +19,12 @@ export class GraphqlSubscriptionsController implements OnModuleInit {
 	constructor(private readonly graphQLSchemaHost: GraphQLSchemaHost) {}
 
 	onModuleInit(): void {
-		const schema = this.graphQLSchemaHost.schema;
-
 		this.handler = createHandler({
-			schema,
+			schema: this.graphQLSchemaHost.schema,
+			context: (req) => ({
+				// pass express request, since the request will be used in the nestjs pipeline
+				req: req.raw,
+			}),
 		});
 	}
 

@@ -1,17 +1,12 @@
-import { Logger, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
 import { GraphQLSubscriptionService } from './graphql/subscriptions/graphql-subscription.service';
 
+@Global() // todo: is this smat? can we reexport the cqrs module?
 @Module({
 	imports: [CqrsModule],
 	providers: [GraphQLSubscriptionService],
-	exports: [GraphQLSubscriptionService],
+	exports: [GraphQLSubscriptionService, CqrsModule],
 })
-export class SharedKernel {
-	private readonly logger = new Logger(SharedKernel.name);
-
-	constructor() {
-		this.logger.log('SharedKernel loaded');
-	}
-}
+export class SharedKernel {}

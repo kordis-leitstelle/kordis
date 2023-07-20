@@ -21,6 +21,8 @@ export class SentryOTelUserContextInterceptor implements NestInterceptor {
 			'user.id': user.id,
 			'user.email': user.email,
 			'user.name': `${user.firstName} ${user.lastName}`,
+			'user.role': user.role,
+			'user.organizationId': user.organizationId,
 		});
 
 		Sentry.setUser({

@@ -6,7 +6,7 @@ import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
 import { createGqlContextForRequest } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser, Role } from '@kordis/shared/auth';
 
 import { SentryOTelUserContextInterceptor } from './sentry-otel-user-context.interceptor';
 
@@ -27,7 +27,8 @@ describe('SentryOTelUserContextInterceptor', () => {
 			email: 'test@example.com',
 			firstName: 'John',
 			lastName: 'Doe',
-			organization: 'testorg',
+			role: Role.USER,
+			organizationId: '123',
 		};
 
 		const ctx = createGqlContextForRequest(
@@ -57,6 +58,8 @@ describe('SentryOTelUserContextInterceptor', () => {
 			'user.id': user.id,
 			'user.email': user.email,
 			'user.name': `${user.firstName} ${user.lastName}`,
+			'user.role': user.role,
+			'user.organizationId': user.organizationId,
 		});
 
 		expect(sentrySetUserSpy).toHaveBeenCalled();
