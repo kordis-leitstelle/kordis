@@ -47,6 +47,12 @@ export class DevAuthService implements AuthService {
 		localStorage.removeItem('krdDevToken');
 		this.userSubject$.next(null);
 		this.tokenSubject$.next(null);
+		void this.router.navigate(['/auth']);
+	}
+
+	getAccessToken(): string {
+		// eslint-disable-next-line rxjs/no-subject-value
+		return this.tokenSubject$.getValue() ?? '';
 	}
 
 	private authUserToTokenPayload(authUser: AuthUser): {
@@ -54,14 +60,16 @@ export class DevAuthService implements AuthService {
 		oid: string;
 		given_name: string;
 		family_name: string;
-		extension_Organisation: string;
+		extension_OrganizationId: string;
+		extension_Role: string;
 	} {
 		return {
 			oid: authUser.id,
 			emails: [authUser.email],
 			given_name: authUser.firstName,
 			family_name: authUser.lastName,
-			extension_Organisation: authUser.organization,
+			extension_OrganizationId: authUser.organizationId,
+			extension_Role: authUser.role,
 		};
 	}
 

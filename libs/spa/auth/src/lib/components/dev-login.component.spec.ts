@@ -2,6 +2,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { createMock } from '@golevelup/ts-jest';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 
+import { Role } from '@kordis/shared/auth';
+
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';
 import { DevLoginComponent } from './dev-login.component';
@@ -44,6 +46,8 @@ describe('DevLoginComponent', () => {
 			firstName: 'Test',
 			lastName: 'User 1',
 			email: 'testuser@test.com',
+			role: Role.USER,
+			organizationId: '1234',
 		});
 		spectator.component.loginWithCustomClaims();
 		expect(authServiceMock.setSession).toHaveBeenCalledWith({
@@ -51,6 +55,8 @@ describe('DevLoginComponent', () => {
 			firstName: 'Test',
 			lastName: 'User 1',
 			email: 'testuser@test.com',
+			role: Role.USER,
+			organizationId: '1234',
 		});
 		expect(spectator.router.navigate).toHaveBeenCalledWith(['/']);
 	});

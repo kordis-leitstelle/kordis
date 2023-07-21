@@ -2,6 +2,8 @@ import { Router } from '@angular/router';
 import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 import { firstValueFrom } from 'rxjs';
 
+import { Role } from '@kordis/shared/auth';
+
 import { DevAuthService } from './dev-auth.service';
 
 describe('DevAuthService', () => {
@@ -34,7 +36,8 @@ describe('DevAuthService', () => {
 				lastName: 'Doe',
 				email: 'johndoe@example.com',
 				id: '1234',
-				organization: 'testorg',
+				role: Role.USER,
+				organizationId: '1234',
 			};
 			spectator.service.setSession(user);
 			expect(localStorage.getItem('krdDevUser')).toBe(JSON.stringify(user));
