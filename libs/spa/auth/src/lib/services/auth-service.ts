@@ -6,8 +6,12 @@ import { AuthUser } from '@kordis/shared/auth';
 export interface AuthService {
 	readonly user$: Observable<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
+
 	login(): void;
+
 	logout(): void;
+
+	getAccessToken(): string;
 }
 
 export const AUTH_SERVICE = new InjectionToken<AuthService>('AUTH_SERVICE');

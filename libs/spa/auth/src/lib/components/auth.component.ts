@@ -65,10 +65,10 @@ export class AuthComponent {
 	readonly hasAuthError$: Observable<boolean>;
 
 	constructor(
-		private readonly activatedRoute: ActivatedRoute,
+		activatedRoute: ActivatedRoute,
 		@Inject(AUTH_SERVICE) private readonly authService: AuthService,
 	) {
-		this.hasAuthError$ = this.activatedRoute.queryParams.pipe(
+		this.hasAuthError$ = activatedRoute.queryParams.pipe(
 			map((params) => !!params['error']),
 		);
 	}
