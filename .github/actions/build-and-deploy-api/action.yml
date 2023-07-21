@@ -17,6 +17,18 @@ inputs:
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
+  aadb2cExtensionAppId:
+    required: false
+    description: "Azure AD B2C App ID for the Extension App"
+  aadb2cTenant:
+    required: false
+    description: "Azure AD B2C tenant"
+  aadb2cClientId:
+    required: false
+    description: "Azure AD B2C Client ID"
+  aadb2cClientSecret:
+    required: false
+    description: "Azure AD B2C Client Secret"
 outputs:
   url:
     description: "API URL"
@@ -25,12 +37,17 @@ outputs:
 runs:
   using: "composite"
   steps:
+
     - run: envsubst < apps/api/src/.env.template > apps/api/src/.env
       env:
         MONGODB_URI: ${{ inputs.mongoUri }}
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
+        AADB2C_TENANT: ${{ inputs.aadb2cTenant }}
+        AADB2C_EXTENSION_APP_ID: ${{ inputs.aadb2cExtensionAppId }}
+        AADB2C_CLIENT_ID: ${{ inputs.aadb2cClientId }}
+        AADB2C_CLIENT_SECRET: ${{ inputs.aadb2cClientSecret }}
       shell: bash
     - run: |
         npx nx build api --prod

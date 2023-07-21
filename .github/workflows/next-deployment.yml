@@ -34,10 +34,14 @@ jobs:
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          aadb2cTenant: ${{ secrets.AADB2C_TENANT_URL }}
+          aadb2cExtensionAppId: ${{ secrets.AADB2C_EXTENSION_APP_ID }}
+          aadb2cClientId: ${{ secrets.AADB2C_CLIENT_ID }}
+          aadb2cClientSecret: ${{ secrets.AADB2C_CLIENT_SECRET }}
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:
-          MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
+          MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }} # TODO: https://github.com/kordis-leitstelle/kordis/issues/184
           MONGODB_DB: dev
 
       - name: Build and Deploy SPA
