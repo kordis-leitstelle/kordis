@@ -1,8 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { registerEnumType } from '@nestjs/graphql';
 
-import { SharedKernel } from '@kordis/api/shared';
 import { Role } from '@kordis/shared/auth';
 
 import { ChangeEmailHandler } from './core/command/change-email.command';
@@ -16,35 +15,17 @@ import { UserResolver } from './infra/controller/user.resolver';
 import { AADB2CUserService } from './infra/service/aadb2c-user.service';
 import { DevUserService } from './infra/service/dev-user.service';
 
-const PROVIDERS = Object.freeze([
-	ChangeEmailHandler,
-	CreateUserHandler,
-	DeactivateUserHandler,
-	ReactivateUserHandler,
-	UserLoginHistoryHandler,
-	OrganizationUsersHandler,
-	UserResolver,
-]);
-
-class BaseUsersModule {
-	constructor() {
-		registerEnumType(Role, {
-			name: 'Role',
-		});
-	}
-}
-
 @Module({
-	imports: [HttpModule, SharedKernel],
+	imports: [HttpModule],
 	providers: [
 		{
 			provide: USER_SERVICE,
 			useClass: AADB2CUserService,
 		},
-		...PROVIDERS,
 	],
+	exports: [USER_SERVICE],
 })
-export class UsersModule extends BaseUsersModule {}
+class AADB2CUsersModule {}
 
 @Module({
 	providers: [
@@ -52,7 +33,37 @@ export class UsersModule extends BaseUsersModule {}
 			provide: USER_SERVICE,
 			useClass: DevUserService,
 		},
-		...PROVIDERS,
 	],
+	exports: [USER_SERVICE],
 })
-export class DevUsersModule extends BaseUsersModule {}
+class DevUsersInMemoryModule {}
+
+const USERS_MODULES = Object.freeze({
+	dev: DevUsersInMemoryModule,
+	aadb2c: AADB2CUsersModule,
+});
+
+@Module({})
+export class UsersModule {
+	constructor() {
+		registerEnumType(Role, {
+			name: 'Role',
+		});
+	}
+
+	static forRoot(usersProvider: keyof typeof USERS_MODULES): DynamicModule {
+		return {
+			module: UsersModule,
+			imports: [USERS_MODULES[usersProvider]],
+			providers: [
+				ChangeEmailHandler,
+				CreateUserHandler,
+				DeactivateUserHandler,
+				ReactivateUserHandler,
+				UserLoginHistoryHandler,
+				OrganizationUsersHandler,
+				UserResolver,
+			],
+		};
+	}
+}
