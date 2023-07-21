@@ -3,12 +3,12 @@ import { Role } from '@kordis/shared/auth';
 // keep in sync with the apps/api/dev-tokens.md file!
 export const TEST_USERS = Object.freeze([
 	{
-		id: 'c0cc4404-7907-4480-86d3-ba4bfc513c6d',
+		id: 'fbdd030c-bae9-4213-9e04-732b1cc8f5b8 ',
 		deactivated: false,
 		firstName: 'Test',
 		lastName: 'User',
 		userName: 'testuser',
-		organizationId: '', // todo: add org id after org mr merge
+		organizationId: 'dff7584efe2c174eee8bae45',
 		email: 'testuser@kordis-leitstelle.de',
 		role: Role.USER,
 	},
@@ -18,7 +18,7 @@ export const TEST_USERS = Object.freeze([
 		firstName: 'Test',
 		lastName: 'Admin',
 		userName: 'testadmin',
-		organizationId: '', // todo: add org id after org mr merge
+		organizationId: 'dff7584efe2c174eee8bae45',
 		email: 'testadmin@kordis-leitstelle.de',
 		role: Role.ADMIN,
 	},
@@ -28,7 +28,7 @@ export const TEST_USERS = Object.freeze([
 		firstName: 'Test',
 		lastName: 'Org Admin',
 		userName: 'testadmin',
-		organizationId: '', // todo: add org id after org mr merge
+		organizationId: 'dff7584efe2c174eee8bae45',
 		email: 'testorgadmin@kordis-leitstelle.de',
 		role: Role.ORGANIZATION_ADMIN,
 	},
