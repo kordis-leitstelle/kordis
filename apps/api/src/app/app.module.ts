@@ -8,10 +8,7 @@ import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
-import {
-	DevObservabilityModule,
-	SentryObservabilityModule,
-} from '@kordis/api/observability';
+import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 import { UsersModule } from '@kordis/api/users';
@@ -20,13 +17,21 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 
-const FEATURE_MODULES = [OrganizationModule, UsersModule];
+const IS_NON_CI_PROD =
+	process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS;
+const IS_NEXT_DEPLOYMENT = process.env.ENVIRONMENT_NAME === 'next';
+const IS_PROD_DEPLOYMENT = process.env.ENVIRONMENT_NAME === 'prod';
+
+const FEATURE_MODULES = [
+	OrganizationModule,
+	UsersModule.forRoot(
+		IS_NEXT_DEPLOYMENT || IS_PROD_DEPLOYMENT ? 'aadb2c' : 'dev',
+	),
+];
 const UTILITY_MODULES = [
 	SharedKernel,
 	AuthModule,
-	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
-		? [SentryObservabilityModule]
-		: [DevObservabilityModule]),
+	ObservabilityModule.forRoot(IS_NON_CI_PROD ? 'sentry' : 'dev'),
 ];
 
 @Module({

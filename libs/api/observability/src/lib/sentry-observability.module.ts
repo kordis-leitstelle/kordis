@@ -9,17 +9,12 @@ import { SentryOTelUserContextInterceptor } from './interceptors/sentry-otel-use
 import oTelSDK from './oTelSdk';
 import { KORDIS_LOGGER_SERVICE } from './services/kordis-logger-service.interface';
 import { KordisLogger } from './services/kordis-logger.interface';
-import { KordisLoggerImpl } from './services/kordis.logger';
 import { SentryLogger } from './services/sentry-logger.service';
 import { wrapProvidersWithTracingSpans } from './trace-wrapper';
 
 // This Module must come after the AuthModule, because it depends on the use set by the AuthInterceptor
 @Module({
 	providers: [
-		{
-			provide: Logger,
-			useClass: KordisLoggerImpl,
-		},
 		{
 			provide: KORDIS_LOGGER_SERVICE,
 			useClass: SentryLogger,
@@ -33,6 +28,7 @@ import { wrapProvidersWithTracingSpans } from './trace-wrapper';
 			useClass: SentryOTelUserContextInterceptor,
 		},
 	],
+	exports: [KORDIS_LOGGER_SERVICE],
 })
 export class SentryObservabilityModule implements OnModuleInit {
 	private readonly logger: KordisLogger = new Logger(
