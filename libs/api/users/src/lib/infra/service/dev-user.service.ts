@@ -22,14 +22,6 @@ export class DevUserService extends BaseUserService {
 		return Promise.resolve();
 	}
 
-	changeUsername(userId: string, username: string): Promise<void> {
-		const user = this.users.find((u) => u.id === userId);
-		if (user) {
-			user.userName = username;
-		}
-		return Promise.resolve();
-	}
-
 	createUser(
 		firstName: string,
 		lastName: string,

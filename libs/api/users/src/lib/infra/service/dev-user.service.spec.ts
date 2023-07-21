@@ -98,4 +98,54 @@ describe('DevUserService', () => {
 	it('should return empty array for login history', async () => {
 		await expect(devUserService.getLoginHistory()).resolves.toEqual([]);
 	});
+
+	it('should change mail', async () => {
+		const { id } = await devUserService.createUser(
+			'John',
+			'Doe',
+			'johndoe',
+			'test@mail.com',
+			Role.USER,
+			'123',
+		);
+		await devUserService.changeEmail(id, 'new@mail.com');
+		await expect(devUserService.getUser(id)).resolves.toEqual(
+			expect.objectContaining({ email: 'new@mail.com' }),
+		);
+	});
+
+	it('should change role', async () => {
+		const { id } = await devUserService.createUser(
+			'John',
+			'Doe',
+			'johndoe',
+			'test@mail.com',
+			Role.USER,
+			'123',
+		);
+		await devUserService.changeRole(id, Role.ADMIN);
+		await expect(devUserService.getUser(id)).resolves.toEqual(
+			expect.objectContaining({ role: Role.ADMIN }),
+		);
+	});
+
+	it('should deactivate and reactivate user', async () => {
+		const { id } = await devUserService.createUser(
+			'John',
+			'Doe',
+			'johndoe',
+			'test@mail.com',
+			Role.USER,
+			'123',
+		);
+		await devUserService.deactivateUser(id);
+		await expect(devUserService.getUser(id)).resolves.toEqual(
+			expect.objectContaining({ deactivated: true }),
+		);
+
+		await devUserService.reactivateUser(id);
+		await expect(devUserService.getUser(id)).resolves.toEqual(
+			expect.objectContaining({ deactivated: false }),
+		);
+	});
 });
