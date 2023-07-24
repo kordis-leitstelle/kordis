@@ -1,4 +1,4 @@
-const beaufortScale = Object.freeze([
+const BEAUFORT_SCALE = Object.freeze([
 	{ grade: 0, description: 'Windstille', limit: 1 },
 	{ grade: 1, description: 'Leiser Zug', limit: 6 },
 	{ grade: 2, description: 'Leichte Brise', limit: 12 },
@@ -43,7 +43,7 @@ export function convertSpeedToBeaufort(kmh: number): {
 	description: string;
 } {
 	// simply iterate over it, binary search would take too much space compared to the static amount of elements we have, also most of the time we probably have a low wind speed
-	for (const { limit, grade, description } of beaufortScale) {
+	for (const { limit, grade, description } of BEAUFORT_SCALE) {
 		if (kmh < limit) {
 			return {
 				grade,
@@ -54,7 +54,7 @@ export function convertSpeedToBeaufort(kmh: number): {
 
 	// should never happen, but keeps the compiler happy
 	return {
-		grade: beaufortScale[beaufortScale.length - 1].grade,
-		description: beaufortScale[beaufortScale.length - 1].description,
+		grade: BEAUFORT_SCALE[BEAUFORT_SCALE.length - 1].grade,
+		description: BEAUFORT_SCALE[BEAUFORT_SCALE.length - 1].description,
 	};
 }
