@@ -29,7 +29,7 @@ export class WarningsCheckerJob {
 			// runs in a cron job instead of rxjs interval to run in a separate child process
 			const job = new CronJob(
 				options.checkCronExpression,
-				() => this.checkForNewWarningsAndPublish(),
+				() => void this.checkForNewWarningsAndPublish(),
 				undefined,
 				undefined,
 				undefined,

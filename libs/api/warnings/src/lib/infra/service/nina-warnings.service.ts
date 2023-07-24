@@ -52,9 +52,11 @@ export class NinaWarningsService implements WarningsService {
 			this.logger.debug(`Found ${sourceWarnings.length} warnings from ${url}`);
 
 			for (const { id, version } of sourceWarnings) {
-				const existingWarning = await this.warningModel.findOne({
-					sourceId: id,
-				});
+				const existingWarning = await this.warningModel
+					.findOne({
+						sourceId: id,
+					})
+					.exec();
 				if (existingWarning) {
 					warningsToKeep.push(id);
 					if (existingWarning.sourceVersion === version) {
@@ -84,9 +86,11 @@ export class NinaWarningsService implements WarningsService {
 			}
 		}
 
-		const deleteResult = await this.warningModel.deleteMany({
-			sourceId: { $nin: warningsToKeep },
-		});
+		const deleteResult = await this.warningModel
+			.deleteMany({
+				sourceId: { $nin: warningsToKeep },
+			})
+			.exec();
 		this.logger.debug(
 			`Deleted ${deleteResult.deletedCount} warnings since they were not present in NINA anymore`,
 		);

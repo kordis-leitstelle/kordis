@@ -43,11 +43,11 @@ export function convertSpeedToBeaufort(kmh: number): {
 	description: string;
 } {
 	// simply iterate over it, binary search would take too much space compared to the static amount of elements we have, also most of the time we probably have a low wind speed
-	for (let i = 0; i < beaufortScale.length; i++) {
-		if (kmh < beaufortScale[i].limit) {
+	for (const { limit, grade, description } of beaufortScale) {
+		if (kmh < limit) {
 			return {
-				grade: beaufortScale[i].grade,
-				description: beaufortScale[i].description,
+				grade,
+				description,
 			};
 		}
 	}

@@ -127,7 +127,12 @@ describe('NinaWarningService', () => {
 				return NEVER;
 			});
 
-			mockWarningModel.findOne.mockResolvedValue(null); // No existing warnings
+			mockWarningModel.findOne.mockImplementation(
+				() =>
+					({
+						exec: jest.fn().mockResolvedValue(null),
+					} as any),
+			); // No existing warnings
 
 			const newWarnings = await warningService.getNewWarnings();
 
@@ -186,8 +191,13 @@ describe('NinaWarningService', () => {
 				sourceVersion: 1,
 				replaceOne: replaceOneMock,
 			};
-			mockWarningModel.findOne.mockResolvedValueOnce(existingWarning);
 
+			mockWarningModel.findOne.mockImplementationOnce(
+				() =>
+					({
+						exec: jest.fn().mockResolvedValue(existingWarning),
+					} as any),
+			);
 			const newWarnings = await warningService.getNewWarnings();
 
 			expect(newWarnings).toHaveLength(1);
@@ -215,11 +225,16 @@ describe('NinaWarningService', () => {
 				of({ data: source1Warnings } as AxiosResponse),
 			);
 
-			mockWarningModel.findOne.mockResolvedValueOnce({
-				_id: 'warning_1_id',
-				sourceId: 'warning_1',
-				sourceVersion: 1,
-			});
+			mockWarningModel.findOne.mockImplementationOnce(
+				() =>
+					({
+						exec: jest.fn().mockResolvedValue({
+							_id: 'warning_1_id',
+							sourceId: 'warning_1',
+							sourceVersion: 1,
+						}),
+					} as any),
+			);
 
 			const newWarnings = await warningService.getNewWarnings();
 			expect(newWarnings).toHaveLength(0);

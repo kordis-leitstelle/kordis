@@ -62,13 +62,13 @@ const FEATURE_MODULES = Object.freeze([
 	WarningsModule.forRootAsync({
 		useFactory: (config: ConfigService) => ({
 			checkCronExpression:
-				config.get('WARNING_CHECK_CRON_EXPRESSION') || undefined,
+				config.get('WARNING_CHECK_CRON_EXPRESSION') ?? undefined,
 		}),
 		inject: [ConfigService],
 	}),
 	WeatherModule.forRootAsync({
 		useFactory: (config: ConfigService) => ({
-			azureMapKey: config.get('AZURE_MAP_KEY') || undefined,
+			azureMapKey: config.get('AZURE_MAP_KEY') ?? undefined,
 		}),
 		inject: [ConfigService],
 	}),
@@ -78,7 +78,6 @@ const UTILITY_MODULES = Object.freeze([
 	SharedKernel,
 	AuthModule,
 	ObservabilityModule.forRoot(
-		// todo: this would be nice to have as an async config through the config service
 		process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
 			? 'sentry'
 			: 'dev',
