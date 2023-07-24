@@ -41,11 +41,11 @@ export class GraphQLSubscriptionService implements OnModuleDestroy {
 	): AsyncIterableIterator<TReturn> {
 		let typeEventStream$ = this.eventStream$.pipe(ofType(event));
 
-		if (operators?.map) {
-			typeEventStream$ = typeEventStream$.pipe(map(operators.map));
-		}
 		if (operators?.filter) {
 			typeEventStream$ = typeEventStream$.pipe(filter(operators.filter));
+		}
+		if (operators?.map) {
+			typeEventStream$ = typeEventStream$.pipe(map(operators.map));
 		}
 
 		return observableToAsyncIterable(typeEventStream$);
