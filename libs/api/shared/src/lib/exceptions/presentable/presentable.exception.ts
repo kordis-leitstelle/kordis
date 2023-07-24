@@ -1,5 +1,6 @@
 import { GraphQLFormattedError } from 'graphql/error';
 
+import { Mutable } from '../../types';
 import GraphqlErrorConvertable from '../graphql-error-convertable';
 
 /**
@@ -24,5 +25,3 @@ export abstract class PresentableException
 		};
 	}
 }
-
-export type Mutable<T> = { -readonly [k in keyof T]: T[k] };
