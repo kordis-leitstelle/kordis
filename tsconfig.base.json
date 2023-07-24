@@ -16,6 +16,7 @@
 		"baseUrl": ".",
 		"paths": {
 			"@kordis/api/auth": ["libs/api/auth/src/index.ts"],
+			"@kordis/api/geospatial": ["libs/api/geospatial/src/index.ts"],
 			"@kordis/api/observability": ["libs/api/observability/src/index.ts"],
 			"@kordis/api/organization": ["libs/api/organization/src/index.ts"],
 			"@kordis/api/shared": ["libs/api/shared/src/index.ts"],
