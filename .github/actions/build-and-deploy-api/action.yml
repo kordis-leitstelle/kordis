@@ -17,6 +17,12 @@ inputs:
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
+  warningsCheckCron:
+    required: false
+    description: "Cron Expression for NINA Warnings Check"
+  azureMapKey:
+    required: false
+    description: "Azure Map API Key"
 outputs:
   url:
     description: "API URL"
@@ -31,6 +37,8 @@ runs:
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
+        WARNING_CHECK_CRON_EXPRESSION: ${{ inputs.warningsCheckCron }}
+        AZURE_MAP_KEY: ${{ inputs.azureMapKey }}
       shell: bash
     - run: |
         npx nx build api --prod

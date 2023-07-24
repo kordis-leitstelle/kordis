@@ -34,6 +34,8 @@ jobs:
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          azureMapKey: ${{ secrets.AZURE_MAP_KEY }}
+          warningsCheckCron: "* * * * *"
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:
