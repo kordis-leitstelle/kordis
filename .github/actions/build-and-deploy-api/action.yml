@@ -25,18 +25,30 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: envsubst < apps/api/src/.env.template > apps/api/src/.env
+    - name: Set environment
+      run: envsubst < apps/api/src/.env.template > apps/api/src/.env
       env:
         MONGODB_URI: ${{ inputs.mongoUri }}
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
       shell: bash
-    - run: |
-        npx nx build api --prod
-        cd dist/apps/api
-        npm i --omit=dev --ignore-scripts
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    # TODO: publish latest tag somewhere and pull latest container image here to make use of Docker's caching
+    - name: Build app and container
+      run: |
+        npx nx docker-build api --prod
       shell: bash
+    - name: Push container to registry
+      run: |
+        docker tag api ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
+        docker push ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
+    # TODO: Replace wa-deployment by deployment to K8s
     - name: Deploy API
       id: wa-deployment
       uses: azure/webapps-deploy@v2
