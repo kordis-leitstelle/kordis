@@ -54,12 +54,17 @@ runs:
       run: |
         npx nx build api --prod
       shell: bash
-    - name: Build and push
+    - id: node-version-check
+      run: echo "node-version=$(cat .nvmrc | tr -cd '[:digit:].')\n" >> $GITHUB_OUTPUT
+      outputs:
+        node-version:
+          descriptio: Version of Node used by the project
+    - name: Build and push image
       uses: docker/build-push-action@v4
       with:
         context: ./apps/api/
         build-args: |
-          NODE_VERSION=$(cat .nvmrc | tr -cd [:digit:].)
+          NODE_VERSION=${{ steps.node-version-check.outputs.node-version}}
         push: true
         tags: |
           ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
