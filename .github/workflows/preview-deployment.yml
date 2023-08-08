@@ -60,6 +60,8 @@ jobs:
     if: |
       (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-preview')) &&
       (needs.comment-handler.outputs.is-admin == 'true')
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v3
         with:
@@ -144,6 +146,8 @@ jobs:
     if: |
       (github.event_name == 'pull_request' && github.event.action == 'synchronize') &&
       (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

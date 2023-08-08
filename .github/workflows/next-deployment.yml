@@ -14,6 +14,8 @@ jobs:
       url: ${{ steps.spa-deployment.outputs.url }}
     outputs:
       spaUrl: ${{ steps.spa-deployment.outputs.url }}
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
