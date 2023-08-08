@@ -39,16 +39,18 @@ runs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    # TODO: publish latest tag somewhere and pull latest container image here to make use of Docker's caching
-    - name: Build app and container
+    - name: Build app
       run: |
-        npx nx docker-build api --prod
+        npx nx build api --prod
       shell: bash
-    - name: Push container to registry
-      run: |
-        docker tag api ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
-        docker push ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
-    # TODO: Replace wa-deployment by deployment to K8s
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./apps/api/
+        push: true
+        tags: ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
     - name: Deploy API
       id: wa-deployment
       uses: azure/webapps-deploy@v2
