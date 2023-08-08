@@ -60,7 +60,8 @@ runs:
     - name: Build and push image
       uses: docker/build-push-action@v4
       with:
-        context: ./apps/api/
+        context: ./
+        file: ./apps/api/Dockerfile
         build-args: |
           NODE_VERSION=${{ steps.node-version-check.outputs.node-version}}
         push: true
