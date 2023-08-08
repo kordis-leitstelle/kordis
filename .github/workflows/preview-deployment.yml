@@ -97,6 +97,9 @@ jobs:
           releaseVersion: ${{ github.sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
@@ -177,6 +180,9 @@ jobs:
           releaseVersion: ${{ github.sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa

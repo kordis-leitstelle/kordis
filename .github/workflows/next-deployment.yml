@@ -34,6 +34,9 @@ jobs:
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:

@@ -17,6 +17,15 @@ inputs:
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
+  containerRegistryUrl:
+    required: true
+    description: "Container registry url"
+  containerRegistryUsername:
+    required: true
+    description: "Container registry username"
+  containerRegistryPassword:
+    required: true
+    description: "Container registry password"
 outputs:
   url:
     description: "API URL"
@@ -36,9 +45,9 @@ runs:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: '${{ secrets.GITHUB_TOKEN }}'
+        registry: ${{ input.containerRegistryUrl }}
+        username: ${{ input.containerRegistryUsername }}
+        password: ${{ input.containerRegistryPassword }}
     - name: Build app
       run: |
         npx nx build api --prod
