@@ -38,7 +38,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: '${{ secrets.GITHUB_TOKEN }}'
     - name: Build app
       run: |
         npx nx build api --prod
