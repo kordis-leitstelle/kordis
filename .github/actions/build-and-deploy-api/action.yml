@@ -47,11 +47,11 @@ runs:
       uses: docker/build-push-action@v4
       with:
         context: ./apps/api/
-        build-args:
-          NODE_VERSION: $(cat .nvmrc | tr -cd [:digit:].)
+        build-args: |
+          NODE_VERSION=$(cat .nvmrc | tr -cd [:digit:].)
         push: true
-        tags:
-          - ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
+        tags: |
+          ghcr.io/kordis-leitstelle/kordis/api-${{ inputs.releaseVersion}}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Deploy API
