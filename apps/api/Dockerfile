@@ -5,7 +5,7 @@ FROM docker.io/node:${NODE_VERSION}-alpine AS builder
 WORKDIR /app
 
 # Install dependencies separately for caching
-COPY dist/apps/api/package.json dist/apps/api/package-lock.json .
+COPY dist/apps/api/package.json dist/apps/api/package-lock.json ./
 RUN npm --omit=dev -f install
 
 COPY dist/apps/api .
