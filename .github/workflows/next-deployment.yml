@@ -14,6 +14,10 @@ jobs:
       url: ${{ steps.spa-deployment.outputs.url }}
     outputs:
       spaUrl: ${{ steps.spa-deployment.outputs.url }}
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -34,6 +38,9 @@ jobs:
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:
