@@ -49,7 +49,7 @@ jobs:
           OAUTH_CONFIG: undefined
       - name: Create API Environment File
         run: |
-          envsubst < apps/api/src/.env.template > apps/api/src/.env
+          envsubst < apps/api/src/.env.template > dist/apps/api/.env
           echo "PORT=3000" >> .env
         env:
           MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
