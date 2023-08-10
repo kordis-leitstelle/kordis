@@ -68,6 +68,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: refs/pull/${{ github.event.issue.number }}/head
+      - name: Set PR SHA
+        id: set-pr-sha
+        run: |
+          head_sha=$(git rev-parse HEAD)
+          echo "::set-output name=head_sha::$head_sha"
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
@@ -98,7 +103,7 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.issue.number }}"
-          releaseVersion: ${{ github.event.issue.pull_request.head.sha }}
+          releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
@@ -110,7 +115,7 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
-          releaseVersion: ${{ github.event.issue.pull_request.head.sha }}
+          releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
           deploymentEnv: "pr${{ github.event.issue.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
@@ -124,7 +129,7 @@ jobs:
             ### 🚀 Deployment Preview
             SPA: ${{ steps.spa-deployment.outputs.url }}
             API: ${{ steps.api-deployment.outputs.url }}
-            Commit SHA: ${{ github.event.issue.pull_request.head.sha }}
+            Commit SHA: ${{ steps.set-pr-sha.outputs.head_sha }}
           reactions: "rocket"
       - name: AZ B2C Tenant Login
         uses: azure/login@v1.4.7
@@ -185,7 +190,7 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.pull_request.number }}"
-          releaseVersion: ${{ github.event.pull_request.head.sha  }}
+          releaseVersion: ${{ github.event.pull_request.head.sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
