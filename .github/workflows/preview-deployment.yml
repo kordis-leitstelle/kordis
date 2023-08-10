@@ -25,8 +25,7 @@ jobs:
 
   comment-handler:
     if: |
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-preview')) &&
-      (needs.has-deployment.outputs.has-swa == 'false' && needs.has-deployment.outputs.has-wa == 'false')
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-preview'))
     needs: has-deployment
     runs-on: ubuntu-latest
     outputs:
