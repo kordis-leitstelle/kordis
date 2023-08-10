@@ -34,7 +34,7 @@ jobs:
       - name: Check sha
         run: echo ${{ github.event.issue.pull_request.head.sha }} 
       - name: Check event
-        run: echo ${{ github.event.issue.pull_request }} 
+        run: echo "${{ toJson(github.event.issue.pull_request) }}" 
       - name: Check Permission
         uses: actions-cool/check-user-permission@v2
         id: is-admin-check
