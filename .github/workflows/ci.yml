@@ -47,6 +47,8 @@ jobs:
           RELEASE_VERSION: ${{ github.sha }}
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: undefined
+      - name: Build
+        run: npx nx run-many -t build --all --parallel=3
       - name: Create API Environment File
         run: |
           envsubst < apps/api/src/.env.template > dist/apps/api/.env
@@ -56,10 +58,6 @@ jobs:
           ENVIRONMENT_NAME: 'ci'
           RELEASE_VERSION: ${{ github.sha }}
           SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
-
-      - name: Build
-        run: npx nx run-many -t build --all --parallel=3
-
       - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Run E2Es
