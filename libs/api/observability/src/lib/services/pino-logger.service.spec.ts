@@ -1,6 +1,4 @@
 import pino from 'pino';
-// import pino-pretty to make dependency explicit to NX
-import 'pino-pretty';
 import { Transform } from 'stream';
 
 import { PinoLogger } from './pino-logger.service';
