@@ -18,22 +18,10 @@ jobs:
       has-wa: ${{ steps.has-wa.outputs.has-wa }}
     runs-on: ubuntu-latest
     steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - name: Check if Webapp Environment exists
-        id: has-swa
-        run: >
-          az staticwebapp environment list --name kordis-spa | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
-          && echo "has-swa=true" >> $GITHUB_OUTPUT
-          || echo "has-swa=false" >> $GITHUB_OUTPUT
       - name: Check if API Environment exists
         id: has-wa
         run: >
-          az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
-          && echo "has-wa=true" >> $GITHUB_OUTPUT
-          || echo "has-wa=false" >> $GITHUB_OUTPUT
+          echo "has-wa=false" >> $GITHUB_OUTPUT
 
   comment-handler:
     if: |
