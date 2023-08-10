@@ -98,7 +98,7 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.issue.number }}"
-          releaseVersion: ${{ github.sha }}
+          releaseVersion: ${{ github.event.issue.pull_request.head.sha }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
@@ -110,7 +110,7 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
-          releaseVersion: ${{ github.sha }}
+          releaseVersion: ${{ github.event.issue.pull_request.head.sha }}
           deploymentEnv: "pr${{ github.event.issue.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
@@ -124,7 +124,7 @@ jobs:
             ### 🚀 Deployment Preview
             SPA: ${{ steps.spa-deployment.outputs.url }}
             API: ${{ steps.api-deployment.outputs.url }}
-            Commit SHA: ${{ github.sha }}
+            Commit SHA: ${{ github.event.issue.pull_request.head.sha }}
           reactions: "rocket"
       - name: AZ B2C Tenant Login
         uses: azure/login@v1.4.7
@@ -185,7 +185,7 @@ jobs:
         uses: ./.github/actions/build-and-deploy-api
         with:
           slot: "pr${{ github.event.pull_request.number }}"
-          releaseVersion: ${{ github.sha }}
+          releaseVersion: ${{ github.event.pull_request.head.sha  }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
@@ -197,7 +197,7 @@ jobs:
         with:
           apiUrl: ${{ steps.api-deployment.outputs.url }}
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
-          releaseVersion: ${{ github.sha }}
+          releaseVersion: ${{ github.event.pull_request.head.sha  }}
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
           publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
@@ -211,7 +211,7 @@ jobs:
             ### 🚀 Deployment Preview
             SPA: ${{ steps.spa-deployment.outputs.url }}
             API: ${{ steps.api-deployment.outputs.url }}
-            Commit SHA: ${{ github.sha }}
+            Commit SHA: ${{ github.event.pull_request.head.sha }}
           reactions: "rocket"
 
   delete-deployment:
