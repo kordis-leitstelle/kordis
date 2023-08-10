@@ -62,7 +62,7 @@ runs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Set environment for Azure deployment
-      run: envsubst < apps/api/src/.env.template > dist/apps/api/src/.env
+      run: envsubst < apps/api/src/.env.template > dist/apps/api/.env
       env:
         MONGODB_URI: ${{ inputs.mongoUri }}
         ENVIRONMENT_NAME: ${{ inputs.slot }}
