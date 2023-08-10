@@ -1,6 +1,7 @@
 import pino from 'pino';
 // import pino-pretty to make dependency explicit to NX
 import 'pino-pretty';
+import { Transform } from 'stream';
 
 import { PinoLogger } from './pino-logger.service';
 
@@ -26,15 +27,12 @@ describe('PinoLogger', () => {
 		const debug = true;
 		logger = new PinoLogger(debug);
 
-		expect(pinoMock).toHaveBeenCalledWith({
-			level: 'trace',
-			transport: {
-				target: 'pino-pretty',
-				colorize: true,
-				translateTime: 'SYS:dd.mm.yyyy hh:MM:ss',
-				ignore: 'pid,hostname',
+		expect(pinoMock).toHaveBeenCalledWith(
+			{
+				level: 'trace',
 			},
-		});
+			expect.any(Transform),
+		);
 	});
 
 	it('should initialize pino with the correct configuration when debug is false', () => {

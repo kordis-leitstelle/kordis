@@ -1,6 +1,7 @@
 import pino from 'pino';
-// import pino-pretty to make dependency explicit to NX
-import 'pino-pretty';
+import { OnUnknown } from 'pino-abstract-transport';
+import pretty from 'pino-pretty';
+import { Transform } from 'stream';
 
 import { KordisLoggerService } from './kordis-logger-service.interface';
 
@@ -11,21 +12,29 @@ export class PinoLogger implements KordisLoggerService {
 	private readonly logger: pino.Logger;
 
 	constructor(debug: boolean) {
-		this.logger = pino(
-			debug
-				? {
-						level: 'trace',
-						transport: {
-							target: 'pino-pretty',
-							colorize: true,
-							translateTime: 'SYS:dd.mm.yyyy hh:MM:ss',
-							ignore: 'pid,hostname',
-						},
-				  }
-				: {
-						level: 'info',
-				  },
-		);
+		let pinoParams:
+			| [{ level: string }]
+			| [{ level: string }, Transform & OnUnknown];
+		if (debug) {
+			pinoParams = [
+				{
+					level: 'trace',
+				},
+				pretty({
+					colorize: true,
+					translateTime: 'SYS:dd.mm.yyyy hh:MM:ss',
+					ignore: 'pid,hostname',
+				}),
+			];
+		} else {
+			pinoParams = [
+				{
+					level: 'info',
+				},
+			];
+		}
+
+		this.logger = pino(...pinoParams);
 	}
 
 	log(message: string, context?: string, args?: object): void {
