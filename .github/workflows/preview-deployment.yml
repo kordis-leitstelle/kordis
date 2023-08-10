@@ -44,6 +44,10 @@ jobs:
     outputs:
       is-admin: ${{ steps.is-admin-check.outputs.require-result }}
     steps:
+      - name: Check sha
+        run: echo ${{ github.event.issue.pull_request.head.sha }} 
+      - name: Check event
+        run: echo ${{ github.event.issue.pull_request }} 
       - name: Check Permission
         uses: actions-cool/check-user-permission@v2
         id: is-admin-check
