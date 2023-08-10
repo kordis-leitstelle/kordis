@@ -31,10 +31,11 @@ jobs:
     outputs:
       is-admin: ${{ steps.is-admin-check.outputs.require-result }}
     steps:
-      - name: Check sha
-        run: echo ${{ github.event.issue.pull_request.head.sha }} 
-      - name: Check event
-        run: echo "${{ toJson(github.event.issue.pull_request) }}" 
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/head
+      - name: Check git
+        run: git rev-parse HEAD
       - name: Check Permission
         uses: actions-cool/check-user-permission@v2
         id: is-admin-check
