@@ -26,6 +26,18 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
+  aadb2cTenantName:
+    required: false
+    description: "Azure AD B2C Tenant Name"
+  aadb2cClientId:
+    required: false
+    description: "Azure AD B2C Client ID"
+  aadb2cIssuer:
+    required: false
+    description: "Azure AD B2C Token Issuer URL"
+  aadb2cPolicy:
+    required: false
+    description: "Azure AD B2C Sign In Policy"
 outputs:
   url:
     description: "API URL"
@@ -68,6 +80,10 @@ runs:
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
+        AADB2C_TENANT_NAME: ${{ inputs.aadb2cTenantName }}
+        AADB2C_CLIENT_ID: ${{ inputs.aadb2cClientId }}
+        AADB2C_SIGN_IN_POLICY: ${{ inputs.aadb2cPolicy }}
+        AADB2C_ISSUER: ${{ inputs.aadb2cIssuer }}
       shell: bash
     - name: Deploy API
       id: wa-deployment

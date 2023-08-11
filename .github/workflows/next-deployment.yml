@@ -41,6 +41,10 @@ jobs:
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          aadb2cTenantName: ${{ secrets.AADB2C_TENANT }}
+          aadb2cClientId: ${{ secrets.DEV_AADB2C_CLIENT_ID }}
+          aadb2cIssuer: ${{ secrets.DEV_AADB2C_ISSUER }}
+          aadb2cPolicy: ${{ secrets.AADB2C_SIGN_IN_POLICY }}
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations
         env:

@@ -22,7 +22,7 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 const FEATURE_MODULES = [OrganizationModule];
 const UTILITY_MODULES = [
 	SharedKernel,
-	AuthModule,
+	AuthModule.forRoot('dev'), // todo: this needs to be changed to aadb2c when we move to onpremise
 	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
 		? [SentryObservabilityModule]
 		: [DevObservabilityModule]),
