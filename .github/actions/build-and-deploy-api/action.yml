@@ -34,14 +34,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Set environment
-      run: envsubst < apps/api/src/.env.template > apps/api/src/.env
-      env:
-        MONGODB_URI: ${{ inputs.mongoUri }}
-        ENVIRONMENT_NAME: ${{ inputs.slot }}
-        RELEASE_VERSION: ${{ inputs.releaseVersion }}
-        SENTRY_KEY: ${{ inputs.sentryKey }}
-      shell: bash
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     - name: Login to GitHub Container Registry
@@ -69,6 +61,14 @@ runs:
           ghcr.io/kordis-leitstelle/kordis-api:${{ inputs.releaseVersion}}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    - name: Set environment for Azure deployment
+      run: envsubst < apps/api/src/.env.template > dist/apps/api/.env
+      env:
+        MONGODB_URI: ${{ inputs.mongoUri }}
+        ENVIRONMENT_NAME: ${{ inputs.slot }}
+        RELEASE_VERSION: ${{ inputs.releaseVersion }}
+        SENTRY_KEY: ${{ inputs.sentryKey }}
+      shell: bash
     - name: Deploy API
       id: wa-deployment
       uses: azure/webapps-deploy@v2
