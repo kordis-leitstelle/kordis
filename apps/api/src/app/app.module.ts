@@ -33,7 +33,6 @@ const UTILITY_MODULES = [
 		ConfigModule.forRoot({
 			isGlobal: true,
 			cache: true,
-			envFilePath: path.resolve(__dirname, '.env'),
 		}),
 		GraphQLModule.forRootAsync<ApolloDriverConfig>({
 			imports: [ConfigModule],

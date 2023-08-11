@@ -45,6 +45,6 @@ Thumbs.db
 playwright/.auth
 
 # Environments
-apps/api/src/.env
+apps/api/.env
 apps/spa-e2e/.env
 apps/spa/src/environments/environment.prod.ts
