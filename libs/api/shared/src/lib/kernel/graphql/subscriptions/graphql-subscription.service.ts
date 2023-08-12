@@ -1,8 +1,9 @@
-import { Injectable, OnModuleDestroy, Type } from '@nestjs/common';
+import { Injectable, Type } from '@nestjs/common';
 import { EventBus, IEvent, ofType } from '@nestjs/cqrs';
-import { Observable, Subject, filter, map, share, takeUntil } from 'rxjs';
+import { Observable, filter, map, share, takeUntil } from 'rxjs';
 
-import { observableToAsyncIterable } from './observable-to-asynciterable.helper';
+import { observableToAsyncIterable } from '../../../helpers/observable-to-asynciterable.helper';
+import { WithDestroySubject } from '../../../helpers/with-destroy-subject';
 
 export type SubscriptionOperators<TInitial, TReturn> = Partial<{
 	map: (payload: TInitial) => TReturn;
@@ -10,31 +11,25 @@ export type SubscriptionOperators<TInitial, TReturn> = Partial<{
 }>;
 
 @Injectable()
-export class GraphQLSubscriptionService implements OnModuleDestroy {
-	private readonly onDestroySubject = new Subject<void>();
-	private readonly subscribedEvents = new Set<string>();
+export class GraphQLSubscriptionService extends WithDestroySubject {
 	private readonly eventStream$: Observable<IEvent>;
 
 	constructor(eventBus: EventBus) {
+		super();
 		this.eventStream$ = eventBus.pipe(
 			share(),
 			takeUntil(this.onDestroySubject),
 		);
 	}
 
-	onModuleDestroy(): void {
-		this.onDestroySubject.next();
-		this.onDestroySubject.complete();
-	}
-
 	/**
-		This method creates an AsyncIterator of the EventBus event stream filtered by the event type.
-		@template TEvent The event type.
-		@template TReturn The return type of the AsyncIterableIterator. This is the type passed to the subscription handler (potentially user facing).
-		@param {TEvent} event The event type to subscribe to.
-		@param {SubscriptionOperators<TEvent, TReturn>} [operators] Optional operators to apply to the event stream.
-		@returns {AsyncIterableIterator<TReturn>} An AsyncIterableIterator of events for the specified event type with the operators applied where TReturn is the type of each emitted item.
-	 **/
+   This method creates an AsyncIterator of the EventBus event stream filtered by the event type.
+   @template TEvent The event type.
+   @template TReturn The return type of the AsyncIterableIterator. This is the type passed to the subscription handler (potentially user facing).
+   @param {TEvent} event The event type to subscribe to.
+   @param {SubscriptionOperators<TEvent, TReturn>} [operators] Optional operators to apply to the event stream.
+   @returns {AsyncIterableIterator<TReturn>} An AsyncIterableIterator of events for the specified event type with the operators applied where TReturn is the type of each emitted item.
+   **/
 	getSubscriptionIteratorForEvent<TEvent extends Type, TReturn>(
 		event: TEvent,
 		operators?: SubscriptionOperators<InstanceType<TEvent>, TReturn>,

@@ -1,5 +1,6 @@
 const { composePlugins, withNx } = require('@nx/webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+const { resolve } = require('path');
 
 module.exports = composePlugins(withNx(), (config) => {
 	config.plugins.push(
@@ -8,5 +9,8 @@ module.exports = composePlugins(withNx(), (config) => {
 		}),
 	);
 
+	config.entry['workers/hpa-ship-position.worker'] = resolve(
+		'libs/api/ship-positions/src/lib/infra/provider/hpa/worker/hpa-ship-position.worker.ts',
+	);
 	return config;
 });

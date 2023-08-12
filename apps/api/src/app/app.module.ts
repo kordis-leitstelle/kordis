@@ -14,12 +14,34 @@ import {
 } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
+import { ShipPositionsModule } from '@kordis/api/ship-positions';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 
-const FEATURE_MODULES = [OrganizationModule];
+const FEATURE_MODULES = [
+	OrganizationModule,
+	ShipPositionsModule.forRootAsync({
+		imports: [ConfigModule],
+		useFactory: (config: ConfigService) => {
+			const hpaAmqpUri = config.get<string>('HPA_SHIP_POSITIONS_AMQP_URI');
+			if (hpaAmqpUri) {
+				return {};
+			}
+			return {
+				hpa: {
+					amqpUri: '',
+					ca: '',
+					cert: '',
+					key: '',
+					mongoCacheUri: config.getOrThrow<string>('MONGODB_URI'),
+				},
+			};
+		},
+		inject: [ConfigService],
+	}),
+];
 const UTILITY_MODULES = [
 	SharedKernel,
 	AuthModule,
