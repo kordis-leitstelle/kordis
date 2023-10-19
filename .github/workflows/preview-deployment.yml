@@ -79,7 +79,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Initial Deployment Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         id: pr-preview-comment
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -121,7 +121,7 @@ jobs:
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.pr-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -173,7 +173,7 @@ jobs:
           body-includes: Deployment Preview
       - name: Update PR Preview Comment
         if: steps.deploy-preview-comment.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -208,7 +208,7 @@ jobs:
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -243,7 +243,7 @@ jobs:
           body-includes: Deployment Preview
       - name: Update PR Preview Comment
         if: steps.deploy-preview-comment.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
