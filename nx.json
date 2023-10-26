@@ -1,6 +1,5 @@
 {
 	"$schema": "./node_modules/nx/schemas/nx-schema.json",
-	"npmScope": "kordis",
 	"targetDefaults": {
 		"build": {
 			"dependsOn": ["^build"],
