@@ -71,7 +71,7 @@ runs:
       shell: bash
     - name: Deploy API
       id: wa-deployment
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
         app-name: 'kordis-api'
         slot-name: ${{ inputs.slot }}
