@@ -73,7 +73,7 @@ jobs:
         run: |
           head_sha=$(git rev-parse HEAD)
           echo "::set-output name=head_sha::$head_sha"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -159,7 +159,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
