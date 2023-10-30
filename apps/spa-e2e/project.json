@@ -5,10 +5,10 @@
 	"projectType": "application",
 	"targets": {
 		"e2e": {
-			"executor": "@mands/nx-playwright:playwright-executor",
+			"executor": "@nx/playwright:playwright",
+			"outputs": ["{workspaceRoot}/dist/.playwright/spa-e2e"],
 			"options": {
-				"e2eFolder": "apps/spa-e2e",
-				"packageRunner": "npx"
+				"config": "apps/spa-e2e/playwright.config.ts"
 			}
 		},
 		"ts-check": {
