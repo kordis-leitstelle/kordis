@@ -39,6 +39,12 @@ const EXAMPLE_INSTATUS_RESPONSE = Object.freeze({
 			duration: 60,
 			url: 'https://kordis.instatus.com/someid3',
 		},
+		{
+			id: 'someid4',
+			name: 'test',
+			status: 'COMPLETED',
+			url: 'https://kordis.instatus.com/someid4',
+		},
 	],
 });
 
@@ -72,7 +78,7 @@ describe('InstatusServiceHealthService', () => {
 		});
 
 		await expect(
-			lastValueFrom(service.serviceStatusChanged$.pipe(take(2), toArray())),
+			lastValueFrom(service.serviceStatusChanged$.pipe(take(3), toArray())),
 		).resolves.toEqual([
 			{
 				message: 'test. Auswirkung: Großer Ausfall',
@@ -83,6 +89,11 @@ describe('InstatusServiceHealthService', () => {
 				message: 'test - am 16:36 05.11. für 60 Minuten.',
 				status: 'maintenance_scheduled',
 				url: 'https://kordis.instatus.com/someid3',
+			},
+			{
+				message: 'test',
+				status: 'up',
+				url: 'https://kordis.instatus.com/someid4',
 			},
 		]);
 	});
@@ -126,6 +137,44 @@ describe('InstatusServiceHealthService', () => {
 				message: 'test - bis 17:36 05.11.',
 				status: 'maintenance',
 				url: 'https://kordis.instatus.com/someid3',
+			},
+		]);
+	});
+
+	it('should emit correctly mapped with unknown status', async () => {
+		MockWorker.mockInstanceSingleton?.onmessage({
+			data: {
+				activeIncidents: [
+					{
+						id: 'someid1',
+						name: 'test',
+						status: 'UNKNOWN',
+						url: 'https://kordis.instatus.com/someid1',
+					},
+				],
+				activeMaintenances: [
+					{
+						id: 'someid2',
+						name: 'test',
+						status: 'UNKNOWN',
+						url: 'https://kordis.instatus.com/someid2',
+					},
+				],
+			},
+		});
+
+		await expect(
+			lastValueFrom(service.serviceStatusChanged$.pipe(take(2), toArray())),
+		).resolves.toEqual([
+			{
+				message: 'test',
+				status: 'down',
+				url: 'https://kordis.instatus.com/someid1',
+			},
+			{
+				message: 'test',
+				status: 'maintenance',
+				url: 'https://kordis.instatus.com/someid2',
 			},
 		]);
 	});
