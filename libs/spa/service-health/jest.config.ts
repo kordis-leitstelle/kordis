@@ -1,4 +1,6 @@
 /* eslint-disable */
+process.env.TZ = 'Europe/Berlin';
+
 export default {
 	displayName: 'spa-service-health',
 	preset: '../../../jest.preset.js',
