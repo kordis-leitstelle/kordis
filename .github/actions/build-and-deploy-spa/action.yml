@@ -23,6 +23,9 @@ inputs:
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
+  instatusUrl:
+    required: false
+    description: "Instatus Dashboard URL"
 outputs:
   url:
     description: "SPA URL"
@@ -42,6 +45,7 @@ runs:
         OAUTH_CONFIG: ${{ inputs.oauthConfig }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
+        INSTATUS_URL: ${{ inputs.instatusUrl }}
     - name: Deploy SPA
       id: spa-deployment
       uses: Azure/static-web-apps-deploy@v1

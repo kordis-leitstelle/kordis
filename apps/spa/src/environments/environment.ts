@@ -5,5 +5,4 @@ export const environment: Environment = {
 	environmentName: 'Dev Local',
 	releaseVersion: '0.0.0-development',
 	apiUrl: 'https://localhost:3000',
-	instatusUrl: 'https://kordis.instatus.com',
 };
