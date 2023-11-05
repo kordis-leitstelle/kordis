@@ -7,4 +7,5 @@ export type Environment = {
 	releaseVersion: string;
 	oauth?: { discoveryDocumentUrl: string; config: AuthConfig };
 	sentryKey?: string;
+	instatusUrl?: string;
 };

@@ -8,6 +8,10 @@ import {
 	NoopObservabilityModule,
 	SentryObservabilityModule,
 } from '@kordis/spa/observability';
+import {
+	InstatusServiceHealthModule,
+	NoopServiceHealthModule,
+} from '@kordis/spa/service-health';
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
@@ -34,6 +38,9 @@ import routes from './routes';
 					environment.releaseVersion,
 			  )
 			: NoopObservabilityModule.forRoot(),
+		environment.instatusUrl
+			? InstatusServiceHealthModule.forRoot(environment.instatusUrl)
+			: NoopServiceHealthModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent],
