@@ -31,6 +31,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Generate Third-Party Licenses
+      run: npx  --yes generate-license-file@3.0.0-beta.1 --input package.json --output apps/spa/src/assets/third-party-licenses.txt --ci
+      shell: bash
     - run: |
         envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
         npx nx build spa --prod
