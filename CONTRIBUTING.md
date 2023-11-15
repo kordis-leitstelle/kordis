@@ -73,6 +73,11 @@ Please try to stick to this as much as possible. You can serve the SPA with
 you will get redirected to a login page where you can choose a persona. This
 will set a JWT in the local storage.
 
+We agreed on supporting only Chromium based browsers with their 2 latest major
+versions. This allows us to use features that are available for these browsers
+regardless of their support in other browsers. Therefore, please use Chrome or
+Edge for development.
+
 ### API
 
 The API is a NestJS application serving a GraphQL API. Please use the NX CLI to
