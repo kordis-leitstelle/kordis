@@ -1,30 +1,32 @@
 <!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<title>Kordis</title>
-	<base href="/" />
-	<meta content="width=device-width, initial-scale=1" name="viewport" />
-	<link href="favicon.ico" rel="icon" type="image/x-icon" />
-	<script>
-		if (navigator.userAgent.indexOf("Chrome") < 0) {
-			alert("Kordis ist für Chrome optimiert. In anderen Browsern kann es zu Fehlern kommen. Bitte verwenden sie daher die letzte Chrome Version!");
-		}
-	</script>
-</head>
-<body>
-<kordis-root>
-	<div class="flex h-screen items-center justify-center">
-		<div
-			class="inline-block h-28 w-28 animate-spin rounded-full border-8 border-solid border-current border-r-transparent align-[-0.125em] text-blue-500 motion-reduce:animate-[spin_1.5s_linear_infinite]"
-			role="status"
-		>
+	<head>
+		<meta charset="utf-8" />
+		<title>Kordis</title>
+		<base href="/" />
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<script>
+			if (navigator.userAgent.indexOf('Chrome') < 0) {
+				alert(
+					'Kordis ist für Chrome optimiert. In anderen Browsern kann es zu Fehlern kommen. Bitte verwenden sie daher die letzte Chrome Version!',
+				);
+			}
+		</script>
+	</head>
+	<body>
+		<kordis-root>
+			<div class="flex h-screen items-center justify-center">
+				<div
+					class="inline-block h-28 w-28 animate-spin rounded-full border-8 border-solid border-current border-r-transparent align-[-0.125em] text-blue-500 motion-reduce:animate-[spin_1.5s_linear_infinite]"
+					role="status"
+				>
 					<span
 						class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-					>Laden...</span
+						>Laden...</span
 					>
-		</div>
-	</div>
-</kordis-root>
-</body>
+				</div>
+			</div>
+		</kordis-root>
+	</body>
 </html>
