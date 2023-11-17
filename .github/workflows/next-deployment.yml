@@ -43,7 +43,7 @@ jobs:
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
           mongoEncrKMSProvider: ${{ secrets.MONGO_ENCR_KMS_PROVIDER }}
           mongoEncrKMSProviderCredentials: ${{ secrets.MONGO_ENCR_KMS_PROVIDER_CREDENTIALS }}
-          mongoEncrKvNamespace: ${{ secrets.MONGO_ENCR_KV_NAMESPACE }}
+          mongoEncrKVNamespace: ${{ secrets.MONGO_ENCR_KV_NAMESPACE }}
           mongoEncrMasterKey: ${{ secrets.MONGO_ENCR_MASTER_KEY }}
       - name: Apply Database Migrations
         run: ./tools/db/kordis-db.sh apply-pending-migrations

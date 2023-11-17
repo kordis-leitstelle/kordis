@@ -15,7 +15,7 @@ inputs:
     required: false
     description: "MongoDB Encryption Key Management Provider"
     default: "local"
-  mongoEncrKvNamespace:
+  mongoEncrKVNamespace:
     required: false
     description: "MongoDB Encryption Key Vault Namespace"
   mongoEncrKMSProviderCredentials:
@@ -80,8 +80,9 @@ runs:
         MONGODB_URI: ${{ inputs.mongoUri }}
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
+        SENTRY_KEY: ${{ inputs.sentryKey }}
         MONGODB_ENCR_KMS_PROVIDER: ${{ inputs.mongoEncrKMSProvider }}
-        MONGODB_ENCR_KV_NAMESPACE: ${{ inputs.mongoEncrKvNamespace }}
+        MONGODB_ENCR_KV_NAMESPACE: ${{ inputs.mongoEncrKVNamespace }}
         MONGODB_ENCR_KMS_PROVIDER_CREDS: ${{ inputs.mongoEncrKMSProviderCredentials }}
         MONGODB_ENCR_MASTER_KEY: ${{ inputs.mongoEncrMasterKey }}
       shell: bash
