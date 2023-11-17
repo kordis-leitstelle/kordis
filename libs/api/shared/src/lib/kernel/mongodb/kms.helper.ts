@@ -36,7 +36,7 @@ export function getMongoEncrKmsFromConfig(config: ConfigService): {
 		kms = {
 			keyVaultNamespace: config.getOrThrow<string>('MONGODB_ENCR_KV_NAMESPACE'),
 			kmsProviders: JSON.parse(
-				config.getOrThrow<string>('MONGODB_ENCR_KMS_PROVIDERS'),
+				config.getOrThrow<string>('MONGODB_ENCR_KMS_PROVIDER_CREDS'),
 			) as mongoose.mongo.AutoEncryptionOptions['kmsProviders'],
 		};
 		masterKey = JSON.parse(

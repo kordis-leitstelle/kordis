@@ -52,7 +52,7 @@ describe('getMongoEncrKmsFromConfig', () => {
 		jest.spyOn(configService, 'getOrThrow').mockImplementation((key) => {
 			if (key === 'MONGODB_ENCR_KV_NAMESPACE')
 				return fakeConfig.keyVaultNamespace;
-			if (key === 'MONGODB_ENCR_KMS_PROVIDERS')
+			if (key === 'MONGODB_ENCR_KMS_PROVIDER_CREDS')
 				return JSON.stringify(fakeConfig.kmsProviders);
 			if (key === 'MONGODB_ENCR_MASTER_KEY')
 				return JSON.stringify(fakeConfig.masterKey);

@@ -109,6 +109,7 @@ jobs:
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          mongoEncrKMSProvider: local
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa

@@ -11,6 +11,19 @@ inputs:
   mongoUri:
     required: true
     description: "Mongo Connection URI"
+  mongoEncrKMSProvider:
+    required: false
+    description: "MongoDB Encryption Key Management Provider"
+    default: "local"
+  mongoEncrKvNamespace:
+    required: false
+    description: "MongoDB Encryption Key Vault Namespace"
+  mongoEncrKMSProviderCredentials:
+    required: false
+    description: "MongoDB Encryption Key Management Provider Credentials"
+  mongoEncrMasterKey:
+    required: false
+    description: "MongoDB Encryption Master Key"
   sentryKey:
     required: true
     description: "Sentry DSN Key"
@@ -67,7 +80,10 @@ runs:
         MONGODB_URI: ${{ inputs.mongoUri }}
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
-        SENTRY_KEY: ${{ inputs.sentryKey }}
+        MONGODB_ENCR_KMS_PROVIDER: ${{ inputs.mongoEncrKMSProvider }}
+        MONGODB_ENCR_KV_NAMESPACE: ${{ inputs.mongoEncrKvNamespace }}
+        MONGODB_ENCR_KMS_PROVIDER_CREDS: ${{ inputs.mongoEncrKMSProviderCredentials }}
+        MONGODB_ENCR_MASTER_KEY: ${{ inputs.mongoEncrMasterKey }}
       shell: bash
     - name: Deploy API
       id: wa-deployment
