@@ -84,7 +84,7 @@ information about the folder and code structure please also read the
 [architecture documentation](docs/architecture.md).
 
 Before you can run the API application, you need to create a .env file from the
-[.env.example](apps/api/src/.env.template) file. There you have to specify the
+[.env.example](apps/api/.env.template) file. There you have to specify the
 MongoDB connection URI and more configurations. You can ignore some values as
 they are only used in production (they have a comment to clarify this). If you
 want to test the API directly without the SPA, you can use one of the

@@ -1,17 +1,21 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
 import { GraphQLSubscriptionService } from './graphql/subscriptions/graphql-subscription.service';
+import { MongoEncryptionClientProvider } from './mongodb';
+import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 
 @Module({
 	imports: [CqrsModule],
-	providers: [GraphQLSubscriptionService],
-	exports: [GraphQLSubscriptionService],
+	providers: [
+		GraphQLSubscriptionService,
+		MongoEncryptionClientProvider,
+		MongoEncryptionService,
+	],
+	exports: [
+		GraphQLSubscriptionService,
+		MongoEncryptionClientProvider,
+		MongoEncryptionService,
+	],
 })
-export class SharedKernel {
-	private readonly logger = new Logger(SharedKernel.name);
-
-	constructor() {
-		this.logger.log('SharedKernel loaded');
-	}
-}
+export class SharedKernel {}

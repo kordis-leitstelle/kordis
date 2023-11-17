@@ -2,7 +2,7 @@
 set -e
 
 MONGO_CONTAINER_NAME="kordis-dev-db"
-MONGO_DB_IMAGE_NAME="mongo:4.2"
+MONGO_DB_IMAGE_NAME="mongo:7"
 LOCAL_MONGO_URI="mongodb://127.0.0.1:27017"
 EXEC_PATH=$(dirname "${BASH_SOURCE[0]}")
 
@@ -11,22 +11,21 @@ ensure_running() {
 		if docker ps --format '{{.Names}}' | grep -q "^${MONGO_CONTAINER_NAME}\$"; then
 			echo "MongoDB already running."
 		else
-			docker start "${MONGO_CONTAINER_NAME}" > /dev/null
+			docker start "${MONGO_CONTAINER_NAME}" >/dev/null
 			echo "MongoDB started."
 		fi
 	else
-		docker run -d --name "${MONGO_CONTAINER_NAME}" -p 27017:27017 "${MONGO_DB_IMAGE_NAME}" > /dev/null
+		docker run -d --name "${MONGO_CONTAINER_NAME}" -p 27017:27017 "${MONGO_DB_IMAGE_NAME}" >/dev/null
 		echo "MongoDB created and started."
 	fi
 
-
 	# We have to wait for the MongoDB process to be up and running
 	until [ "$(docker inspect -f "{{.State.Running}}" $MONGO_CONTAINER_NAME)" == "true" ]; do
-      sleep 0.1;
-  done;
-	until docker exec $MONGO_CONTAINER_NAME mongo --quiet --eval "quit()" > /dev/null 2>&1; do
-      sleep 1
-  done
+		sleep 0.1
+	done
+	until docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "quit()" >/dev/null 2>&1; do
+		sleep 1
+	done
 }
 
 ensure_clean_db() {
@@ -94,12 +93,12 @@ if [ "$1" == "from-remote" ]; then
 elif [ "$1" == "init" ]; then
 	init "$2"
 elif [ "$1" == "new-migration" ]; then
-		if [ -z "$2" ]; then
-  		"$EXEC_PATH/migrations/cli.ts" new
-		else
-			"$EXEC_PATH/migrations/cli.ts" new -n "$2"
-  	fi
-  	echo "Create new migration in $EXEC_PATH/migrations"
+	if [ -z "$2" ]; then
+		"$EXEC_PATH/migrations/cli.ts" new
+	else
+		"$EXEC_PATH/migrations/cli.ts" new -n "$2"
+	fi
+	echo "Create new migration in $EXEC_PATH/migrations"
 elif [ "$1" == "revert-last-migration" ]; then
 	"$EXEC_PATH/migrations/cli.ts" down -l
 	"$EXEC_PATH/migrations/cli.ts" status
