@@ -30,13 +30,13 @@ ensure_running() {
 
 ensure_clean_db() {
 	db_name="$1"
-	db_exists=$(docker exec $MONGO_CONTAINER_NAME mongo --quiet --eval "db.getMongo().getDBNames().indexOf('$db_name') > -1")
+	db_exists=$(docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "db.getMongo().getDBNames().indexOf('$db_name') > -1")
 
 	if [[ $db_exists == "true" ]]; then
 		read -p "A Database with that Name already exists. If you don't delete the DB, the data will simply be inserted on top of existing data! Do you want to delete the database '$db_name'? (y/n): " confirmation
 
 		if [[ $confirmation == "y" || $confirmation == "Y" ]]; then
-			docker exec $MONGO_CONTAINER_NAME mongo --quiet --eval "db.getSiblingDB('$db_name').dropDatabase()"
+			docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "db.getSiblingDB('$db_name').dropDatabase()"
 			echo "The database '$db_name' has been deleted."
 		fi
 	fi
