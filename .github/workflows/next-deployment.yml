@@ -38,7 +38,7 @@ jobs:
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
       - name: Apply Database Migrations
-        run: ./tools/db/kordis-db.sh apply-pending-migrations
+        run: echo "add again once infrastructure is set up" # ./tools/db/kordis-db.sh apply-pending-migrations
         env:
           MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
           MONGODB_DB: dev
