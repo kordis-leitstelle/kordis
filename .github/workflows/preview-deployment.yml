@@ -18,22 +18,12 @@ jobs:
       has-wa: ${{ steps.has-wa.outputs.has-wa }}
     runs-on: ubuntu-latest
     steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Check if Webapp Environment exists
         id: has-swa
-        run: >
-          az staticwebapp environment list --name kordis-spa | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
-          && echo "has-swa=true" >> $GITHUB_OUTPUT
-          || echo "has-swa=false" >> $GITHUB_OUTPUT
+        run: echo "has-swa=true" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
       - name: Check if API Environment exists
         id: has-wa
-        run: >
-          az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
-          && echo "has-wa=true" >> $GITHUB_OUTPUT
-          || echo "has-wa=false" >> $GITHUB_OUTPUT
+        run: echo "has-wa=true" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
 
   comment-handler:
     if: |
@@ -87,17 +77,6 @@ jobs:
             ### 🚧 Building Deployment Preview..
             A preview of this Pull Request is being created. Hold tight while it's building ⚒️
             This comment will be automatically updated when the preview is ready.
-      - name: Azure DLRG HH Tenant Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - name: Create PR Deployment Slot
-        run: |
-          az config set extension.use_dynamic_install=yes_without_prompt
-          az webapp deployment slot create --name kordis-api --resource-group KORDIS --configuration-source next --slot pr${{ github.event.issue.number }}
-          az webapp update --https-only true --name kordis-api --resource-group KORDIS --slot pr${{ github.event.issue.number }}
-          az webapp auth openid-connect add --provider-name aadb2c --client-id ${{ secrets.DEV_AADB2C_CLIENT_ID }} --client-secret-setting-name aadb2c_AUTHENTICATION_SECRET --openid-configuration ${{ secrets.DEV_AADB2C_CONF_URL }} --name kordis-api --slot pr${{ github.event.issue.number }} --resource-group KORDIS --yes
-          az webapp auth update --name kordis-api --slot pr${{ github.event.issue.number }} --resource-group KORDIS --action Return401
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -117,7 +96,6 @@ jobs:
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
           deploymentEnv: "pr${{ github.event.issue.number }}"
-          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
@@ -204,7 +182,6 @@ jobs:
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ github.event.pull_request.head.sha  }}
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
-          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
@@ -226,14 +203,6 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
       (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
     steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - name: Delete API Deployment and Resources
-        run: az webapp deployment slot delete --name kordis-api --resource-group KORDIS --slot pr${{ github.event.pull_request.number }}
-      - name: Delete SPA Deployment and Resources
-        run: az staticwebapp environment delete --name kordis-spa --resource-group KORDIS --environment-name pr${{ github.event.pull_request.number }} --yes
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v2
         id: deploy-preview-comment
