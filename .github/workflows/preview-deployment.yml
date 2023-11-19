@@ -23,7 +23,7 @@ jobs:
         run: echo "has-swa=true" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
       - name: Check if API Environment exists
         id: has-wa
-        run: echo "has-wa=true" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
+        run: echo "has-wa=false" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
 
   comment-handler:
     if: |
