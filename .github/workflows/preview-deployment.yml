@@ -130,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       (github.event_name == 'pull_request' && github.event.action == 'synchronize') &&
-      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true') && false
     permissions:
       contents: read
       packages: write
@@ -159,10 +159,6 @@ jobs:
             ### 🚧 Building Deployment Preview..
             The Pull Request preview is being updated. Hold tight while it's building ⚒️
             This comment will be automatically updated when the new version is ready.
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
