@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true') && false
     steps:
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v2
