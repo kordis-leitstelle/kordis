@@ -41,15 +41,15 @@ inputs:
 outputs:
   url:
     description: "API URL"
-    value: ${{ steps.wa-deployment.outputs.webapp-url }}
+    value: ${{ steps.wa-deployment.outputs.url }}
 
 runs:
   using: "composite"
   steps:
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
     - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         registry: ${{ inputs.containerRegistryUrl }}
         username: ${{ inputs.containerRegistryUsername }}
@@ -62,7 +62,7 @@ runs:
       run: echo "node-version=$(cat .nvmrc | tr -cd '[:digit:].')" >> $GITHUB_OUTPUT
       shell: bash
     - name: Build and push image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: ./
         file: ./apps/api/Dockerfile
@@ -73,7 +73,7 @@ runs:
           ghcr.io/kordis-leitstelle/kordis-api:${{ inputs.releaseVersion}}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Set environment for Azure deployment
+    - name: Set environment for deployment
       run: envsubst < apps/api/src/.env.template > dist/apps/api/.env
       env:
         MONGODB_URI: ${{ inputs.mongoUri }}
@@ -87,11 +87,8 @@ runs:
       shell: bash
     - name: Deploy API
       id: wa-deployment
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'kordis-api'
-        slot-name: ${{ inputs.slot }}
-        package: dist/apps/api/
+      run: echo "url=placeholder" >> $GITHUB_OUTPUT
+      shell: bash
     - name: Create Sentry release
       uses: getsentry/action-release@v1
       env:

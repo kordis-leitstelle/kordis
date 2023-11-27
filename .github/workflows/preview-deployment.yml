@@ -18,22 +18,12 @@ jobs:
       has-wa: ${{ steps.has-wa.outputs.has-wa }}
     runs-on: ubuntu-latest
     steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Check if Webapp Environment exists
         id: has-swa
-        run: >
-          az staticwebapp environment list --name kordis-spa | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
-          && echo "has-swa=true" >> $GITHUB_OUTPUT
-          || echo "has-swa=false" >> $GITHUB_OUTPUT
+        run: echo "has-swa=true" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
       - name: Check if API Environment exists
         id: has-wa
-        run: >
-          az webapp deployment slot list -n kordis-api --resource-group KORDIS | grep -q '"name": "pr${{ github.event.pull_request.number || github.event.issue.number }}"'
-          && echo "has-wa=true" >> $GITHUB_OUTPUT
-          || echo "has-wa=false" >> $GITHUB_OUTPUT
+        run: echo "has-wa=false" >> $GITHUB_OUTPUT # this temporarily disables preview deployments
 
   comment-handler:
     if: |
@@ -50,7 +40,7 @@ jobs:
         with:
           require: 'admin'
       - name: Remove Comment
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: 'github.rest.issues.deleteComment({ comment_id: context.payload.comment.id, owner: context.repo.owner, repo: context.repo.repo })'
 
@@ -65,7 +55,7 @@ jobs:
       packages: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.issue.number }}/head
       - name: Set PR SHA
@@ -73,13 +63,13 @@ jobs:
         run: |
           head_sha=$(git rev-parse HEAD)
           echo "::set-output name=head_sha::$head_sha"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Initial Deployment Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         id: pr-preview-comment
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -87,17 +77,6 @@ jobs:
             ### 🚧 Building Deployment Preview..
             A preview of this Pull Request is being created. Hold tight while it's building ⚒️
             This comment will be automatically updated when the preview is ready.
-      - name: Azure DLRG HH Tenant Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - name: Create PR Deployment Slot
-        run: |
-          az config set extension.use_dynamic_install=yes_without_prompt
-          az webapp deployment slot create --name kordis-api --resource-group KORDIS --configuration-source next --slot pr${{ github.event.issue.number }}
-          az webapp update --https-only true --name kordis-api --resource-group KORDIS --slot pr${{ github.event.issue.number }}
-          az webapp auth openid-connect add --provider-name aadb2c --client-id ${{ secrets.DEV_AADB2C_CLIENT_ID }} --client-secret-setting-name aadb2c_AUTHENTICATION_SECRET --openid-configuration ${{ secrets.DEV_AADB2C_CONF_URL }} --name kordis-api --slot pr${{ github.event.issue.number }} --resource-group KORDIS --yes
-          az webapp auth update --name kordis-api --slot pr${{ github.event.issue.number }} --resource-group KORDIS --action Return401
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -117,11 +96,10 @@ jobs:
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
           deploymentEnv: "pr${{ github.event.issue.number }}"
-          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.pr-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -132,7 +110,7 @@ jobs:
             Commit SHA: ${{ steps.set-pr-sha.outputs.head_sha }}
           reactions: "rocket"
       - name: AZ B2C Tenant Login
-        uses: azure/login@v1.4.7
+        uses: azure/login@v1.5.0
         with:
           creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
@@ -152,14 +130,14 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       (github.event_name == 'pull_request' && github.event.action == 'synchronize') &&
-      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true') && false
     permissions:
       contents: read
       packages: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -173,7 +151,7 @@ jobs:
           body-includes: Deployment Preview
       - name: Update PR Preview Comment
         if: steps.deploy-preview-comment.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -181,10 +159,6 @@ jobs:
             ### 🚧 Building Deployment Preview..
             The Pull Request preview is being updated. Hold tight while it's building ⚒️
             This comment will be automatically updated when the new version is ready.
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -204,11 +178,10 @@ jobs:
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ github.event.pull_request.head.sha  }}
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
-          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Update PR Preview Comment
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -224,16 +197,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true')
+      (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true') && false
     steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - name: Delete API Deployment and Resources
-        run: az webapp deployment slot delete --name kordis-api --resource-group KORDIS --slot pr${{ github.event.pull_request.number }}
-      - name: Delete SPA Deployment and Resources
-        run: az staticwebapp environment delete --name kordis-spa --resource-group KORDIS --environment-name pr${{ github.event.pull_request.number }} --yes
       - name: Find PR Preview Comment
         uses: peter-evans/find-comment@v2
         id: deploy-preview-comment
@@ -243,7 +208,7 @@ jobs:
           body-includes: Deployment Preview
       - name: Update PR Preview Comment
         if: steps.deploy-preview-comment.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v3.0.2
+        uses: peter-evans/create-or-update-comment@v3.1.0
         with:
           comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
           edit-mode: replace
@@ -252,7 +217,7 @@ jobs:
             🏁 This PR has been closed. No deployment preview is available.
           reactions: "hooray"
       - name: AZ B2C Tenant Login
-        uses: azure/login@v1.4.7
+        uses: azure/login@v1.5.0
         with:
           creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true

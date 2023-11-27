@@ -8,3 +8,7 @@ package-lock.json
 .angular
 
 apps/api/src/main.ts
+
+/.nx/cache
+
+migrations.json
