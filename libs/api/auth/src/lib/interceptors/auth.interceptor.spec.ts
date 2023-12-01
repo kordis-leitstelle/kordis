@@ -1,10 +1,12 @@
 import { createMock } from '@golevelup/ts-jest';
-import { CallHandler, UnauthorizedException } from '@nestjs/common';
-import { Observable, firstValueFrom, of } from 'rxjs';
+import type { CallHandler } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
+import type { Observable } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 import { createGqlContextForRequest } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import type { AuthUser } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
 import { AuthInterceptor } from './auth.interceptor';

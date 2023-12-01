@@ -1,6 +1,9 @@
-import { Injectable, OnModuleDestroy, Type } from '@nestjs/common';
-import { EventBus, IEvent, ofType } from '@nestjs/cqrs';
-import { Observable, Subject, filter, map, share, takeUntil } from 'rxjs';
+import type { OnModuleDestroy, Type } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import type { EventBus, IEvent } from '@nestjs/cqrs';
+import { ofType } from '@nestjs/cqrs';
+import type { Observable } from 'rxjs';
+import { filter, map, share, Subject, takeUntil } from 'rxjs';
 
 import { observableToAsyncIterable } from './observable-to-asynciterable.helper';
 

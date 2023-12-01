@@ -1,12 +1,14 @@
 import { createMock } from '@golevelup/ts-jest';
-import { CallHandler } from '@nestjs/common/interfaces';
-import { Span, trace } from '@opentelemetry/api';
+import type { CallHandler } from '@nestjs/common/interfaces';
+import type { Span } from '@opentelemetry/api';
+import { trace } from '@opentelemetry/api';
 import * as Sentry from '@sentry/node';
-import { Observable, firstValueFrom, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 import { createGqlContextForRequest } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import type { AuthUser } from '@kordis/shared/auth';
 
 import { SentryOTelUserContextInterceptor } from './sentry-otel-user-context.interceptor';
 

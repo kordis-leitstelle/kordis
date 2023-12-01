@@ -1,6 +1,6 @@
-import { GraphQLFormattedError } from 'graphql/error';
+import type { GraphQLFormattedError } from 'graphql/error';
 
-import GraphqlErrorConvertable from './graphql-error-convertable';
+import type GraphqlErrorConvertable from './graphql-error-convertable';
 import { PresentableUnknownException } from './presentable/presentable-unknown.exception';
 import { PresentableException } from './presentable/presentable.exception';
 

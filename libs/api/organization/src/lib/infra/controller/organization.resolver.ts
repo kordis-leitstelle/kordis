@@ -1,4 +1,4 @@
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import type { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import {
@@ -9,10 +9,8 @@ import {
 
 import { CreateOrganizationCommand } from '../../core/command/create-organization.command';
 import { UpdateOrganizationGeoSettingsCommand } from '../../core/command/update-organization-geo-settings.command';
-import {
-	Organization,
-	OrganizationGeoSettings,
-} from '../../core/entity/organization.entity';
+import type { OrganizationGeoSettings } from '../../core/entity/organization.entity';
+import { Organization } from '../../core/entity/organization.entity';
 import { OrganizationNotFoundException } from '../../core/exceptions/organization-not-found.exception';
 import { GetOrganizationQuery } from '../../core/query/get-organization.query';
 

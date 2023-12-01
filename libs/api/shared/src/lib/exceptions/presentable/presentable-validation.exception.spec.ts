@@ -1,9 +1,7 @@
-import { ValidationError } from 'class-validator';
+import type { ValidationError } from 'class-validator';
 
-import {
-	ValidationException,
-	ValidationExceptionEntry,
-} from '../core/validation.exception';
+import type { ValidationExceptionEntry } from '../core/validation.exception';
+import { ValidationException } from '../core/validation.exception';
 import { PresentableValidationException } from '../presentable/presentable-validation.exception';
 
 describe('PresentableValidationException', () => {

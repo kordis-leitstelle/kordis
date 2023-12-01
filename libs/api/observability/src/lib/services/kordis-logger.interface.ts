@@ -1,4 +1,4 @@
-import { LoggerService } from '@nestjs/common';
+import type { LoggerService } from '@nestjs/common';
 
 export interface KordisLogger extends LoggerService {
 	log(message: string, args?: object): void;

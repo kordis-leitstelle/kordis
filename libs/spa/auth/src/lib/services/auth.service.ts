@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import {
-	BehaviorSubject,
-	Observable,
-	distinctUntilChanged,
-	map,
-	shareReplay,
-} from 'rxjs';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, shareReplay } from 'rxjs';
 
-import { AuthUser } from '@kordis/shared/auth';
+import type { AuthUser } from '@kordis/shared/auth';
 
-import { AuthService } from './auth-service';
+import type { AuthService } from './auth-service';
 
 @Injectable()
 export class ProdAuthService implements AuthService {

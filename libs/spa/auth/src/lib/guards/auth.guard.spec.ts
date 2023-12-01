@@ -1,14 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import {
+import type {
 	ActivatedRouteSnapshot,
 	NavigationExtras,
-	Router,
 	RouterStateSnapshot,
 } from '@angular/router';
+import { Router } from '@angular/router';
 import { createMock } from '@golevelup/ts-jest';
-import { Observable, ReplaySubject, Subject, firstValueFrom } from 'rxjs';
+import type { Observable, Subject } from 'rxjs';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 
-import { AUTH_SERVICE, AuthService } from '../services/auth-service';
+import type { AuthService } from '../services/auth-service';
+import { AUTH_SERVICE } from '../services/auth-service';
 import { authGuard } from './auth.guard';
 
 describe('AuthGuard', () => {

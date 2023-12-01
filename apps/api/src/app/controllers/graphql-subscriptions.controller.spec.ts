@@ -1,10 +1,11 @@
 import { createMock } from '@golevelup/ts-jest';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
-import { Test, TestingModule } from '@nestjs/testing';
-import { Response } from 'express';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import type { Response } from 'express';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 
 import { GraphqlSubscriptionsController } from './graphql-subscriptions.controller';
 

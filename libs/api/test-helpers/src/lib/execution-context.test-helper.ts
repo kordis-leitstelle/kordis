@@ -1,8 +1,8 @@
 import { createMock } from '@golevelup/ts-jest';
-import { ExecutionContext } from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import type { ExecutionContext } from '@nestjs/common';
+import type { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 
 export function createGqlContextForRequest(req: KordisRequest) {
 	return createMock<ExecutionContext>({

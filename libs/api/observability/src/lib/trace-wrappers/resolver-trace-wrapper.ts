@@ -1,5 +1,5 @@
-import { ModulesContainer } from '@nestjs/core';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import type { ModulesContainer } from '@nestjs/core';
+import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import {
 	RESOLVER_NAME_METADATA,
 	RESOLVER_TYPE_METADATA,

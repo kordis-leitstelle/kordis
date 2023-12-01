@@ -1,18 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-	APP_INITIALIZER,
-	ErrorHandler,
-	ModuleWithProviders,
-	NgModule,
-} from '@angular/core';
+import type { ModuleWithProviders } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 import {
 	BrowserTracing,
-	Replay,
-	TraceService,
 	createErrorHandler,
 	init as initSentry,
 	instrumentAngularRouting,
+	Replay,
+	TraceService,
 } from '@sentry/angular-ivy';
 
 import {

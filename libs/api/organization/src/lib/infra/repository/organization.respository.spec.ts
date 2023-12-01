@@ -1,11 +1,12 @@
 import { classes } from '@automapper/classes';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import type { DeepMocked } from '@golevelup/ts-jest';
+import { createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
-import { Model } from 'mongoose';
+import type { Model } from 'mongoose';
 
-import { Mutable } from '@kordis/api/shared';
+import type { Mutable } from '@kordis/api/shared';
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';

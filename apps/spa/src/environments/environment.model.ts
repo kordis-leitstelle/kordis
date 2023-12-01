@@ -1,4 +1,4 @@
-import { AuthConfig } from 'angular-oauth2-oidc';
+import type { AuthConfig } from 'angular-oauth2-oidc';
 
 export type Environment = {
 	production: boolean;

@@ -1,12 +1,12 @@
+import type { OnModuleInit } from '@nestjs/common';
 import {
 	Controller,
-	OnModuleInit,
 	Post,
 	Req,
 	Res,
 	ServiceUnavailableException,
 } from '@nestjs/common';
-import { GraphQLSchemaHost } from '@nestjs/graphql';
+import type { GraphQLSchemaHost } from '@nestjs/graphql';
 import type { Response } from 'express';
 import { createHandler } from 'graphql-sse/lib/use/express';
 

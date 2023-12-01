@@ -1,13 +1,14 @@
 import { createMock } from '@golevelup/ts-jest';
-import {
+import type {
 	CallHandler,
 	ExecutionContext,
-	Injectable,
 	NestInterceptor,
 } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { APP_INTERCEPTOR, ModulesContainer } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { Observable, firstValueFrom, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
 import {
 	createTraceMocks,

@@ -1,7 +1,8 @@
-import { SpectatorService } from '@ngneat/spectator';
+import type { SpectatorService } from '@ngneat/spectator';
 import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
-import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
-import { Subject, firstValueFrom } from 'rxjs';
+import type { OAuthEvent } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { firstValueFrom, Subject } from 'rxjs';
 
 import { ProdAuthService } from './auth.service';
 

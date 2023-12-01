@@ -1,11 +1,12 @@
-import {
+import type {
 	HttpEvent,
 	HttpHandler,
 	HttpInterceptor,
 	HttpRequest,
 } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, first } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { first } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { AUTH_SERVICE } from '../services/auth-service';

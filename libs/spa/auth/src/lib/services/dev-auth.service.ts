@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 
-import { AuthUser } from '@kordis/shared/auth';
+import type { AuthUser } from '@kordis/shared/auth';
 
-import { AuthService } from './auth-service';
+import type { AuthService } from './auth-service';
 
 /**
  * This is a simple implementation of the AuthService which is intended to be used in development.

@@ -1,8 +1,5 @@
-import {
-	NoopOTelSDKFactory,
-	OTelSDKFactory,
-	SentryOTelSDKFactory,
-} from './oTel.factory';
+import type { OTelSDKFactory } from './oTel.factory';
+import { NoopOTelSDKFactory, SentryOTelSDKFactory } from './oTel.factory';
 
 /**
  * this file has to be the first import of the bootstrap file! otherwise the oTel sdk will not be initialized correctly.

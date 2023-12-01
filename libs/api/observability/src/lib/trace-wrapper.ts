@@ -1,10 +1,10 @@
-import { ModulesContainer } from '@nestjs/core';
+import type { ModulesContainer } from '@nestjs/core';
 
+import type { TraceWrapper } from './trace-wrappers';
 import {
 	InterceptorTraceWrapper,
 	ResolverTraceWrapper,
 	TraceDecoratorTraceWrapper,
-	TraceWrapper,
 } from './trace-wrappers';
 
 // this has to be called from a NestJS import (main.ts or any provider/module) context, otherwise prototypes are not correctly patched

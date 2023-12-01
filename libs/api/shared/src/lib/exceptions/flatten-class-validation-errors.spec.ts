@@ -1,4 +1,4 @@
-import { ValidationExceptionEntry } from './core/validation.exception';
+import type { ValidationExceptionEntry } from './core/validation.exception';
 import { flattenValidationErrors } from './flatten-class-validation-errors';
 
 describe('flattenValidationErrors', () => {

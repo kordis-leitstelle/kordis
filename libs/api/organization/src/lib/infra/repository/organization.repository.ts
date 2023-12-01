@@ -1,14 +1,12 @@
-import { Mapper } from '@automapper/core';
+import type { Mapper } from '@automapper/core';
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { getMapperToken } from '@timonmasberg/automapper-nestjs';
-import { Model } from 'mongoose';
+import type { Model } from 'mongoose';
 
-import {
-	Organization,
-	Organization as OrganizationEntity,
-} from '../../core/entity/organization.entity';
-import { OrganizationRepository } from '../../core/repository/organization.repository';
+import type { Organization } from '../../core/entity/organization.entity';
+import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
+import type { OrganizationRepository } from '../../core/repository/organization.repository';
 import { OrganizationDocument } from '../schema/organization.schema';
 
 export class ImplOrganizationRepository implements OrganizationRepository {

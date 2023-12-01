@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/ts-jest';
 
-import { KordisLoggerService } from './kordis-logger-service.interface';
+import type { KordisLoggerService } from './kordis-logger-service.interface';
 import { KordisLoggerImpl } from './kordis.logger';
 
 describe('KordisLoggerImpl', () => {

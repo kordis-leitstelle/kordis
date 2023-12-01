@@ -1,6 +1,6 @@
-import { GraphQLFormattedError } from 'graphql/error';
+import type { GraphQLFormattedError } from 'graphql/error';
 
-import GraphqlErrorConvertable from '../graphql-error-convertable';
+import type GraphqlErrorConvertable from '../graphql-error-convertable';
 
 /**
  * Errors are exclusive. Only Errors of type PresentableError will be delivered to external layers.

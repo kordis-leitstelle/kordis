@@ -1,10 +1,9 @@
-import { Inject, LoggerService } from '@nestjs/common';
+import type { LoggerService } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
-import {
-	KORDIS_LOGGER_SERVICE,
-	KordisLoggerService,
-} from './kordis-logger-service.interface';
-import { KordisLogger } from './kordis-logger.interface';
+import type { KordisLoggerService } from './kordis-logger-service.interface';
+import { KORDIS_LOGGER_SERVICE } from './kordis-logger-service.interface';
+import type { KordisLogger } from './kordis-logger.interface';
 
 export class KordisLoggerImpl implements LoggerService, KordisLogger {
 	constructor(

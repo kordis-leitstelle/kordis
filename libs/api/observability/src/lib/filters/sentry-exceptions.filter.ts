@@ -1,4 +1,5 @@
-import { Catch, ExceptionFilter } from '@nestjs/common';
+import type { ExceptionFilter } from '@nestjs/common';
+import { Catch } from '@nestjs/common';
 import * as Sentry from '@sentry/node';
 
 import { PresentableException } from '@kordis/api/shared';

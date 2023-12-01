@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-import { BaseModel } from './base-entity.model';
+import type { BaseModel } from './base-entity.model';
 
 export abstract class BaseDocument extends Document implements BaseModel {
 	@Prop()

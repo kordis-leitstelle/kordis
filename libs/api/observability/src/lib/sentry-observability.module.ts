@@ -1,6 +1,8 @@
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, ModulesContainer } from '@nestjs/core';
+import type { OnModuleInit } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
+import type { ModulesContainer } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { init as initSentry } from '@sentry/node';
 import { ProfilingIntegration } from '@sentry/profiling-node';
 
@@ -8,7 +10,7 @@ import { SentryExceptionsFilter } from './filters/sentry-exceptions.filter';
 import { SentryOTelUserContextInterceptor } from './interceptors/sentry-otel-user-context.interceptor';
 import oTelSDK from './oTelSdk';
 import { KORDIS_LOGGER_SERVICE } from './services/kordis-logger-service.interface';
-import { KordisLogger } from './services/kordis-logger.interface';
+import type { KordisLogger } from './services/kordis-logger.interface';
 import { KordisLoggerImpl } from './services/kordis.logger';
 import { SentryLogger } from './services/sentry-logger.service';
 import { wrapProvidersWithTracingSpans } from './trace-wrapper';

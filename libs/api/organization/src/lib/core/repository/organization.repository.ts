@@ -1,4 +1,4 @@
-import { Organization } from '../entity/organization.entity';
+import type { Organization } from '../entity/organization.entity';
 
 export const ORGANIZATION_REPOSITORY = Symbol('OrganizationRepository');
 

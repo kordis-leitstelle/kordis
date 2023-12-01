@@ -1,6 +1,6 @@
-import { ValidationError } from 'class-validator';
+import type { ValidationError } from 'class-validator';
 
-import { ValidationExceptionEntry } from './core/validation.exception';
+import type { ValidationExceptionEntry } from './core/validation.exception';
 
 export function flattenValidationErrors(
 	errors: ValidationError[],

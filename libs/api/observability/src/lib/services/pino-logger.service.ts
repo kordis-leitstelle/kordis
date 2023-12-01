@@ -1,9 +1,9 @@
 import pino from 'pino';
-import { OnUnknown } from 'pino-abstract-transport';
+import type { OnUnknown } from 'pino-abstract-transport';
 import pretty from 'pino-pretty';
-import { Transform } from 'stream';
+import type { Transform } from 'stream';
 
-import { KordisLoggerService } from './kordis-logger-service.interface';
+import type { KordisLoggerService } from './kordis-logger-service.interface';
 
 /*
  * This logger is used for logging with pino to the console. If debug is set to false, it will only log info and above as json output, otherwise as a pretty print.

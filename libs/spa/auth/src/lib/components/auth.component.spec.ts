@@ -1,4 +1,5 @@
-import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
+import type { SpectatorRouting } from '@ngneat/spectator/jest';
+import { createRoutingFactory } from '@ngneat/spectator/jest';
 
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';

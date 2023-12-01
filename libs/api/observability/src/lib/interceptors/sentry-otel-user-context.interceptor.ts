@@ -1,15 +1,15 @@
-import {
+import type {
 	CallHandler,
 	ExecutionContext,
-	Injectable,
 	NestInterceptor,
 } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { trace } from '@opentelemetry/api';
 import * as Sentry from '@sentry/node';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
-import { KordisGqlContext } from '@kordis/api/shared';
+import type { KordisGqlContext } from '@kordis/api/shared';
 
 @Injectable()
 export class SentryOTelUserContextInterceptor implements NestInterceptor {

@@ -1,5 +1,6 @@
 import { classes } from '@automapper/classes';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import type { ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriver } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -13,7 +14,7 @@ import {
 	SentryObservabilityModule,
 } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
-import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
+import { errorFormatterFactory, SharedKernel } from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';

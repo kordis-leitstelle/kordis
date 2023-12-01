@@ -1,18 +1,17 @@
 import { Inject, Logger } from '@nestjs/common';
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import type { EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler } from '@nestjs/cqrs';
 
-import { KordisLogger } from '@kordis/api/observability';
+import type { KordisLogger } from '@kordis/api/observability';
 
-import {
+import type {
 	Organization,
 	OrganizationGeoSettings,
 } from '../entity/organization.entity';
 import { OrganizationGeoSettingsUpdatedEvent } from '../event/organization-geo-settings-updated.event';
 import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
-import {
-	ORGANIZATION_REPOSITORY,
-	OrganizationRepository,
-} from '../repository/organization.repository';
+import type { OrganizationRepository } from '../repository/organization.repository';
+import { ORGANIZATION_REPOSITORY } from '../repository/organization.repository';
 
 export class UpdateOrganizationGeoSettingsCommand {
 	constructor(

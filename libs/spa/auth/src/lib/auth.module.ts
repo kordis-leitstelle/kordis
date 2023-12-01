@@ -1,14 +1,10 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import {
-	APP_INITIALIZER,
-	ModuleWithProviders,
-	NgModule,
-	inject,
-} from '@angular/core';
+import type { ModuleWithProviders } from '@angular/core';
+import { APP_INITIALIZER, inject, NgModule } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import type { AuthConfig } from 'angular-oauth2-oidc';
 import {
-	AuthConfig,
 	DefaultOAuthInterceptor,
 	OAuthModule,
 	OAuthService,

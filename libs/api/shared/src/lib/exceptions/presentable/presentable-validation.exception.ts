@@ -1,7 +1,7 @@
-import { ValidationError } from 'class-validator';
-import { GraphQLFormattedError } from 'graphql/error';
+import type { ValidationError } from 'class-validator';
+import type { GraphQLFormattedError } from 'graphql/error';
 
-import {
+import type {
 	ValidationException,
 	ValidationExceptionEntry,
 } from '../core/validation.exception';

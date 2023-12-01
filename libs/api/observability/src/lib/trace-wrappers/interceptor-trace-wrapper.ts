@@ -1,4 +1,4 @@
-import { ModulesContainer } from '@nestjs/core';
+import type { ModulesContainer } from '@nestjs/core';
 
 import { TraceWrapper } from './abstract-trace-wrapper';
 

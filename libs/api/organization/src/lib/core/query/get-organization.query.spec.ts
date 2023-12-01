@@ -1,14 +1,12 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
-import { Mutable } from '@kordis/api/shared';
+import type { Mutable } from '@kordis/api/shared';
 
 import { Organization } from '../entity/organization.entity';
 import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
-import {
-	ORGANIZATION_REPOSITORY,
-	OrganizationRepository,
-} from '../repository/organization.repository';
+import type { OrganizationRepository } from '../repository/organization.repository';
+import { ORGANIZATION_REPOSITORY } from '../repository/organization.repository';
 import {
 	GetOrganizationHandler,
 	GetOrganizationQuery,

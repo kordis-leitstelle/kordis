@@ -1,11 +1,11 @@
 import { createMock } from '@golevelup/ts-jest';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 import {
 	createGqlContextForRequest,
 	createParamDecoratorFactory,
 } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import type { AuthUser } from '@kordis/shared/auth';
 
 import { User } from './user.decorator';
 

@@ -1,5 +1,6 @@
-import { MetadataScanner, ModulesContainer } from '@nestjs/core';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import type { ModulesContainer } from '@nestjs/core';
+import { MetadataScanner } from '@nestjs/core';
+import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { trace } from '@opentelemetry/api';
 
 export abstract class TraceWrapper {

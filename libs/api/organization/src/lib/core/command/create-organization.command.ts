@@ -1,17 +1,14 @@
 import { Inject, Logger } from '@nestjs/common';
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import type { EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler } from '@nestjs/cqrs';
 
 import type { KordisLogger } from '@kordis/api/observability';
 
-import {
-	Organization,
-	OrganizationGeoSettings,
-} from '../entity/organization.entity';
+import type { OrganizationGeoSettings } from '../entity/organization.entity';
+import { Organization } from '../entity/organization.entity';
 import { OrganizationCreatedEvent } from '../event/organization-created.event';
-import {
-	ORGANIZATION_REPOSITORY,
-	OrganizationRepository,
-} from '../repository/organization.repository';
+import type { OrganizationRepository } from '../repository/organization.repository';
+import { ORGANIZATION_REPOSITORY } from '../repository/organization.repository';
 
 export class CreateOrganizationCommand {
 	constructor(

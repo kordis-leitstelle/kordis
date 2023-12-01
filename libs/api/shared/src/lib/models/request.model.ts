@@ -1,6 +1,6 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 
-import { AuthUser } from '@kordis/shared/auth';
+import type { AuthUser } from '@kordis/shared/auth';
 
 export interface KordisGqlContext {
 	req: KordisRequest;

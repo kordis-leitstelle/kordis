@@ -1,4 +1,5 @@
-import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
+import type { SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory } from '@ngneat/spectator/jest';
 import { AUTH_SERVICE, DevAuthService } from '@kordis/spa/auth';
 
 import { SentryObservabilityService } from './sentry-observability.service';

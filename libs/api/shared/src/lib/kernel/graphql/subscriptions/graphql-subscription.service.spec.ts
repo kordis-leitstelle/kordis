@@ -1,5 +1,6 @@
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 
 import { GraphQLSubscriptionService } from './graphql-subscription.service';
 

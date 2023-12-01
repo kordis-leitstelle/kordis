@@ -1,18 +1,18 @@
-import {
+import type {
 	CallHandler,
 	ExecutionContext,
-	Injectable,
-	Logger,
 	NestInterceptor,
-	UnauthorizedException,
 } from '@nestjs/common';
-import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
-import { Observable, throwError } from 'rxjs';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import type { GqlContextType } from '@nestjs/graphql';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import type { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 
-import { KordisLogger } from '@kordis/api/observability';
-import { KordisGqlContext, KordisRequest } from '@kordis/api/shared';
+import type { KordisLogger } from '@kordis/api/observability';
+import type { KordisGqlContext, KordisRequest } from '@kordis/api/shared';
 
-import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
+import type { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
 
 @Injectable()
 export class AuthInterceptor implements NestInterceptor {

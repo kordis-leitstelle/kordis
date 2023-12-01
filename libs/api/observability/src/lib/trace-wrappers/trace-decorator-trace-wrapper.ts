@@ -1,5 +1,5 @@
-import { ModulesContainer } from '@nestjs/core';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import type { ModulesContainer } from '@nestjs/core';
+import type { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 
 import { SPAN_ACTIVE, TRACE_NAME } from '../decorators/trace.decorator';
 import { TraceWrapper } from './abstract-trace-wrapper';

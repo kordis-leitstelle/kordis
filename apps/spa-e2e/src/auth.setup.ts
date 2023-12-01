@@ -1,7 +1,8 @@
 import { test as setup } from '@playwright/test';
 
 import { LoginPo } from './page-objects/login.po';
-import { TestUsernames, getAuthStoragePath, testUsernames } from './test-users';
+import type { TestUsernames } from './test-users';
+import { getAuthStoragePath, testUsernames } from './test-users';
 
 // Documentation: https://playwright.dev/docs/auth#multiple-signed-in-roles
 

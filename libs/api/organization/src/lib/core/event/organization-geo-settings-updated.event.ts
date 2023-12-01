@@ -1,4 +1,4 @@
-import { OrganizationGeoSettings } from '../entity/organization.entity';
+import type { OrganizationGeoSettings } from '../entity/organization.entity';
 
 export class OrganizationGeoSettingsUpdatedEvent {
 	constructor(

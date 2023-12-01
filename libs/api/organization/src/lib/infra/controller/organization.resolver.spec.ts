@@ -1,9 +1,11 @@
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import type { DeepMocked } from '@golevelup/ts-jest';
+import { createMock } from '@golevelup/ts-jest';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 
+import type { Mutable } from '@kordis/api/shared';
 import {
-	Mutable,
 	PresentableNotFoundException,
 	PresentableValidationException,
 	ValidationException,
@@ -11,10 +13,8 @@ import {
 
 import { CreateOrganizationCommand } from '../../core/command/create-organization.command';
 import { UpdateOrganizationGeoSettingsCommand } from '../../core/command/update-organization-geo-settings.command';
-import {
-	Organization,
-	OrganizationGeoSettings,
-} from '../../core/entity/organization.entity';
+import type { OrganizationGeoSettings } from '../../core/entity/organization.entity';
+import { Organization } from '../../core/entity/organization.entity';
 import { OrganizationNotFoundException } from '../../core/exceptions/organization-not-found.exception';
 import { OrganizationResolver } from './organization.resolver';
 

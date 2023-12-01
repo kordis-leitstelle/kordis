@@ -1,13 +1,11 @@
 import { createMock } from '@golevelup/ts-jest';
-import { EventBus } from '@nestjs/cqrs';
+import type { EventBus } from '@nestjs/cqrs';
 
-import {
-	Organization,
-	OrganizationGeoSettings,
-} from '../entity/organization.entity';
+import type { OrganizationGeoSettings } from '../entity/organization.entity';
+import { Organization } from '../entity/organization.entity';
 import { OrganizationGeoSettingsUpdatedEvent } from '../event/organization-geo-settings-updated.event';
 import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
-import { OrganizationRepository } from '../repository/organization.repository';
+import type { OrganizationRepository } from '../repository/organization.repository';
 import {
 	UpdateOrganizationGeoSettingsCommand,
 	UpdateOrganizationGeoSettingsHandler,

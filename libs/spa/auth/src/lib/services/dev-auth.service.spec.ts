@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
-import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
+import type { SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory } from '@ngneat/spectator/jest';
 import { firstValueFrom } from 'rxjs';
 
 import { DevAuthService } from './dev-auth.service';

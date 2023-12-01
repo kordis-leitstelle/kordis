@@ -1,11 +1,9 @@
 import { createMock } from '@golevelup/ts-jest';
 
-import { KordisRequest } from '@kordis/api/shared';
+import type { KordisRequest } from '@kordis/api/shared';
 
-import {
-	AuthUserExtractorStrategy,
-	ExtractUserFromMsPrincipleHeader,
-} from './auth-user-extractor.strategy';
+import type { AuthUserExtractorStrategy } from './auth-user-extractor.strategy';
+import { ExtractUserFromMsPrincipleHeader } from './auth-user-extractor.strategy';
 
 describe('ExtractUserFromMsPrincipleHeader', () => {
 	let extractStrat: AuthUserExtractorStrategy;
