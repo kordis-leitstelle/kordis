@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
 import { ProtectedComponent } from './component/protected.component';
 import routes from './routes';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
 	declarations: [AppComponent, ProtectedComponent],
@@ -34,6 +35,12 @@ import routes from './routes';
 					environment.releaseVersion,
 			  )
 			: NoopObservabilityModule.forRoot(),
+		ServiceWorkerModule.register('ngsw-worker.js', {
+			enabled: !isDevMode(),
+			// Register the ServiceWorker as soon as the application is stable
+			// or after 30 seconds (whichever comes first).
+			registrationStrategy: 'registerWhenStable:30000',
+		}),
 	],
 	providers: [],
 	bootstrap: [AppComponent],
