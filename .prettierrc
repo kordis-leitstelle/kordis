@@ -6,10 +6,15 @@
 	"proseWrap": "always",
 	"overrides": [
 		{
-			"files": ["*.ts"],
+			"files": [
+				"*.ts"
+			],
 			"options": {
 				"parser": "typescript",
-				"importOrder": ["^@kordis/(.*)$", "^[./]"],
+				"importOrder": [
+					"^@kordis/(.*)$",
+					"^[./]"
+				],
 				"importOrderSeparation": true,
 				"importOrderSortSpecifiers": true,
 				"importOrderParserPlugins": [
@@ -20,6 +25,9 @@
 			}
 		}
 	],
-	"plugins": ["prettier-plugin-tailwindcss"],
+	"plugins": [
+		"prettier-plugin-tailwindcss",
+		"@trivago/prettier-plugin-sort-imports"
+	],
 	"tailwindConfig": "./apps/spa/tailwind.config.js"
 }

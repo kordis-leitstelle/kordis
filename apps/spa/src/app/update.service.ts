@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { filter } from 'rxjs';
 import { SwUpdate, type VersionReadyEvent } from '@angular/service-worker';
+import { filter } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',

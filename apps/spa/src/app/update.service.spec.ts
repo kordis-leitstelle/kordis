@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { SwUpdate } from '@angular/service-worker';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Subject } from 'rxjs';
+
 import { UpdateService } from './update.service';
 
 describe('UpdateService', () => {

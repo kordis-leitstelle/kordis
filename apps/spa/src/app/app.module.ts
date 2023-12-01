@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
 import {
@@ -13,7 +14,6 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
 import { ProtectedComponent } from './component/protected.component';
 import routes from './routes';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
 	declarations: [AppComponent, ProtectedComponent],
