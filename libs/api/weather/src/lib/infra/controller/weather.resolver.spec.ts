@@ -1,4 +1,4 @@
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { CacheModule } from '@nestjs/cache-manager';
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -40,7 +40,7 @@ describe('WeatherResolver', () => {
 
 			queryBus.execute.mockResolvedValueOnce(CURRENT_CONDITION_MODEL_EXAMPLE);
 
-			const result = await weatherResolver.getCurrentWeatherCondition({
+			const result = await weatherResolver.currentWeatherCondition({
 				latitude,
 				longitude,
 			});
@@ -54,11 +54,11 @@ describe('WeatherResolver', () => {
 		it('should return current weather condition from cache', async () => {
 			queryBus.execute.mockResolvedValueOnce(CURRENT_CONDITION_MODEL_EXAMPLE);
 
-			await weatherResolver.getCurrentWeatherCondition({
+			await weatherResolver.currentWeatherCondition({
 				latitude: 53.551086,
 				longitude: 9.993682,
 			});
-			const result = await weatherResolver.getCurrentWeatherCondition({
+			const result = await weatherResolver.currentWeatherCondition({
 				latitude: 53.551436,
 				longitude: 9.994445,
 			});
@@ -75,7 +75,7 @@ describe('WeatherResolver', () => {
 			const hours = 1;
 			queryBus.execute.mockResolvedValueOnce(HOURLY_FORECAST_MODEL_EXAMPLE);
 
-			const result = await weatherResolver.getHourlyWeatherForecast({
+			const result = await weatherResolver.hourlyWeatherForecast({
 				latitude,
 				longitude,
 				hours,
@@ -90,13 +90,13 @@ describe('WeatherResolver', () => {
 		it('should return hourly weather forecast from cache', async () => {
 			queryBus.execute.mockResolvedValueOnce(HOURLY_FORECAST_MODEL_EXAMPLE);
 
-			await weatherResolver.getHourlyWeatherForecast({
+			await weatherResolver.hourlyWeatherForecast({
 				latitude: 53.551086,
 				longitude: 9.993682,
 				hours: 1,
 			});
 
-			const result = await weatherResolver.getHourlyWeatherForecast({
+			const result = await weatherResolver.hourlyWeatherForecast({
 				latitude: 53.551436,
 				longitude: 9.994445,
 				hours: 1,
@@ -114,7 +114,7 @@ describe('WeatherResolver', () => {
 			const days = 1;
 			queryBus.execute.mockResolvedValueOnce(DAILY_FORECAST_MODEL_EXAMPLE);
 
-			const result = await weatherResolver.getDailyWeatherForecast({
+			const result = await weatherResolver.dailyWeatherForecast({
 				latitude,
 				longitude,
 				days,
@@ -129,13 +129,13 @@ describe('WeatherResolver', () => {
 		it('should return daily weather forecast from cache', async () => {
 			queryBus.execute.mockResolvedValueOnce(DAILY_FORECAST_MODEL_EXAMPLE);
 
-			await weatherResolver.getDailyWeatherForecast({
+			await weatherResolver.dailyWeatherForecast({
 				latitude: 53.551086,
 				longitude: 9.993682,
 				days: 1,
 			});
 
-			const result = await weatherResolver.getDailyWeatherForecast({
+			const result = await weatherResolver.dailyWeatherForecast({
 				latitude: 53.551436,
 				longitude: 9.994445,
 				days: 1,

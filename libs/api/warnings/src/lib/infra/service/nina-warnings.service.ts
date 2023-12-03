@@ -78,6 +78,7 @@ export class NinaWarningsService implements WarningsService {
 						await existingWarning.replaceOne(newWarning).exec();
 					} else {
 						this.logger.debug(`Saving warning ${id}`);
+
 						warningsToKeep.push(id);
 						await this.warningModel.create(newWarning);
 					}
@@ -115,8 +116,9 @@ export class NinaWarningsService implements WarningsService {
 			),
 		]);
 		const info =
-			mapData.info.find(({ language }: { language: string }) =>
-				language?.toLowerCase()?.includes('de'),
+			mapData.info.find(
+				({ language }: { language: string }) =>
+					language?.toLowerCase()?.includes('de'),
 			) || mapData.info?.[0];
 
 		if (info && featureCollection) {

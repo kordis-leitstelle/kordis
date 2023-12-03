@@ -22,7 +22,7 @@ export class WeatherResolver {
 	) {}
 
 	@Query(() => CurrentWeatherCondition)
-	async getCurrentWeatherCondition(
+	async currentWeatherCondition(
 		@Args() { latitude, longitude }: WeatherConditionsArgs,
 	): Promise<CurrentWeatherCondition> {
 		return this.cacheManager.wrap(
@@ -38,7 +38,7 @@ export class WeatherResolver {
 	}
 
 	@Query(() => HourlyWeatherForecast)
-	async getHourlyWeatherForecast(
+	async hourlyWeatherForecast(
 		@Args() { latitude, longitude, hours }: HourlyWeatherForecastArgs,
 	): Promise<HourlyWeatherForecast> {
 		return this.cacheManager.wrap(
@@ -55,7 +55,7 @@ export class WeatherResolver {
 	}
 
 	@Query(() => DailyWeatherForecast)
-	async getDailyWeatherForecast(
+	async dailyWeatherForecast(
 		@Args() { latitude, longitude, days }: DailyWeatherForecastArgs,
 	): Promise<DailyWeatherForecast> {
 		return this.cacheManager.wrap(

@@ -26,10 +26,11 @@ export class WarningsCheckerJob {
 		schedulerRegistry: SchedulerRegistry,
 	) {
 		if (options.checkCronExpression) {
+			this.logger.log('process id: ' + process.pid);
 			// runs in a cron job instead of rxjs interval to run in a separate child process
 			const job = new CronJob(
 				options.checkCronExpression,
-				() => void this.checkForNewWarningsAndPublish(),
+				() => this.checkForNewWarningsAndPublish(),
 				undefined,
 				undefined,
 				undefined,
