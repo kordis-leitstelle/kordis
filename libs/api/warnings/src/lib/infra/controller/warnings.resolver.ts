@@ -22,7 +22,7 @@ export class WarningsResolver {
 	) {}
 
 	@Query(() => [Warning])
-	async getWarningsForLocation(
+	async warningsForLocation(
 		@Args('latitude', { type: () => Float }) lat: number,
 		@Args('longitude', { type: () => Float }) lon: number,
 	): Promise<Warning[]> {

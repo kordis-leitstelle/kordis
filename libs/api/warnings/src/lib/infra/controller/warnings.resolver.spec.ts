@@ -1,4 +1,4 @@
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { CommandBus, CqrsModule, EventBus, QueryBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 
@@ -70,7 +70,7 @@ describe('WarningsResolver', () => {
 		];
 
 		warningServiceMock.getWarningsForLocation.mockResolvedValueOnce(warnings);
-		await expect(resolver.getWarningsForLocation(lat, lon)).resolves.toEqual(
+		await expect(resolver.warningsForLocation(lat, lon)).resolves.toEqual(
 			warnings,
 		);
 		expect(warningServiceMock.getWarningsForLocation).toHaveBeenCalledWith(
