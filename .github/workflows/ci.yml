@@ -11,13 +11,13 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Ensure Conventional Commits
-        uses: webiny/action-conventional-commits@v1.1.0
+        uses: webiny/action-conventional-commits@v1.2.0
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -47,25 +47,19 @@ jobs:
           RELEASE_VERSION: ${{ github.sha }}
           API_URL: http://localhost:3000/
           OAUTH_CONFIG: undefined
-      - name: Create API Environment File
-        run: |
-          envsubst < apps/api/src/.env.template > apps/api/src/.env
-          echo "PORT=3000" >> .env
-        env:
-          MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
-          ENVIRONMENT_NAME: 'ci'
-          RELEASE_VERSION: ${{ github.sha }}
-          SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
-
       - name: Build
         run: npx nx run-many -t build --all --parallel=3
-
       - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Run E2Es
         run: npm run serve:all:prod & (npx wait-on tcp:3000 && npx wait-on http://localhost:4200 && npx nx e2e spa-e2e)
         env:
           E2E_BASE_URL: http://localhost:4200/
+          MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
+          ENVIRONMENT_NAME: 'ci'
+          RELEASE_VERSION: ${{ github.sha }}
+          SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
+          PORT: 3000
       - uses: actions/upload-artifact@v3
         if: failure()
         with:

@@ -14,17 +14,17 @@ jobs:
       url: ${{ steps.spa-deployment.outputs.url }}
     outputs:
       spaUrl: ${{ steps.spa-deployment.outputs.url }}
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --ignore-scripts
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -34,10 +34,13 @@ jobs:
           mongoUri: ${{ secrets.DEV_MONGODB_URI }}
           sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
           azureMapKey: ${{ secrets.AZURE_MAP_KEY }}
           warningsCheckCron: "* * * * *"
       - name: Apply Database Migrations
-        run: ./tools/db/kordis-db.sh apply-pending-migrations
+        run: echo "add again once infrastructure is set up" # ./tools/db/kordis-db.sh apply-pending-migrations
         env:
           MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
           MONGODB_DB: dev
@@ -50,7 +53,6 @@ jobs:
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ github.sha }}
           deploymentEnv: "next"
-          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
@@ -58,14 +60,14 @@ jobs:
     needs: deployment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
       - name: Run SPA E2Es
-        run: npx nx e2e spa-e2e
+        run: echo "add again when deployment is ready" # npx nx e2e spa-e2e
         env:
           E2E_BASE_URL: ${{ needs.deployment.outputs.spaUrl }}
           AADB2C_TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
