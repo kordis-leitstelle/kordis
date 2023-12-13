@@ -1,16 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { Inject, inject, Injectable } from '@angular/core';
+import { Inject, Injectable, inject } from '@angular/core';
 import {
-	concatAll,
-	map,
 	Observable,
 	ReplaySubject,
+	concatAll,
+	map,
 	scan,
 	shareReplay,
 } from 'rxjs';
 
-import { ServiceHealthService } from './service-health.service';
 import { ServiceStatusReport } from '../models/service-status-report.model';
+import { ServiceHealthService } from './service-health.service';
 
 const IMPACT_MAP: Readonly<Record<string, string>> = Object.freeze({
 	DEGRADEDPERFORMANCE: 'Leistungseinbußen',

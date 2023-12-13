@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Provider } from '@angular/core';
-import { InstatusServiceHealthService } from './services/instatus-service-health.service';
 import { of } from 'rxjs';
+
+import { InstatusServiceHealthService } from './services/instatus-service-health.service';
 import { SERVICE_HEALTH_SERVICE } from './services/service-health.service';
 
 export function getInstatusProviders(

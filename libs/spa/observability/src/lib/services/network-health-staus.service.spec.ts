@@ -1,4 +1,5 @@
 import { firstValueFrom, skip } from 'rxjs';
+
 import { NetworkHealthStatusService } from './network-health-staus.service';
 
 describe('NetworkHealthStatusService', () => {

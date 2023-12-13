@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import {
-	getNoopSentryProviders,
-	getSentryProviders,
-} from './sentry.providers-factory';
+
 import {
 	getInstatusProviders,
 	getNoopInstatusProviders,
 } from './instatus.providers-factory';
+import {
+	getNoopSentryProviders,
+	getSentryProviders,
+} from './sentry.providers-factory';
 
 @NgModule({
 	imports: [CommonModule],

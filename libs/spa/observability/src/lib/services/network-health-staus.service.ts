@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
+	Observable,
 	fromEvent,
 	map,
 	merge,
-	Observable,
 	shareReplay,
 	startWith,
 } from 'rxjs';

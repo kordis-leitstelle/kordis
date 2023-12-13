@@ -1,7 +1,8 @@
-import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
-import { InstatusServiceHealthService } from './instatus-service-health.service';
 import { DatePipe } from '@angular/common';
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 import { lastValueFrom, take, toArray } from 'rxjs';
+
+import { InstatusServiceHealthService } from './instatus-service-health.service';
 
 Object.defineProperty(URL, 'createObjectURL', {
 	value: jest.fn(),

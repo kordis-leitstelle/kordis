@@ -4,12 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
+import { ObservabilityModule } from '@kordis/spa/observability';
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
 import { ProtectedComponent } from './component/protected.component';
 import routes from './routes';
-import { ObservabilityModule } from '@kordis/spa/observability';
 
 @NgModule({
 	declarations: [AppComponent, ProtectedComponent],

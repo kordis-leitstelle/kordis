@@ -2,11 +2,11 @@ import { APP_INITIALIZER, ErrorHandler, Provider } from '@angular/core';
 import { Router } from '@angular/router';
 import {
 	BrowserTracing,
+	Replay,
+	TraceService,
 	createErrorHandler,
 	init as initSentry,
 	instrumentAngularRouting,
-	Replay,
-	TraceService,
 } from '@sentry/angular-ivy';
 
 import {
