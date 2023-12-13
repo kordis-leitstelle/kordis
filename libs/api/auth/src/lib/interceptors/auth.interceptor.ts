@@ -32,9 +32,8 @@ export class AuthInterceptor implements NestInterceptor {
 			req = context.switchToHttp().getRequest<KordisRequest>();
 		}
 
-		const possibleAuthUser = await this.authUserExtractor.verifyUserFromRequest(
-			req,
-		);
+		const possibleAuthUser =
+			await this.authUserExtractor.verifyUserFromRequest(req);
 
 		if (!possibleAuthUser) {
 			this.logger.warn('Request with invalid JWT', {

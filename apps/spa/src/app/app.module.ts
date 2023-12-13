@@ -24,7 +24,7 @@ import routes from './routes';
 			? AuthModule.forRoot(
 					environment.oauth.config,
 					environment.oauth.discoveryDocumentUrl,
-			  )
+				)
 			: DevAuthModule.forRoot(),
 		// for now, we accept that we have the sentry module and dependencies in our dev bundle as well
 		environment.sentryKey
@@ -32,7 +32,7 @@ import routes from './routes';
 					environment.sentryKey,
 					environment.environmentName,
 					environment.releaseVersion,
-			  )
+				)
 			: NoopObservabilityModule.forRoot(),
 	],
 	providers: [],

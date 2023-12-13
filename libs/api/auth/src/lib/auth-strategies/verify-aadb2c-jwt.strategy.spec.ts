@@ -66,7 +66,7 @@ describe('VerifyAADB2CJWTStrategy', () => {
 						emails: ['foo@bar.de'],
 						organization: 'testorg',
 					},
-				} as any),
+				}) as any,
 		);
 
 		const verifySpy = jest.spyOn(jwt, 'verify').mockReturnValueOnce(undefined);
@@ -108,7 +108,7 @@ describe('VerifyAADB2CJWTStrategy', () => {
 			() =>
 				({
 					header: { kid: 'mockKid' },
-				} as any),
+				}) as any,
 		);
 
 		jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
