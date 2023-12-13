@@ -79,12 +79,12 @@ export class InstatusServiceHealthService implements ServiceHealthService {
 				...(response.incidents
 					? response.incidents.map((incident: InstatusIncident) =>
 							this.mapIncidentToReport(incident),
-					  )
+						)
 					: []),
 				...(response.maintenances
 					? response.maintenances.map((maintenance: InstatusMaintenance) =>
 							this.mapMaintenanceToReport(maintenance),
-					  )
+						)
 					: []),
 			]),
 			shareReplay({ bufferSize: 1, refCount: true }),

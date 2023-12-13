@@ -21,7 +21,7 @@ import { ObservabilityModule } from '@kordis/spa/observability';
 			? AuthModule.forRoot(
 					environment.oauth.config,
 					environment.oauth.discoveryDocumentUrl,
-			  )
+				)
 			: DevAuthModule.forRoot(),
 		// for now, we accept that we have the sentry module and dependencies in our dev bundle as well
 		ObservabilityModule.forRoot(
@@ -30,13 +30,13 @@ import { ObservabilityModule } from '@kordis/spa/observability';
 						dsn: environment.sentryKey,
 						environment: environment.environmentName,
 						release: environment.releaseVersion,
-				  }
+					}
 				: undefined,
 			environment.instatusUrl
 				? {
 						url: environment.instatusUrl,
 						checkIntervalMs: 30000,
-				  }
+					}
 				: undefined,
 		),
 	],
