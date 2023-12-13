@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 
 import { ServiceHealthService } from './service-health.service';
-import { ServiceStatusReport } from './service-status-report.model';
+import { ServiceStatusReport } from '../models/service-status-report.model';
 
 const IMPACT_MAP: Readonly<Record<string, string>> = Object.freeze({
 	DEGRADEDPERFORMANCE: 'Leistungseinbußen',

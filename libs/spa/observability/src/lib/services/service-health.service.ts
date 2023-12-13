@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ServiceStatusReport } from './service-status-report.model';
+import { ServiceStatusReport } from '../models/service-status-report.model';
 
 export const SERVICE_HEALTH_SERVICE = new InjectionToken<ServiceHealthService>(
 	'SERVICE_HEALTH_SERVICE',
