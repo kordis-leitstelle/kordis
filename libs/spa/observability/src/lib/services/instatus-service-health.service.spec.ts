@@ -53,7 +53,6 @@ describe('InstatusServiceHealthService', () => {
 	let spectator: SpectatorService<InstatusServiceHealthService>;
 	let service: InstatusServiceHealthService;
 
-	// Prepare the service factory
 	const createService = createServiceFactory({
 		service: InstatusServiceHealthService,
 		providers: [DatePipe],

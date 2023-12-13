@@ -1,4 +1,6 @@
 /* eslint-disable */
+process.env.TZ = 'Europe/Berlin';
+
 export default {
 	displayName: 'spa-observability',
 	preset: '../../../jest.preset.js',
