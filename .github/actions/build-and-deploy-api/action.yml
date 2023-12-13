@@ -29,7 +29,7 @@ inputs:
 outputs:
   url:
     description: "API URL"
-    value: ${{ steps.wa-deployment.outputs.webapp-url }}
+    value: ${{ steps.wa-deployment.outputs.url }}
 
 runs:
   using: "composite"
@@ -61,7 +61,7 @@ runs:
           ghcr.io/kordis-leitstelle/kordis-api:${{ inputs.releaseVersion}}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Set environment for Azure deployment
+    - name: Set environment for deployment
       run: envsubst < apps/api/src/.env.template > dist/apps/api/.env
       env:
         MONGODB_URI: ${{ inputs.mongoUri }}
@@ -71,11 +71,8 @@ runs:
       shell: bash
     - name: Deploy API
       id: wa-deployment
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'kordis-api'
-        slot-name: ${{ inputs.slot }}
-        package: dist/apps/api/
+      run: echo "url=placeholder" >> $GITHUB_OUTPUT
+      shell: bash
     - name: Create Sentry release
       uses: getsentry/action-release@v1
       env:

@@ -13,10 +13,7 @@ inputs:
     description: "Release Version (Commit or Tag)"
   deploymentEnv:
     required: true
-    description: "Azure SWA Deployment Environment"
-  publishToken:
-    required: true
-    description: "Azure Static Web App Deployment Token"
+    description: "Deployment Environment"
   sentryKey:
     required: true
     description: "Sentry DSN Key"
@@ -34,6 +31,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Generate Third-Party Licenses
+      run: npx  --yes generate-license-file@3.0.0-beta.1 --input package.json --output apps/spa/src/assets/third-party-licenses.txt --ci
+      shell: bash
     - run: |
         envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
         npx nx build spa --prod
@@ -48,15 +48,8 @@ runs:
         INSTATUS_URL: ${{ inputs.instatusUrl }}
     - name: Deploy SPA
       id: spa-deployment
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ inputs.publishToken }}
-        action: "upload"
-        app_location: "dist/apps/spa/"
-        output_location: ''
-        skip_app_build: true
-        skip_api_build: true
-        deployment_environment: ${{ inputs.deploymentEnv }}
+      shell: bash
+      run: echo "url=placeholder" >> $GITHUB_OUTPUT
     - name: Build SPA with source maps
       run: npx nx build spa --prod --source-map=true
       shell: bash

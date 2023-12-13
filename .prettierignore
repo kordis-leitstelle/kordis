@@ -10,3 +10,5 @@ package-lock.json
 apps/api/src/main.ts
 
 /.nx/cache
+
+migrations.json

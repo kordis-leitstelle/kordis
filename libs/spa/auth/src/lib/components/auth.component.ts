@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 
@@ -54,7 +54,9 @@ import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 				<img
 					class="absolute inset-0 h-full w-full object-cover"
 					alt="Kordis"
-					src="/assets/login-bg.jpg"
+					ngSrc="/assets/login-bg.jpg"
+					fill
+					priority
 				/>
 			</div>
 		</div>
