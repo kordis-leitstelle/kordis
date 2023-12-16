@@ -10,9 +10,6 @@ import { PresentableException } from './presentable.exception';
 
 export class PresentableValidationException extends PresentableException {
 	readonly code = 'VALIDATION_EXCEPTION';
-	readonly graphqlError = {
-		test: 123,
-	};
 
 	constructor(
 		message: string,
