@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class MongoEncryptionClientProvider {

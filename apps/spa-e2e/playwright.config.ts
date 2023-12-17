@@ -1,6 +1,6 @@
+import { nxE2EPreset } from '@nx/playwright/preset';
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
-import { nxE2EPreset } from '@nx/playwright/preset';
 
 const baseURL = process.env.E2E_BASE_URL || 'http://localhost:4200/';
 

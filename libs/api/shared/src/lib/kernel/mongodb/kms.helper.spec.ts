@@ -1,6 +1,8 @@
-import { getMongoEncrKmsFromConfig } from './kms.helper'; // Update the path as needed
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
+// Update the path as needed
 import { ConfigService } from '@nestjs/config';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+
+import { getMongoEncrKmsFromConfig } from './kms.helper';
 
 describe('getMongoEncrKmsFromConfig', () => {
 	let configService: DeepMocked<ConfigService>;

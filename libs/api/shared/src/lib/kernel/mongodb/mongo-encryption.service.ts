@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import mongoose from 'mongoose';
+
 import { MongoEncryptionClientProvider } from './mongo-encryption-client.provider';
 
 const ENCR_ALGO = 'AEAD_AES_256_CBC_HMAC_SHA_512';

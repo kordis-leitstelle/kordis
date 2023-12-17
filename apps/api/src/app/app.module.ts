@@ -14,10 +14,10 @@ import {
 } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import {
-	errorFormatterFactory,
-	getMongoEncrKmsFromConfig,
 	MongoEncryptionClientProvider,
 	SharedKernel,
+	errorFormatterFactory,
+	getMongoEncrKmsFromConfig,
 } from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';

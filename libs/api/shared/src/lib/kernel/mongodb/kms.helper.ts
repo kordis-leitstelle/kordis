@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import mongoose from 'mongoose';
 
 type KMS = {
 	keyVaultNamespace: string;

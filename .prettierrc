@@ -6,15 +6,10 @@
 	"proseWrap": "always",
 	"overrides": [
 		{
-			"files": [
-				"*.ts"
-			],
+			"files": ["*.ts"],
 			"options": {
 				"parser": "typescript",
-				"importOrder": [
-					"^@kordis/(.*)$",
-					"^[./]"
-				],
+				"importOrder": ["^@kordis/(.*)$", "^[./]"],
 				"importOrderSeparation": true,
 				"importOrderSortSpecifiers": true,
 				"importOrderParserPlugins": [

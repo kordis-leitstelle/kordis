@@ -1,3 +1,5 @@
+import { MongoEncryptionClientProvider } from './mongo-encryption-client.provider';
+
 jest.mock('mongoose', () => ({
 	default: {
 		createConnection: jest.fn().mockReturnValue({
@@ -12,8 +14,6 @@ jest.mock('mongoose', () => ({
 		},
 	},
 }));
-
-import { MongoEncryptionClientProvider } from './mongo-encryption-client.provider';
 
 describe('MongoEncryptionClientProvider', () => {
 	let mongoEncryptionClientProvider: MongoEncryptionClientProvider;

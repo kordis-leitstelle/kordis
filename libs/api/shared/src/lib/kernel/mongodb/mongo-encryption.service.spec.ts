@@ -1,6 +1,7 @@
-import { MongoEncryptionService } from './mongo-encryption.service';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
+
 import { MongoEncryptionClientProvider } from './mongo-encryption-client.provider';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { MongoEncryptionService } from './mongo-encryption.service';
 
 describe('MongoEncryptionService', () => {
 	let mongoEncryptionService: MongoEncryptionService;
