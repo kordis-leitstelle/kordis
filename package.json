@@ -65,7 +65,7 @@
     "jest-environment-node": "^29.5.0",
     "jest-preset-angular": "13.1.4",
     "lcov-result-merger": "^5.0.0",
-    "@timonmasberg/mongo-migrate-ts": "^0.0.0",
+    "mongo-migrate-ts": "^1.4.0",
     "nx": "17.2.5",
     "playwright": "^1.39.0",
     "postcss": "^8.4.31",
