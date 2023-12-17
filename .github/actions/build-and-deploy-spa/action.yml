@@ -13,10 +13,7 @@ inputs:
     description: "Release Version (Commit or Tag)"
   deploymentEnv:
     required: true
-    description: "Azure SWA Deployment Environment"
-  publishToken:
-    required: true
-    description: "Azure Static Web App Deployment Token"
+    description: "Deployment Environment"
   sentryKey:
     required: true
     description: "Sentry DSN Key"
@@ -47,15 +44,8 @@ runs:
         SENTRY_KEY: ${{ inputs.sentryKey }}
     - name: Deploy SPA
       id: spa-deployment
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ inputs.publishToken }}
-        action: "upload"
-        app_location: "dist/apps/spa/"
-        output_location: ''
-        skip_app_build: true
-        skip_api_build: true
-        deployment_environment: ${{ inputs.deploymentEnv }}
+      shell: bash
+      run: echo "url=placeholder" >> $GITHUB_OUTPUT
     - name: Build SPA with source maps
       run: npx nx build spa --prod --source-map=true
       shell: bash

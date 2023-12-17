@@ -25,10 +25,6 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --ignore-scripts
-      - name: Azure Login
-        uses: Azure/login@v1.4.7
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - name: Build and Deploy API
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
@@ -46,7 +42,7 @@ jobs:
           mongoEncrKVNamespace: ${{ secrets.MONGO_ENCR_KV_NAMESPACE }}
           mongoEncrMasterKey: ${{ secrets.MONGO_ENCR_MASTER_KEY }}
       - name: Apply Database Migrations
-        run: ./tools/db/kordis-db.sh apply-pending-migrations
+        run: echo "add again once infrastructure is set up" # ./tools/db/kordis-db.sh apply-pending-migrations
         env:
           MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
           MONGODB_DB: dev
@@ -59,7 +55,6 @@ jobs:
           oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ github.sha }}
           deploymentEnv: "next"
-          publishToken: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
@@ -74,11 +69,11 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run SPA E2Es
-        run: npx nx e2e spa-e2e
+        run: echo "add again when deployment is ready" # npx nx e2e spa-e2e
         env:
           E2E_BASE_URL: ${{ needs.deployment.outputs.spaUrl }}
           AADB2C_TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-test-results

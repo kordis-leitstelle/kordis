@@ -54,7 +54,9 @@ import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 				<img
 					class="absolute inset-0 h-full w-full object-cover"
 					alt="Kordis"
-					src="/assets/login-bg.jpg"
+					ngSrc="/assets/login-bg.jpg"
+					fill
+					priority
 				/>
 			</div>
 		</div>

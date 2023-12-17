@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
 	APP_INITIALIZER,
@@ -41,6 +41,7 @@ import { ProdAuthService } from './services/auth.service';
 				],
 			},
 		]),
+		NgOptimizedImage,
 	],
 	declarations: [AuthComponent],
 	exports: [AuthComponent, RouterModule],
