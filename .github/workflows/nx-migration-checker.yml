@@ -17,7 +17,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      - uses: timonmasberg/nx-migration-gh-action@v1.1.10
+      - uses: timonmasberg/nx-migration-gh-action@v1.1.11
         with:
           repoToken: ${{ secrets.WORKFLOW_PAT }}
           prTitle: 'chore(deps): migrate nx to $VERSION'
