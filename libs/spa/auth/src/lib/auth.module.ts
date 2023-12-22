@@ -15,7 +15,6 @@ import {
 	OAuthStorage,
 } from 'angular-oauth2-oidc';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
-import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzContentComponent, NzLayoutComponent } from 'ng-zorro-antd/layout';
 import { switchMap } from 'rxjs';
 
@@ -48,7 +47,6 @@ import { ProdAuthService } from './services/auth.service';
 		NzContentComponent,
 		NzLayoutComponent,
 		NzButtonComponent,
-		NzIconDirective,
 	],
 	declarations: [AuthComponent],
 	exports: [AuthComponent, RouterModule],

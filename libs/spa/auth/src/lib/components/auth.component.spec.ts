@@ -1,8 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
-import { LoginOutline } from '@ant-design/icons-angular/icons';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
-import { NzIconDirective, NzIconModule } from 'ng-zorro-antd/icon';
 import { NzContentComponent, NzLayoutComponent } from 'ng-zorro-antd/layout';
 
 import { AUTH_SERVICE } from '../services/auth-service';
@@ -18,8 +16,6 @@ describe('AuthComponent', () => {
 			NzContentComponent,
 			NzLayoutComponent,
 			NzButtonComponent,
-			NzIconDirective,
-			NzIconModule.forChild([LoginOutline]),
 		],
 		componentProviders: [
 			{

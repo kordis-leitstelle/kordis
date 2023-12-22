@@ -15,15 +15,7 @@
 				"polyfills": ["zone.js"],
 				"tsConfig": "apps/spa/tsconfig.app.json",
 				"inlineStyleLanguage": "css",
-				"assets": [
-					"apps/spa/src/favicon.ico",
-					"apps/spa/src/assets",
-					{
-						"glob": "**/*",
-						"input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
-						"output": "/assets/"
-					}
-				],
+				"assets": ["apps/spa/src/favicon.ico"],
 				"styles": [
 					"./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
 					"apps/spa/src/styles.css"

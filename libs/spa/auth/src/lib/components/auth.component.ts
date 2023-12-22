@@ -26,7 +26,6 @@ import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 						(click)="login()"
 						data-testid="login-btn"
 					>
-						<span nz-icon nzType="login"></span>
 						Anmelden
 					</button>
 				</div>
