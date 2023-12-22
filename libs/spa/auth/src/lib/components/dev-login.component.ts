@@ -19,38 +19,40 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 
 @Component({
 	selector: 'krd-auth',
-	styles: [
-		`
-			button {
-				@apply rounded bg-blue-500 px-4 py-2 text-white;
-			}
-
-			input {
-				@apply rounded-md border p-1.5;
-			}
-		`,
-	],
 	template: `
 		<div style="max-width: 500px; padding: 20px;">
-			<div class="flex">
-				<button (click)="loginAsTestuser(0)" data-username="testuser">
-					Login as <b>testuser</b>
+			<div style="display: flex">
+				<button nz-button (click)="loginAsTestuser(0)" data-username="testuser">
+					Login as&nbsp; <b>testuser</b>
 				</button>
 			</div>
 			<form
 				[formGroup]="customClaimsForm"
 				(ngSubmit)="loginWithCustomClaims()"
-				class="mt-5 flex flex-col"
+				style="display: flex; margin-top: 1.25rem; flex-direction: column;"
 			>
 				<label for="id">ID</label>
-				<input id="id" type="text" formControlName="id" />
+				<input nz-input id="id" type="text" formControlName="id" />
 				<label for="firstName">First name</label>
-				<input id="firstName" type="text" formControlName="firstName" />
+				<input
+					nz-input
+					id="firstName"
+					type="text"
+					formControlName="firstName"
+				/>
 				<label for="lastName">Last name</label>
-				<input id="lastName" type="text" formControlName="lastName" />
+				<input nz-input id="lastName" type="text" formControlName="lastName" />
 				<label for="email">Email</label>
-				<input id="email" type="text" formControlName="email" />
-				<button class="mt-2" type="submit">Login as Custom user</button>
+				<input nz-input id="email" type="text" formControlName="email" />
+				<button
+					nz-button
+					nzSize="large"
+					nzType="primary"
+					style="margin-top: 0.5rem;"
+					type="submit"
+				>
+					Login as Custom user
+				</button>
 			</form>
 		</div>
 	`,
