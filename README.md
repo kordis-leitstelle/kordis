@@ -9,6 +9,7 @@ control centres
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis?ref=badge_shield)
 
 </div>
 
@@ -56,6 +57,9 @@ Architecture information can be found in the given subproject READMEs or and the
 
 Distributed under the AGPL-3.0 License. See [`LICENSE.md`](./LICENSE.md) for
 more information.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis?ref=badge_large)
 
 ## Contact
 
