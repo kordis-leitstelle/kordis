@@ -6,16 +6,16 @@
 	"prefix": "kordis",
 	"targets": {
 		"build": {
-			"executor": "@angular-devkit/build-angular:browser",
+			"executor": "@angular-devkit/build-angular:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/apps/spa",
 				"index": "apps/spa/src/index.html",
-				"main": "apps/spa/src/main.ts",
+				"browser": "apps/spa/src/main.ts",
 				"polyfills": ["zone.js"],
 				"tsConfig": "apps/spa/tsconfig.app.json",
 				"inlineStyleLanguage": "css",
-				"assets": ["apps/spa/src/favicon.ico"],
+				"assets": ["apps/spa/src/favicon.ico", "apps/spa/src/assets"],
 				"styles": [
 					"./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
 					"apps/spa/src/styles.css"
@@ -45,12 +45,9 @@
 					"outputHashing": "all"
 				},
 				"development": {
-					"buildOptimizer": false,
 					"optimization": false,
-					"vendorChunk": true,
 					"extractLicenses": false,
-					"sourceMap": true,
-					"namedChunks": true
+					"sourceMap": true
 				}
 			},
 			"defaultConfiguration": "production"
