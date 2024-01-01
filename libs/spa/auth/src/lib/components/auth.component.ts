@@ -15,9 +15,11 @@ import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 						<h1>Kordis</h1>
 						<span> Koordinierungssoftware für Einsatzleitstellen </span>
 					</div>
-					<span data-testid="auth-error-msg" *ngIf="hasAuthError$ | async">
-						Sie konnten nicht authentifiziert werden!
-					</span>
+					@if (hasAuthError$ | async) {
+						<span data-testid="auth-error-msg">
+							Sie konnten nicht authentifiziert werden!
+						</span>
+					}
 					<button
 						nz-button
 						nzType="primary"
