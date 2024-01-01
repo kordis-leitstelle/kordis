@@ -7,4 +7,5 @@ export const environment: Environment = {
 	apiUrl: '$API_URL',
 	releaseVersion: '$RELEASE_VERSION',
 	oauth: $OAUTH_CONFIG as any,
+    instatusUrl: '$INSTATUS_URL',
 };

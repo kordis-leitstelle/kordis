@@ -53,6 +53,7 @@ jobs:
           deploymentEnv: "next"
           sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          instatusUrl: ${{ secrets.INSTATUS_URL }}
 
   e2e:
     needs: deployment
