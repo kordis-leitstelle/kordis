@@ -31,8 +31,6 @@ jobs:
         with:
           slot: "next"
           releaseVersion: ${{ github.sha }}
-          mongoUri: ${{ secrets.DEV_MONGODB_URI }}
-          sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}

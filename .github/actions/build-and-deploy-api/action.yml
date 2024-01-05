@@ -8,12 +8,6 @@ inputs:
   slot:
     required: true
     description: "Slot Identifier"
-  mongoUri:
-    required: true
-    description: "Mongo Connection URI"
-  sentryKey:
-    required: true
-    description: "Sentry DSN Key"
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
@@ -55,20 +49,12 @@ runs:
         context: ./
         file: ./apps/api/Dockerfile
         build-args: |
-          NODE_VERSION=${{ steps.node-version-check.outputs.node-version}}
+          NODE_VERSION=${{steps.node-version-check.outputs.node-version}}
         push: true
         tags: |
-          ghcr.io/kordis-leitstelle/kordis-api:${{ inputs.releaseVersion}}
+          ghcr.io/kordis-leitstelle/kordis-api:${{inputs.releaseVersion}}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Set environment for deployment
-      run: envsubst < apps/api/src/.env.template > dist/apps/api/.env
-      env:
-        MONGODB_URI: ${{ inputs.mongoUri }}
-        ENVIRONMENT_NAME: ${{ inputs.slot }}
-        RELEASE_VERSION: ${{ inputs.releaseVersion }}
-        SENTRY_KEY: ${{ inputs.sentryKey }}
-      shell: bash
     - name: Deploy API
       id: wa-deployment
       run: echo "url=placeholder" >> $GITHUB_OUTPUT

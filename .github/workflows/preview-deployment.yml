@@ -83,7 +83,6 @@ jobs:
         with:
           slot: "pr${{ github.event.issue.number }}"
           releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
-          sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
@@ -165,7 +164,6 @@ jobs:
         with:
           slot: "pr${{ github.event.pull_request.number }}"
           releaseVersion: ${{ github.event.pull_request.head.sha }}
-          sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
