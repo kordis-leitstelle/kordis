@@ -29,7 +29,7 @@ jobs:
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
-          slot: "next"
+          deploymentEnv: "next"
           releaseVersion: ${{ github.sha }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
@@ -45,12 +45,12 @@ jobs:
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
-          apiUrl: ${{ steps.api-deployment.outputs.url }}
-          oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ github.sha }}
           deploymentEnv: "next"
-          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
 
   e2e:
     needs: deployment

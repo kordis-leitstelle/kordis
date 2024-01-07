@@ -1,13 +1,13 @@
 name: 'build-and-deploy-api'
-description: 'Builds API Project for Production and Deploys it to a given WA Slot'
+description: 'Builds API project for production and deploys it to a given environment'
 
 inputs:
   releaseVersion:
     required: true
     description: "Release Version (Commit or Tag)"
-  slot:
+  deploymentEnv:
     required: true
-    description: "Slot Identifier"
+    description: "Deployment Environment"
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
@@ -66,6 +66,6 @@ runs:
         SENTRY_ORG: kordis-leitstelle
         SENTRY_PROJECT: kordis-api
       with:
-        environment: ${{ inputs.slot }}
+        environment: ${{ inputs.deploymentEnv }}
         version: ${{ inputs.releaseVersion }}
         sourcemaps: ./dist/apps/api

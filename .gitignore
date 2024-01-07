@@ -47,6 +47,6 @@ playwright/.auth
 # Environments
 apps/api/src/.env
 apps/spa-e2e/.env
-apps/spa/src/environments/environment.prod.ts
+apps/spa/src/environments/environment.template
 
 .nx/cache
