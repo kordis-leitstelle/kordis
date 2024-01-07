@@ -19,21 +19,28 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 
 @Component({
 	selector: 'krd-auth',
-	styles: `
-	 	.container {
-	 		max-width: 500px; padding: 20px;
-	 		> div {
-	 			display: flex
-	 		}
+	styles: [
+		`
+			.container {
+				max-width: 500px;
+				padding: 20px;
 
-	 		> form {
-	 			display: flex; margin-top: 1.25rem; flex-direction: column;
-	 			> button {
-	 		  	margin-top: 0.5rem;
-	 			}
-	 		}
-	 	}
-	`,
+				> div {
+					display: flex;
+				}
+
+				> form {
+					display: flex;
+					margin-top: 1.25rem;
+					flex-direction: column;
+
+					> button {
+						margin-top: 0.5rem;
+					}
+				}
+			}
+		`,
+	],
 	template: `
 		<div class="container">
 			<div>
