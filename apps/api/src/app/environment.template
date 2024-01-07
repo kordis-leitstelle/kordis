@@ -1,0 +1,4 @@
+export default () => ({
+	RELEASE_VERSION: '$RELEASE_VERSION',
+	ENVIRONMENT_NAME: '$ENVIRONMENT_NAME',
+});

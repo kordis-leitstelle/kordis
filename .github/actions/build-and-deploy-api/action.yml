@@ -36,6 +36,12 @@ runs:
         registry: ${{ inputs.containerRegistryUrl }}
         username: ${{ inputs.containerRegistryUsername }}
         password: ${{ inputs.containerRegistryPassword }}
+    - name: Create Environment
+      run: envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
+      shell: bash
+      env:
+        ENVIRONMENT_NAME: 'ci'
+        RELEASE_VERSION: ${{ github.sha }}
     - name: Build app
       run: |
         npx nx build api --prod

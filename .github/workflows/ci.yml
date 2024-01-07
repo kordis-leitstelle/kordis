@@ -39,14 +39,14 @@ jobs:
       - name: Merge Coverage files
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
 
-      - name: Create SPA Environment File
-        run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
+      - name: Create Environments
+        run: |
+          envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.ts
+          envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
         env:
           IS_PRODUCTION: true
           ENVIRONMENT_NAME: 'ci'
           RELEASE_VERSION: ${{ github.sha }}
-          API_URL: http://localhost:3000/
-          OAUTH_CONFIG: undefined
       - name: Build
         run: |
           npx nx run-many -t build --all --parallel=3
@@ -59,8 +59,8 @@ jobs:
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Start API and SPA containers
         run: |
-          docker run -d -p 3000:3333 -e MONGODB_URI=mongodb://127.0.0.1:27017/e2edb -e ENVIRONMENT_NAME=ci -e RELEASE_VERSION=${{ github.sha }} kordis-api:ci-run)
-          docker run -d -p 4200:80 -e ENVIRONMENT_NAME=ci -e RELEASE_VERSION=${{ github.sha }} kordis-api:ci-run
+          docker run -d -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb kordis-api:ci-run
+          docker run -d -p 4200:80 -e API_URL=http://localhost:3000 kordis-api:ci-run
       - name: Run E2Es
         run: npx wait-on tcp:3000 && npx wait-on http://localhost:4200 && npx nx e2e spa-e2e --skipInstall
         env:

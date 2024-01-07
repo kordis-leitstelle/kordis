@@ -36,8 +36,7 @@ runs:
         registry: ${{ inputs.containerRegistryUrl }}
         username: ${{ inputs.containerRegistryUsername }}
         password: ${{ inputs.containerRegistryPassword }}
-    - run: |
-        envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
+    - run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.ts
       shell: bash
       env:
         IS_PRODUCTION: true
