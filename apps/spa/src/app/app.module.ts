@@ -1,10 +1,11 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import de from '@angular/common/locales/de';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
+import { firstValueFrom } from 'rxjs';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
 import {
@@ -40,7 +41,19 @@ registerLocaleData(de);
 				)
 			: NoopObservabilityModule.forRoot(),
 	],
-	providers: [{ provide: NZ_I18N, useValue: de_DE }],
+	providers: [
+		{
+			provide: APP_INITIALIZER,
+			useFactory: (http: HttpClient) => async () => {
+				const config = await firstValueFrom(http.get('./assets/config.json'));
+				return Object.assign(environment, { ...config, ...environment });
+			},
+			deps: [HttpClient],
+			multi: true,
+		},
+
+		{ provide: NZ_I18N, useValue: de_DE },
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

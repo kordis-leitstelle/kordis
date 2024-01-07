@@ -24,12 +24,6 @@
 			},
 			"configurations": {
 				"production": {
-					"fileReplacements": [
-						{
-							"replace": "apps/spa/src/environments/environment.ts",
-							"with": "apps/spa/src/environments/environment.prod.ts"
-						}
-					],
 					"budgets": [
 						{
 							"type": "initial",

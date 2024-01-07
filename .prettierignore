@@ -8,6 +8,7 @@ package-lock.json
 .angular
 
 apps/api/src/main.ts
+apps/spa/src/assets/config.template.json
 
 /.nx/cache
 
