@@ -9,6 +9,7 @@ package-lock.json
 
 apps/api/src/main.ts
 apps/spa/src/assets/config.template.json
+libs/spa/observability/src/lib/services/sentry-observability.service.spec.ts
 
 /.nx/cache
 
