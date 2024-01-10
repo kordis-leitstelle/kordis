@@ -50,7 +50,7 @@ runs:
       uses: docker/build-push-action@v5
       with:
         context: ./
-        file: ./apps/src/docker/Dockerfile
+        file: ./apps/spa/docker/Dockerfile
         push: true
         tags: |
           ghcr.io/kordis-leitstelle/kordis-spa:${{inputs.releaseVersion}}
