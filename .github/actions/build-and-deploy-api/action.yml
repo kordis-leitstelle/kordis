@@ -40,8 +40,8 @@ runs:
       run: envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
       shell: bash
       env:
-        ENVIRONMENT_NAME: 'ci'
-        RELEASE_VERSION: ${{ github.sha }}
+        ENVIRONMENT_NAME: ${{ inputs.deploymentEnv }}
+        RELEASE_VERSION: ${{ inputs.releaseVersion }}
     - name: Build app
       run: |
         npx nx build api --prod

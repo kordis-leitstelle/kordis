@@ -46,13 +46,13 @@ registerLocaleData(de);
 		{
 			provide: APP_INITIALIZER,
 			// we need to use a global tt policy here mainly for the ant design icons
-			useFactory: () => async () => {
+			useFactory: () => () => {
 				globalThis.trustedTypes.createPolicy('default', {
 					// https://github.com/angular/angular/issues/31329 can't use Angular DomSanitizer here
 					createHTML: (s) => {
 						return DOMPurify.sanitize(
 							s
-								// hack until https://github.com/cure53/DOMPurify/issues/900 figured out
+								// hack so chrome won't complain about inline styles (mainly from svg icons)
 								.replace('<style />', ''),
 							{
 								USE_PROFILES: { html: true, svg: true },
@@ -67,7 +67,7 @@ registerLocaleData(de);
 			provide: APP_INITIALIZER,
 			useFactory: (http: HttpClient) => async () => {
 				const config = await firstValueFrom(http.get('./assets/config.json'));
-				return Object.assign(environment, { ...config, ...environment });
+				Object.assign(environment, { ...config, ...environment });
 			},
 			deps: [HttpClient],
 			multi: true,
