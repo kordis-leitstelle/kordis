@@ -67,7 +67,7 @@
     "mongo-migrate-ts": "^1.1.4",
     "nx": "17.2.8",
     "playwright": "^1.39.0",
-    "prettier": "3.2.1",
+    "prettier": "3.2.2",
     "ts-jest": "29.1.0",
     "ts-node": "10.9.2",
     "typescript": "5.2.2",
