@@ -20,6 +20,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
+  containerTag:
+    required: true
+    description: "Container tag"
 outputs:
   url:
     description: "API URL"
@@ -40,7 +43,6 @@ runs:
       run: envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
       shell: bash
       env:
-        ENVIRONMENT_NAME: ${{ inputs.deploymentEnv }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
     - name: Build app
       run: |
@@ -58,7 +60,7 @@ runs:
           NODE_VERSION=${{steps.node-version-check.outputs.node-version}}
         push: true
         tags: |
-          ghcr.io/kordis-leitstelle/kordis-api:${{inputs.releaseVersion}}
+          {{ inputs.containerTag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Deploy API

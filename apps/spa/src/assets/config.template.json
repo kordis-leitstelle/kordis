@@ -1,5 +1,6 @@
 {
 	"sentryKey": "$SENTRY_KEY",
+	"environmentName": "$ENVIRONMENT_NAME",
 	"apiUrl": "$API_URL",
 	"oauth": $OAUTH_CONFIG
 }

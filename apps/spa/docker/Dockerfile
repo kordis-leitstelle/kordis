@@ -1,8 +1,4 @@
-ARG NGINX_VERSION=stable
-ARG RELEASE_VERSION
-ARG ENVIRONMENT_NAME
-
-FROM nginx:${NGINX_VERSION}-alpine
+FROM nginx:1.24.0-alpine
 
 WORKDIR /usr/share/nginx/html
 

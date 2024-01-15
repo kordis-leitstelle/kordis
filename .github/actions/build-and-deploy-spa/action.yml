@@ -20,6 +20,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
+  containerTag:
+    required: true
+    description: "Container tag"
 outputs:
   url:
     description: "SPA URL"
@@ -40,7 +43,6 @@ runs:
       shell: bash
       env:
         IS_PRODUCTION: true
-        ENVIRONMENT_NAME: ${{ inputs.deploymentEnv }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
     - run: |
         npx nx build spa --prod
@@ -53,7 +55,7 @@ runs:
         file: ./apps/spa/docker/Dockerfile
         push: true
         tags: |
-          ghcr.io/kordis-leitstelle/kordis-spa:${{inputs.releaseVersion}}
+          ${{inputs.containerTag}}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Deploy SPA

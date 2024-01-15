@@ -1,5 +1,4 @@
 export const environment = {
 	production: $IS_PRODUCTION,
-	environmentName: '$ENVIRONMENT_NAME',
 	releaseVersion: '$RELEASE_VERSION',
 } as any;

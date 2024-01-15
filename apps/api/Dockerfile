@@ -1,6 +1,5 @@
 ARG NODE_VERSION
 
-
 FROM docker.io/node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /app
@@ -21,7 +20,6 @@ WORKDIR /app
 
 ENV PORT=3333
 ENV NODE_ENV=production
-
 
 EXPOSE ${PORT}
 

@@ -28,9 +28,6 @@
 			"enabled": false
 		}
 	],
-	"nvm": {
-		"enabled": false
-	},
 	"platformAutomerge": true,
 	"labels": ["type:dependencies", "renovate"],
 	"vulnerabilityAlerts": {

@@ -35,6 +35,7 @@ jobs:
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.sha }}
       - name: Apply Database Migrations
         run: echo "add again once infrastructure is set up" # ./tools/db/kordis-db.sh apply-pending-migrations
         env:
@@ -51,6 +52,7 @@ jobs:
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.sha }}
 
   e2e:
     needs: deployment
