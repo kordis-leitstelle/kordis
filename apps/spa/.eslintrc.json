@@ -31,6 +31,12 @@
 			"files": ["*.html"],
 			"extends": ["plugin:@nx/angular-template"],
 			"rules": {}
+		},
+		{
+			"files": ["*.d.ts"],
+			"rules": {
+				"no-var": "off"
+			}
 		}
 	]
 }

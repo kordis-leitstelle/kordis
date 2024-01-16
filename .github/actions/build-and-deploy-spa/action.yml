@@ -1,25 +1,28 @@
 name: 'build-and-deploy-spa'
-description: 'Builds SPA Project for Production and Deploys it to a given SWA Environment'
+description: 'Builds SPA project for production and deploys it to a given environment'
 
 inputs:
-  apiUrl:
-    required: true
-    description: "Base URL of the API"
-  oauthConfig:
-    required: true
-    description: "OAuthConfig from the angular-oauth2-oidc package"
   releaseVersion:
     required: true
     description: "Release Version (Commit or Tag)"
   deploymentEnv:
     required: true
     description: "Deployment Environment"
-  sentryKey:
-    required: true
-    description: "Sentry DSN Key"
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
+  containerRegistryUrl:
+    required: true
+    description: "Container registry url"
+  containerRegistryUsername:
+    required: true
+    description: "Container registry username"
+  containerRegistryPassword:
+    required: true
+    description: "Container registry password"
+  containerTag:
+    required: true
+    description: "Container tag"
 outputs:
   url:
     description: "SPA URL"
@@ -28,25 +31,38 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Generate Third-Party Licenses
-      run: npx  --yes generate-license-file@3.0.0-beta.1 --input package.json --output apps/spa/src/assets/third-party-licenses.txt --ci
-      shell: bash
-    - run: |
-        envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
-        npx nx build spa --prod
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ inputs.containerRegistryUrl }}
+        username: ${{ inputs.containerRegistryUsername }}
+        password: ${{ inputs.containerRegistryPassword }}
+    - run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.ts
       shell: bash
       env:
         IS_PRODUCTION: true
-        ENVIRONMENT_NAME: ${{ inputs.deploymentEnv }}
-        API_URL: ${{ inputs.apiUrl }}
-        OAUTH_CONFIG: ${{ inputs.oauthConfig }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
-        SENTRY_KEY: ${{ inputs.sentryKey }}
+    - run: |
+        npx nx build spa --prod
+        npx --yes generate-license-file@3.0.1 --input package.json --output dist/apps/spa/browser/assets/third-party-licenses.txt --ci
+      shell: bash
+    - name: Build and push image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./
+        file: ./apps/spa/docker/Dockerfile
+        push: true
+        tags: |
+          ${{inputs.containerTag}}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
     - name: Deploy SPA
       id: spa-deployment
       shell: bash
       run: echo "url=placeholder" >> $GITHUB_OUTPUT
-    - name: Build SPA with source maps
+    - name: Build SPA with source maps for sentry
       run: npx nx build spa --prod --source-map=true
       shell: bash
     - name: Create Sentry release

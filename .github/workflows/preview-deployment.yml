@@ -81,23 +81,25 @@ jobs:
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
-          slot: "pr${{ github.event.issue.number }}"
+          deploymentEnv: "pr${{ github.event.issue.number }}"
           releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
-          sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ steps.set-pr-sha.outputs.head_sha }}
+
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
-          apiUrl: ${{ steps.api-deployment.outputs.url }}
-          oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ steps.set-pr-sha.outputs.head_sha }}
           deploymentEnv: "pr${{ github.event.issue.number }}"
-          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ steps.set-pr-sha.outputs.head_sha }}
       - name: Update PR Preview Comment
         uses: peter-evans/create-or-update-comment@v3.1.0
         with:
@@ -163,23 +165,25 @@ jobs:
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
-          slot: "pr${{ github.event.pull_request.number }}"
+          deploymentEnv: "pr${{ github.event.pull_request.number }}"
           releaseVersion: ${{ github.event.pull_request.head.sha }}
-          sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.event.pull_request.head.sha }}
       - name: Build and Deploy SPA
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
-          apiUrl: ${{ steps.api-deployment.outputs.url }}
-          oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
-          releaseVersion: ${{ github.event.pull_request.head.sha  }}
+          releaseVersion: ${{ github.event.pull_request.head.sha }}
           deploymentEnv: "pr${{ github.event.pull_request.number }}"
-          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.event.pull_request.head.sha }}
+
       - name: Update PR Preview Comment
         uses: peter-evans/create-or-update-comment@v3.1.0
         with:

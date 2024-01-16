@@ -19,18 +19,36 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 
 @Component({
 	selector: 'krd-auth',
+	styles: [
+		`
+			.container {
+				max-width: 500px;
+				padding: 20px;
+
+				> div {
+					display: flex;
+				}
+
+				> form {
+					display: flex;
+					margin-top: 1.25rem;
+					flex-direction: column;
+
+					> button {
+						margin-top: 0.5rem;
+					}
+				}
+			}
+		`,
+	],
 	template: `
-		<div style="max-width: 500px; padding: 20px;">
-			<div style="display: flex">
+		<div class="container">
+			<div>
 				<button nz-button (click)="loginAsTestuser(0)" data-username="testuser">
 					Login as&nbsp; <b>testuser</b>
 				</button>
 			</div>
-			<form
-				[formGroup]="customClaimsForm"
-				(ngSubmit)="loginWithCustomClaims()"
-				style="display: flex; margin-top: 1.25rem; flex-direction: column;"
-			>
+			<form [formGroup]="customClaimsForm" (ngSubmit)="loginWithCustomClaims()">
 				<label for="id">ID</label>
 				<input nz-input id="id" type="text" formControlName="id" />
 				<label for="firstName">First name</label>
@@ -44,13 +62,7 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 				<input nz-input id="lastName" type="text" formControlName="lastName" />
 				<label for="email">Email</label>
 				<input nz-input id="email" type="text" formControlName="email" />
-				<button
-					nz-button
-					nzSize="large"
-					nzType="primary"
-					style="margin-top: 0.5rem;"
-					type="submit"
-				>
+				<button nz-button nzSize="large" nzType="primary" type="submit">
 					Login as Custom user
 				</button>
 			</form>
