@@ -57,10 +57,10 @@ runs:
         context: ./
         file: ./apps/api/Dockerfile
         build-args: |
-          NODE_VERSION=${{steps.node-version-check.outputs.node-version}}
+          NODE_VERSION=${{ steps.node-version-check.outputs.node-version }}
         push: true
         tags: |
-          {{ inputs.containerTag }}
+          ${{ inputs.containerTag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Deploy API
