@@ -112,7 +112,7 @@ jobs:
             Commit SHA: ${{ steps.set-pr-sha.outputs.head_sha }}
           reactions: "rocket"
       - name: AZ B2C Tenant Login
-        uses: azure/login@v1.6.0
+        uses: azure/login@v1.6.1
         with:
           creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
@@ -221,7 +221,7 @@ jobs:
             🏁 This PR has been closed. No deployment preview is available.
           reactions: "hooray"
       - name: AZ B2C Tenant Login
-        uses: azure/login@v1.6.0
+        uses: azure/login@v1.6.1
         with:
           creds: '${{ secrets.AZURE_AADB2C_CREDENTIALS }}'
           allow-no-subscriptions: true
