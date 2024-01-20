@@ -73,6 +73,11 @@ Please try to stick to this as much as possible. You can serve the SPA with
 you will get redirected to a login page where you can choose a persona. This
 will set a JWT in the local storage.
 
+We agreed on supporting only Chromium based browsers with their 2 latest major
+versions. This allows us to use features that are available for these browsers
+regardless of their support in other browsers. Therefore, please use Chrome or
+Edge for development.
+
 ### API
 
 The API is a NestJS application serving a GraphQL API. Please use the NX CLI to
@@ -84,7 +89,7 @@ information about the folder and code structure please also read the
 [architecture documentation](docs/architecture.md).
 
 Before you can run the API application, you need to create a .env file from the
-[.env.example](apps/api/src/.env.template) file. There you have to specify the
+[.env.example](apps/api/.env.template) file. There you have to specify the
 MongoDB connection URI and more configurations. You can ignore some values as
 they are only used in production (they have a comment to clarify this). If you
 want to test the API directly without the SPA, you can use one of the

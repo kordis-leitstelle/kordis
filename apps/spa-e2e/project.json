@@ -5,10 +5,10 @@
 	"projectType": "application",
 	"targets": {
 		"e2e": {
-			"executor": "@mands/nx-playwright:playwright-executor",
+			"executor": "@nx/playwright:playwright",
+			"outputs": ["{workspaceRoot}/dist/.playwright/spa-e2e"],
 			"options": {
-				"e2eFolder": "apps/spa-e2e",
-				"packageRunner": "npx"
+				"config": "apps/spa-e2e/playwright.config.ts"
 			}
 		},
 		"ts-check": {
@@ -22,11 +22,8 @@
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": ["apps/spa-e2e/**/*.{ts,tsx,js,jsx}"]
-			}
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
 		}
 	},
 	"tags": [],

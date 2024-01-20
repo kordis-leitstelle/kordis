@@ -12,50 +12,63 @@ import { DevAuthService } from '../services/dev-auth.service';
 	selector: 'krd-auth',
 	styles: [
 		`
-			button {
-				@apply rounded bg-blue-500 px-4 py-2 text-white;
-			}
+			.container {
+				max-width: 500px;
+				padding: 20px;
 
-			input {
-				@apply rounded-md border p-1.5;
-			}
+				> div {
+					display: flex;
+					gap: 5px;
+				}
 
-			select {
-				@apply rounded-md border py-1.5 pl-3;
+				> form {
+					display: flex;
+					margin-top: 1.25rem;
+					flex-direction: column;
+
+					> button {
+						margin-top: 0.5rem;
+					}
+				}
 			}
 		`,
 	],
 	template: `
-		<div style="padding: 20px;">
-			<div class="flex gap-2">
-				<button
-					*ngFor="let username of usernames; let i = index"
-					(click)="loginAsTestuser(i)"
-					[attr.data-username]="username"
-				>
-					Login as <b>{{ username }}</b>
-				</button>
+		<div class="container">
+			<div>
+				@for (username of usernames; let i = $index) {
+					<button
+						nz-button
+						(click)="loginAsTestuser(i)"
+						[attr.data-username]="username"
+					>
+						Login as <b>{{ username }}</b>
+					</button>
+				}
 			</div>
-			<form
-				[formGroup]="customClaimsForm"
-				(ngSubmit)="loginWithCustomClaims()"
-				class="mt-5 flex max-w-xl flex-col"
-			>
+			<form [formGroup]="customClaimsForm" (ngSubmit)="loginWithCustomClaims()">
 				<label for="id">ID</label>
-				<input id="id" type="text" formControlName="id" />
+				<input nz-input id="id" type="text" formControlName="id" />
 				<label for="firstName">First name</label>
-				<input id="firstName" type="text" formControlName="firstName" />
+				<input
+					nz-input
+					id="firstName"
+					type="text"
+					formControlName="firstName"
+				/>
 				<label for="lastName">Last name</label>
-				<input id="lastName" type="text" formControlName="lastName" />
+				<input nz-input id="lastName" type="text" formControlName="lastName" />
 				<label for="email">Email</label>
-				<input id="email" type="text" formControlName="email" />
+				<input nz-input id="email" type="text" formControlName="email" />
 				<label for="role">Role</label>
 				<select name="role" formControlName="role">
 					<option value="user">User</option>
 					<option value="admin">Admin</option>
 					<option value="organization_admin">Org Admin</option>
 				</select>
-				<button class="mt-2" type="submit">Login as Custom user</button>
+				<button nz-button nzSize="large" nzType="primary" type="submit">
+					Login as Custom user
+				</button>
 			</form>
 		</div>
 	`,

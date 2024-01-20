@@ -11,13 +11,13 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Ensure Conventional Commits
-        uses: webiny/action-conventional-commits@v1.1.0
+        uses: webiny/action-conventional-commits@v1.2.0
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -39,34 +39,33 @@ jobs:
       - name: Merge Coverage files
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
 
-      - name: Create SPA Environment File
-        run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.prod.ts
+      - name: Create Environments
+        run: |
+          envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.ts
+          envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
         env:
           IS_PRODUCTION: true
           ENVIRONMENT_NAME: 'ci'
           RELEASE_VERSION: ${{ github.sha }}
-          API_URL: http://localhost:3000/
-          OAUTH_CONFIG: undefined
-      - name: Create API Environment File
-        run: |
-          envsubst < apps/api/src/.env.template > apps/api/src/.env
-          echo "PORT=3000" >> .env
-        env:
-          MONGODB_URI: mongodb://127.0.0.1:27017/e2edb
-          ENVIRONMENT_NAME: 'ci'
-          RELEASE_VERSION: ${{ github.sha }}
-          SENTRY_KEY: ${{ secrets.SENTRY_KEY }}
-
       - name: Build
-        run: npx nx run-many -t build --all --parallel=3
-
+        run: |
+          npx nx run-many -t build --all --parallel=3
+          docker build -t kordis-api:${{ github.sha }} -f ./apps/api/Dockerfile --build-arg NODE_VERSION=$(cat .nvmrc | tr -cd '[:digit:].') . &
+          docker build -t kordis-spa:${{ github.sha }} -f ./apps/spa/docker/Dockerfile . &
+          wait
+      - name: Install Chromium for E2Es
+        run: npx -y playwright install chromium
       - name: Start and prepare MongoDB for E2Es
         run: ./tools/db/kordis-db.sh init e2edb
+      - name: Start API and SPA containers
+        run: |
+          docker run -d -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb kordis-api:${{ github.sha }}
+          docker run -d -p 4200:8080 -e API_URL=http://localhost:3000 kordis-spa:${{ github.sha }}
       - name: Run E2Es
-        run: npm run serve:all:prod & (npx wait-on tcp:3000 && npx wait-on http://localhost:4200 && npx nx e2e spa-e2e)
+        run: npx wait-on -t 30s tcp:3000 && npx wait-on -t 30s http://localhost:4200 && npx nx e2e spa-e2e --skipInstall
         env:
           E2E_BASE_URL: http://localhost:4200/
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-test-results

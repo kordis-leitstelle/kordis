@@ -1,4 +1,7 @@
+import { NgOptimizedImage } from '@angular/common';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzContentComponent, NzLayoutComponent } from 'ng-zorro-antd/layout';
 
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';
@@ -8,6 +11,12 @@ describe('AuthComponent', () => {
 	let spectator: SpectatorRouting<AuthComponent>;
 	const createComponent = createRoutingFactory({
 		component: AuthComponent,
+		imports: [
+			NgOptimizedImage,
+			NzContentComponent,
+			NzLayoutComponent,
+			NzButtonComponent,
+		],
 		componentProviders: [
 			{
 				provide: AUTH_SERVICE,

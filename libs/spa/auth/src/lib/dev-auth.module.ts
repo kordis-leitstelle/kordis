@@ -3,6 +3,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzInputDirective } from 'ng-zorro-antd/input';
 
 import { BaseAuthModule } from './auth.module';
 import { DevLoginComponent } from './components/dev-login.component';
@@ -22,6 +24,8 @@ import { DevAuthService } from './services/dev-auth.service';
 				component: DevLoginComponent,
 			},
 		]),
+		NzButtonComponent,
+		NzInputDirective,
 	],
 	exports: [RouterModule],
 })

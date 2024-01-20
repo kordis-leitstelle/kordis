@@ -16,6 +16,7 @@ import { UsersModule } from '@kordis/api/users';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
+import environment from './environment';
 
 const IS_NON_CI_PROD =
 	process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS;
@@ -40,6 +41,7 @@ const UTILITY_MODULES = [
 			isGlobal: true,
 			cache: true,
 			envFilePath: path.resolve(__dirname, '.env'),
+			load: [environment],
 		}),
 		GraphQLModule.forRootAsync<ApolloDriverConfig>({
 			imports: [ConfigModule],

@@ -11,6 +11,7 @@ export class LoginPo {
 		},
 		loginBtn: testIdSelector('login-btn'),
 	};
+
 	constructor(private readonly page: Page) {}
 
 	async loginWithB2C(username: string, password: string): Promise<void> {
@@ -26,8 +27,8 @@ export class LoginPo {
 			this.selectors.b2c.loginBtn,
 		);
 
-		await usernameInput.type(username);
-		await passwordInput.type(password);
+		await usernameInput.fill(username);
+		await passwordInput.fill(password);
 		await b2cLoginBtn.click();
 	}
 
