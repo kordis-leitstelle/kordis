@@ -8,10 +8,7 @@ import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
-import {
-	DevObservabilityModule,
-	SentryObservabilityModule,
-} from '@kordis/api/observability';
+import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 
@@ -20,13 +17,14 @@ import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 import environment from './environment';
 
+// todo: narrow this down, we should have either an explicit way of defining when to use what (currently hard, since ConfigService not available in forRoot), or we should have an environment variable that defines the environment
+const isProdEnv =
+	process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS;
 const FEATURE_MODULES = [OrganizationModule];
 const UTILITY_MODULES = [
 	SharedKernel,
-	AuthModule.forRoot('dev'), // todo: this needs to be changed to aadb2c when we move to onpremise
-	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
-		? [SentryObservabilityModule]
-		: [DevObservabilityModule]),
+	AuthModule.forRoot(isProdEnv ? 'aadb2c' : 'dev'),
+	ObservabilityModule.forRoot(isProdEnv ? 'sentry' : 'dev'),
 ];
 
 @Module({

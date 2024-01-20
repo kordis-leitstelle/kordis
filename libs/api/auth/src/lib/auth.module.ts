@@ -13,7 +13,6 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 			useClass: VerifyAADB2CJWTStrategy,
 		},
 	],
-	exports: [VerifyAuthUserStrategy],
 })
 class AADB2CAuthModule {}
 
@@ -24,7 +23,6 @@ class AADB2CAuthModule {}
 			useClass: VerifyDevBearerStrategy,
 		},
 	],
-	exports: [VerifyAuthUserStrategy],
 })
 class DevAuthModule {}
 
@@ -39,6 +37,7 @@ export class AuthModule {
 		return {
 			module: AuthModule,
 			imports: [AUTH_MODULES[authProvider]],
+			exports: [VerifyAuthUserStrategy],
 			providers: [
 				{
 					provide: APP_INTERCEPTOR,
