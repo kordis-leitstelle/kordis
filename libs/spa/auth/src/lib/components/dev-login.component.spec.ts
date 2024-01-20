@@ -2,6 +2,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { createMock } from '@golevelup/ts-jest';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { Role } from '@kordis/shared/auth';
 
@@ -14,7 +15,7 @@ describe('DevLoginComponent', () => {
 	const authServiceMock = createMock<DevAuthService>();
 	const createComponent = createRoutingFactory({
 		component: DevLoginComponent,
-		imports: [ReactiveFormsModule, NzButtonComponent],
+		imports: [ReactiveFormsModule, NzButtonComponent, NzSelectModule],
 		componentProviders: [
 			{
 				provide: AUTH_SERVICE,

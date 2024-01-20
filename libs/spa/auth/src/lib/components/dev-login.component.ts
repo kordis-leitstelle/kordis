@@ -36,19 +36,26 @@ import { DevAuthService } from '../services/dev-auth.service';
 	template: `
 		<div class="container">
 			<div>
-				@for (username of usernames; let i = $index) {
+				@for (username of usernames; track i; let i = $index) {
 					<button
 						nz-button
 						(click)="loginAsTestuser(i)"
 						[attr.data-username]="username"
 					>
-						Login as <b>{{ username }}</b>
+						Login as <b> {{ username }}</b>
 					</button>
 				}
 			</div>
 			<form [formGroup]="customClaimsForm" (ngSubmit)="loginWithCustomClaims()">
 				<label for="id">ID</label>
 				<input nz-input id="id" type="text" formControlName="id" />
+				<label for="orgId">Organization ID</label>
+				<input
+					nz-input
+					id="orgId"
+					type="text"
+					formControlName="organizationId"
+				/>
 				<label for="firstName">First name</label>
 				<input
 					nz-input
@@ -60,12 +67,12 @@ import { DevAuthService } from '../services/dev-auth.service';
 				<input nz-input id="lastName" type="text" formControlName="lastName" />
 				<label for="email">Email</label>
 				<input nz-input id="email" type="text" formControlName="email" />
-				<label for="role">Role</label>
-				<select name="role" formControlName="role">
-					<option value="user">User</option>
-					<option value="admin">Admin</option>
-					<option value="organization_admin">Org Admin</option>
-				</select>
+				<label>Role</label>
+				<nz-select formControlName="role">
+					<nz-option nzValue="user" nzLabel="User" />
+					<nz-option nzValue="admin" nzLabel="Admin" />
+					<nz-option nzValue="organization_admin" nzLabel="Org Admin" />
+				</nz-select>
 				<button nz-button nzSize="large" nzType="primary" type="submit">
 					Login as Custom user
 				</button>

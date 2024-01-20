@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import de from '@angular/common/locales/de';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
@@ -26,6 +27,7 @@ registerLocaleData(de);
 	declarations: [AppComponent, ProtectedComponent],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
 		RouterModule.forRoot(routes),
 		HttpClientModule,
 		environment.oauth

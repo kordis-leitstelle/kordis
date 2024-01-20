@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzInputDirective } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { BaseAuthModule } from './auth.module';
 import { DevLoginComponent } from './components/dev-login.component';
@@ -26,6 +27,7 @@ import { DevAuthService } from './services/dev-auth.service';
 		]),
 		NzButtonComponent,
 		NzInputDirective,
+		NzSelectModule,
 	],
 	exports: [RouterModule],
 })
