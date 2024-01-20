@@ -7,6 +7,7 @@ import {
 	inject,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { LoginOutline } from '@ant-design/icons-angular/icons';
 import {
 	AuthConfig,
 	DefaultOAuthInterceptor,
@@ -14,6 +15,9 @@ import {
 	OAuthService,
 	OAuthStorage,
 } from 'angular-oauth2-oidc';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzContentComponent, NzLayoutComponent } from 'ng-zorro-antd/layout';
 import { switchMap } from 'rxjs';
 
 import { AuthComponent } from './components/auth.component';
@@ -42,6 +46,10 @@ import { ProdAuthService } from './services/auth.service';
 			},
 		]),
 		NgOptimizedImage,
+		NzContentComponent,
+		NzLayoutComponent,
+		NzButtonComponent,
+		NzIconModule.forChild([LoginOutline]),
 	],
 	declarations: [AuthComponent],
 	exports: [AuthComponent, RouterModule],

@@ -18,6 +18,7 @@ import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
+import environment from './environment';
 
 const FEATURE_MODULES = [OrganizationModule];
 const UTILITY_MODULES = [
@@ -33,6 +34,8 @@ const UTILITY_MODULES = [
 		ConfigModule.forRoot({
 			isGlobal: true,
 			cache: true,
+			envFilePath: path.resolve(__dirname, '.env'),
+			load: [environment],
 		}),
 		GraphQLModule.forRootAsync<ApolloDriverConfig>({
 			imports: [ConfigModule],

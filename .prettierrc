@@ -20,9 +20,5 @@
 			}
 		}
 	],
-	"plugins": [
-		"@trivago/prettier-plugin-sort-imports",
-		"prettier-plugin-tailwindcss"
-	],
-	"tailwindConfig": "./apps/spa/tailwind.config.js"
+	"plugins": ["@trivago/prettier-plugin-sort-imports"]
 }

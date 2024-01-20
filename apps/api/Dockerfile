@@ -4,9 +4,11 @@ FROM docker.io/node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 # Install dependencies separately for caching
 COPY ./dist/apps/api/package.json ./dist/apps/api/package-lock.json ./
-RUN npm --omit=dev -f install
+RUN npm --omit=dev ci
 
 COPY ./dist/apps/api ./
 
@@ -17,7 +19,8 @@ COPY --from=builder /app /app
 WORKDIR /app
 
 ENV PORT=3333
-EXPOSE ${PORT}
+ENV NODE_ENV=production
 
+EXPOSE ${PORT}
 
 CMD ["./main.js"]
