@@ -11,7 +11,10 @@ import { UserDeactivatedEvent } from '../event/user-deactivated.event';
 import { USER_SERVICE, UserService } from '../service/user.service';
 
 export class DeactivateUserCommand implements ICommand {
-	constructor(readonly userId: string, readonly requestUserOrgId: string) {}
+	constructor(
+		readonly userId: string,
+		readonly requestUserOrgId: string,
+	) {}
 }
 
 @CommandHandler(DeactivateUserCommand)

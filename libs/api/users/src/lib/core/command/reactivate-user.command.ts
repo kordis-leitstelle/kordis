@@ -5,7 +5,10 @@ import { User } from '../entity/user.entity';
 import { USER_SERVICE, UserService } from '../service/user.service';
 
 export class ReactivateUserCommand implements ICommand {
-	constructor(readonly userId: string, readonly requestUserOrgId: string) {}
+	constructor(
+		readonly userId: string,
+		readonly requestUserOrgId: string,
+	) {}
 }
 
 @CommandHandler(ReactivateUserCommand)

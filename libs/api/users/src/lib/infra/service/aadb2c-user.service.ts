@@ -42,7 +42,10 @@ export class AADB2CUserService extends BaseUserService {
 	private readonly clientId: string;
 	private readonly clientSecret: string;
 
-	constructor(private readonly http: HttpService, config: ConfigService) {
+	constructor(
+		private readonly http: HttpService,
+		config: ConfigService,
+	) {
 		super();
 		this.tenant = config.getOrThrow<string>('AADB2C_TENANT');
 		this.extensionAppId = config.getOrThrow<string>('AADB2C_EXTENSION_APP_ID');

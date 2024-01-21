@@ -27,15 +27,13 @@ export class AppComponent {
 					if (!isAuthenticated) {
 						return NEVER;
 					}
-					return this.gqlService.subscribe$(
-						gql`
-							subscription {
-								currentUserDeactivated {
-									userId
-								}
+					return this.gqlService.subscribe$(gql`
+						subscription {
+							currentUserDeactivated {
+								userId
 							}
-						`,
-					);
+						}
+					`);
 				}),
 				takeUntilDestroyed(),
 			)
