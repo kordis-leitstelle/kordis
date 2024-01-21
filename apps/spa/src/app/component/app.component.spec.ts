@@ -7,6 +7,11 @@ import { GraphqlService } from '@kordis/spa/graphql';
 
 import { AppComponent } from './app.component';
 
+// https://github.com/getsentry/sentry-javascript/issues/9448
+jest.mock('@sentry/angular-ivy', () => ({
+	TraceClassDecorator: () => () => {},
+}));
+
 describe('AppComponent', () => {
 	let spectator: SpectatorRouting<AppComponent>;
 	const gqlService = createMock<GraphqlService>();
