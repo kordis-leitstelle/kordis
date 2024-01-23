@@ -1,10 +1,10 @@
 import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
