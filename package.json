@@ -89,6 +89,7 @@
     "@automapper/core": "^8.8.1",
     "@automapper/nestjs": "^8.8.1",
     "@nestjs/apollo": "^12.0.3",
+    "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "10.2.4",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "10.2.4",
