@@ -145,7 +145,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Find PR Preview Comment
-        uses: peter-evans/find-comment@v2
+        uses: peter-evans/find-comment@v3
         id: deploy-preview-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -204,7 +204,7 @@ jobs:
       (needs.has-deployment.outputs.has-swa == 'true' || needs.has-deployment.outputs.has-wa == 'true') && false
     steps:
       - name: Find PR Preview Comment
-        uses: peter-evans/find-comment@v2
+        uses: peter-evans/find-comment@v3
         id: deploy-preview-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
