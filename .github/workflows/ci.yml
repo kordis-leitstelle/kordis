@@ -34,8 +34,12 @@ jobs:
       - name: Lint
         run: npx nx affected --target=lint --parallel=3
 
-      - name: Run Tests with Code Coverage
-        run: npx nx affected --target=test --parallel=3 --ci --coverage --coverageReporters=lcov
+      - name: Run all tests
+        if: github.event_name == 'push'
+        run: npx nx run-many --all --target=test --parallel --ci --coverage --coverageReporters=lcov
+      - name: Run affected tests
+        if: github.event_name == 'pull_request'
+        run: npx nx affected --target=test --parallel --ci --coverage --coverageReporters=lcov
       - name: Merge Coverage files
         run: '[ -d "./coverage/" ] && ./node_modules/.bin/lcov-result-merger ./coverage/**/lcov.info ./coverage/lcov.info || exit 0'
 
