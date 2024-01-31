@@ -3,7 +3,10 @@ import { CallHandler, UnauthorizedException } from '@nestjs/common';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
-import { createGqlContextForRequest } from '@kordis/api/test-helpers';
+import {
+	createGqlContextForRequest,
+	createHttpContextForRequest,
+} from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
@@ -42,7 +45,7 @@ describe('AuthInterceptor', () => {
 		).rejects.toThrow(UnauthorizedException);
 	});
 
-	it('should continue request pipeline', async () => {
+	it('should continue request pipeline for authenticated request', async () => {
 		jest.spyOn(mockAuthUserExtractor, 'getUserFromRequest').mockReturnValue({
 			id: '123',
 			firstName: 'foo',
@@ -67,6 +70,27 @@ describe('AuthInterceptor', () => {
 
 		await expect(
 			firstValueFrom(service.intercept(httpCtx, handler)),
+		).resolves.toBeTruthy();
+	});
+
+	it('should continue request pipeline for health-check request', async () => {
+		const handler = createMock<CallHandler>({
+			handle(): Observable<boolean> {
+				return of(true);
+			},
+		});
+
+		await expect(
+			firstValueFrom(
+				service.intercept(
+					createHttpContextForRequest(
+						createMock<KordisRequest>({
+							path: '/health-check',
+						}),
+					),
+					handler,
+				),
+			),
 		).resolves.toBeTruthy();
 	});
 });
