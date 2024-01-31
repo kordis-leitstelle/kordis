@@ -2,7 +2,7 @@
 set -e
 
 MONGO_CONTAINER_NAME="kordis-dev-db"
-MONGO_DB_IMAGE_NAME="mongo:4.2"
+MONGO_DB_IMAGE_NAME="mongo:7.0"
 LOCAL_MONGO_URI="mongodb://127.0.0.1:27017"
 EXEC_PATH=$(dirname "${BASH_SOURCE[0]}")
 
