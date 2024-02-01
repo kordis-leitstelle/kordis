@@ -39,8 +39,8 @@ describe('SentryExceptionsFilter', () => {
 
 		sentryExceptionsFilter.catch(presentableException);
 
-		expect(logger.error).toHaveBeenCalledTimes(1);
-		expect(logger.error).toHaveBeenCalledWith('message', undefined, {
+		expect(logger.log).toHaveBeenCalledTimes(1);
+		expect(logger.log).toHaveBeenCalledWith('message', {
 			name: 'Error',
 			code: 'code',
 			stack: expect.any(String),

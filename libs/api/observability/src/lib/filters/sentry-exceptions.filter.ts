@@ -16,7 +16,7 @@ export class SentryExceptionsFilter implements ExceptionFilter {
 	catch(exception: unknown): void {
 		if (exception instanceof PresentableException) {
 			// if this is a presentable error, such as a validation error, we don't want to log it as an error but rather as an information to have the context for possible future debugging
-			this.logger.error(exception.message, undefined, {
+			this.logger.log(exception.message, {
 				code: exception.code,
 				name: exception.name,
 				stack: exception.stack,
