@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: kordis-spa-config-map
 data:
-  ENVIRONMENT_NAME: <environment name> 
+  ENVIRONMENT_NAME: <environment name>
   OAUTH_CONFIG: |
     <oauth config object>
   API_URL: <api url>

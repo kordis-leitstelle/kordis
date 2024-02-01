@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: kordis-api-config-map
 data:
-  ENVIRONMENT_NAME: next 
+  ENVIRONMENT_NAME: next
