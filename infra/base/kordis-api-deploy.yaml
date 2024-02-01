@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kordis-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      serverpod: kordis-api
+  template:
+    metadata:
+      labels:
+        serverpod: kordis-api
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: kordis-api
+          image: kordis-api:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 500m
+            requests:
+              memory: 128Mi
+              cpu: 100m
+          ports:
+            - containerPort: 3333
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: kordis-api-config-map
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: kordis-api-mongodb
+                  key: connectionString
+            - name: SENTRY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-vault-secrets
+                  key: sentry-dns
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health-check
+              port: 3333
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health-check
+              port: 3333
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: secrets
+              mountPath: '/mnt/secrets'
+              readOnly: true
+      volumes:
+        - name: secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: azure-vault-secrets
+            nodePublishSecretRef:
+              name: azure-vault-creds

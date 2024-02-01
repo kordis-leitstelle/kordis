@@ -1,0 +1,28 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-vault-secrets
+spec:
+  provider: azure
+  parameters:
+    keyvaultName: kordisvault
+    tenantId: aef4dff0-4552-432b-a5c9-925890face46
+    objects: |
+      array:
+        - |
+          objectName: sentry-api-dns
+          objectType: secret
+        - |
+          objectName: sentry-spa-dns
+          objectType: secret
+  secretObjects:
+    - secretName: api-vault-secrets
+      type: Opaque
+      data:
+        - key: sentry-dns
+          objectName: sentry-api-dns
+    - secretName: spa-vault-secrets
+      type: Opaque
+      data:
+        - key: sentry-dns
+          objectName: sentry-spa-dns

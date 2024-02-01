@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kordis-api-config-map
+data:
+  ENVIRONMENT_NAME: <environment name> 

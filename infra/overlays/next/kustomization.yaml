@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kordis-next
+
+resources:
+  - ../../base/
+  - kordis-ns.yaml
+  - kordis-azure-ss.yaml
+  - kordis-spc.yaml
+  - kordis-api-config-map.yaml
+  - kordis-spa-config-map.yaml
+
+images:
+  - name: kordis-api
+    newName: ghcr.io/kordis-leitstelle/kordis-api
+    newTag: 8683454f374b5989ae30882db5b584152bab715a
+  - name: kordis-spa
+    newName: ghcr.io/kordis-leitstelle/kordis-spa
+    newTag: 8683454f374b5989ae30882db5b584152bab715a
+
+patches:
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: api.next.kordis-leitstelle.de
+    target:
+      group: networking.k8s.io
+      kind: Ingress
+      name: kordis-api
+      version: v1
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: next.kordis-leitstelle.de
+    target:
+      group: networking.k8s.io
+      kind: Ingress
+      name: kordis-spa
+      version: v1

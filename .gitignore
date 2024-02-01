@@ -48,4 +48,7 @@ playwright/.auth
 apps/api/.env
 apps/spa-e2e/.env
 
+# Infrastructure secrets
+/**/*-secret.yaml
+
 .nx/cache
