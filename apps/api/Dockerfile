@@ -13,9 +13,9 @@ RUN npm --omit=dev ci
 COPY ./dist/apps/api ./
 
 # Use distroless for maximum security: https://github.com/GoogleContainerTools/distroless
-FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian11
+FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian12:nonroot
 
-COPY --from=builder /app /app
+COPY --chown=nonroot --from=builder /app /app
 WORKDIR /app
 
 ENV PORT=3333
