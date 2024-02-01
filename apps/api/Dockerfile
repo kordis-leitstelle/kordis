@@ -15,7 +15,7 @@ COPY ./dist/apps/api ./
 # Use distroless for maximum security: https://github.com/GoogleContainerTools/distroless
 FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian12:nonroot
 
-COPY --chown=nonroot --from=builder /app /app
+COPY --chown=nonroot --chmod=500 --from=builder /app /app
 WORKDIR /app
 
 ENV PORT=3333
