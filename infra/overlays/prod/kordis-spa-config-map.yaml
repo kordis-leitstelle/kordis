@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kordis-spa-config-map
+data:
+  ENVIRONMENT_NAME: prod
+  OAUTH_CONFIG: |
+    {
+      "config": {
+        "redirectUri": "https://app.kordis-leitstelle.de/auth",
+        "oidc": true,
+        "responseType": "code",
+        "clientId": "d3c8c4e6-ef97-4878-935e-167ef9b68f41",
+        "issuer": "https://kordisleitstelle.b2clogin.com/5b974891-a530-4e68-ac04-e26a18c3bd46/v2.0/",
+        "tokenEndpoint": "https://kordisleitstelle.b2clogin.com/kordisleitstelle.onmicrosoft.com/b2c_1_signin/oauth2/v2.0/token",
+        "scope": "openid offline_access d3c8c4e6-ef97-4878-935e-167ef9b68f41",
+        "strictDiscoveryDocumentValidation": false
+      },
+      "discoveryDocumentUrl": "https://kordisleitstelle.b2clogin.com/kordisleitstelle.onmicrosoft.com/B2C_1_SignIn/v2.0/.well-known/openid-configuration"
+    }
+  API_URL: https://api.kordis-leitstelle.de
