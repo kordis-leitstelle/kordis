@@ -17,6 +17,10 @@ describe('SentryOTelUserContextInterceptor', () => {
 		interceptor = new SentryOTelUserContextInterceptor();
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it('should set user context and attributes for Sentry and OpenTelemetry', async () => {
 		const user: AuthUser = {
 			id: '123',
