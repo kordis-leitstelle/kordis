@@ -26,10 +26,6 @@ describe('AuthInterceptor', () => {
 		service = new AuthInterceptor(mockAuthUserExtractor);
 	});
 
-	it('should be defined', () => {
-		expect(service).toBeDefined();
-	});
-
 	it('should throw unauthorized http exception', async () => {
 		jest
 			.spyOn(mockAuthUserExtractor, 'getUserFromRequest')

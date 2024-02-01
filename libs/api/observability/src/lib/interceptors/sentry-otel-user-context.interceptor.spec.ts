@@ -17,8 +17,8 @@ describe('SentryOTelUserContextInterceptor', () => {
 		interceptor = new SentryOTelUserContextInterceptor();
 	});
 
-	it('should be defined', () => {
-		expect(interceptor).toBeDefined();
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 
 	it('should set user context and attributes for Sentry and OpenTelemetry', async () => {
@@ -65,5 +65,28 @@ describe('SentryOTelUserContextInterceptor', () => {
 			email: user.email,
 			username: `${user.firstName} ${user.lastName}`,
 		});
+	});
+
+	it('should ignore user context and attributes for Sentry and OpenTelemetry if no user is present', async () => {
+		const ctx = createGqlContextForRequest(
+			createMock<KordisRequest>({
+				user: undefined,
+			}),
+		);
+		const handler = createMock<CallHandler>({
+			handle(): Observable<boolean> {
+				return of(true);
+			},
+		});
+
+		const sentrySetUserSpy = jest.spyOn(Sentry, 'setUser');
+		const getActiveSpanSpy = jest.spyOn(trace, 'getActiveSpan');
+
+		await expect(
+			firstValueFrom(interceptor.intercept(ctx, handler)),
+		).resolves.toBeTruthy();
+
+		expect(sentrySetUserSpy).not.toHaveBeenCalled();
+		expect(getActiveSpanSpy).not.toHaveBeenCalled();
 	});
 });
