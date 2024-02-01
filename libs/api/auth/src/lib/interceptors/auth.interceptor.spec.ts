@@ -3,7 +3,10 @@ import { CallHandler, UnauthorizedException } from '@nestjs/common';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
-import { createGqlContextForRequest } from '@kordis/api/test-helpers';
+import {
+	createGqlContextForRequest,
+	createHttpContextForRequest,
+} from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/auth';
 
 import { VerifyAuthUserStrategy } from '../auth-strategies/verify-auth-user.strategy';
@@ -23,10 +26,6 @@ describe('AuthInterceptor', () => {
 		service = new AuthInterceptor(mockAuthUserExtractor);
 	});
 
-	it('should be defined', () => {
-		expect(service).toBeDefined();
-	});
-
 	it('should throw unauthorized http exception', async () => {
 		jest
 			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
@@ -42,7 +41,7 @@ describe('AuthInterceptor', () => {
 		).rejects.toThrow(UnauthorizedException);
 	});
 
-	it('should continue request pipeline', async () => {
+	it('should continue request pipeline for authenticated request', async () => {
 		jest
 			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
 			.mockResolvedValue({
@@ -69,6 +68,27 @@ describe('AuthInterceptor', () => {
 
 		await expect(
 			firstValueFrom(await service.intercept(httpCtx, handler)),
+		).resolves.toBeTruthy();
+	});
+
+	it('should continue request pipeline for health-check request', async () => {
+		const handler = createMock<CallHandler>({
+			handle(): Observable<boolean> {
+				return of(true);
+			},
+		});
+
+		await expect(
+			firstValueFrom(
+				await service.intercept(
+					createHttpContextForRequest(
+						createMock<KordisRequest>({
+							path: '/health-check',
+						}),
+					),
+					handler,
+				),
+			),
 		).resolves.toBeTruthy();
 	});
 });
