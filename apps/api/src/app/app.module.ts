@@ -18,6 +18,7 @@ import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
+import { HealthCheckController } from './controllers/health-check.controller';
 import environment from './environment';
 
 const FEATURE_MODULES = [OrganizationModule];
@@ -69,6 +70,6 @@ const UTILITY_MODULES = [
 		...FEATURE_MODULES,
 	],
 	providers: [AppService, AppResolver],
-	controllers: [GraphqlSubscriptionsController],
+	controllers: [GraphqlSubscriptionsController, HealthCheckController],
 })
 export class AppModule {}
