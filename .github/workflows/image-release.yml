@@ -1,0 +1,30 @@
+name: Build and Push Docker Image on Release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Build and Publish API
+        uses: ./.github/actions/build-and-publish-api
+        with:
+          releaseVersion: ${{ github.event.release.tag_name }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.event.release.tag_name }}
+
+      - name: Build and Publish SPA
+        uses: ./.github/actions/build-and-publish-spa
+        with:
+          releaseVersion: ${{ github.event.release.tag_name }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.event.release.tag_name }}
