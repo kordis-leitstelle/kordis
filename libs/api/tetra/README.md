@@ -12,5 +12,4 @@ is received, a `NewTetraStatusEvent` is emitted.
 
 ## Running unit tests
 
-Run `nx test api-radio-communication-system` to execute the unit tests via
-[Jest](https://jestjs.io).
+Run `nx test api-tetra` to execute the unit tests via [Jest](https://jestjs.io).
