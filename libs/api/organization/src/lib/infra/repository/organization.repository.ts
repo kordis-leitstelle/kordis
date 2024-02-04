@@ -35,13 +35,14 @@ export class ImplOrganizationRepository implements OrganizationRepository {
 	}
 
 	async findById(id: string): Promise<OrganizationEntity | null> {
-		const orgDoc = await this.organizationModel.findById(id).exec();
+		const orgDoc = await this.organizationModel.findById(id).lean().exec();
+
 		if (!orgDoc) {
 			return null;
 		}
 
 		return this.mapper.mapAsync(
-			orgDoc.toObject(),
+			orgDoc,
 			OrganizationDocument,
 			OrganizationEntity,
 		);

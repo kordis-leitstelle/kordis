@@ -53,6 +53,6 @@ describe('TetraControlWebhookController', () => {
 
 		await controller.handleWebhook(payload as any, 'validKey', '192.168.0.2');
 
-		expect(tetraService.handleStatusWebhook).toHaveBeenCalledWith(payload);
+		expect(tetraService.handleWebhook).toHaveBeenCalledWith(payload);
 	});
 });

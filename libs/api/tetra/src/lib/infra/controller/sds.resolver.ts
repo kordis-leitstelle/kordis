@@ -1,23 +1,28 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
+import { User } from '@kordis/api/auth';
+import { AuthUser } from '@kordis/shared/auth';
+
 import { SendTetraSDSCommand } from '../../core/command/send-tetra-sds.command';
 import { SdsNotAbleToSendException } from '../../core/exception/sds-not-able-to-send.exception';
 import { PresentableSdsNotSendException } from '../exception/presentable-sds-not-send.exception';
 
 @Resolver()
-export class RCSResolver {
+export class SDSResolver {
 	constructor(private readonly commandBus: CommandBus) {}
 
 	@Mutation(() => Boolean)
 	async sendSDS(
-		@Args('issi') issi: string,
+		@User() user: AuthUser,
+		@Args('issi')
+		issi: string,
 		@Args('message') message: string,
 		@Args('isFlash') isFlash?: boolean,
 	): Promise<boolean> {
 		try {
 			await this.commandBus.execute(
-				new SendTetraSDSCommand(issi, message, !!isFlash),
+				new SendTetraSDSCommand(user.organization, issi, message, !!isFlash),
 			);
 		} catch (error) {
 			if (error instanceof SdsNotAbleToSendException) {

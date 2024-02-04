@@ -6,6 +6,7 @@ import { TETRA_SERVICE, TetraService } from '../service/tetra.service';
 
 export class SendTetraSDSCommand {
 	constructor(
+		readonly orgId: string,
 		readonly issi: string,
 		readonly message: string,
 		readonly isFlash: boolean,
@@ -23,6 +24,7 @@ export class SendTetraSDSHandler
 	async execute(command: SendTetraSDSCommand): Promise<void> {
 		try {
 			await this.tetraService.sendSDS(
+				command.orgId,
 				command.issi,
 				command.message,
 				command.isFlash,

@@ -2,19 +2,21 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CommandBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AuthUser } from '@kordis/shared/auth';
+
 import { SendTetraSDSCommand } from '../../core/command/send-tetra-sds.command';
 import { SdsNotAbleToSendException } from '../../core/exception/sds-not-able-to-send.exception';
 import { PresentableSdsNotSendException } from '../exception/presentable-sds-not-send.exception';
-import { RCSResolver } from './rcs.resolver';
+import { SDSResolver } from './sds.resolver';
 
-describe('RCSResolver', () => {
-	let resolver: RCSResolver;
+describe('SDSResolver', () => {
+	let resolver: SDSResolver;
 	let commandBus: DeepMocked<CommandBus>;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				RCSResolver,
+				SDSResolver,
 				{
 					provide: CommandBus,
 					useValue: createMock<CommandBus>(),
@@ -22,7 +24,7 @@ describe('RCSResolver', () => {
 			],
 		}).compile();
 
-		resolver = module.get<RCSResolver>(RCSResolver);
+		resolver = module.get<SDSResolver>(SDSResolver);
 		commandBus = module.get<DeepMocked<CommandBus>>(CommandBus);
 	});
 
@@ -31,11 +33,17 @@ describe('RCSResolver', () => {
 			const issi = '123456';
 			const message = 'Test message';
 			const isFlash = true;
+			const orgId = 'orgId';
 
-			await resolver.sendSDS(issi, message, isFlash);
+			await resolver.sendSDS(
+				{ organization: orgId } as AuthUser,
+				issi,
+				message,
+				isFlash,
+			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new SendTetraSDSCommand(issi, message, isFlash),
+				new SendTetraSDSCommand(orgId, issi, message, isFlash),
 			);
 		});
 
@@ -48,16 +56,26 @@ describe('RCSResolver', () => {
 				new SdsNotAbleToSendException(new Error()),
 			);
 
-			await expect(resolver.sendSDS(issi, message, isFlash)).rejects.toThrow(
-				PresentableSdsNotSendException,
-			);
+			await expect(
+				resolver.sendSDS(
+					{ organization: 'orgId' } as AuthUser,
+					issi,
+					message,
+					isFlash,
+				),
+			).rejects.toThrow(PresentableSdsNotSendException);
 
 			const unknownError = new Error('i am an unknown error');
 			commandBus.execute.mockRejectedValueOnce(unknownError);
 
-			await expect(resolver.sendSDS(issi, message, isFlash)).rejects.toThrow(
-				unknownError,
-			);
+			await expect(
+				resolver.sendSDS(
+					{ organization: ' ' } as AuthUser,
+					issi,
+					message,
+					isFlash,
+				),
+			).rejects.toThrow(unknownError);
 		});
 	});
 });

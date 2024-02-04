@@ -17,15 +17,17 @@ describe('SendTetraSDSHandler', () => {
 	});
 
 	it('should call send sds through tetra service', async () => {
+		const orgId = 'orgId';
 		const issi = '12345';
 		const message = 'Test message';
 		const isFlash = true;
 
-		const command = new SendTetraSDSCommand(issi, message, isFlash);
+		const command = new SendTetraSDSCommand(orgId, issi, message, isFlash);
 
 		await handler.execute(command);
 
 		expect(tetraServiceMock.sendSDS).toHaveBeenCalledWith(
+			orgId,
 			issi,
 			message,
 			isFlash,
@@ -33,11 +35,12 @@ describe('SendTetraSDSHandler', () => {
 	});
 
 	it('should throw an error if tetraService.sendSDS throws an error', async () => {
+		const orgId = 'orgId';
 		const issi = '12345';
 		const message = 'Test message';
 		const isFlash = true;
 
-		const command = new SendTetraSDSCommand(issi, message, isFlash);
+		const command = new SendTetraSDSCommand(orgId, issi, message, isFlash);
 
 		tetraServiceMock.sendSDS.mockRejectedValue(new Error());
 
