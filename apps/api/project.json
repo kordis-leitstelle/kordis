@@ -38,6 +38,25 @@
 				}
 			}
 		},
+		"build-generate-schema-script": {
+			"executor": "@nx/webpack:webpack",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"target": "node",
+				"compiler": "tsc",
+				"outputPath": "dist/apps/api-generate-schema",
+				"main": "apps/api/src/generate-schema.ts",
+				"tsConfig": "apps/api/tsconfig.app.json",
+				"webpackConfig": "apps/api/webpack.config.js"
+			}
+		},
+		"generate-schema": {
+			"executor": "@nx/js:node",
+			"options": {
+				"buildTarget": "api:build-generate-schema-script",
+				"watch": false
+			}
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]

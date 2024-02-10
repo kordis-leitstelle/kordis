@@ -42,10 +42,7 @@ const UTILITY_MODULES = [
 			imports: [ConfigModule],
 			driver: ApolloDriver,
 			useFactory: (config: ConfigService) => ({
-				autoSchemaFile:
-					config.get('NODE_ENV') !== 'production'
-						? path.join(process.cwd(), 'apps/api/src/schema.gql')
-						: true,
+				autoSchemaFile: true,
 				subscriptions: {
 					'graphql-ws': true,
 				},
