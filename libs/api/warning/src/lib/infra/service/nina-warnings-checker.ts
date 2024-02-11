@@ -17,49 +17,73 @@ export class NinaWarningsChecker {
 
 	async getNewWarnings(): Promise<Warning[]> {
 		const newWarnings: Warning[] = [];
-		const warningsToKeep: string[] = [];
+		const warningsToKeep = new Set<string>();
 
 		for (const url of this.ninaSources) {
-			const sourceWarnings = await firstValueFrom(
-				this.httpService
-					.get<{ id: string; version: number }[]>(url)
-					.pipe(map(({ data }) => data)),
-			);
-
-			for (const { id, version } of sourceWarnings) {
-				const existingWarning = await this.warningModel
-					.findOne({
-						sourceId: id,
-					})
-					.exec();
-				if (existingWarning) {
-					warningsToKeep.push(id);
-					if (existingWarning.sourceVersion === version) {
-						continue;
-					}
-				}
-
-				const newWarning = await this.fetchPopulatedWarning(id, version);
-
-				if (newWarning) {
-					if (existingWarning) {
-						await existingWarning.replaceOne(newWarning).exec();
-					} else {
-						warningsToKeep.push(id);
-						await this.warningModel.create(newWarning);
-					}
-					newWarnings.push(newWarning);
-				}
-			}
+			await this.retrieveAndSyncWarnings(url, newWarnings, warningsToKeep);
 		}
 
-		await this.warningModel
-			.deleteMany({
-				sourceId: { $nin: warningsToKeep },
-			})
-			.exec();
+		await this.cleanupWarnings(warningsToKeep);
 
 		return newWarnings;
+	}
+
+	private async retrieveAndSyncWarnings(
+		url: string,
+		newWarnings: Warning[],
+		warningsToKeep: Set<string>,
+	): Promise<void> {
+		const sourceWarnings = await this.fetchSourceWarnings(url);
+		for (const { id, version } of sourceWarnings) {
+			await this.syncWarningWithSource(
+				id,
+				version,
+				newWarnings,
+				warningsToKeep,
+			);
+		}
+	}
+
+	private async fetchSourceWarnings(
+		url: string,
+	): Promise<{ id: string; version: number }[]> {
+		return firstValueFrom(
+			this.httpService
+				.get<{ id: string; version: number }[]>(url)
+				.pipe(map(({ data }) => data)),
+		);
+	}
+
+	private async syncWarningWithSource(
+		id: string,
+		version: number,
+		newWarnings: Warning[],
+		warningsToKeep: Set<string>,
+	): Promise<void> {
+		const existingWarning = await this.warningModel
+			.findOne({ sourceId: id })
+			.exec();
+		if (existingWarning) {
+			warningsToKeep.add(id);
+			if (existingWarning.sourceVersion === version) return;
+		}
+
+		const newWarning = await this.fetchPopulatedWarning(id, version);
+		if (!newWarning) return;
+
+		if (existingWarning) {
+			await existingWarning.replaceOne(newWarning).exec();
+		} else {
+			warningsToKeep.add(id);
+			await this.warningModel.create(newWarning);
+		}
+		newWarnings.push(newWarning);
+	}
+
+	private async cleanupWarnings(warningsToKeep: Set<string>): Promise<void> {
+		await this.warningModel
+			.deleteMany({ sourceId: { $nin: Array.from(warningsToKeep) } })
+			.exec();
 	}
 
 	private async fetchPopulatedWarning(

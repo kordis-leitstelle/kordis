@@ -15,7 +15,7 @@ async function checkAndEmitNewWarnings(
 
 process.once(
 	'message',
-	async ({
+	({
 		mongoUri,
 		checkIntervalSec,
 		ninaSourcesOfInterest,
@@ -24,19 +24,21 @@ process.once(
 		checkIntervalSec: number;
 		ninaSourcesOfInterest: string[];
 	}) => {
-		await mongoose.connect(mongoUri);
+		(async () => {
+			await mongoose.connect(mongoUri);
 
-		const warningsChecker = new NinaWarningsChecker(
-			mongoose.model(Warning.name, WarningSchema),
-			ninaSourcesOfInterest,
-			new HttpService(),
-		);
+			const warningsChecker = new NinaWarningsChecker(
+				mongoose.model(Warning.name, WarningSchema),
+				ninaSourcesOfInterest,
+				new HttpService(),
+			);
 
-		const startWorker = async (): Promise<void> => {
-			await checkAndEmitNewWarnings(warningsChecker);
-			setTimeout(startWorker, 1000 * checkIntervalSec);
-		};
+			const startWorker = async (): Promise<void> => {
+				await checkAndEmitNewWarnings(warningsChecker);
+				setTimeout(startWorker, 1000 * checkIntervalSec);
+			};
 
-		await startWorker();
+			await startWorker();
+		})();
 	},
 );
