@@ -1,4 +1,5 @@
 import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
@@ -6,25 +7,27 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
-import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
+import { WarningsModule } from 'api/warning';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
-import { errorFormatterFactory, SharedKernel } from '@kordis/api/shared';
-import { WarningsModule } from 'api/warning';
+import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 import { WeatherModule } from '@kordis/api/weather';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
+import { HealthCheckController } from './controllers/health-check.controller';
+import environment from './environment';
 
 const FRAMEWORK_MODULES = Object.freeze([
 	ConfigModule.forRoot({
 		isGlobal: true,
 		cache: true,
 		envFilePath: path.resolve(__dirname, '.env'),
+		load: [environment],
 	}),
 	GraphQLModule.forRootAsync<ApolloDriverConfig>({
 		imports: [ConfigModule],
@@ -56,7 +59,6 @@ const FRAMEWORK_MODULES = Object.freeze([
 		isGlobal: true,
 	}),
 ]);
-
 const FEATURE_MODULES = Object.freeze([
 	OrganizationModule,
 	WarningsModule.forRootAsync({
@@ -74,7 +76,6 @@ const FEATURE_MODULES = Object.freeze([
 		inject: [ConfigService],
 	}),
 ]);
-
 const UTILITY_MODULES = Object.freeze([
 	SharedKernel,
 	AuthModule,
@@ -88,6 +89,6 @@ const UTILITY_MODULES = Object.freeze([
 @Module({
 	imports: [...FRAMEWORK_MODULES, ...UTILITY_MODULES, ...FEATURE_MODULES],
 	providers: [AppService, AppResolver],
-	controllers: [GraphqlSubscriptionsController],
+	controllers: [GraphqlSubscriptionsController, HealthCheckController],
 })
 export class AppModule {}

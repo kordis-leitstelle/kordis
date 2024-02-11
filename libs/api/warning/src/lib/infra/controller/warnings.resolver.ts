@@ -1,19 +1,21 @@
 import { Inject } from '@nestjs/common';
 import { Args, Float, Query, Resolver, Subscription } from '@nestjs/graphql';
+
+import {
+	GEOSPATIAL_TYPE_CONVERTER,
+	GeospatialTypesConverter,
+} from '@kordis/api/geospatial';
 import {
 	GraphQLSubscriptionService,
 	observableToAsyncIterable,
 } from '@kordis/api/shared';
+
 import { Warning } from '../../core/model/warning.model';
 import {
 	WARNINGS_SERVICE,
 	WarningsService,
 } from '../../core/service/warnings.service';
 import { NewWarningArgs } from './args/new-warning.args';
-import {
-	GEOSPATIAL_TYPE_CONVERTER,
-	GeospatialTypesConverter,
-} from '@kordis/api/geospatial';
 
 @Resolver()
 export class WarningsResolver {

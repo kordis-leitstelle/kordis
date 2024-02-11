@@ -1,7 +1,7 @@
 <br />
 <div align="center">
 
-<h1 align="center">Kordis</h3>
+<h1 align="center">Kordis</h1>
 
 Koordinierungssoftware für Einsatzleitstellen/ Software for rescue operations
 control centres
@@ -9,6 +9,7 @@ control centres
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis?ref=badge_shield)
 
 </div>
 

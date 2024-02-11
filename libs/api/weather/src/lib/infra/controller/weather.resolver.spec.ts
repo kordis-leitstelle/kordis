@@ -1,4 +1,4 @@
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CacheModule } from '@nestjs/cache-manager';
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';

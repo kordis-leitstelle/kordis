@@ -1,4 +1,4 @@
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
 import { Warning } from '../model/warning.model';

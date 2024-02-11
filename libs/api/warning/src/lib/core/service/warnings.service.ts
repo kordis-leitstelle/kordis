@@ -1,6 +1,7 @@
-import { Warning } from '../model/warning.model';
-import { Observable } from 'rxjs';
 import { Feature, Geometry } from '@turf/turf';
+import { Observable } from 'rxjs';
+
+import { Warning } from '../model/warning.model';
 
 export const WARNINGS_SERVICE = Symbol('WARNINGS_SERVICE');
 

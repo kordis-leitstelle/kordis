@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export default {
 	displayName: 'spa',
 	preset: '../../jest.preset.js',

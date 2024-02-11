@@ -1,20 +1,21 @@
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { HttpService } from '@nestjs/axios';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { point } from '@turf/turf';
 import { Model } from 'mongoose';
+import { ReplaySubject, firstValueFrom } from 'rxjs';
 
-import { Warning } from '../../core/model/warning.model';
-import { NINA_SOURCES_TOKEN } from './nina-sources';
-import { NinaWarningsService } from './nina-warnings.service';
 import {
 	GEOSPATIAL_SERVICE,
 	GeospatialModule,
 	GeospatialService,
 } from '@kordis/api/geospatial';
-import { point } from '@turf/turf';
-import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { BackgroundJob } from '@kordis/api/shared';
+
+import { Warning } from '../../core/model/warning.model';
+import { NINA_SOURCES_TOKEN } from './nina-sources';
+import { NinaWarningsService } from './nina-warnings.service';
 
 describe('NinaWarningService', () => {
 	let warningService: NinaWarningsService;

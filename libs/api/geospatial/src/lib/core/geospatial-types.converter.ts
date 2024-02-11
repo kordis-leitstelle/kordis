@@ -1,5 +1,6 @@
-import { BBox } from '../models';
 import { Geometry, Position } from '@turf/turf';
+
+import { BBox } from '../models';
 
 export const GEOSPATIAL_TYPE_CONVERTER = Symbol('GEOSPATIAL_TYPE_CONVERTER');
 

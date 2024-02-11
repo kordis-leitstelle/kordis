@@ -1,5 +1,7 @@
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { CommandBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
+import { ReplaySubject } from 'rxjs';
 
 import { GeospatialModule } from '@kordis/api/geospatial';
 import { GraphQLSubscriptionService } from '@kordis/api/shared';
@@ -10,8 +12,6 @@ import {
 	WarningsService,
 } from '../../core/service/warnings.service';
 import { WarningsResolver } from './warnings.resolver';
-import { ReplaySubject } from 'rxjs';
-import { CommandBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 
 describe('WarningsResolver', () => {
 	let resolver: WarningsResolver;

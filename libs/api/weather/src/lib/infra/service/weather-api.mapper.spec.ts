@@ -2,14 +2,6 @@ import { CurrentWeatherCondition } from '../../core/model/current-weather-condit
 import { DailyWeatherForecast } from '../../core/model/daily-weather-forecast.model';
 import { HourlyWeatherForecast } from '../../core/model/hourly-weather-forecast.model';
 import {
-	CURRENT_CONDITION_API_RESPONSE_EXAMPLE,
-	CURRENT_CONDITION_MODEL_EXAMPLE,
-	DAILY_FORECAST_API_RESPONSE_EXAMPLE,
-	DAILY_FORECAST_MODEL_EXAMPLE,
-	HOURLY_FORECAST_API_RESPONSE_EXAMPLE,
-	HOURLY_FORECAST_MODEL_EXAMPLE,
-} from './weather-example-data.test-helper';
-import {
 	mapCurrentConditionAPIResponse,
 	mapDailyForecastAPIResponse,
 	mapHourlyForecastAPIResponse,
@@ -19,6 +11,14 @@ import {
 	DailyForecastAPIResponse,
 	HourlyForecastAPIResponse,
 } from './weather-api.model';
+import {
+	CURRENT_CONDITION_API_RESPONSE_EXAMPLE,
+	CURRENT_CONDITION_MODEL_EXAMPLE,
+	DAILY_FORECAST_API_RESPONSE_EXAMPLE,
+	DAILY_FORECAST_MODEL_EXAMPLE,
+	HOURLY_FORECAST_API_RESPONSE_EXAMPLE,
+	HOURLY_FORECAST_MODEL_EXAMPLE,
+} from './weather-example-data.test-helper';
 
 describe('weather-api.mapper', () => {
 	it('should map current condition API response correctly', () => {

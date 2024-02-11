@@ -1,15 +1,16 @@
-import { ChildProcess, fork, Serializable } from 'child_process';
+import { ChildProcess, Serializable, fork } from 'child_process';
 import { join as joinPath } from 'path';
 import {
+	Observable,
+	Subject,
 	distinctUntilChanged,
 	finalize,
 	map,
-	Observable,
 	scan,
 	share,
-	Subject,
 	takeUntil,
 } from 'rxjs';
+
 import { DisposableBackgroundJob } from './background-job.interface';
 
 /**

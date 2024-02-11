@@ -29,16 +29,13 @@ jobs:
         id: api-deployment
         uses: ./.github/actions/build-and-deploy-api
         with:
-          slot: "next"
+          deploymentEnv: "next"
           releaseVersion: ${{ github.sha }}
-          mongoUri: ${{ secrets.DEV_MONGODB_URI }}
-          sentryKey: ${{ secrets.API_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
-          azureMapKey: ${{ secrets.AZURE_MAP_KEY }}
-          warningsCheckIntervalSec: 60
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.sha }}
       - name: Apply Database Migrations
         run: echo "add again once infrastructure is set up" # ./tools/db/kordis-db.sh apply-pending-migrations
         env:
@@ -49,12 +46,13 @@ jobs:
         id: spa-deployment
         uses: ./.github/actions/build-and-deploy-spa
         with:
-          apiUrl: ${{ steps.api-deployment.outputs.url }}
-          oauthConfig: ${{ secrets.DEV_OAUTH_CONFIG }}
           releaseVersion: ${{ github.sha }}
           deploymentEnv: "next"
-          sentryKey: ${{ secrets.SPA_SENTRY_KEY }}
           sentryAuthToken: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.sha }}
 
   e2e:
     needs: deployment
@@ -71,7 +69,7 @@ jobs:
         env:
           E2E_BASE_URL: ${{ needs.deployment.outputs.spaUrl }}
           AADB2C_TEST_USERS: ${{ secrets.E2E_TEST_USERS }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-test-results

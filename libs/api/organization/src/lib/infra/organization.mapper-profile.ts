@@ -1,10 +1,7 @@
 import type { Mapper } from '@automapper/core';
 import { createMap, forMember, mapFrom } from '@automapper/core';
+import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
-import {
-	AutomapperProfile,
-	getMapperToken,
-} from '@timonmasberg/automapper-nestjs';
 
 import { Organization as OrganizationEntity } from '../core/entity/organization.entity';
 import { OrganizationDocument } from './schema/organization.schema';

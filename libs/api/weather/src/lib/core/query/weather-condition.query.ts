@@ -5,7 +5,10 @@ import { CurrentWeatherCondition } from '../model/current-weather-condition.mode
 import { WEATHER_SERVICE, WeatherService } from '../service/weather.service';
 
 export class WeatherConditionQuery {
-	constructor(readonly lat: number, readonly lon: number) {}
+	constructor(
+		readonly lat: number,
+		readonly lon: number,
+	) {}
 }
 
 @QueryHandler(WeatherConditionQuery)

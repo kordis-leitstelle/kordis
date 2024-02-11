@@ -1,5 +1,6 @@
-import { GeospatialTypesConverterImpl } from './geospatial-types.converter';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import { GeospatialTypesConverterImpl } from './geospatial-types.converter';
 
 describe('GeospatialTypesConverter', () => {
 	let geospatialTypesConverter: GeospatialTypesConverterImpl;

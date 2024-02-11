@@ -5,6 +5,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AxiosResponse } from 'axios';
 import { of } from 'rxjs';
 
+import { MODULE_OPTIONS_TOKEN } from '../weather.module-options';
+import { AzureWeatherService } from './azure-weather.service';
 import {
 	CURRENT_CONDITION_API_RESPONSE_EXAMPLE,
 	CURRENT_CONDITION_MODEL_EXAMPLE,
@@ -13,8 +15,6 @@ import {
 	HOURLY_FORECAST_API_RESPONSE_EXAMPLE,
 	HOURLY_FORECAST_MODEL_EXAMPLE,
 } from './weather-example-data.test-helper';
-import { MODULE_OPTIONS_TOKEN } from '../weather.module-options';
-import { AzureWeatherService } from './azure-weather.service';
 
 describe('AzureWeatherService', () => {
 	let weatherService: AzureWeatherService;

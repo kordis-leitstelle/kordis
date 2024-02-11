@@ -1,6 +1,7 @@
 import { Injectable, OnModuleDestroy, Type } from '@nestjs/common';
 import { EventBus, IEvent, ofType } from '@nestjs/cqrs';
-import { filter, map, Observable, share, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, filter, map, share, takeUntil } from 'rxjs';
+
 import { observableToAsyncIterable } from '../../../helpers';
 
 export type SubscriptionOperators<TInitial, TReturn> = Partial<{

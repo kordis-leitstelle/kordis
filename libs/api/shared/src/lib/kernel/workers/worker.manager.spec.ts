@@ -1,6 +1,7 @@
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { ChildProcess, fork } from 'child_process';
+
 import { WorkerManager } from './worker.manager';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
 
 jest.mock('child_process', () => ({
 	fork: jest.fn(),

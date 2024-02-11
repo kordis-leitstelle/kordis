@@ -1,7 +1,8 @@
-import { BBox } from '../models';
-import { bboxPolygon, Geometry, Position } from '@turf/turf';
-import { GeospatialTypesConverter } from '../core/geospatial-types.converter';
 import { Injectable } from '@nestjs/common';
+import { Geometry, Position, bboxPolygon } from '@turf/turf';
+
+import { GeospatialTypesConverter } from '../core/geospatial-types.converter';
+import { BBox } from '../models';
 
 @Injectable()
 export class GeospatialTypesConverterImpl implements GeospatialTypesConverter {

@@ -1,8 +1,9 @@
-import { Model } from 'mongoose';
-import { Warning } from '../../core/model/warning.model';
-import { firstValueFrom, map } from 'rxjs';
-import { Feature } from '@turf/turf';
 import { HttpService } from '@nestjs/axios';
+import { Feature } from '@turf/turf';
+import { Model } from 'mongoose';
+import { firstValueFrom, map } from 'rxjs';
+
+import { Warning } from '../../core/model/warning.model';
 
 const NINA_WARNING_POPULATION_URL =
 	'https://nina.api.proxy.bund.dev/api31/warnings';
@@ -78,9 +79,8 @@ export class NinaWarningsChecker {
 			),
 		]);
 		const info =
-			mapData.info.find(
-				({ language }: { language: string }) =>
-					language?.toLowerCase()?.includes('de'),
+			mapData.info.find(({ language }: { language: string }) =>
+				language?.toLowerCase()?.includes('de'),
 			) || mapData.info?.[0];
 
 		if (info && featureCollection) {

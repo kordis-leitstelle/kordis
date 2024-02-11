@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { point, polygon, Position } from '@turf/turf';
+import { Position, point, polygon } from '@turf/turf';
 
 import { GeospatialServiceImpl } from './geospatial.service';
 

@@ -1,10 +1,11 @@
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { HttpService } from '@nestjs/axios';
+import { AxiosResponse } from 'axios';
 import { Model } from 'mongoose';
 import { of } from 'rxjs';
-import { NinaWarningsChecker } from '../service/nina-warnings-checker';
+
 import { Warning } from '../../core/model/warning.model';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { AxiosResponse } from 'axios';
+import { NinaWarningsChecker } from '../service/nina-warnings-checker';
 
 const EXAMPLE_WARNING_INFO = Object.freeze({
 	identifier: '1',

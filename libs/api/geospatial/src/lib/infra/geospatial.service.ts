@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import {
-	booleanDisjoint,
-	distance,
 	Feature,
 	Geometry,
 	Position,
+	booleanDisjoint,
+	distance,
 } from '@turf/turf';
 
 import { GeospatialService } from '../core/geospatial.service';

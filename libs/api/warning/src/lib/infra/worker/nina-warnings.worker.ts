@@ -1,7 +1,8 @@
+import { HttpService } from '@nestjs/axios';
 import mongoose from 'mongoose';
+
 import { Warning, WarningSchema } from '../../core/model/warning.model';
 import { NinaWarningsChecker } from '../service/nina-warnings-checker';
-import { HttpService } from '@nestjs/axios';
 
 async function checkAndEmitNewWarnings(
 	warningsChecker: NinaWarningsChecker,
