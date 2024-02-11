@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
-import { KordisLogger } from '@kordis/api/observability';
+import { KordisLogger, Trace } from '@kordis/api/observability';
 
 import { CurrentWeatherCondition } from '../../core/model/current-weather-condition.model';
 import { DailyWeatherForecast } from '../../core/model/daily-weather-forecast.model';
@@ -41,6 +41,7 @@ export class AzureWeatherService implements WeatherService {
 		}
 	}
 
+	@Trace()
 	async getCondition(
 		latitude: number,
 		longitude: number,
@@ -53,6 +54,7 @@ export class AzureWeatherService implements WeatherService {
 		return mapCurrentConditionAPIResponse(data);
 	}
 
+	@Trace()
 	async getForeCastByHours(
 		hours: 1 | 12 | 24 | 72,
 		latitude: number,
@@ -67,6 +69,7 @@ export class AzureWeatherService implements WeatherService {
 		return mapHourlyForecastAPIResponse(data);
 	}
 
+	@Trace()
 	async getForeCastByDays(
 		days: 1 | 5 | 10 | 15,
 		latitude: number,

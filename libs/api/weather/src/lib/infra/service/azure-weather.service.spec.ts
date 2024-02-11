@@ -12,7 +12,7 @@ import {
 	DAILY_FORECAST_MODEL_EXAMPLE,
 	HOURLY_FORECAST_API_RESPONSE_EXAMPLE,
 	HOURLY_FORECAST_MODEL_EXAMPLE,
-} from '../../weather-example-data.test-helper';
+} from './weather-example-data.test-helper';
 import { MODULE_OPTIONS_TOKEN } from '../weather.module-options';
 import { AzureWeatherService } from './azure-weather.service';
 

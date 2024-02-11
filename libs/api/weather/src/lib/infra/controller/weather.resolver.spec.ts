@@ -10,7 +10,7 @@ import {
 	CURRENT_CONDITION_MODEL_EXAMPLE,
 	DAILY_FORECAST_MODEL_EXAMPLE,
 	HOURLY_FORECAST_MODEL_EXAMPLE,
-} from '../../weather-example-data.test-helper';
+} from '../service/weather-example-data.test-helper';
 import { WeatherResolver } from './weather.resolver';
 
 describe('WeatherResolver', () => {

@@ -1,7 +1,7 @@
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
-import { CURRENT_CONDITION_MODEL_EXAMPLE } from '../../weather-example-data.test-helper';
+import { CURRENT_CONDITION_MODEL_EXAMPLE } from '../../infra/service/weather-example-data.test-helper';
 import { WEATHER_SERVICE, WeatherService } from '../service/weather.service';
 import {
 	WeatherConditionHandler,

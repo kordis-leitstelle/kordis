@@ -3,7 +3,8 @@ export async function expectIterableNotToHaveNext(
 ): Promise<void> {
 	await expect(
 		Promise.race([
-			iterable.next().then(() => {
+			iterable.next().then((v) => {
+				console.log('got iterator next result', v);
 				throw new Error();
 			}),
 			// resolve after 100ms to have a safety delay, even though it might be unnecessary

@@ -1,30 +1,15 @@
-import { Feature, Geometry } from '@turf/turf';
-
-import { BBox } from '@kordis/api/shared';
+import { Feature, Geometry, Position } from '@turf/turf';
 
 export const GEOSPATIAL_SERVICE = Symbol('GEOSPATIAL_SERVICE');
 
 export interface GeospatialService {
-	getMetersBetweenCoords(
-		coord1: { lat: number; lon: number },
-		coord2: { lat: number; lon: number },
-	): number;
+	getMetersBetweenCoords(coord1: Position, coord2: Position): number;
 
 	/*
-	 * Checks whether the first feature is completely within the second feature.
-	 */
-	isCompletelyWithin(
-		possibleInner: Geometry | Feature,
-		possibleOuter: Geometry | Feature,
-	): boolean;
-
-	/*
-	 * Checks whether two features intersect, meaning, if the intersection of the two features is not empty and not one of the geometries itself.
+	 * Checks whether two features intersect, meaning, if the intersection of the two features is not empty (this also includes geometries that are completely within another).
 	 */
 	isIntersecting(
 		feature1: Geometry | Feature,
 		feature2: Geometry | Feature,
 	): boolean;
-
-	bboxToGeometry(bbox: BBox): Geometry;
 }

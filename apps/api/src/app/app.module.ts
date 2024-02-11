@@ -12,8 +12,8 @@ import * as path from 'path';
 import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
-import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
-import { WarningsModule } from '@kordis/api/warnings';
+import { errorFormatterFactory, SharedKernel } from '@kordis/api/shared';
+import { WarningsModule } from 'api/warning';
 import { WeatherModule } from '@kordis/api/weather';
 
 import { AppResolver } from './app.resolver';
@@ -61,8 +61,9 @@ const FEATURE_MODULES = Object.freeze([
 	OrganizationModule,
 	WarningsModule.forRootAsync({
 		useFactory: (config: ConfigService) => ({
-			checkCronExpression:
-				config.get('WARNING_CHECK_CRON_EXPRESSION') ?? undefined,
+			checkForNewWarningsIntervalSec:
+				config.get('WARNING_CHECK_INTERVAL_SEC') ?? undefined,
+			mongoUri: config.getOrThrow<string>('MONGODB_URI'),
 		}),
 		inject: [ConfigService],
 	}),

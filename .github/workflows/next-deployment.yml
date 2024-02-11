@@ -38,7 +38,7 @@ jobs:
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
           azureMapKey: ${{ secrets.AZURE_MAP_KEY }}
-          warningsCheckCron: "* * * * *"
+          warningsCheckIntervalSec: 60
       - name: Apply Database Migrations
         run: echo "add again once infrastructure is set up" # ./tools/db/kordis-db.sh apply-pending-migrations
         env:

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { point, polygon } from '@turf/turf';
+import { point, polygon, Position } from '@turf/turf';
 
 import { GeospatialServiceImpl } from './geospatial.service';
 
@@ -17,8 +17,8 @@ describe('GeospatialService', () => {
 	});
 
 	it('should calculate the correct distance in meters between two coordinates', () => {
-		const coord1 = { lat: 52.52, lon: 13.405 };
-		const coord2 = { lat: 48.8566, lon: 2.3522 };
+		const coord1: Position = [13.405, 52.52];
+		const coord2: Position = [2.3522, 48.8566];
 		const distanceInMeters = geospatialService.getMetersBetweenCoords(
 			coord1,
 			coord2,
@@ -27,50 +27,8 @@ describe('GeospatialService', () => {
 		expect(distanceInMeters).toBeCloseTo(877464.5, 1);
 	});
 
-	describe('isCompletelyWithin', () => {
-		it('should correctly determine if a point is completely within a polygon', () => {
-			const pointWithinPolygon = point([-74.0055, 40.7129]);
-			const polygonContainingPoint = polygon([
-				[
-					[-74.006, 40.7128],
-					[-74.005, 40.7128],
-					[-74.005, 40.7138],
-					[-74.006, 40.7138],
-					[-74.006, 40.7128],
-				],
-			]);
-
-			expect(
-				geospatialService.isCompletelyWithin(
-					pointWithinPolygon,
-					polygonContainingPoint,
-				),
-			).toBe(true);
-		});
-
-		it('should correctly determine if a point is not completely within a polygon', () => {
-			const pointOutsidePolygon = point([-74.001, 40.7129]);
-			const polygonContainingPoint = polygon([
-				[
-					[-74.006, 40.7128],
-					[-74.005, 40.7128],
-					[-74.005, 40.7138],
-					[-74.006, 40.7138],
-					[-74.006, 40.7128],
-				],
-			]);
-
-			expect(
-				geospatialService.isCompletelyWithin(
-					pointOutsidePolygon,
-					polygonContainingPoint,
-				),
-			).toBe(false);
-		});
-	});
-
 	describe('isIntersecting', () => {
-		it('should correctly determine if two geometries intersect', () => {
+		it('should correctly determine if two polygons intersect', () => {
 			const polygon1 = polygon([
 				[
 					[-74.00526550241943, 40.714024620673655],
@@ -91,9 +49,10 @@ describe('GeospatialService', () => {
 			]);
 
 			expect(geospatialService.isIntersecting(polygon1, polygon2)).toBe(true);
+			expect(geospatialService.isIntersecting(polygon2, polygon1)).toBe(true);
 		});
 
-		it('should correctly determine if two geometries do not intersect', () => {
+		it('should correctly determine if two polygons do not intersect', () => {
 			const polygon1 = polygon([
 				[
 					[-74.0035116469346, 40.713914754479504],
@@ -114,25 +73,100 @@ describe('GeospatialService', () => {
 			]);
 
 			expect(geospatialService.isIntersecting(polygon1, polygon2)).toBe(false);
+			expect(geospatialService.isIntersecting(polygon2, polygon1)).toBe(false);
 		});
-	});
 
-	it('should correctly convert a BBox to a Polygon geometry', () => {
-		const bbox = {
-			topLeft: { lon: -74.047185, lat: 40.679648 },
-			bottomRight: { lon: -73.907005, lat: 40.882078 },
-		};
-		const result = geospatialService.bboxToGeometry(bbox);
+		it('should correctly determine if boundaries intersect', () => {
+			expect(
+				geospatialService.isIntersecting(
+					polygon([
+						[
+							[1, 2],
+							[3, 4],
+							[5, 6],
+							[1, 2],
+						],
+					]),
+					point([1, 2]),
+				),
+			).toBe(true);
+		});
 
-		expect(result.type).toBe('Polygon');
-		expect(result.coordinates).toEqual([
-			[
-				[-74.047185, 40.679648],
-				[-73.907005, 40.679648],
-				[-73.907005, 40.882078],
-				[-74.047185, 40.882078],
-				[-74.047185, 40.679648],
-			],
-		]);
+		it('should correctly determine if polygons within intersect', () => {
+			const polygon1 = polygon([
+				[
+					[-74.00526550241943, 40.714024620673655],
+					[-74.00526550241943, 40.712640295318295],
+					[-74.00446829543361, 40.712640295318295],
+					[-74.00446829543361, 40.714024620673655],
+					[-74.00526550241943, 40.714024620673655],
+				],
+			]);
+			const polygon2 = polygon([
+				[
+					[-74.00485109291682, 40.71344554213209],
+					[-74.00485109291682, 40.71320208208249],
+					[-74.00463882508765, 40.71320208208249],
+					[-74.00463882508765, 40.71344554213209],
+					[-74.00485109291682, 40.71344554213209],
+				],
+			]);
+
+			expect(geospatialService.isIntersecting(polygon1, polygon2)).toBe(true);
+			expect(geospatialService.isIntersecting(polygon2, polygon1)).toBe(true);
+		});
+
+		it('should correctly determine if points are equal', () => {
+			expect(
+				geospatialService.isIntersecting(point([1, 2]), point([1, 2])),
+			).toBe(true);
+
+			expect(
+				geospatialService.isIntersecting(
+					polygon([
+						[
+							[1, 2],
+							[3, 4],
+							[5, 6],
+							[1, 2],
+						],
+					]),
+					polygon([
+						[
+							[1, 2],
+							[3, 4],
+							[5, 6],
+							[1, 2],
+						],
+					]),
+				),
+			).toBe(true);
+		});
+
+		it('should correctly determine if a point is within a polygon', () => {
+			const pointWithinPolygon = point([-74.0055, 40.7129]);
+			const polygonContainingPoint = polygon([
+				[
+					[-74.006, 40.7128],
+					[-74.005, 40.7128],
+					[-74.005, 40.7138],
+					[-74.006, 40.7138],
+					[-74.006, 40.7128],
+				],
+			]);
+
+			expect(
+				geospatialService.isIntersecting(
+					pointWithinPolygon,
+					polygonContainingPoint,
+				),
+			).toBe(true);
+			expect(
+				geospatialService.isIntersecting(
+					polygonContainingPoint,
+					pointWithinPolygon,
+				),
+			).toBe(true);
+		});
 	});
 });

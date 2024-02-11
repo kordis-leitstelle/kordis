@@ -26,9 +26,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
-  warningsCheckCron:
+  warningsCheckIntervalSec:
     required: false
-    description: "Cron Expression for NINA Warnings Check"
+    description: "Interval for NINA Warnings Check"
   azureMapKey:
     required: false
     description: "Azure Map API Key"
@@ -74,7 +74,7 @@ runs:
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
-        WARNING_CHECK_CRON_EXPRESSION: ${{ inputs.warningsCheckCron }}
+        WARNING_CHECK_INTERVAL_SEC: ${{ inputs.warningsCheckIntervalSec }}
         AZURE_MAP_KEY: ${{ inputs.azureMapKey }}
       shell: bash
     - name: Deploy API

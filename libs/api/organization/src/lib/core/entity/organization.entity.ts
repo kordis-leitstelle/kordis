@@ -7,7 +7,8 @@ import {
 	ValidateNested,
 } from 'class-validator';
 
-import { BBox, BaseEntityModel, Coordinate, IsBBox } from '@kordis/api/shared';
+import { BaseEntityModel } from '@kordis/api/shared';
+import { BBox, Coordinate, IsBBox } from '@kordis/api/geospatial';
 
 @ObjectType()
 @InputType('OrganizationGeoSettingsInput')
