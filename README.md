@@ -78,4 +78,4 @@ We receive support from the following awesome companies:
   (Sponsorship)
 - [Microsoft Azure](https://azure.microsoft.com/) for cloud hosting and
   developer support (Sponsorship)
-- [Sentry](https://sentry.com/) for performance and error tracking (Sponsorship)
+- [Sentry](https://sentry.io/) for performance and error tracking (Sponsorship)

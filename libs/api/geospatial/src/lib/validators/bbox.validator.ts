@@ -3,7 +3,7 @@ import {
 	ValidatorConstraintInterface,
 } from 'class-validator';
 
-import { BBox } from './organization.entity';
+import { BBox } from '../models/bbox';
 
 @ValidatorConstraint()
 export class IsBBox implements ValidatorConstraintInterface {

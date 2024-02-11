@@ -1,5 +1,5 @@
+import { BBox } from '../models/bbox';
 import { IsBBox } from './bbox.validator';
-import { BBox } from './organization.entity';
 
 describe('BBox Validator', () => {
 	const bboxValidator = new IsBBox();
