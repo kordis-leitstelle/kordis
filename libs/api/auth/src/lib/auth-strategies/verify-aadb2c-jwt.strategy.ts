@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
+import { KordisLogger } from '@kordis/api/observability';
 import { AuthUser } from '@kordis/shared/auth';
 
 import { VerifyAuthUserStrategy } from './verify-auth-user.strategy';
@@ -23,6 +24,9 @@ declare module 'jsonwebtoken' {
 export class VerifyAADB2CJWTStrategy extends VerifyAuthUserStrategy {
 	private readonly client: jwksClient.JwksClient;
 	private readonly verifyOptions: jwt.VerifyOptions;
+	private readonly logger: KordisLogger = new Logger(
+		VerifyAADB2CJWTStrategy.name,
+	);
 
 	constructor(config: ConfigService) {
 		super();
@@ -48,21 +52,26 @@ export class VerifyAADB2CJWTStrategy extends VerifyAuthUserStrategy {
 		if (!authHeaderValue) {
 			return null;
 		}
-		const bearerToken = authHeaderValue.split(' ')[1];
 
-		const decodedToken = jwt.decode(bearerToken, {
-			complete: true,
-		});
-		if (!decodedToken) {
-			return null;
-		}
-
-		const key = await this.client.getSigningKey(decodedToken.header.kid);
-		const publicKey = key.getPublicKey();
-
+		let decodedToken: jwt.Jwt;
 		try {
+			const bearerToken = authHeaderValue.split(' ')[1];
+			const possibleDecodedToken = jwt.decode(bearerToken, {
+				complete: true,
+			});
+			if (!possibleDecodedToken) {
+				return null;
+			}
+			decodedToken = possibleDecodedToken;
+
+			const key = await this.client.getSigningKey(decodedToken.header.kid);
+			const publicKey = key.getPublicKey();
+
 			jwt.verify(bearerToken, publicKey, this.verifyOptions);
-		} catch {
+		} catch (error) {
+			this.logger.warn('Failed to decode or verify bearer token', {
+				error,
+			});
 			return null;
 		}
 
