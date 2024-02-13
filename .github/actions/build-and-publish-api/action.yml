@@ -14,9 +14,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
-  containerTag:
+  containerTags:
     required: true
-    description: "Container tag"
+    description: "Container tag or csv delimited tags"
 
 runs:
   using: "composite"
@@ -49,7 +49,6 @@ runs:
         build-args: |
           NODE_VERSION=${{ steps.node-version-check.outputs.node-version }}
         push: true
-        tags: |
-          ${{ inputs.containerTag }}
+        tags: ${{ inputs.containerTags }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

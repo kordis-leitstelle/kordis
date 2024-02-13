@@ -21,7 +21,7 @@ jobs:
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
-          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.event.release.tag_name }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.event.release.tag_name }},ghcr.io/kordis-leitstelle/kordis-api:latest
 
       - name: Build and Publish SPA
         uses: ./.github/actions/build-and-publish-spa
@@ -30,7 +30,7 @@ jobs:
           containerRegistryUrl: ghcr.io
           containerRegistryUsername: ${{ github.actor }}
           containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
-          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.event.release.tag_name }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.event.release.tag_name }},ghcr.io/kordis-leitstelle/kordis-spa:latest
 
   trigger-infra-release:
     runs-on: ubuntu-latest
