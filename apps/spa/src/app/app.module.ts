@@ -1,12 +1,11 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import de from '@angular/common/locales/de';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
-import { firstValueFrom } from 'rxjs';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
 import {
@@ -61,15 +60,6 @@ registerLocaleData(de);
 					},
 				});
 			},
-			multi: true,
-		},
-		{
-			provide: APP_INITIALIZER,
-			useFactory: (http: HttpClient) => async () => {
-				const config = await firstValueFrom(http.get('./assets/config.json'));
-				Object.assign(environment, { ...config, ...environment });
-			},
-			deps: [HttpClient],
 			multi: true,
 		},
 		{ provide: NZ_I18N, useValue: de_DE },
