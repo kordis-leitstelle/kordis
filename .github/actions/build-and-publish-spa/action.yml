@@ -52,10 +52,3 @@ runs:
           ${{ inputs.containerTag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Deploy SPA
-      id: spa-deployment
-      shell: bash
-      run: echo "url=placeholder" >> $GITHUB_OUTPUT
-    - name: Build SPA with source maps for sentry
-      run: npx nx build spa --prod --source-map=true
-      shell: bash
