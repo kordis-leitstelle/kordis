@@ -8,25 +8,30 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
-import {
-	DevObservabilityModule,
-	SentryObservabilityModule,
-} from '@kordis/api/observability';
+import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
-import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
+import {
+	MongoEncryptionClientProvider,
+	SharedKernel,
+	errorFormatterFactory,
+	getMongoEncrKmsFromConfig,
+} from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
+import { HealthCheckController } from './controllers/health-check.controller';
 import environment from './environment';
+
+const isNextOrProdEnv = ['next', 'prod'].includes(
+	process.env.ENVIRONMENT_NAME ?? '',
+);
 
 const FEATURE_MODULES = [OrganizationModule];
 const UTILITY_MODULES = [
 	SharedKernel,
-	AuthModule,
-	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
-		? [SentryObservabilityModule]
-		: [DevObservabilityModule]),
+	AuthModule.forRoot(isNextOrProdEnv ? 'aadb2c' : 'dev'),
+	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
 ];
 
 @Module({
@@ -41,10 +46,7 @@ const UTILITY_MODULES = [
 			imports: [ConfigModule],
 			driver: ApolloDriver,
 			useFactory: (config: ConfigService) => ({
-				autoSchemaFile:
-					config.get('NODE_ENV') !== 'production'
-						? path.join(process.cwd(), 'apps/api/src/schema.gql')
-						: true,
+				autoSchemaFile: true,
 				subscriptions: {
 					'graphql-ws': true,
 				},
@@ -56,11 +58,31 @@ const UTILITY_MODULES = [
 			inject: [ConfigService],
 		}),
 		MongooseModule.forRootAsync({
-			imports: [ConfigModule],
-			useFactory: (config: ConfigService) => ({
-				uri: config.getOrThrow<string>('MONGODB_URI'),
-			}),
-			inject: [ConfigService],
+			imports: [ConfigModule, SharedKernel],
+			useFactory: async (
+				config: ConfigService,
+				encrManager: MongoEncryptionClientProvider,
+			) => {
+				const uri = config.getOrThrow<string>('MONGODB_URI');
+				const { kms, masterKey, provider } = getMongoEncrKmsFromConfig(config);
+
+				await encrManager.init(
+					uri,
+					provider,
+					kms.keyVaultNamespace,
+					kms.kmsProviders,
+					masterKey,
+				);
+
+				return {
+					uri,
+					autoEncryption: {
+						...kms,
+						bypassAutoEncryption: true,
+					},
+				};
+			},
+			inject: [ConfigService, MongoEncryptionClientProvider],
 		}),
 		AutomapperModule.forRoot({
 			strategyInitializer: classes(),
@@ -69,6 +91,6 @@ const UTILITY_MODULES = [
 		...FEATURE_MODULES,
 	],
 	providers: [AppService, AppResolver],
-	controllers: [GraphqlSubscriptionsController],
+	controllers: [GraphqlSubscriptionsController, HealthCheckController],
 })
 export class AppModule {}

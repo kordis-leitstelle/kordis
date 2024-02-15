@@ -1,16 +1,10 @@
-name: 'build-and-deploy-api'
-description: 'Builds API project for production and deploys it to a given environment'
+name: 'build-and-publish-api'
+description: 'Builds API project and publish its image'
 
 inputs:
   releaseVersion:
     required: true
     description: "Release Version (Commit or Tag)"
-  deploymentEnv:
-    required: true
-    description: "Deployment Environment"
-  sentryAuthToken:
-    required: true
-    description: "Sentry Auth Token"
   containerRegistryUrl:
     required: true
     description: "Container registry url"
@@ -20,13 +14,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
-  containerTag:
+  containerTags:
     required: true
-    description: "Container tag"
-outputs:
-  url:
-    description: "API URL"
-    value: ${{ steps.wa-deployment.outputs.url }}
+    description: "Container tag or csv delimited tags"
 
 runs:
   using: "composite"
@@ -59,21 +49,6 @@ runs:
         build-args: |
           NODE_VERSION=${{ steps.node-version-check.outputs.node-version }}
         push: true
-        tags: |
-          ${{ inputs.containerTag }}
+        tags: ${{ inputs.containerTags }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Deploy API
-      id: wa-deployment
-      run: echo "url=placeholder" >> $GITHUB_OUTPUT
-      shell: bash
-    - name: Create Sentry release
-      uses: getsentry/action-release@v1
-      env:
-        SENTRY_AUTH_TOKEN: ${{ inputs.sentryAuthToken }}
-        SENTRY_ORG: kordis-leitstelle
-        SENTRY_PROJECT: kordis-api
-      with:
-        environment: ${{ inputs.deploymentEnv }}
-        version: ${{ inputs.releaseVersion }}
-        sourcemaps: ./dist/apps/api

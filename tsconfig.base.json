@@ -20,7 +20,7 @@
 			"@kordis/api/organization": ["libs/api/organization/src/index.ts"],
 			"@kordis/api/shared": ["libs/api/shared/src/index.ts"],
 			"@kordis/api/test-helpers": ["libs/api/test-helpers/src/index.ts"],
-			"@kordis/shared/auth": ["libs/shared/auth/src/index.ts"],
+			"@kordis/shared/model": ["libs/shared/model/src/index.ts"],
 			"@kordis/spa/auth": ["libs/spa/auth/src/index.ts"],
 			"@kordis/spa/observability": ["libs/spa/observability/src/index.ts"],
 			"api-tetra": ["libs/api/tetra/src/index.ts"]

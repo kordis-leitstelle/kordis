@@ -6,6 +6,13 @@
 		<base href="/" />
 		<meta content="width=device-width, initial-scale=1" name="viewport" />
 		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="manifest.webmanifest" rel="manifest" />
+		<meta content="#1976d2" name="theme-color" />
+		<meta content="noindex" name="robots" />
+		<meta
+			content="Kordis Contributors, info@kordis-leitstelle.de"
+			name="author"
+		/>
 		<script nonce="csp_nonce">
 			if (navigator.userAgent.indexOf('Chrome') < 0) {
 				alert(
@@ -15,6 +22,7 @@
 		</script>
 	</head>
 	<body>
+		<noscript>Bitte aktivieren Sie JavaScript um Kordis zu nutzen.</noscript>
 		<kordis-root ngCspNonce="csp_nonce"></kordis-root>
 	</body>
 </html>
