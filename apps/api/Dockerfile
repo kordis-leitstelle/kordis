@@ -1,6 +1,6 @@
 ARG NODE_VERSION
 
-FROM docker.io/node:${NODE_VERSION}-alpine AS builder
+FROM docker.io/node:${NODE_VERSION}-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -8,6 +8,7 @@ ENV NODE_ENV=production
 
 # Install dependencies separately for caching
 COPY ./dist/apps/api/package.json ./dist/apps/api/package-lock.json ./
+
 RUN npm --omit=dev ci
 
 COPY ./dist/apps/api ./

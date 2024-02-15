@@ -10,7 +10,12 @@ import * as path from 'path';
 import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
-import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
+import {
+	MongoEncryptionClientProvider,
+	SharedKernel,
+	errorFormatterFactory,
+	getMongoEncrKmsFromConfig,
+} from '@kordis/api/shared';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
@@ -53,11 +58,31 @@ const UTILITY_MODULES = [
 			inject: [ConfigService],
 		}),
 		MongooseModule.forRootAsync({
-			imports: [ConfigModule],
-			useFactory: (config: ConfigService) => ({
-				uri: config.getOrThrow<string>('MONGODB_URI'),
-			}),
-			inject: [ConfigService],
+			imports: [ConfigModule, SharedKernel],
+			useFactory: async (
+				config: ConfigService,
+				encrManager: MongoEncryptionClientProvider,
+			) => {
+				const uri = config.getOrThrow<string>('MONGODB_URI');
+				const { kms, masterKey, provider } = getMongoEncrKmsFromConfig(config);
+
+				await encrManager.init(
+					uri,
+					provider,
+					kms.keyVaultNamespace,
+					kms.kmsProviders,
+					masterKey,
+				);
+
+				return {
+					uri,
+					autoEncryption: {
+						...kms,
+						bypassAutoEncryption: true,
+					},
+				};
+			},
+			inject: [ConfigService, MongoEncryptionClientProvider],
 		}),
 		AutomapperModule.forRoot({
 			strategyInitializer: classes(),
