@@ -1,0 +1,46 @@
+name: Build and Push Docker Image on Release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build-and-publish-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci --ignore-scripts
+      - name: Build and Publish API
+        uses: ./.github/actions/build-and-publish-api
+        with:
+          releaseVersion: ${{ github.event.release.tag_name }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-api:${{ github.event.release.tag_name }},ghcr.io/kordis-leitstelle/kordis-api:latest
+
+      - name: Build and Publish SPA
+        uses: ./.github/actions/build-and-publish-spa
+        with:
+          releaseVersion: ${{ github.event.release.tag_name }}
+          containerRegistryUrl: ghcr.io
+          containerRegistryUsername: ${{ github.actor }}
+          containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          containerTag: ghcr.io/kordis-leitstelle/kordis-spa:${{ github.event.release.tag_name }},ghcr.io/kordis-leitstelle/kordis-spa:latest
+
+  trigger-infra-release:
+    runs-on: ubuntu-latest
+    needs: build-and-publish-images
+    steps:
+      - name: Trigger Next Deployment
+        uses: peter-evans/repository-dispatch@v4
+        with:
+          token: ${{ secrets.INFRA_PAT }}
+          repository: kordis-leitstelle/infrastructure
+          event-type: release-published
+          client-payload: '{"release": "${{ github.event.release.tag_name }}"}'
+
