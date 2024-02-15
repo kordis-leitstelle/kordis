@@ -16,6 +16,7 @@ import {
 	errorFormatterFactory,
 	getMongoEncrKmsFromConfig,
 } from '@kordis/api/shared';
+import { TetraModule } from '@kordis/api/tetra';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
@@ -27,7 +28,7 @@ const isNextOrProdEnv = ['next', 'prod'].includes(
 	process.env.ENVIRONMENT_NAME ?? '',
 );
 
-const FEATURE_MODULES = [OrganizationModule];
+const FEATURE_MODULES = [OrganizationModule, TetraModule];
 const UTILITY_MODULES = [
 	SharedKernel,
 	AuthModule.forRoot(isNextOrProdEnv ? 'aadb2c' : 'dev'),
