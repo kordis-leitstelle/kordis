@@ -1,19 +1,13 @@
 name: 'build-and-deploy-api'
-description: 'Builds API Project for Production and Deploys it to a given WA Slot'
+description: 'Builds API project for production and deploys it to a given environment'
 
 inputs:
   releaseVersion:
     required: true
     description: "Release Version (Commit or Tag)"
-  slot:
+  deploymentEnv:
     required: true
-    description: "Slot Identifier"
-  mongoUri:
-    required: true
-    description: "Mongo Connection URI"
-  sentryKey:
-    required: true
-    description: "Sentry DSN Key"
+    description: "Deployment Environment"
   sentryAuthToken:
     required: true
     description: "Sentry Auth Token"
@@ -26,6 +20,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
+  containerTag:
+    required: true
+    description: "Container tag"
 outputs:
   url:
     description: "API URL"
@@ -42,6 +39,11 @@ runs:
         registry: ${{ inputs.containerRegistryUrl }}
         username: ${{ inputs.containerRegistryUsername }}
         password: ${{ inputs.containerRegistryPassword }}
+    - name: Create Environment
+      run: envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
+      shell: bash
+      env:
+        RELEASE_VERSION: ${{ inputs.releaseVersion }}
     - name: Build app
       run: |
         npx nx build api --prod
@@ -55,20 +57,12 @@ runs:
         context: ./
         file: ./apps/api/Dockerfile
         build-args: |
-          NODE_VERSION=${{ steps.node-version-check.outputs.node-version}}
+          NODE_VERSION=${{ steps.node-version-check.outputs.node-version }}
         push: true
         tags: |
-          ghcr.io/kordis-leitstelle/kordis-api:${{ inputs.releaseVersion}}
+          ${{ inputs.containerTag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Set environment for deployment
-      run: envsubst < apps/api/src/.env.template > dist/apps/api/.env
-      env:
-        MONGODB_URI: ${{ inputs.mongoUri }}
-        ENVIRONMENT_NAME: ${{ inputs.slot }}
-        RELEASE_VERSION: ${{ inputs.releaseVersion }}
-        SENTRY_KEY: ${{ inputs.sentryKey }}
-      shell: bash
     - name: Deploy API
       id: wa-deployment
       run: echo "url=placeholder" >> $GITHUB_OUTPUT
@@ -80,6 +74,6 @@ runs:
         SENTRY_ORG: kordis-leitstelle
         SENTRY_PROJECT: kordis-api
       with:
-        environment: ${{ inputs.slot }}
+        environment: ${{ inputs.deploymentEnv }}
         version: ${{ inputs.releaseVersion }}
         sourcemaps: ./dist/apps/api

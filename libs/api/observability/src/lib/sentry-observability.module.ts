@@ -2,24 +2,18 @@ import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, ModulesContainer } from '@nestjs/core';
 import { init as initSentry } from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
 
 import { SentryExceptionsFilter } from './filters/sentry-exceptions.filter';
 import { SentryOTelUserContextInterceptor } from './interceptors/sentry-otel-user-context.interceptor';
 import oTelSDK from './oTelSdk';
 import { KORDIS_LOGGER_SERVICE } from './services/kordis-logger-service.interface';
 import { KordisLogger } from './services/kordis-logger.interface';
-import { KordisLoggerImpl } from './services/kordis.logger';
 import { SentryLogger } from './services/sentry-logger.service';
 import { wrapProvidersWithTracingSpans } from './trace-wrapper';
 
 // This Module must come after the AuthModule, because it depends on the use set by the AuthInterceptor
 @Module({
 	providers: [
-		{
-			provide: Logger,
-			useClass: KordisLoggerImpl,
-		},
 		{
 			provide: KORDIS_LOGGER_SERVICE,
 			useClass: SentryLogger,
@@ -48,11 +42,9 @@ export class SentryObservabilityModule implements OnModuleInit {
 		initSentry({
 			dsn: this.config.get('SENTRY_KEY'),
 			tracesSampleRate: 1.0,
-			profilesSampleRate: 1.0,
 			instrumenter: 'otel',
 			environment: this.config.get('ENVIRONMENT_NAME') ?? 'local-dev',
 			release: this.config.get('RELEASE_VERSION') ?? '0.0.0-development',
-			integrations: [new ProfilingIntegration()],
 		});
 		wrapProvidersWithTracingSpans(this.modulesContainer);
 		oTelSDK.start();

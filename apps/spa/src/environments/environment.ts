@@ -1,8 +1,9 @@
-import { Environment } from './environment.model';
+import { DynamicConfig } from './dynamic-config.model';
 
-export const environment: Environment = {
+export const environment = {
 	production: false,
-	environmentName: 'Dev Local',
 	releaseVersion: '0.0.0-development',
-	apiUrl: 'https://localhost:3000',
-};
+} as {
+	production: boolean;
+	releaseVersion: string;
+} & DynamicConfig; // DynamicConfig properties are from the runtime dependent assets/config.json

@@ -1,10 +1,4 @@
-import { Environment } from './environment.model';
-
-export const environment: Environment = {
+export const environment = {
 	production: $IS_PRODUCTION,
-	environmentName: '$ENVIRONMENT_NAME',
-	sentryKey: '$SENTRY_KEY',
-	apiUrl: '$API_URL',
 	releaseVersion: '$RELEASE_VERSION',
-	oauth: $OAUTH_CONFIG as any,
-};
+} as any;

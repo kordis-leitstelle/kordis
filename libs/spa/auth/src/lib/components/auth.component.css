@@ -1,0 +1,47 @@
+nz-content {
+	display: flex;
+	height: 100vh;
+}
+
+.login-form {
+	display: flex;
+	padding: 3rem 1rem;
+	flex-direction: column;
+	flex: 1 1 0;
+	justify-content: center;
+
+	@media (min-width: 640px) {
+		padding-left: 8rem;
+		padding-right: 8rem;
+	}
+
+	@media (min-width: 1024px) {
+		padding-left: 5rem;
+		padding-right: 5rem;
+		flex: none;
+		width: 500px;
+	}
+
+	.header {
+		margin-bottom: 5rem;
+
+		span {
+			font-size: 1rem;
+		}
+	}
+}
+
+.image {
+	display: none;
+	position: relative;
+	flex: 1 1 0;
+
+	@media (min-width: 1024px) {
+		display: block;
+	}
+
+	.cover-image {
+		object-fit: cover;
+		position: absolute;
+	}
+}

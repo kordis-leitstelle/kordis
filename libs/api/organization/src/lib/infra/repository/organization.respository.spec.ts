@@ -1,8 +1,8 @@
 import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
-import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
 import { Model } from 'mongoose';
 
 import { Mutable } from '@kordis/api/shared';

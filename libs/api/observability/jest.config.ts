@@ -2,13 +2,13 @@
 export default {
 	displayName: 'api-observability',
 	preset: '../../../jest.preset.js',
+	globals: {},
 	testEnvironment: 'node',
 	transform: {
-		'^.+\\.(ts|mjs|js|html)$': [
-			'jest-preset-angular',
+		'^.+\\.[tj]s$': [
+			'ts-jest',
 			{
 				tsconfig: '<rootDir>/tsconfig.spec.json',
-				stringifyContentPathRegex: '\\.(html|svg)$',
 			},
 		],
 	},
