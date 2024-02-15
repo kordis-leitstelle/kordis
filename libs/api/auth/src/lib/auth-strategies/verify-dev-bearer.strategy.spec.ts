@@ -2,28 +2,25 @@ import { createMock } from '@golevelup/ts-jest';
 
 import { KordisRequest } from '@kordis/api/shared';
 
-import {
-	AuthUserExtractorStrategy,
-	ExtractUserFromMsPrincipleHeader,
-} from './auth-user-extractor.strategy';
+import { VerifyAuthUserStrategy } from './verify-auth-user.strategy';
+import { VerifyDevBearerStrategy } from './verify-dev-bearer.strategy';
 
-describe('ExtractUserFromMsPrincipleHeader', () => {
-	let extractStrat: AuthUserExtractorStrategy;
+describe('VerifyDevBearerStrategy', () => {
+	let extractStrat: VerifyAuthUserStrategy;
 
 	beforeEach(() => {
-		extractStrat = new ExtractUserFromMsPrincipleHeader();
+		extractStrat = new VerifyDevBearerStrategy();
 	});
 
-	it('should return null if the authorization header is not present', () => {
+	it('should return null if the authorization header is not present', async () => {
 		const req = createMock<Omit<KordisRequest, 'user'>>({
 			headers: {},
 		});
-		const result = extractStrat.getUserFromRequest(req);
 
-		expect(result).toBeNull();
+		await expect(extractStrat.verifyUserFromRequest(req)).resolves.toBeNull();
 	});
 
-	it('should extract user correctly from signed access token', () => {
+	it('should extract user correctly from signed access token', async () => {
 		const headerValue =
 			'Bearer eyJhbGciOiJIUzI1NiJ9.eyJvaWQiOiJjMGNjNDQwNC03OTA3LTQ0ODAtODZkMy1iYTRiZmM1MTNjNmQiLCJzdWIiOiJjMGNjNDQwNC03OTA3LTQ0ODAtODZkMy1iYTRiZmM1MTNjNmQiLCJnaXZlbl9uYW1lIjoiVGVzdCIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlscyI6WyJ0ZXN0QHRpbW9ubWFzYmVyZy5jb20iXX0.9FXjgT037QkeE0KptQo3MzMriuXGzqCNfBDVEkWbJaA';
 
@@ -31,7 +28,7 @@ describe('ExtractUserFromMsPrincipleHeader', () => {
 			headers: { authorization: headerValue },
 		});
 
-		expect(extractStrat.getUserFromRequest(req)).toEqual({
+		await expect(extractStrat.verifyUserFromRequest(req)).resolves.toEqual({
 			id: 'c0cc4404-7907-4480-86d3-ba4bfc513c6d',
 			email: 'test@timonmasberg.com',
 			firstName: 'Test',

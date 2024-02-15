@@ -2,16 +2,14 @@ import { Request } from 'express';
 
 import { AuthUser } from '@kordis/shared/auth';
 
-export abstract class AuthUserExtractorStrategy {
-	abstract getUserFromRequest(req: Request): AuthUser | null;
-}
+import { VerifyAuthUserStrategy } from './verify-auth-user.strategy';
 
-export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy {
-	getUserFromRequest(req: Request): AuthUser | null {
+export class VerifyDevBearerStrategy extends VerifyAuthUserStrategy {
+	verifyUserFromRequest(req: Request): Promise<AuthUser | null> {
 		const headerValue = req.headers['authorization'];
 
 		if (!headerValue) {
-			return null;
+			return Promise.resolve(null);
 		}
 		const payloadBuffer = Buffer.from(headerValue.split('.')[1], 'base64');
 		const decodedToken = JSON.parse(payloadBuffer.toString()) as {
@@ -23,12 +21,12 @@ export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy 
 			organization: string;
 		};
 
-		return {
-			id: decodedToken['oid'] || decodedToken['sub'],
+		return Promise.resolve({
+			id: decodedToken['oid'] ?? decodedToken['sub'],
 			email: decodedToken['emails'][0],
 			firstName: decodedToken['given_name'],
 			lastName: decodedToken['family_name'],
 			organization: decodedToken['organization'],
-		};
+		});
 	}
 }
