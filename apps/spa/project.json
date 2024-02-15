@@ -25,8 +25,7 @@
 					"apps/spa/src/styles.css"
 				],
 				"scripts": [],
-				"serviceWorker": true,
-				"ngswConfigPath": "apps/spa/ngsw-config.json"
+				"serviceWorker": "apps/spa/ngsw-config.json"
 			},
 			"configurations": {
 				"production": {
