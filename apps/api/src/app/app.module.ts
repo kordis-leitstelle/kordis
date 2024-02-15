@@ -8,10 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
-import {
-	DevObservabilityModule,
-	SentryObservabilityModule,
-} from '@kordis/api/observability';
+import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
 
@@ -21,13 +18,15 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 import { HealthCheckController } from './controllers/health-check.controller';
 import environment from './environment';
 
+const isNextOrProdEnv = ['next', 'prod'].includes(
+	process.env.ENVIRONMENT_NAME ?? '',
+);
+
 const FEATURE_MODULES = [OrganizationModule];
 const UTILITY_MODULES = [
 	SharedKernel,
-	AuthModule,
-	...(process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS
-		? [SentryObservabilityModule]
-		: [DevObservabilityModule]),
+	AuthModule.forRoot(isNextOrProdEnv ? 'aadb2c' : 'dev'),
+	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
 ];
 
 @Module({

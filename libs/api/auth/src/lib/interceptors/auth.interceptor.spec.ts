@@ -9,18 +9,18 @@ import {
 } from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/model';
 
-import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
+import { VerifyAuthUserStrategy } from '../auth-strategies/verify-auth-user.strategy';
 import { AuthInterceptor } from './auth.interceptor';
 
 describe('AuthInterceptor', () => {
-	let mockAuthUserExtractor: AuthUserExtractorStrategy;
+	let mockAuthUserExtractor: VerifyAuthUserStrategy;
 	let service: AuthInterceptor;
 
 	beforeEach(() => {
-		mockAuthUserExtractor = new (class extends AuthUserExtractorStrategy {
+		mockAuthUserExtractor = new (class extends VerifyAuthUserStrategy {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			getUserFromRequest(req: KordisRequest): AuthUser | null {
-				return null;
+			verifyUserFromRequest(req: KordisRequest): Promise<AuthUser | null> {
+				return Promise.resolve(null);
 			}
 		})();
 		service = new AuthInterceptor(mockAuthUserExtractor);
@@ -28,12 +28,12 @@ describe('AuthInterceptor', () => {
 
 	it('should throw unauthorized http exception', async () => {
 		jest
-			.spyOn(mockAuthUserExtractor, 'getUserFromRequest')
-			.mockReturnValue(null);
+			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
+			.mockResolvedValueOnce(null);
 
 		await expect(
 			firstValueFrom(
-				service.intercept(
+				await service.intercept(
 					createGqlContextForRequest(createMock<KordisRequest>()),
 					createMock<CallHandler>(),
 				),
@@ -42,13 +42,15 @@ describe('AuthInterceptor', () => {
 	});
 
 	it('should continue request pipeline for authenticated request', async () => {
-		jest.spyOn(mockAuthUserExtractor, 'getUserFromRequest').mockReturnValue({
-			id: '123',
-			firstName: 'foo',
-			lastName: 'bar',
-			email: 'foo@bar.de',
-			organization: 'testorg',
-		});
+		jest
+			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
+			.mockResolvedValue({
+				id: '123',
+				firstName: 'foo',
+				lastName: 'bar',
+				email: 'foo@bar.de',
+				organization: 'testorg',
+			});
 
 		const handler = createMock<CallHandler>({
 			handle(): Observable<boolean> {
@@ -59,13 +61,13 @@ describe('AuthInterceptor', () => {
 		const gqlCtx = createGqlContextForRequest(createMock<KordisRequest>());
 
 		await expect(
-			firstValueFrom(service.intercept(gqlCtx, handler)),
+			firstValueFrom(await service.intercept(gqlCtx, handler)),
 		).resolves.toBeTruthy();
 
 		const httpCtx = createGqlContextForRequest(createMock<KordisRequest>());
 
 		await expect(
-			firstValueFrom(service.intercept(httpCtx, handler)),
+			firstValueFrom(await service.intercept(httpCtx, handler)),
 		).resolves.toBeTruthy();
 	});
 
@@ -78,7 +80,7 @@ describe('AuthInterceptor', () => {
 
 		await expect(
 			firstValueFrom(
-				service.intercept(
+				await service.intercept(
 					createHttpContextForRequest(
 						createMock<KordisRequest>({
 							path: '/health-check',
