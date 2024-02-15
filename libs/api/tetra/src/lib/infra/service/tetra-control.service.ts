@@ -31,7 +31,7 @@ export class TetraControlService implements TetraService {
 			Typ: 195,
 			Text: message,
 			noreply: noReply ? 1 : 0,
-			userkey: config.userKey,
+			userkey: config.tetraControlApiUserKey,
 		};
 
 		if (prio) {
@@ -39,7 +39,7 @@ export class TetraControlService implements TetraService {
 		}
 
 		const queryParams = querystring.encode(params);
-		const url = `${config.url}/API/SDS?${queryParams}`;
+		const url = `${config.tetraControlApiUrl}/API/SDS?${queryParams}`;
 
 		await firstValueFrom(this.httpService.get(url));
 	}
@@ -56,11 +56,11 @@ export class TetraControlService implements TetraService {
 			Ziel: issi,
 			Text: message,
 			Flash: isFlash ? 1 : 0,
-			userkey: config.userKey,
+			userkey: config.tetraControlApiUserKey,
 		};
 
 		const queryParams = querystring.encode(params);
-		const url = `${config.url}/API/SDS?${queryParams}`;
+		const url = `${config.tetraControlApiUrl}/API/SDS?${queryParams}`;
 
 		await firstValueFrom(this.httpService.get(url));
 	}
@@ -75,11 +75,11 @@ export class TetraControlService implements TetraService {
 		const params: Record<string, string | number> = {
 			issi,
 			status: this.convertFmsStatusToTetraStatus(status),
-			userkey: config.userKey,
+			userkey: config.tetraControlApiUserKey,
 		};
 
 		const queryParams = querystring.encode(params);
-		const url = `${config.url}/API/ISSIUPD?${queryParams}`;
+		const url = `${config.tetraControlApiUrl}/API/ISSIUPD?${queryParams}`;
 
 		await firstValueFrom(this.httpService.get(url));
 	}

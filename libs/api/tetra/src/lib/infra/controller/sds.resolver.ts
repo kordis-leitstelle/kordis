@@ -2,7 +2,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { User } from '@kordis/api/auth';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { SendTetraSDSCommand } from '../../core/command/send-tetra-sds.command';
 import { SdsNotAbleToSendException } from '../../core/exception/sds-not-able-to-send.exception';

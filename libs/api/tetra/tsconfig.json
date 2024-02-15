@@ -8,15 +8,16 @@
     "noImplicitReturns": true,
     "strictPropertyInitialization": false,
     "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true
   },
   "files": [],
   "include": [],
   "references": [
     {
-      "path": "./tsconfig.lib.json",
+      "path": "./tsconfig.lib.json"
     },
     {
-      "path": "./tsconfig.spec.json",
-    },
-  ],
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

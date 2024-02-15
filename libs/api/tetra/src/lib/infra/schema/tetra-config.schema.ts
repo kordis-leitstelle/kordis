@@ -7,10 +7,10 @@ export class TetraConfigDocument extends Document {
 	orgId: string;
 
 	@Prop()
-	url: string;
+	tetraControlApiUrl: string;
 
 	@Prop()
-	userKey: string;
+	tetraControlApiUserKey: string;
 
 	@Prop({ index: true })
 	webhookAccessKey: string;

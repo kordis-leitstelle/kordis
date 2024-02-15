@@ -2,7 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CommandBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { SendTetraSDSCommand } from '../../core/command/send-tetra-sds.command';
 import { SdsNotAbleToSendException } from '../../core/exception/sds-not-able-to-send.exception';

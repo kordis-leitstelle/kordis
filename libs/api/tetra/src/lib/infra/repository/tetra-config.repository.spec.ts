@@ -51,8 +51,8 @@ describe('TetraConfigRepository', () => {
 			const orgId = 'orgId';
 			const expected: TetraConfig = new TetraConfig();
 			expected.orgId = orgId;
-			expected.url = 'url';
-			expected.userKey = 'userKey';
+			expected.tetraControlApiUrl = 'url';
+			expected.tetraControlApiUserKey = 'userKey';
 			expected.webhookAccessKey = 'webhook access key';
 
 			mockModelMethodResult(tetraConfigModel, expected, 'findOne');
@@ -76,8 +76,8 @@ describe('TetraConfigRepository', () => {
 			const accessKey = 'accessKey';
 			const expected: TetraConfig = new TetraConfig();
 			expected.orgId = 'orgId';
-			expected.url = 'url';
-			expected.userKey = 'userKey';
+			expected.tetraControlApiUrl = 'url';
+			expected.tetraControlApiUserKey = 'userKey';
 			expected.webhookAccessKey = accessKey;
 
 			mockModelMethodResult(tetraConfigModel, expected, 'findOne');

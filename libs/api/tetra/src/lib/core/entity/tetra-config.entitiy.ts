@@ -1,6 +1,6 @@
 export class TetraConfig {
 	orgId: string;
-	url: string;
-	userKey: string;
+	tetraControlApiUrl: string;
+	tetraControlApiUserKey: string;
 	webhookAccessKey: string;
 }

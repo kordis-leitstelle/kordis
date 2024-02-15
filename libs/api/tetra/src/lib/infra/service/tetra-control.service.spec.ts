@@ -3,7 +3,6 @@ import { HttpService } from '@nestjs/axios';
 import { Test } from '@nestjs/testing';
 import { of } from 'rxjs';
 
-import { TetraConfig } from '../../core/entity/tetra-config.entitiy';
 import {
 	TETRA_CONFIG_REPOSITORY,
 	TetraConfigRepository,
@@ -23,18 +22,18 @@ describe('TetraControlService', () => {
 					useValue: createMock<TetraConfigRepository>({
 						findByOrgId: () =>
 							Promise.resolve({
-								strategyConfig: {
-									url: 'https://tetra-control-service.com',
-									userKey: 'mock_key',
-								},
-							} as TetraConfig),
+								orgId: 'orgId',
+								webhookAccessKey: 'accessKey',
+								tetraControlApiUrl: 'https://tetra-control-service.com',
+								tetraControlApiUserKey: 'mock_key',
+							}),
 						findByWebhookAccessKey: () =>
 							Promise.resolve({
-								strategyConfig: {
-									url: 'https://tetra-control-service.com',
-									userKey: 'mock_key',
-								},
-							} as TetraConfig),
+								orgId: 'orgId',
+								webhookAccessKey: 'accessKey',
+								tetraControlApiUrl: 'https://tetra-control-service.com',
+								tetraControlApiUserKey: 'mock_key',
+							}),
 					}),
 				},
 				{

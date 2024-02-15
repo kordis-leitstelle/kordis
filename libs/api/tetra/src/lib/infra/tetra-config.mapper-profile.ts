@@ -23,12 +23,12 @@ export class TetraConfigMapperProfile extends AutomapperProfile {
 					mapFrom((s) => s.orgId),
 				),
 				forMember(
-					(d) => d.url,
-					mapFrom((s) => s.url),
+					(d) => d.tetraControlApiUrl,
+					mapFrom((s) => s.tetraControlApiUrl),
 				),
 				forMember(
-					(d) => d.userKey,
-					mapFrom((s) => s.userKey),
+					(d) => d.tetraControlApiUserKey,
+					mapFrom((s) => s.tetraControlApiUserKey),
 				),
 				forMember(
 					(d) => d.webhookAccessKey,
