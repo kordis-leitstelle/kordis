@@ -7,7 +7,7 @@ import {
 	createGqlContextForRequest,
 	createHttpContextForRequest,
 } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { VerifyAuthUserStrategy } from '../auth-strategies/verify-auth-user.strategy';
 import { AuthInterceptor } from './auth.interceptor';
