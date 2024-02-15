@@ -1,0 +1,6 @@
+overwrite: true
+schema: 'dist/schema.gql'
+generates:
+  libs/shared/model/src/lib/gql.model.ts:
+    plugins:
+      - typescript

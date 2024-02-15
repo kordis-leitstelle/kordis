@@ -6,7 +6,7 @@ import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { KordisRequest } from '@kordis/api/shared';
 import { createGqlContextForRequest } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { SentryOTelUserContextInterceptor } from './sentry-otel-user-context.interceptor';
 
