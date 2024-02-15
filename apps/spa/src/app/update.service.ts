@@ -7,6 +7,7 @@ import { filter } from 'rxjs';
 })
 export class UpdateService {
 	constructor(swUpdate: SwUpdate) {
+		// todo: create an interval to check for updates
 		swUpdate.versionUpdates
 			.pipe(
 				filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
