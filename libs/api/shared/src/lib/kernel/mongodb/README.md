@@ -15,8 +15,11 @@ You can use the [`MongoEncryptionService`](./mongo-encryption.service.ts) to
 encrypt the value:
 
 ```ts
-const encryptedResult = await mongoEncryptionService.encrypt(unencrptedValue, 'Random');
-await model.insert({ someKey; encryptedResult });
+const encryptedResult = await mongoEncryptionService.encrypt(
+	unencrptedValue,
+	'Random',
+);
+await model.insert({ someKey: encryptedResult });
 ```
 
 Pass `Random` as encryption algo to receive a different value for every
