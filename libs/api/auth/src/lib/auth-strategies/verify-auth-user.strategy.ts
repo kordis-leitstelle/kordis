@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 export abstract class VerifyAuthUserStrategy {
 	/*

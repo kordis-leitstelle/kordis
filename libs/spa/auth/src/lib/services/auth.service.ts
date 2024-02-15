@@ -8,7 +8,7 @@ import {
 	shareReplay,
 } from 'rxjs';
 
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { AuthService } from './auth-service';
 

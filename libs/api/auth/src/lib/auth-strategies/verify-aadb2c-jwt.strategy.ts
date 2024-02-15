@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
 import { KordisLogger } from '@kordis/api/observability';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { VerifyAuthUserStrategy } from './verify-auth-user.strategy';
 

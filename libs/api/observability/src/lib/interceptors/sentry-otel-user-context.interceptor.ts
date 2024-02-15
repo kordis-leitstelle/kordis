@@ -10,7 +10,7 @@ import * as Sentry from '@sentry/node';
 import { Observable } from 'rxjs';
 
 import { KordisGqlContext, KordisRequest } from '@kordis/api/shared';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 @Injectable()
 export class SentryOTelUserContextInterceptor implements NestInterceptor {
