@@ -1,35 +1,10 @@
-name: 'build-and-deploy-api'
-description: 'Builds API Project for Production and Deploys it to a given WA Slot'
+name: 'build-and-publish-api'
+description: 'Builds API project and publish its image'
 
 inputs:
   releaseVersion:
     required: true
     description: "Release Version (Commit or Tag)"
-  slot:
-    required: true
-    description: "Slot Identifier"
-  mongoUri:
-    required: true
-    description: "Mongo Connection URI"
-  mongoEncrKMSProvider:
-    required: false
-    description: "MongoDB Encryption Key Management Provider"
-    default: "local"
-  mongoEncrKVNamespace:
-    required: false
-    description: "MongoDB Encryption Key Vault Namespace"
-  mongoEncrKMSProviderCredentials:
-    required: false
-    description: "MongoDB Encryption Key Management Provider Credentials"
-  mongoEncrMasterKey:
-    required: false
-    description: "MongoDB Encryption Master Key"
-  sentryKey:
-    required: true
-    description: "Sentry DSN Key"
-  sentryAuthToken:
-    required: true
-    description: "Sentry Auth Token"
   containerRegistryUrl:
     required: true
     description: "Container registry url"
@@ -39,10 +14,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
-outputs:
-  url:
-    description: "API URL"
-    value: ${{ steps.wa-deployment.outputs.url }}
+  containerTags:
+    required: true
+    description: "Container tag or csv delimited tags"
 
 runs:
   using: "composite"
@@ -55,6 +29,11 @@ runs:
         registry: ${{ inputs.containerRegistryUrl }}
         username: ${{ inputs.containerRegistryUsername }}
         password: ${{ inputs.containerRegistryPassword }}
+    - name: Create Environment
+      run: envsubst < apps/api/src/app/environment.template > apps/api/src/app/environment.ts
+      shell: bash
+      env:
+        RELEASE_VERSION: ${{ inputs.releaseVersion }}
     - name: Build app
       run: |
         npx nx build api --prod
@@ -68,10 +47,9 @@ runs:
         context: ./
         file: ./apps/api/Dockerfile
         build-args: |
-          NODE_VERSION=${{ steps.node-version-check.outputs.node-version}}
+          NODE_VERSION=${{ steps.node-version-check.outputs.node-version }}
         push: true
-        tags: |
-          ghcr.io/kordis-leitstelle/kordis-api:${{ inputs.releaseVersion}}
+        tags: ${{ inputs.containerTags }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Set environment for deployment
@@ -81,10 +59,6 @@ runs:
         ENVIRONMENT_NAME: ${{ inputs.slot }}
         RELEASE_VERSION: ${{ inputs.releaseVersion }}
         SENTRY_KEY: ${{ inputs.sentryKey }}
-        MONGODB_ENCR_KMS_PROVIDER: ${{ inputs.mongoEncrKMSProvider }}
-        MONGODB_ENCR_KV_NAMESPACE: ${{ inputs.mongoEncrKVNamespace }}
-        MONGODB_ENCR_KMS_PROVIDER_CREDS: ${{ inputs.mongoEncrKMSProviderCredentials }}
-        MONGODB_ENCR_MASTER_KEY: ${{ inputs.mongoEncrMasterKey }}
       shell: bash
     - name: Deploy API
       id: wa-deployment

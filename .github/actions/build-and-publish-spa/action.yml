@@ -1,0 +1,53 @@
+name: 'build-and-publish-spa'
+description: 'Builds SPA project and publish its image'
+
+inputs:
+  releaseVersion:
+    required: true
+    description: "Release Version (Commit or Tag)"
+  containerRegistryUrl:
+    required: true
+    description: "Container registry url"
+  containerRegistryUsername:
+    required: true
+    description: "Container registry username"
+  containerRegistryPassword:
+    required: true
+    description: "Container registry password"
+  containerTags:
+    required: true
+    description: "Container tag or csv delimited tags"
+outputs:
+  url:
+    description: "SPA URL"
+    value: ${{ steps.spa-deployment.outputs.static_web_app_url  }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ inputs.containerRegistryUrl }}
+        username: ${{ inputs.containerRegistryUsername }}
+        password: ${{ inputs.containerRegistryPassword }}
+    - run: envsubst < apps/spa/src/environments/environment.template > apps/spa/src/environments/environment.ts
+      shell: bash
+      env:
+        IS_PRODUCTION: true
+        RELEASE_VERSION: ${{ inputs.releaseVersion }}
+    - run: |
+        npx nx build spa --prod
+        npx --yes generate-license-file@3.0.1 --input package.json --output dist/apps/spa/browser/assets/third-party-licenses.txt --ci
+      shell: bash
+    - name: Build and push image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./
+        file: ./apps/spa/docker/Dockerfile
+        push: true
+        tags: ${{ inputs.containerTags }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

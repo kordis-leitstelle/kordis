@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';
@@ -21,36 +21,50 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 	selector: 'krd-auth',
 	styles: [
 		`
-			button {
-				@apply rounded bg-blue-500 px-4 py-2 text-white;
-			}
+			.container {
+				max-width: 500px;
+				padding: 20px;
 
-			input {
-				@apply rounded-md border p-1.5;
+				> div {
+					display: flex;
+				}
+
+				> form {
+					display: flex;
+					margin-top: 1.25rem;
+					flex-direction: column;
+
+					> button {
+						margin-top: 0.5rem;
+					}
+				}
 			}
 		`,
 	],
 	template: `
-		<div style="max-width: 500px; padding: 20px;">
-			<div class="flex">
-				<button (click)="loginAsTestuser(0)" data-username="testuser">
-					Login as <b>testuser</b>
+		<div class="container">
+			<div>
+				<button nz-button (click)="loginAsTestuser(0)" data-username="testuser">
+					Login as&nbsp; <b>testuser</b>
 				</button>
 			</div>
-			<form
-				[formGroup]="customClaimsForm"
-				(ngSubmit)="loginWithCustomClaims()"
-				class="mt-5 flex flex-col"
-			>
+			<form [formGroup]="customClaimsForm" (ngSubmit)="loginWithCustomClaims()">
 				<label for="id">ID</label>
-				<input id="id" type="text" formControlName="id" />
+				<input nz-input id="id" type="text" formControlName="id" />
 				<label for="firstName">First name</label>
-				<input id="firstName" type="text" formControlName="firstName" />
+				<input
+					nz-input
+					id="firstName"
+					type="text"
+					formControlName="firstName"
+				/>
 				<label for="lastName">Last name</label>
-				<input id="lastName" type="text" formControlName="lastName" />
+				<input nz-input id="lastName" type="text" formControlName="lastName" />
 				<label for="email">Email</label>
-				<input id="email" type="text" formControlName="email" />
-				<button class="mt-2" type="submit">Login as Custom user</button>
+				<input nz-input id="email" type="text" formControlName="email" />
+				<button nz-button nzSize="large" nzType="primary" type="submit">
+					Login as Custom user
+				</button>
 			</form>
 		</div>
 	`,

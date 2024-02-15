@@ -5,7 +5,7 @@ import {
 	createGqlContextForRequest,
 	createParamDecoratorFactory,
 } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 import { User } from './user.decorator';
 

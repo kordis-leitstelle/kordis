@@ -1,7 +1,7 @@
 {
-	"name": "shared-auth",
+	"name": "shared-model",
 	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/shared/auth/src",
+	"sourceRoot": "libs/shared/model/src",
 	"projectType": "library",
 	"targets": {
 		"lint": {

@@ -6,36 +6,34 @@
 	"prefix": "kordis",
 	"targets": {
 		"build": {
-			"executor": "@angular-devkit/build-angular:browser",
+			"executor": "@angular-devkit/build-angular:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/apps/spa",
 				"index": "apps/spa/src/index.html",
-				"main": "apps/spa/src/main.ts",
+				"browser": "apps/spa/src/main.ts",
 				"polyfills": ["zone.js"],
 				"tsConfig": "apps/spa/tsconfig.app.json",
 				"inlineStyleLanguage": "css",
 				"assets": [
 					"apps/spa/src/favicon.ico",
-					"apps/spa/src/assets",
-					"apps/spa/src/staticwebapp.config.json"
+					"apps/spa/src/manifest.webmanifest",
+					"apps/spa/src/assets"
 				],
-				"styles": ["apps/spa/src/styles.css"],
-				"scripts": []
+				"styles": [
+					"./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+					"apps/spa/src/styles.css"
+				],
+				"scripts": [],
+				"serviceWorker": "apps/spa/ngsw-config.json"
 			},
 			"configurations": {
 				"production": {
-					"fileReplacements": [
-						{
-							"replace": "apps/spa/src/environments/environment.ts",
-							"with": "apps/spa/src/environments/environment.prod.ts"
-						}
-					],
 					"budgets": [
 						{
 							"type": "initial",
-							"maximumWarning": "500kb",
-							"maximumError": "1mb"
+							"maximumWarning": "1.5mb",
+							"maximumError": "2mb"
 						},
 						{
 							"type": "anyComponentStyle",
@@ -46,12 +44,9 @@
 					"outputHashing": "all"
 				},
 				"development": {
-					"buildOptimizer": false,
 					"optimization": false,
-					"vendorChunk": true,
 					"extractLicenses": false,
-					"sourceMap": true,
-					"namedChunks": true
+					"sourceMap": true
 				}
 			},
 			"defaultConfiguration": "production"
@@ -63,7 +58,10 @@
 					"buildTarget": "spa:build:production"
 				},
 				"development": {
-					"buildTarget": "spa:build:development"
+					"buildTarget": "spa:build:development",
+					"headers": {
+						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; object-src 'none'; base-uri 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'nonce-csp_nonce'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
+					}
 				}
 			},
 			"defaultConfiguration": "development"
