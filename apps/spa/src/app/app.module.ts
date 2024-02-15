@@ -1,9 +1,10 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import de from '@angular/common/locales/de';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
@@ -40,6 +41,12 @@ registerLocaleData(de);
 					environment.releaseVersion,
 				)
 			: NoopObservabilityModule.forRoot(),
+		ServiceWorkerModule.register('ngsw-worker.js', {
+			enabled: !isDevMode(),
+			// Register the ServiceWorker as soon as the application is stable
+			// or after 30 seconds (whichever comes first).
+			registrationStrategy: 'registerWhenStable:30000',
+		}),
 	],
 	providers: [
 		{
