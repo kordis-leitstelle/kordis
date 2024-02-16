@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NEVER, switchMap } from 'rxjs';
 
+import { AUTH_SERVICE } from '@kordis/spa/auth';
+import { GraphqlService, gql } from '@kordis/spa/graphql';
 import { TraceComponent } from '@kordis/spa/observability';
 
 @Component({
@@ -8,4 +12,31 @@ import { TraceComponent } from '@kordis/spa/observability';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @TraceComponent()
-export class AppComponent {}
+export class AppComponent {
+	private readonly authService = inject(AUTH_SERVICE);
+	private readonly gqlService = inject(GraphqlService);
+
+	constructor() {
+		this.logoutOnUserDeactivated();
+	}
+
+	logoutOnUserDeactivated(): void {
+		this.authService.isAuthenticated$
+			.pipe(
+				switchMap((isAuthenticated) => {
+					if (!isAuthenticated) {
+						return NEVER;
+					}
+					return this.gqlService.subscribe$(gql`
+						subscription {
+							currentUserDeactivated {
+								userId
+							}
+						}
+					`);
+				}),
+				takeUntilDestroyed(),
+			)
+			.subscribe(() => this.authService.logout());
+	}
+}

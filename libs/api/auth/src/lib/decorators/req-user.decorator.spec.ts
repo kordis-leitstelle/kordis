@@ -5,24 +5,25 @@ import {
 	createGqlContextForRequest,
 	createParamDecoratorFactory,
 } from '@kordis/api/test-helpers';
-import { AuthUser } from '@kordis/shared/model';
+import { AuthUser, Role } from '@kordis/shared/model';
 
-import { User } from './user.decorator';
+import { RequestUser } from './req-user.decorator';
 
-describe('User Decorator', () => {
+describe('Request User Decorator', () => {
 	it('should return user from request', () => {
 		const user: AuthUser = {
 			id: 'id123',
 			email: 'someemail@gmail.com',
 			firstName: 'somefirstname',
 			lastName: 'somelastname',
-			organization: 'someorganization',
+			role: Role.USER,
+			organizationId: 'org123',
 		};
 		const req = createMock<KordisRequest>({
 			user,
 		});
 		const context = createGqlContextForRequest(req);
-		const factory = createParamDecoratorFactory(User);
+		const factory = createParamDecoratorFactory(RequestUser);
 		const result = factory(null, context);
 		expect(result).toEqual(user);
 	});

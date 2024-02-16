@@ -2,20 +2,11 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthUser } from '@kordis/shared/model';
+import { AuthUser, Role } from '@kordis/shared/model';
+import { TEST_USERS } from '@kordis/shared/test-helpers';
 
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';
-
-const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
-	{
-		firstName: 'Test',
-		lastName: 'User',
-		email: 'testuser@test.com',
-		id: 'testuser@kordis-leitstelle.de',
-		organization: 'testorganization',
-	},
-]);
 
 @Component({
 	selector: 'krd-auth',
@@ -27,6 +18,7 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 
 				> div {
 					display: flex;
+					gap: 5px;
 				}
 
 				> form {
@@ -44,13 +36,26 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 	template: `
 		<div class="container">
 			<div>
-				<button nz-button (click)="loginAsTestuser(0)" data-username="testuser">
-					Login as&nbsp; <b>testuser</b>
-				</button>
+				@for (username of usernames; track i; let i = $index) {
+					<button
+						nz-button
+						(click)="loginAsTestuser(i)"
+						[attr.data-username]="username"
+					>
+						Login as <b> {{ username }}</b>
+					</button>
+				}
 			</div>
 			<form [formGroup]="customClaimsForm" (ngSubmit)="loginWithCustomClaims()">
 				<label for="id">ID</label>
 				<input nz-input id="id" type="text" formControlName="id" />
+				<label for="orgId">Organization ID</label>
+				<input
+					nz-input
+					id="orgId"
+					type="text"
+					formControlName="organizationId"
+				/>
 				<label for="firstName">First name</label>
 				<input
 					nz-input
@@ -62,6 +67,12 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 				<input nz-input id="lastName" type="text" formControlName="lastName" />
 				<label for="email">Email</label>
 				<input nz-input id="email" type="text" formControlName="email" />
+				<label>Role</label>
+				<nz-select formControlName="role">
+					<nz-option nzValue="user" nzLabel="User" />
+					<nz-option nzValue="admin" nzLabel="Admin" />
+					<nz-option nzValue="organization_admin" nzLabel="Org Admin" />
+				</nz-select>
 				<button nz-button nzSize="large" nzType="primary" type="submit">
 					Login as Custom user
 				</button>
@@ -71,12 +82,16 @@ const TEST_USERS: Readonly<AuthUser[]> = Object.freeze([
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevLoginComponent {
-	customClaimsForm = this.fb.group({
+	readonly customClaimsForm = this.fb.nonNullable.group({
 		id: ['', Validators.required],
 		firstName: ['', Validators.required],
 		lastName: ['', Validators.required],
 		email: ['', Validators.required],
+		organizationId: ['', Validators.required],
+		role: [Role.USER, Validators.required],
 	});
+
+	readonly usernames = TEST_USERS.map((u) => u.userName);
 
 	constructor(
 		@Inject(AUTH_SERVICE) private readonly devAuthService: DevAuthService,

@@ -15,16 +15,16 @@ async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule, { cors: true, bufferLogs: true });
 	app.useLogger(app.get(Logger));
 	app.useGlobalPipes(new ValidationPipe({
-		exceptionFactory: (errors) => PresentableValidationException.fromClassValidationErrors(errors),
-		})
-	);
+			exceptionFactory: (errors) => PresentableValidationException.fromClassValidationErrors(errors)
+		}
+	));
 	const config = app.get(ConfigService);
 	const envPort = config.get('PORT');
 
 	const port = envPort ? +envPort : 3000;
 	await app.listen(port);
 
-	Logger.log(`🚀 Application is running on: http://localhost:${port}}`);
+	Logger.log(`🚀 Kordis is running on: http://localhost:${port}}`);
 }
 
 bootstrap();

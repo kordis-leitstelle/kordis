@@ -12,11 +12,11 @@ const OBSERVABILITY_MODULES = Object.freeze({
 @Module({})
 export class ObservabilityModule {
 	static forRoot(
-		observabilityProvider: keyof typeof OBSERVABILITY_MODULES,
+		observabilityStrategy: keyof typeof OBSERVABILITY_MODULES,
 	): DynamicModule {
 		return {
 			module: ObservabilityModule,
-			imports: [OBSERVABILITY_MODULES[observabilityProvider]],
+			imports: [OBSERVABILITY_MODULES[observabilityStrategy]],
 			providers: [
 				{
 					provide: Logger,

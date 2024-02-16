@@ -21,8 +21,8 @@ import { NzContentComponent, NzLayoutComponent } from 'ng-zorro-antd/layout';
 import { switchMap } from 'rxjs';
 
 import { AuthComponent } from './components/auth.component';
+import { AADB2COAuthService } from './services/aadb2c-oauth.service';
 import { AUTH_SERVICE } from './services/auth-service';
-import { ProdAuthService } from './services/auth.service';
 
 @NgModule({
 	imports: [
@@ -70,7 +70,7 @@ export class AuthModule {
 			providers: [
 				{
 					provide: AUTH_SERVICE,
-					useClass: ProdAuthService,
+					useClass: AADB2COAuthService,
 				},
 				{
 					provide: OAuthStorage,

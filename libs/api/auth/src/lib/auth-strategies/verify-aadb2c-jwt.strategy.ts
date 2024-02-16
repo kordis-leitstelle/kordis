@@ -85,7 +85,8 @@ export class VerifyAADB2CJWTStrategy extends VerifyAuthUserStrategy {
 			email: payload['emails'][0],
 			firstName: payload['given_name'],
 			lastName: payload['family_name'],
-			organization: payload['organization'],
+			organizationId: payload['organizationId'],
+			role: payload['role'],
 		};
 	}
 }

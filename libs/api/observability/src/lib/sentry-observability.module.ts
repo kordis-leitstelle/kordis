@@ -27,6 +27,7 @@ import { wrapProvidersWithTracingSpans } from './trace-wrapper';
 			useClass: SentryOTelUserContextInterceptor,
 		},
 	],
+	exports: [KORDIS_LOGGER_SERVICE],
 })
 export class SentryObservabilityModule implements OnModuleInit {
 	private readonly logger: KordisLogger = new Logger(

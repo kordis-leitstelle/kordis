@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
-import { GraphQLSubscriptionService } from './graphql/subscriptions/graphql-subscription.service';
+import { GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 
+@Global()
 @Module({
 	imports: [CqrsModule],
 	providers: [
@@ -16,6 +17,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
+		CqrsModule,
 	],
 })
 export class SharedKernel {}

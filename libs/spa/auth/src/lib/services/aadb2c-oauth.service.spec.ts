@@ -3,14 +3,14 @@ import { createServiceFactory, mockProvider } from '@ngneat/spectator/jest';
 import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
 import { Subject, firstValueFrom } from 'rxjs';
 
-import { ProdAuthService } from './auth.service';
+import { AADB2COAuthService } from './aadb2c-oauth.service';
 
-describe('AuthService', () => {
-	let spectator: SpectatorService<ProdAuthService>;
+describe('AADB2COAuthService', () => {
+	let spectator: SpectatorService<AADB2COAuthService>;
 	const mockEventSubject$ = new Subject<OAuthEvent>();
 
 	const createService = createServiceFactory({
-		service: ProdAuthService,
+		service: AADB2COAuthService,
 		providers: [
 			mockProvider(OAuthService, {
 				// eslint-disable-next-line rxjs/finnish,rxjs/suffix-subjects
@@ -27,6 +27,14 @@ describe('AuthService', () => {
 		await expect(
 			firstValueFrom(spectator.service.isAuthenticated$),
 		).resolves.toBe(false);
+	});
+
+	it('should return access token', async () => {
+		const mockOauth = spectator.inject(OAuthService);
+		const token = 'test-token';
+		jest.spyOn(mockOauth, 'getAccessToken').mockReturnValue(token);
+
+		await expect(spectator.service.getAccessToken()).toBe(token);
 	});
 
 	it('should not have claims when unauthorized', async () => {

@@ -20,8 +20,11 @@
 			"@kordis/api/organization": ["libs/api/organization/src/index.ts"],
 			"@kordis/api/shared": ["libs/api/shared/src/index.ts"],
 			"@kordis/api/test-helpers": ["libs/api/test-helpers/src/index.ts"],
+			"@kordis/api/user": ["libs/api/user/src/index.ts"],
 			"@kordis/shared/model": ["libs/shared/model/src/index.ts"],
+			"@kordis/shared/test-helpers": ["libs/shared/test-helpers/src/index.ts"],
 			"@kordis/spa/auth": ["libs/spa/auth/src/index.ts"],
+			"@kordis/spa/graphql": ["libs/spa/graphql/src/index.ts"],
 			"@kordis/spa/observability": ["libs/spa/observability/src/index.ts"]
 		}
 	},

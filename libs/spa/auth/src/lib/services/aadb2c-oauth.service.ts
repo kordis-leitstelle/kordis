@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import {
 	BehaviorSubject,
@@ -8,19 +9,23 @@ import {
 	shareReplay,
 } from 'rxjs';
 
-import { AuthUser } from '@kordis/shared/model';
+import { AuthUser, Role } from '@kordis/shared/model';
 
 import { AuthService } from './auth-service';
 
 @Injectable()
-export class ProdAuthService implements AuthService {
+export class AADB2COAuthService implements AuthService {
 	readonly user$: Observable<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
+
 	private readonly isAuthenticatedSubject$ = new BehaviorSubject<boolean>(
 		false,
 	);
 
-	constructor(private readonly oauthService: OAuthService) {
+	constructor(
+		private readonly oauthService: OAuthService,
+		private readonly router: Router,
+	) {
 		this.isAuthenticated$ = this.isAuthenticatedSubject$
 			.asObservable()
 			.pipe(distinctUntilChanged());
@@ -47,7 +52,8 @@ export class ProdAuthService implements AuthService {
 					firstName: claims['given_name'],
 					lastName: claims['family_name'],
 					email: claims['emails']?.[0],
-					organization: claims['extension_Organisation'],
+					role: claims['extension_Role'] as Role,
+					organizationId: claims['extension_OrganizationId'],
 				};
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),
@@ -60,5 +66,10 @@ export class ProdAuthService implements AuthService {
 
 	logout(): void {
 		this.oauthService.logOut();
+		void this.router.navigate(['/auth']);
+	}
+
+	getAccessToken(): string {
+		return this.oauthService.getAccessToken();
 	}
 }

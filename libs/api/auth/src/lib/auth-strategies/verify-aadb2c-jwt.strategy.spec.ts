@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import jwt from 'jsonwebtoken';
 
 import { KordisRequest } from '@kordis/api/shared';
+import { Role } from '@kordis/shared/model';
 
 import { VerifyAADB2CJWTStrategy } from './verify-aadb2c-jwt.strategy';
 
@@ -64,7 +65,8 @@ describe('VerifyAADB2CJWTStrategy', () => {
 						given_name: 'foo',
 						family_name: 'bar',
 						emails: ['foo@bar.de'],
-						organization: 'testorg',
+						organizationId: 'testorg',
+						role: 'admin',
 					},
 				}) as any,
 		);
@@ -77,7 +79,8 @@ describe('VerifyAADB2CJWTStrategy', () => {
 			email: 'foo@bar.de',
 			firstName: 'foo',
 			lastName: 'bar',
-			organization: 'testorg',
+			organizationId: 'testorg',
+			role: Role.ADMIN,
 		});
 
 		expect(verifySpy).toHaveBeenCalledWith(
