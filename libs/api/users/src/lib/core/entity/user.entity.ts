@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Role } from '@kordis/shared/auth';
 
 @ObjectType()
-export class User {
+export class UserEntity {
 	@Field()
 	id: string;
 

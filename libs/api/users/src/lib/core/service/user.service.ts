@@ -1,6 +1,6 @@
 import { Role } from '@kordis/shared/auth';
 
-import { User } from '../entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { UserNotFoundException } from '../exception/user-not-found.exception';
 
 export const USER_SERVICE = Symbol('USER_SERVICE');
@@ -13,32 +13,42 @@ export abstract class BaseUserService implements UserService {
 		email: string,
 		role: Role,
 		orgId: string,
-	): Promise<User>;
+	): Promise<UserEntity>;
 
-	abstract changeEmail(userId: string, email: string): Promise<void>;
+	abstract updateEmail(
+		orgId: string,
+		userId: string,
+		email: string,
+	): Promise<void>;
 
-	abstract changeRole(userId: string, role: Role): Promise<void>;
+	abstract deactivateUser(orgId: string, userId: string): Promise<void>;
 
-	abstract deactivateUser(userId: string): Promise<void>;
+	abstract reactivateUser(orgId: string, userId: string): Promise<void>;
 
-	abstract getOrganizationUsers(orgId: string): Promise<User[]>;
+	abstract updateRole(orgId: string, userId: string, role: Role): Promise<void>;
 
-	abstract getUser(id: string): Promise<User | null>;
+	abstract getOrganizationUsers(orgId: string): Promise<UserEntity[]>;
 
-	abstract reactivateUser(userId: string): Promise<void>;
+	abstract getUser(orgId: string, id: string): Promise<UserEntity | null>;
 
-	abstract getLoginHistory(id: string, amount: number): Promise<Date[]>;
+	abstract getLoginHistory(
+		orgId: string,
+		id: string,
+		amount: number,
+	): Promise<Date[]>;
 
-	async assertOrgMembership(
-		requestUserOrgId: string,
+	protected async assertOrgMembership(
+		orgId: string,
 		userId: string,
 	): Promise<void> {
 		// if user is not in the organisation
-		const user = await this.getUser(userId);
-		if (!user || requestUserOrgId !== user.organizationId) {
+		const user = await this.getUserById(userId);
+		if (!user || orgId !== user.organizationId) {
 			throw new UserNotFoundException();
 		}
 	}
+
+	protected abstract getUserById(id: string): Promise<UserEntity | null>;
 }
 
 export interface UserService {
@@ -49,24 +59,19 @@ export interface UserService {
 		email: string,
 		role: Role,
 		orgId: string,
-	): Promise<User>;
+	): Promise<UserEntity>;
 
-	changeEmail(userId: string, email: string): Promise<void>;
+	updateEmail(orgId: string, userId: string, email: string): Promise<void>;
 
-	deactivateUser(userId: string): Promise<void>;
+	deactivateUser(orgId: string, userId: string): Promise<void>;
 
-	reactivateUser(userId: string): Promise<void>;
+	reactivateUser(orgId: string, userId: string): Promise<void>;
 
-	changeRole(userId: string, role: Role): Promise<void>;
+	updateRole(orgId: string, userId: string, role: Role): Promise<void>;
 
-	getOrganizationUsers(orgId: string): Promise<User[]>;
+	getOrganizationUsers(orgId: string): Promise<UserEntity[]>;
 
-	getUser(id: string): Promise<User | null>;
+	getUser(orgId: string, id: string): Promise<UserEntity | null>;
 
-	getLoginHistory(id: string, amount: number): Promise<Date[]>;
-
-	/*
-	 * Checks if the user is modifying a user in its organization. Otherwise, throws an error.
-	 */
-	assertOrgMembership(requestUserOrgId: string, userId: string): Promise<void>;
+	getLoginHistory(orgId: string, id: string, amount: number): Promise<Date[]>;
 }

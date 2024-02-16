@@ -4,7 +4,8 @@ import { randomUUID } from 'crypto';
 import { Role } from '@kordis/shared/auth';
 import { TEST_USERS } from '@kordis/shared/test-helpers';
 
-import { User } from '../../core/entity/user.entity';
+import { UserEntity } from '../../core/entity/user.entity';
+import { UserNotFoundException } from '../../core/exception/user-not-found.exception';
 import { BaseUserService } from '../../core/service/user.service';
 
 /*
@@ -12,10 +13,12 @@ import { BaseUserService } from '../../core/service/user.service';
  */
 @Injectable()
 export class DevUserService extends BaseUserService {
-	private readonly users: User[] = [...TEST_USERS];
+	private readonly users: UserEntity[] = [...structuredClone(TEST_USERS)];
 
-	changeEmail(userId: string, email: string): Promise<void> {
-		const user = this.users.find((u) => u.id === userId);
+	updateEmail(orgId: string, userId: string, email: string): Promise<void> {
+		const user = this.users.find(
+			(u) => u.id === userId && u.organizationId === orgId,
+		);
 		if (user) {
 			user.email = email;
 		}
@@ -29,8 +32,8 @@ export class DevUserService extends BaseUserService {
 		email: string,
 		role: Role,
 		organizationId: string,
-	): Promise<User> {
-		const user: User = {
+	): Promise<UserEntity> {
+		const user: UserEntity = {
 			deactivated: false,
 			id: randomUUID(),
 			email,
@@ -46,41 +49,58 @@ export class DevUserService extends BaseUserService {
 		return Promise.resolve(user);
 	}
 
-	deactivateUser(userId: string): Promise<void> {
-		const user = this.users.find((u) => u.id === userId);
+	deactivateUser(orgId: string, userId: string): Promise<void> {
+		const user = this.users.find(
+			(u) => u.id === userId && u.organizationId === orgId,
+		);
 		if (user) {
 			user.deactivated = true;
 		}
 		return Promise.resolve();
 	}
 
-	reactivateUser(userId: string): Promise<void> {
-		const user = this.users.find((u) => u.id === userId);
+	reactivateUser(orgId: string, userId: string): Promise<void> {
+		const user = this.users.find(
+			(u) => u.id === userId && u.organizationId === orgId,
+		);
 		if (user) {
 			user.deactivated = false;
 		}
 		return Promise.resolve();
 	}
 
-	changeRole(userId: string, role: Role): Promise<void> {
-		const user = this.users.find((u) => u.id === userId);
+	updateRole(orgId: string, userId: string, role: Role): Promise<void> {
+		const user = this.users.find(
+			(u) => u.id === userId && u.organizationId === orgId,
+		);
 		if (user) {
 			user.role = role;
 		}
 		return Promise.resolve();
 	}
 
-	getOrganizationUsers(orgId: string): Promise<User[]> {
+	getOrganizationUsers(orgId: string): Promise<UserEntity[]> {
 		return Promise.resolve(
 			this.users.filter((u) => u.organizationId === orgId),
 		);
 	}
 
-	getUser(id: string): Promise<User | null> {
-		return Promise.resolve(this.users.find((u) => u.id === id) ?? null);
+	getUser(orgId: string, id: string): Promise<UserEntity> {
+		const user = this.users.find(
+			(u) => u.id === id && u.organizationId === orgId,
+		);
+		if (user) {
+			return Promise.resolve(user);
+		} else {
+			throw new UserNotFoundException();
+		}
 	}
 
 	getLoginHistory(): Promise<Date[]> {
 		return Promise.resolve([]);
+	}
+
+	protected getUserById(id: string): Promise<UserEntity | null> {
+		return Promise.resolve(this.users.find((u) => u.id === id) ?? null);
 	}
 }

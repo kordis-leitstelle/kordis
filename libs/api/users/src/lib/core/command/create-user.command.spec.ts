@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 
 import { Role } from '@kordis/shared/auth';
 
-import { User } from '../entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { USER_SERVICE, UserService } from '../service/user.service';
 import { CreateUserCommand, CreateUserHandler } from './create-user.command';
 
@@ -35,7 +35,7 @@ describe('CreateUserHandler', () => {
 	const role = Role.USER;
 
 	it('should call createUser and return created user', async () => {
-		const mockUser: User = {
+		const mockUser: UserEntity = {
 			id: 'user-id',
 			userName,
 			email,

@@ -6,14 +6,13 @@ import {
 	ICommandHandler,
 } from '@nestjs/cqrs';
 
-import { User } from '../entity/user.entity';
 import { UserDeactivatedEvent } from '../event/user-deactivated.event';
 import { USER_SERVICE, UserService } from '../service/user.service';
 
 export class DeactivateUserCommand implements ICommand {
 	constructor(
 		readonly userId: string,
-		readonly requestUserOrgId: string,
+		readonly orgId: string,
 	) {}
 }
 
@@ -26,15 +25,8 @@ export class DeactivateUserHandler
 		private readonly eventBus: EventBus,
 	) {}
 
-	async execute({
-		userId,
-		requestUserOrgId,
-	}: DeactivateUserCommand): Promise<User | null> {
-		await this.userService.assertOrgMembership(requestUserOrgId, userId);
-
-		await this.userService.deactivateUser(userId);
+	async execute({ userId, orgId }: DeactivateUserCommand): Promise<void> {
+		await this.userService.deactivateUser(userId, orgId);
 		this.eventBus.publish(new UserDeactivatedEvent(userId));
-
-		return this.userService.getUser(userId);
 	}
 }

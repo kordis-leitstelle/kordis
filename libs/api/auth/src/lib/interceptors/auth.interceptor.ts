@@ -15,7 +15,6 @@ import { Role } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
 import { METADATA_ROLE_KEY } from '../decorators/minimum-role.decorator';
-import { PresentableInsufficientPermissionException } from '../errors/presentable-insufficient-permission.exception';
 import { PresentableUnauthorizedException } from '../errors/presentable-unauthorized.exception';
 import { isRoleAllowed } from '../roles';
 
@@ -55,7 +54,7 @@ export class AuthInterceptor implements NestInterceptor {
 			context.getHandler(),
 		);
 		if (minimumRole && !isRoleAllowed(possibleAuthUser.role, minimumRole)) {
-			return throwError(() => new PresentableInsufficientPermissionException());
+			return throwError(() => new PresentableUnauthorizedException());
 		}
 
 		req.user = possibleAuthUser;

@@ -1,7 +1,7 @@
 import { Role } from '@kordis/shared/auth';
 
 // keep in sync with the apps/api/dev-tokens.md file!
-export const TEST_USERS = Object.freeze([
+export const TEST_USERS = [
 	{
 		id: 'fbdd030c-bae9-4213-9e04-732b1cc8f5b8 ',
 		deactivated: false,
@@ -32,4 +32,4 @@ export const TEST_USERS = Object.freeze([
 		email: 'testorgadmin@kordis-leitstelle.de',
 		role: Role.ORGANIZATION_ADMIN,
 	},
-]);
+] as const;

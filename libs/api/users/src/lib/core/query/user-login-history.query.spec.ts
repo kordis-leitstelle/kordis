@@ -42,6 +42,6 @@ describe('UserLoginHistoryHandler', () => {
 				new UserLoginHistoryQuery('user-id', 3, 'requestOrgId'),
 			),
 		).resolves.toEqual(loginHistory);
-		expect(getLoginHistory).toHaveBeenCalledWith('user-id', 3);
+		expect(getLoginHistory).toHaveBeenCalledWith('requestOrgId', 'user-id', 3);
 	});
 });

@@ -3,7 +3,7 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
 import { Role } from '@kordis/shared/auth';
 
-import { User } from '../entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { USER_SERVICE, UserService } from '../service/user.service';
 
 export class CreateUserCommand implements ICommand {
@@ -23,7 +23,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 		@Inject(USER_SERVICE) private readonly userService: UserService,
 	) {}
 
-	async execute(command: CreateUserCommand): Promise<User> {
+	async execute(command: CreateUserCommand): Promise<UserEntity> {
 		return this.userService.createUser(
 			command.firstName,
 			command.lastName,

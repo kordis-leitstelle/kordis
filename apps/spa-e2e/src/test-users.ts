@@ -2,8 +2,7 @@ import { test } from '@playwright/test';
 
 import { TEST_USERS } from '@kordis/shared/test-helpers';
 
-export const testUsernames = [...TEST_USERS.map((u) => u.userName)] as const;
-export type TestUsernames = (typeof testUsernames)[number];
+export type TestUsernames = (typeof TEST_USERS)[number]['userName'];
 
 export function getAuthStoragePath(username: TestUsernames): string {
 	return `playwright/.auth/${username}.json`;

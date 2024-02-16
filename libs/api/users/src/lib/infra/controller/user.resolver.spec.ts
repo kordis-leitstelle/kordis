@@ -2,7 +2,6 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CommandBus, CqrsModule, EventBus, QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PresentableInsufficientPermissionException } from '@kordis/api/auth';
 import {
 	GraphQLSubscriptionService,
 	PresentableNotFoundException,
@@ -10,14 +9,13 @@ import {
 import { expectIterableNotToHaveNext } from '@kordis/api/test-helpers';
 import { AuthUser, Role } from '@kordis/shared/auth';
 
-import { ChangeEmailCommand } from '../../core/command/change-email.command';
-import { ChangeRoleCommand } from '../../core/command/change-role.command';
 import { CreateUserCommand } from '../../core/command/create-user.command';
 import { DeactivateUserCommand } from '../../core/command/deactivate-user.command';
 import { ReactivateUserCommand } from '../../core/command/reactivate-user.command';
-import { User } from '../../core/entity/user.entity';
+import { UpdateEmailCommand } from '../../core/command/update-email.command';
+import { UpdateRoleCommand } from '../../core/command/update-role.command';
+import { UserEntity } from '../../core/entity/user.entity';
 import { UserDeactivatedEvent } from '../../core/event/user-deactivated.event';
-import { InsufficientPermissionException } from '../../core/exception/insufficient-permission.exception';
 import { UserNotFoundException } from '../../core/exception/user-not-found.exception';
 import { OrganizationUsersQuery } from '../../core/query/organization-users.query';
 import { UserLoginHistoryQuery } from '../../core/query/user-login-history.query';
@@ -58,7 +56,7 @@ describe('UserResolver', () => {
 	describe('organizationUsers', () => {
 		it('should return an array of users', async () => {
 			const organizationId = 'organization-id';
-			const mockUsers: User[] = [
+			const mockUsers: UserEntity[] = [
 				{
 					id: '1',
 					userName: 'user1',
@@ -131,26 +129,12 @@ describe('UserResolver', () => {
 					'Der Benutzer konnte nicht gefunden werden.',
 				),
 			);
-
-			mockQueryBus.execute.mockRejectedValueOnce(
-				new InsufficientPermissionException(),
-			);
-
-			await expect(
-				resolver.userLoginHistory(
-					{
-						organizationId: 'organization-id',
-					} as AuthUser,
-					'user-id',
-					3,
-				),
-			).rejects.toThrow(PresentableInsufficientPermissionException);
 		});
 	});
 
 	describe('createUser', () => {
 		it('should call create user command and return created user', async () => {
-			const user: User = {
+			const user: UserEntity = {
 				id: '1',
 				userName: 'user1',
 				email: 'test@mail.com',
@@ -191,18 +175,7 @@ describe('UserResolver', () => {
 
 	describe('deactivateUser', () => {
 		it('should call deactivate user command and return user', async () => {
-			const user: User = {
-				id: '1',
-				userName: 'userid',
-				email: 'test@mail.com',
-				organizationId: 'organization-id',
-				role: Role.USER,
-				lastName: 'test',
-				firstName: 'user 1',
-				deactivated: true,
-			};
-
-			mockCommandBus.execute.mockResolvedValueOnce(user);
+			mockCommandBus.execute.mockResolvedValueOnce(undefined);
 
 			const result = await resolver.deactivateUser(
 				{
@@ -213,7 +186,7 @@ describe('UserResolver', () => {
 			expect(mockCommandBus.execute).toHaveBeenCalledWith(
 				new DeactivateUserCommand('userid', 'organization-id'),
 			);
-			expect(result).toEqual(user);
+			expect(result).toBe(true);
 		});
 
 		it('should throw PresentableNotFoundException if UserNotFoundException is thrown', async () => {
@@ -231,18 +204,7 @@ describe('UserResolver', () => {
 
 	describe('reactivateUser', () => {
 		it('should call reactivate user command and return user', async () => {
-			const user: User = {
-				id: '1',
-				userName: 'userid',
-				email: 'test@mail.com',
-				organizationId: 'organization-id',
-				role: Role.USER,
-				lastName: 'test',
-				firstName: 'user 1',
-				deactivated: false,
-			};
-
-			mockCommandBus.execute.mockResolvedValueOnce(user);
+			mockCommandBus.execute.mockResolvedValueOnce(undefined);
 
 			const result = await resolver.reactivateUser(
 				{
@@ -253,7 +215,7 @@ describe('UserResolver', () => {
 			expect(mockCommandBus.execute).toHaveBeenCalledWith(
 				new ReactivateUserCommand('userid', 'organization-id'),
 			);
-			expect(result).toEqual(user);
+			expect(result).toBe(true);
 		});
 
 		it('should throw PresentableNotFoundException if UserNotFoundException is thrown', async () => {
@@ -271,18 +233,7 @@ describe('UserResolver', () => {
 
 	describe('changeEmail', () => {
 		it('should call change email command and return user', async () => {
-			const user: User = {
-				id: '1',
-				userName: 'userid',
-				email: 'test@mail.com',
-				organizationId: 'organization-id',
-				role: Role.USER,
-				lastName: 'test',
-				firstName: 'user 1',
-				deactivated: false,
-			};
-
-			mockCommandBus.execute.mockResolvedValueOnce(user);
+			mockCommandBus.execute.mockResolvedValueOnce(undefined);
 
 			const result = await resolver.changeEmail(
 				{
@@ -293,15 +244,21 @@ describe('UserResolver', () => {
 				{ userId: 'userid', newEmail: 'test@mail.com' },
 			);
 			expect(mockCommandBus.execute).toHaveBeenCalledWith(
-				new ChangeEmailCommand(
-					'userid',
-					'test@mail.com',
-					'requestUserId',
-					Role.ORGANIZATION_ADMIN,
-					'organization-id',
-				),
+				new UpdateEmailCommand('userid', 'test@mail.com', 'organization-id'),
 			);
-			expect(result).toEqual(user);
+			expect(result).toBe(true);
+		});
+
+		it('should throw UserNotFoundException if not org admin and not requesting user', async () => {
+			await expect(
+				resolver.changeEmail(
+					{
+						id: 'aDifferentUser',
+						role: Role.USER,
+					} as AuthUser,
+					{ userId: 'attemptedUserIdToChange', newEmail: 'test@mail.com' },
+				),
+			).rejects.toThrow(PresentableNotFoundException);
 		});
 
 		it('should throw PresentableNotFoundException if UserNotFoundException is thrown', async () => {
@@ -310,41 +267,17 @@ describe('UserResolver', () => {
 				resolver.changeEmail(
 					{
 						organizationId: 'organization-id',
+						role: Role.ORGANIZATION_ADMIN,
 					} as AuthUser,
 					{ userId: 'userid', newEmail: 'test@mail.com' },
 				),
 			).rejects.toThrow(PresentableNotFoundException);
 		});
-
-		it('should throw PresentableInsufficientPermissionException if InsufficientPermissionException is thrown', async () => {
-			mockCommandBus.execute.mockRejectedValueOnce(
-				new InsufficientPermissionException(),
-			);
-			await expect(
-				resolver.changeEmail(
-					{
-						organizationId: 'organization-id',
-					} as AuthUser,
-					{ userId: 'userid', newEmail: 'test@mail.com' },
-				),
-			).rejects.toThrow(PresentableInsufficientPermissionException);
-		});
 	});
 
 	describe('changeRole', () => {
 		it('should call change role command and return user', async () => {
-			const user: User = {
-				id: '1',
-				userName: 'userid',
-				email: 'test@mail.com',
-				organizationId: 'organization-id',
-				role: Role.USER,
-				lastName: 'test',
-				firstName: 'user 1',
-				deactivated: false,
-			};
-
-			mockCommandBus.execute.mockResolvedValueOnce(user);
+			mockCommandBus.execute.mockResolvedValueOnce(undefined);
 
 			const result = await resolver.changeRole(
 				{
@@ -353,9 +286,9 @@ describe('UserResolver', () => {
 				{ userId: 'userid', newRole: Role.ADMIN },
 			);
 			expect(mockCommandBus.execute).toHaveBeenCalledWith(
-				new ChangeRoleCommand('userid', Role.ADMIN, 'organization-id'),
+				new UpdateRoleCommand('userid', Role.ADMIN, 'organization-id'),
 			);
-			expect(result).toEqual(user);
+			expect(result).toBe(true);
 		});
 
 		it('should throw PresentableNotFoundException if UserNotFoundException is thrown', async () => {

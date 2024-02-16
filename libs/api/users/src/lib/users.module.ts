@@ -4,10 +4,10 @@ import { registerEnumType } from '@nestjs/graphql';
 
 import { Role } from '@kordis/shared/auth';
 
-import { ChangeEmailHandler } from './core/command/change-email.command';
 import { CreateUserHandler } from './core/command/create-user.command';
 import { DeactivateUserHandler } from './core/command/deactivate-user.command';
 import { ReactivateUserHandler } from './core/command/reactivate-user.command';
+import { UpdateEmailHandler } from './core/command/update-email.command';
 import { OrganizationUsersHandler } from './core/query/organization-users.query';
 import { UserLoginHistoryHandler } from './core/query/user-login-history.query';
 import { USER_SERVICE } from './core/service/user.service';
@@ -56,7 +56,7 @@ export class UsersModule {
 			module: UsersModule,
 			imports: [USERS_MODULES[usersProvider]],
 			providers: [
-				ChangeEmailHandler,
+				UpdateEmailHandler,
 				CreateUserHandler,
 				DeactivateUserHandler,
 				ReactivateUserHandler,

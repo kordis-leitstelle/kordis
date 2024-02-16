@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { User } from '../entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { USER_SERVICE, UserService } from '../service/user.service';
 
 export class OrganizationUsersQuery {
@@ -16,7 +16,7 @@ export class OrganizationUsersHandler
 		@Inject(USER_SERVICE) private readonly userService: UserService,
 	) {}
 
-	async execute(query: OrganizationUsersQuery): Promise<User[]> {
+	async execute(query: OrganizationUsersQuery): Promise<UserEntity[]> {
 		return this.userService.getOrganizationUsers(query.orgId);
 	}
 }

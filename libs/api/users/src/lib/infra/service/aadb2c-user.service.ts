@@ -3,11 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomBytes } from 'crypto';
 import { stringify as qsStringify } from 'qs';
-import { firstValueFrom, map } from 'rxjs';
+import { catchError, firstValueFrom, map } from 'rxjs';
 
 import { Role } from '@kordis/shared/auth';
 
-import { User } from '../../core/entity/user.entity';
+import { UserEntity } from '../../core/entity/user.entity';
+import { UserNotFoundException } from '../../core/exception/user-not-found.exception';
 import { BaseUserService } from '../../core/service/user.service';
 
 const MS_API_USER_KEY_MAP = Object.freeze(
@@ -33,6 +34,7 @@ type AADB2CUser = {
 	}[];
 } & Record<string, string>;
 
+// todo: check whether the graph api throws 404 and map it to UserNotFoundException
 @Injectable()
 export class AADB2CUserService extends BaseUserService {
 	private bearerToken = '';
@@ -53,41 +55,18 @@ export class AADB2CUserService extends BaseUserService {
 		this.clientSecret = config.getOrThrow<string>('AADB2C_CLIENT_SECRET');
 	}
 
-	async updateUser(
+	async updateEmail(
+		orgId: string,
 		userId: string,
-		user: Partial<
-			Omit<User, 'organizationId'> & {
-				accountEnabled: boolean;
-			}
-		>,
+		email: string,
 	): Promise<void> {
 		await this.ensureBearerToken();
 
-		const updatePayload: Record<string, unknown> = {};
-
-		for (const [key, value] of Object.entries(user)) {
-			if (MS_API_USER_KEY_MAP.has(key)) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const msKey = MS_API_USER_KEY_MAP.get(key)!;
-				updatePayload[msKey] = value;
-			} else if (key === 'role') {
-				updatePayload[`extension_${this.extensionAppId}_Role`] = value;
-			} else if (key === 'organizationId') {
-				updatePayload[`extension_${this.extensionAppId}_OrganizationId`] =
-					value;
-			} else {
-				updatePayload[key] = value;
-			}
-		}
-
-		await this.updateUserRequest(userId, updatePayload);
-	}
-
-	async changeEmail(userId: string, email: string): Promise<void> {
-		await this.ensureBearerToken();
-
 		// identities will be completely replaced, so we still have to pass the username...
-		const { userName } = await this.getUser(userId);
+		const { userName, organizationId } = await this.getUserById(userId);
+		if (organizationId !== orgId) {
+			throw new UserNotFoundException();
+		}
 
 		await this.updateUserRequest(userId, {
 			mail: email,
@@ -106,7 +85,8 @@ export class AADB2CUserService extends BaseUserService {
 		});
 	}
 
-	async changeRole(userId: string, role: Role): Promise<void> {
+	async updateRole(orgId: string, userId: string, role: Role): Promise<void> {
+		await this.assertOrgMembership(orgId, userId);
 		await this.updateUser(userId, {
 			role,
 		});
@@ -119,7 +99,7 @@ export class AADB2CUserService extends BaseUserService {
 		email: string,
 		role: Role,
 		orgId: string,
-	): Promise<User> {
+	): Promise<UserEntity> {
 		await this.ensureBearerToken();
 
 		return firstValueFrom(
@@ -161,32 +141,43 @@ export class AADB2CUserService extends BaseUserService {
 		);
 	}
 
-	async deactivateUser(userId: string): Promise<void> {
+	async deactivateUser(orgId: string, userId: string): Promise<void> {
+		await this.assertOrgMembership(orgId, userId);
 		await this.updateUser(userId, {
 			accountEnabled: false,
 		});
 
 		// also revoke all refresh tokens to invalidate active sessions
 		await firstValueFrom(
-			this.http.post(
-				`${MS_GRAPH_API_BASE_URL}/users/${userId}/revokeSignInSessions`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${this.bearerToken}`,
+			this.http
+				.post(
+					`${MS_GRAPH_API_BASE_URL}/users/${userId}/revokeSignInSessions`,
+					{},
+					{
+						headers: {
+							Authorization: `Bearer ${this.bearerToken}`,
+						},
 					},
-				},
-			),
+				)
+				.pipe(
+					catchError((err, user$) => {
+						if (err.response.status === 404) {
+							throw new UserNotFoundException();
+						}
+						return user$;
+					}),
+				),
 		);
 	}
 
-	async reactivateUser(userId: string): Promise<void> {
+	async reactivateUser(orgId: string, userId: string): Promise<void> {
+		await this.assertOrgMembership(orgId, userId);
 		await this.updateUser(userId, {
 			accountEnabled: true,
 		});
 	}
 
-	async getOrganizationUsers(orgId: string): Promise<User[]> {
+	async getOrganizationUsers(orgId: string): Promise<UserEntity[]> {
 		await this.ensureBearerToken();
 
 		const resp = await firstValueFrom(
@@ -211,7 +202,57 @@ export class AADB2CUserService extends BaseUserService {
 			.map((user) => this.mapAADB2CUserToUser(user));
 	}
 
-	async getUser(id: string): Promise<User> {
+	async getUser(orgId: string, id: string): Promise<UserEntity> {
+		const user = await this.getUserById(id);
+		if (user.organizationId !== orgId) {
+			throw new UserNotFoundException();
+		} else {
+			return user;
+		}
+	}
+
+	/*
+	 * Returns the last login history of the last n successful logins of a user
+	 */
+	async getLoginHistory(
+		orgId: string,
+		userId: string,
+		historyLength: number,
+	): Promise<Date[]> {
+		await this.assertOrgMembership(orgId, userId);
+		await this.ensureBearerToken();
+
+		// azure restricts audit log to the last 7 days
+		const resp = await firstValueFrom(
+			this.http
+				.get<{
+					value: {
+						createdDateTime: string;
+					}[];
+				}>(
+					`${MS_GRAPH_API_BASE_URL}/auditLogs/signIns?$top=${historyLength}&$filter=userId eq '${userId}' and status/errorCode eq 0`,
+					{
+						headers: {
+							Authorization: `Bearer ${this.bearerToken}`,
+						},
+					},
+				)
+				.pipe(
+					catchError((err, user$) => {
+						if (err.response.status === 404) {
+							throw new UserNotFoundException();
+						}
+						return user$;
+					}),
+				),
+		);
+
+		return resp.data.value.map(
+			({ createdDateTime }) => new Date(createdDateTime),
+		);
+	}
+
+	protected async getUserById(id: string): Promise<UserEntity> {
 		await this.ensureBearerToken();
 
 		return firstValueFrom(
@@ -224,38 +265,43 @@ export class AADB2CUserService extends BaseUserService {
 						},
 					},
 				)
-				.pipe(map(({ data }) => this.mapAADB2CUserToUser(data))),
+				.pipe(
+					map(({ data }) => this.mapAADB2CUserToUser(data)),
+					catchError((err, user$) => {
+						if (err.response.status === 404) {
+							throw new UserNotFoundException();
+						}
+						return user$;
+					}),
+				),
 		);
 	}
 
-	/*
-	 * Returns the last login history of the last n successful logins of a user
-	 */
-	async getLoginHistory(
+	private async updateUser(
 		userId: string,
-		historyLength: number,
-	): Promise<Date[]> {
+		user: Partial<
+			Omit<UserEntity, 'organizationId'> & {
+				accountEnabled: boolean;
+			}
+		>,
+	): Promise<void> {
 		await this.ensureBearerToken();
 
-		// azure restricts audit log to the last 7 days
-		const resp = await firstValueFrom(
-			this.http.get<{
-				value: {
-					createdDateTime: string;
-				}[];
-			}>(
-				`${MS_GRAPH_API_BASE_URL}/auditLogs/signIns?$top=${historyLength}&$filter=userId eq '${userId}' and status/errorCode eq 0`,
-				{
-					headers: {
-						Authorization: `Bearer ${this.bearerToken}`,
-					},
-				},
-			),
-		);
+		const updatePayload: Record<string, unknown> = {};
 
-		return resp.data.value.map(
-			({ createdDateTime }) => new Date(createdDateTime),
-		);
+		for (const [key, value] of Object.entries(user)) {
+			if (MS_API_USER_KEY_MAP.has(key)) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const msKey = MS_API_USER_KEY_MAP.get(key)!;
+				updatePayload[msKey] = value;
+			} else if (key === 'role') {
+				updatePayload[`extension_${this.extensionAppId}_Role`] = value;
+			} else {
+				updatePayload[key] = value;
+			}
+		}
+
+		await this.updateUserRequest(userId, updatePayload);
 	}
 
 	private async updateUserRequest(
@@ -263,11 +309,20 @@ export class AADB2CUserService extends BaseUserService {
 		data: Record<string, unknown>,
 	): Promise<void> {
 		await firstValueFrom(
-			this.http.patch(`${MS_GRAPH_API_BASE_URL}/users/${userId}`, data, {
-				headers: {
-					Authorization: `Bearer ${this.bearerToken}`,
-				},
-			}),
+			this.http
+				.patch(`${MS_GRAPH_API_BASE_URL}/users/${userId}`, data, {
+					headers: {
+						Authorization: `Bearer ${this.bearerToken}`,
+					},
+				})
+				.pipe(
+					catchError((err, response) => {
+						if (err.response.status === 404) {
+							throw new UserNotFoundException();
+						}
+						return response;
+					}),
+				),
 		);
 	}
 
@@ -297,7 +352,7 @@ export class AADB2CUserService extends BaseUserService {
 		this.validUntil = new Date(Date.now() + (resp.data.expires_in - 10) * 1000); // cut of 10 seconds to have some overlap for request time
 	}
 
-	private mapAADB2CUserToUser(user: AADB2CUser): User {
+	private mapAADB2CUserToUser(user: AADB2CUser): UserEntity {
 		return {
 			id: user.id,
 			firstName: user.givenName,

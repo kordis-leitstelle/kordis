@@ -11,7 +11,6 @@ import {
 import { AuthUser, Role } from '@kordis/shared/auth';
 
 import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
-import { PresentableInsufficientPermissionException } from '../errors/presentable-insufficient-permission.exception';
 import { PresentableUnauthorizedException } from '../errors/presentable-unauthorized.exception';
 import { AuthInterceptor } from './auth.interceptor';
 
@@ -45,7 +44,7 @@ describe('AuthInterceptor', () => {
 		).rejects.toThrow(PresentableUnauthorizedException);
 	});
 
-	it('should throw unauthorized http exception with insufficient role permission', async () => {
+	it('should throw unauthorized http exception with PresentableUnauthorizedException', async () => {
 		jest
 			.spyOn(mockAuthUserExtractor, 'getUserFromRequest')
 			.mockReturnValueOnce({
@@ -65,7 +64,7 @@ describe('AuthInterceptor', () => {
 					createMock<CallHandler>(),
 				),
 			),
-		).rejects.toThrow(PresentableInsufficientPermissionException);
+		).rejects.toThrow(PresentableUnauthorizedException);
 	});
 
 	it('should continue request pipeline', async () => {

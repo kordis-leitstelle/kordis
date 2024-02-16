@@ -7,7 +7,7 @@ export class UserLoginHistoryQuery {
 	constructor(
 		readonly userId: string,
 		readonly historyLength: number,
-		readonly requestUserOrgId: string,
+		readonly orgId: string,
 	) {}
 }
 
@@ -21,10 +21,9 @@ export class UserLoginHistoryHandler
 
 	async execute({
 		userId,
-		requestUserOrgId,
+		orgId,
 		historyLength,
 	}: UserLoginHistoryQuery): Promise<Date[]> {
-		await this.userService.assertOrgMembership(requestUserOrgId, userId);
-		return this.userService.getLoginHistory(userId, historyLength);
+		return this.userService.getLoginHistory(orgId, userId, historyLength);
 	}
 }

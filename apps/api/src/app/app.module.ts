@@ -26,6 +26,7 @@ const IS_PROD_DEPLOYMENT = process.env.ENVIRONMENT_NAME === 'prod';
 const FEATURE_MODULES = [
 	OrganizationModule,
 	UsersModule.forRoot(
+		// todo: auslagernnin USER_AUTH_PROVIDER
 		IS_NEXT_DEPLOYMENT || IS_PROD_DEPLOYMENT ? 'aadb2c' : 'dev',
 	),
 ];

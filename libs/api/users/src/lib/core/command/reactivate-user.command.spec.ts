@@ -3,10 +3,8 @@ import { Test } from '@nestjs/testing';
 
 import { Role } from '@kordis/shared/auth';
 
-import { User } from '../entity/user.entity';
-import { InsufficientPermissionException } from '../exception/insufficient-permission.exception';
+import { UserEntity } from '../entity/user.entity';
 import { BaseUserService, USER_SERVICE } from '../service/user.service';
-import { DeactivateUserCommand } from './deactivate-user.command';
 import {
 	ReactivateUserCommand,
 	ReactivateUserHandler,
@@ -35,7 +33,7 @@ describe('ReactivateUserHandler', () => {
 	});
 
 	it('should call reactivateUser and return reactivated user', async () => {
-		const mockUser: User = {
+		const mockUser: UserEntity = {
 			id: 'userId',
 			userName: 'userName',
 			email: 'email',
@@ -45,25 +43,16 @@ describe('ReactivateUserHandler', () => {
 			lastName: 'lastName',
 			deactivated: false,
 		};
-		mockUserService.assertOrgMembership.mockResolvedValueOnce();
+
 		mockUserService.reactivateUser.mockResolvedValueOnce();
 		mockUserService.getUser.mockResolvedValueOnce(mockUser);
 
 		const command = new ReactivateUserCommand('userId', 'requestUserOrgId');
 
-		const result = await reactivateUserHandler.execute(command);
-		expect(mockUserService.reactivateUser).toHaveBeenCalledWith('userId');
-		expect(result).toEqual(mockUser);
-	});
-
-	it('should throw Error if assertOrgAdminTaskOrOwnUser fails', async () => {
-		const command = new DeactivateUserCommand('userId', 'requestUserOrgId');
-		mockUserService.assertOrgMembership.mockRejectedValueOnce(
-			new InsufficientPermissionException(),
+		await reactivateUserHandler.execute(command);
+		expect(mockUserService.reactivateUser).toHaveBeenCalledWith(
+			'requestUserOrgId',
+			'userId',
 		);
-		await expect(reactivateUserHandler.execute(command)).rejects.toThrow(
-			InsufficientPermissionException,
-		);
-		expect(mockUserService.reactivateUser).not.toHaveBeenCalled();
 	});
 });

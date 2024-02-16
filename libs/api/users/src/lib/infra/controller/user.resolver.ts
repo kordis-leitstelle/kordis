@@ -2,35 +2,30 @@ import { Inject } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 
-import {
-	MinimumRole,
-	PresentableInsufficientPermissionException,
-	RequestUser,
-} from '@kordis/api/auth';
+import { MinimumRole, RequestUser } from '@kordis/api/auth';
 import {
 	GraphQLSubscriptionService,
 	PresentableNotFoundException,
 } from '@kordis/api/shared';
 import { AuthUser, Role } from '@kordis/shared/auth';
 
-import { ChangeEmailCommand } from '../../core/command/change-email.command';
-import { ChangeRoleCommand } from '../../core/command/change-role.command';
 import { CreateUserCommand } from '../../core/command/create-user.command';
 import { DeactivateUserCommand } from '../../core/command/deactivate-user.command';
 import { ReactivateUserCommand } from '../../core/command/reactivate-user.command';
-import { User } from '../../core/entity/user.entity';
+import { UpdateEmailCommand } from '../../core/command/update-email.command';
+import { UpdateRoleCommand } from '../../core/command/update-role.command';
 import { UserDeactivatedEvent } from '../../core/event/user-deactivated.event';
-import { InsufficientPermissionException } from '../../core/exception/insufficient-permission.exception';
 import { UserNotFoundException } from '../../core/exception/user-not-found.exception';
 import { OrganizationUsersQuery } from '../../core/query/organization-users.query';
 import { UserLoginHistoryQuery } from '../../core/query/user-login-history.query';
 import { USER_SERVICE, UserService } from '../../core/service/user.service';
+import { UserViewModel } from '../user.view-model';
 import { ChangeEmailArgs } from './argument/change-email.args';
 import { ChangeRoleArgs } from './argument/change-role.args';
 import { CreateUserArgs } from './argument/create-user.args';
 import { UserDeactivated } from './object-type/user-deactivated.object-type';
 
-@Resolver(User)
+@Resolver(UserViewModel)
 export class UserResolver {
 	constructor(
 		private readonly commandBus: CommandBus,
@@ -40,8 +35,10 @@ export class UserResolver {
 	) {}
 
 	@MinimumRole(Role.ORGANIZATION_ADMIN)
-	@Query(() => [User])
-	async users(@RequestUser() { organizationId }: AuthUser): Promise<User[]> {
+	@Query(() => [UserViewModel])
+	async users(
+		@RequestUser() { organizationId }: AuthUser,
+	): Promise<UserViewModel[]> {
 		return this.queryBus.execute(new OrganizationUsersQuery(organizationId));
 	}
 
@@ -67,11 +64,11 @@ export class UserResolver {
 	}
 
 	@MinimumRole(Role.ORGANIZATION_ADMIN)
-	@Mutation(() => User)
+	@Mutation(() => UserViewModel)
 	async createUser(
 		@RequestUser() { organizationId }: AuthUser,
 		@Args() createUserArgs: CreateUserArgs,
-	): Promise<User> {
+	): Promise<UserViewModel> {
 		return this.commandBus.execute(
 			new CreateUserCommand(
 				createUserArgs.firstName,
@@ -85,68 +82,74 @@ export class UserResolver {
 	}
 
 	@MinimumRole(Role.ORGANIZATION_ADMIN)
-	@Mutation(() => User)
+	@Mutation(() => Boolean)
 	async deactivateUser(
 		@RequestUser() reqUser: AuthUser,
 		@Args('userId', { type: () => String }) userId: string,
-	): Promise<User> {
+	): Promise<boolean> {
 		try {
-			return await this.commandBus.execute(
+			await this.commandBus.execute(
 				new DeactivateUserCommand(userId, reqUser.organizationId),
 			);
 		} catch (error) {
 			this.throwPresentable(error);
 		}
+
+		return true;
 	}
 
 	@MinimumRole(Role.ORGANIZATION_ADMIN)
-	@Mutation(() => User)
+	@Mutation(() => Boolean)
 	async reactivateUser(
 		@RequestUser() reqUser: AuthUser,
 		@Args('userId', { type: () => String }) userId: string,
-	): Promise<User> {
+	): Promise<boolean> {
 		try {
-			return await this.commandBus.execute(
+			await this.commandBus.execute(
 				new ReactivateUserCommand(userId, reqUser.organizationId),
 			);
 		} catch (error) {
 			this.throwPresentable(error);
 		}
+
+		return true;
 	}
 
-	@Mutation(() => User)
+	@Mutation(() => Boolean)
 	async changeEmail(
 		@RequestUser() reqUser: AuthUser,
 		@Args() { userId, newEmail }: ChangeEmailArgs,
-	): Promise<User> {
+	): Promise<boolean> {
+		// Only organization admins can change other users' email
+		if (reqUser.role !== Role.ORGANIZATION_ADMIN && userId !== reqUser.id) {
+			this.throwPresentable(new UserNotFoundException());
+		}
 		try {
-			return await this.commandBus.execute(
-				new ChangeEmailCommand(
-					userId,
-					newEmail,
-					reqUser.id,
-					reqUser.role,
-					reqUser.organizationId,
-				),
+			await this.commandBus.execute(
+				new UpdateEmailCommand(userId, newEmail, reqUser.organizationId),
 			);
 		} catch (error) {
 			this.throwPresentable(error);
 		}
+
+		return true;
 	}
 
 	@MinimumRole(Role.ORGANIZATION_ADMIN)
-	@Mutation(() => User)
+	@Mutation(() => Boolean)
 	async changeRole(
 		@RequestUser() reqUser: AuthUser,
 		@Args() { userId, newRole }: ChangeRoleArgs,
-	): Promise<User> {
+	): Promise<boolean> {
 		try {
-			return await this.commandBus.execute(
-				new ChangeRoleCommand(userId, newRole, reqUser.organizationId),
+			await this.commandBus.execute(
+				new UpdateRoleCommand(userId, newRole, reqUser.organizationId),
 			);
 		} catch (error) {
 			this.throwPresentable(error);
 		}
+
+		return true;
 	}
 
 	@Subscription(() => UserDeactivated, {
@@ -168,10 +171,6 @@ export class UserResolver {
 			throw new PresentableNotFoundException(
 				'Der Benutzer konnte nicht gefunden werden.',
 			);
-		}
-
-		if (error instanceof InsufficientPermissionException) {
-			throw new PresentableInsufficientPermissionException();
 		}
 
 		throw error;
