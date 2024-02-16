@@ -1,0 +1,38 @@
+<nz-table #protocolTable [nzData]='exampleData' [nzFrontPagination]='false' [nzScroll]="{ x: '100%', y: '100%' }"
+					[nzShowPagination]='false' [nzVirtualForTrackBy]='trackById' [nzVirtualItemSize]='54'>
+	<thead>
+	<tr>
+		<th>Zeit</th>
+		<th>Meldende Einheit</th>
+		<th>Empfangende Einheit</th>
+		<th>Nachricht</th>
+		<th>Kanal</th>
+		<th>Nutzer</th>
+		<th>Aktionen</th>
+	</tr>
+	</thead>
+	<tbody>
+	<ng-template let-data nz-virtual-scroll>
+		<tr>
+			<td>{{ data.time | krdProtocolEntryTime }}</td>
+			<td>{{ data.sendingUnit }}</td>
+			<td>{{ data.receivingUnit ?? "-" }}</td>
+			<td>
+				@switch (data.entryType) {
+					@case ("UNIT_STATUS") {
+						Case A.
+					}
+					@case ("RCS_COMMUNICATION") {
+						Case B.
+					}
+				}
+			</td>
+			<td>{{ data.channel }}</td>
+			<td>{{ data.producer }}</td>
+			<td nzRight>
+
+			</td>
+		</tr>
+	</ng-template>
+	</tbody>
+</nz-table>

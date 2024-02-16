@@ -18,6 +18,7 @@
 				"assets": ["apps/spa/src/favicon.ico", "apps/spa/src/assets"],
 				"styles": [
 					"./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+					"./node_modules/ng-zorro-antd/ng-zorro-antd.variable.css",
 					"apps/spa/src/styles.css"
 				],
 				"scripts": []
@@ -55,7 +56,7 @@
 				"development": {
 					"buildTarget": "spa:build:development",
 					"headers": {
-						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; object-src 'none'; base-uri 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'nonce-csp_nonce'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
+						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; object-src 'none'; base-uri 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
 					}
 				}
 			},

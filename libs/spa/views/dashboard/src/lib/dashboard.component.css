@@ -1,0 +1,68 @@
+@import 'ng-zorro-antd/ng-zorro-antd.variable.css';
+
+nz-layout {
+	--header-size: 64px;
+
+	[nz-menu] {
+		line-height: var(--header-size);
+	}
+
+	nz-header {
+		background: #fff;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.left {
+			display: flex;
+			align-items: center;
+			float: left;
+
+			.logo {
+				color: var(--ant-primary-color);
+				font-size: 24px;
+				margin-right: 50px;
+			}
+		}
+
+		.right {
+			float: right;
+
+			.help-icon {
+				margin-right: 10px;
+				font-size: 16px;
+			}
+		}
+	}
+
+	nz-content {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+
+		padding: 16px;
+		grid-gap: 16px;
+
+		height: calc(100vh - var(--header-size));
+		min-height: 720px;
+		min-width: 1280px;
+
+		.container {
+			/**padding: 15 px;**/
+		}
+
+		.protocol {
+			grid-area: 1 / 1 / 3 / 4;
+			background-color: red;
+		}
+
+		.operations {
+			grid-area: 1 / 4 / 3 / 6;
+		}
+
+		.deployments {
+			grid-area: 3 / 1 / 4 / 6;
+			overflow: hidden;
+		}
+	}
+}

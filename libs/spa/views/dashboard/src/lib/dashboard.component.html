@@ -1,0 +1,33 @@
+<nz-layout>
+	<nz-header>
+		<div class='left'>
+			<span class='logo'>Kordis</span>
+		</div>
+		<div class='right'>
+			<button [nzDropdownMenu]='userMenu' nz-button nz-dropdown nzType='dashed'>
+				{{ name$ | async }}
+			</button>
+			<nz-dropdown-menu #userMenu='nzDropdownMenu'>
+				<ul nz-menu>
+					<li (click)='logout()' nz-menu-item>Abmelden</li>
+					<li (click)='showReportErrorModal()' nz-menu-item>Fehler melden</li>
+					<li (click)='showCreditsAndLicensesModal()' nz-menu-item>Credits und Lizenzen</li>
+				</ul>
+			</nz-dropdown-menu>
+		</div>
+	</nz-header>
+	<nz-content>
+		<div class='protocol container'>
+			<krd-protocol />
+		</div>
+		<div class='operations container'>
+			operations
+		</div>
+		<div class='deployments container'>
+			deployments
+			<div style='height: 500px; background-color: blue'>
+				test
+			</div>
+		</div>
+	</nz-content>
+</nz-layout>
