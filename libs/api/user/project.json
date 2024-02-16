@@ -1,21 +1,21 @@
 {
-	"name": "api-users",
+	"name": "api-user",
 	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/api/users/src",
+	"sourceRoot": "libs/api/user/src",
 	"projectType": "library",
 	"targets": {
 		"lint": {
 			"executor": "@nx/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["libs/api/users/**/*.ts"]
+				"lintFilePatterns": ["libs/api/user/**/*.ts"]
 			}
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "libs/api/users/jest.config.ts",
+				"jestConfig": "libs/api/user/jest.config.ts",
 				"passWithNoTests": true
 			},
 			"configurations": {

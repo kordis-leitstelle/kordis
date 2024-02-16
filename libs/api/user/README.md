@@ -6,4 +6,4 @@ Microsoft Graph API.
 
 ## Running unit tests
 
-Run `nx test api-users` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test api-user` to execute the unit tests via [Jest](https://jestjs.io).

@@ -11,7 +11,7 @@ import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
-import { UsersModule } from '@kordis/api/users';
+import { UsersModule } from '@kordis/api/user';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
