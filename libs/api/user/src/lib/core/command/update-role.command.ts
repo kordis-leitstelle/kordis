@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { USER_SERVICE, UserService } from '../service/user.service';
 

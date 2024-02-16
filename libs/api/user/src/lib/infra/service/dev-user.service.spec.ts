@@ -1,4 +1,4 @@
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { DevUserService } from './dev-user.service';
 

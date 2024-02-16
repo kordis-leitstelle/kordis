@@ -5,7 +5,7 @@ import { randomBytes } from 'crypto';
 import { stringify as qsStringify } from 'qs';
 import { catchError, firstValueFrom, map } from 'rxjs';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { UserEntity } from '../../core/entity/user.entity';
 import { UserNotFoundException } from '../../core/exception/user-not-found.exception';
@@ -49,7 +49,7 @@ export class AADB2CUserService extends BaseUserService {
 		config: ConfigService,
 	) {
 		super();
-		this.tenant = config.getOrThrow<string>('AADB2C_TENANT');
+		this.tenant = config.getOrThrow<string>('AADB2C_TENANT_ID');
 		this.extensionAppId = config.getOrThrow<string>('AADB2C_EXTENSION_APP_ID');
 		this.clientId = config.getOrThrow<string>('AADB2C_CLIENT_ID');
 		this.clientSecret = config.getOrThrow<string>('AADB2C_CLIENT_SECRET');

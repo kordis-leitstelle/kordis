@@ -1,13 +1,13 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import de from '@angular/common/locales/de';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
-import { firstValueFrom } from 'rxjs';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
 import { GraphqlModule } from '@kordis/spa/graphql';
@@ -47,6 +47,12 @@ registerLocaleData(de);
 					environment.releaseVersion,
 				)
 			: NoopObservabilityModule.forRoot(),
+		ServiceWorkerModule.register('ngsw-worker.js', {
+			enabled: !isDevMode(),
+			// Register the ServiceWorker as soon as the application is stable
+			// or after 30 seconds (whichever comes first).
+			registrationStrategy: 'registerWhenStable:30000',
+		}),
 	],
 	providers: [
 		{
@@ -67,15 +73,6 @@ registerLocaleData(de);
 					},
 				});
 			},
-			multi: true,
-		},
-		{
-			provide: APP_INITIALIZER,
-			useFactory: (http: HttpClient) => async () => {
-				const config = await firstValueFrom(http.get('./assets/config.json'));
-				Object.assign(environment, { ...config, ...environment });
-			},
-			deps: [HttpClient],
 			multi: true,
 		},
 		{ provide: NZ_I18N, useValue: de_DE },

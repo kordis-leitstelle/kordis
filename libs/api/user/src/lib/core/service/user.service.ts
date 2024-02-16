@@ -1,4 +1,4 @@
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { UserEntity } from '../entity/user.entity';
 import { UserNotFoundException } from '../exception/user-not-found.exception';

@@ -1,16 +1,10 @@
-name: 'build-and-deploy-spa'
-description: 'Builds SPA project for production and deploys it to a given environment'
+name: 'build-and-publish-spa'
+description: 'Builds SPA project and publish its image'
 
 inputs:
   releaseVersion:
     required: true
     description: "Release Version (Commit or Tag)"
-  deploymentEnv:
-    required: true
-    description: "Deployment Environment"
-  sentryAuthToken:
-    required: true
-    description: "Sentry Auth Token"
   containerRegistryUrl:
     required: true
     description: "Container registry url"
@@ -20,9 +14,9 @@ inputs:
   containerRegistryPassword:
     required: true
     description: "Container registry password"
-  containerTag:
+  containerTags:
     required: true
-    description: "Container tag"
+    description: "Container tag or csv delimited tags"
 outputs:
   url:
     description: "SPA URL"
@@ -54,24 +48,6 @@ runs:
         context: ./
         file: ./apps/spa/docker/Dockerfile
         push: true
-        tags: |
-          ${{ inputs.containerTag }}
+        tags: ${{ inputs.containerTags }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Deploy SPA
-      id: spa-deployment
-      shell: bash
-      run: echo "url=placeholder" >> $GITHUB_OUTPUT
-    - name: Build SPA with source maps for sentry
-      run: npx nx build spa --prod --source-map=true
-      shell: bash
-    - name: Create Sentry release
-      uses: getsentry/action-release@v1
-      env:
-        SENTRY_AUTH_TOKEN: ${{ inputs.sentryAuthToken }}
-        SENTRY_ORG: kordis-leitstelle
-        SENTRY_PROJECT: kordis-spa
-      with:
-        environment: ${{ inputs.deploymentEnv }}
-        version: ${{ inputs.releaseVersion }}
-        sourcemaps: ./dist/apps/spa

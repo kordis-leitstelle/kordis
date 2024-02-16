@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { USER_SERVICE, UserService } from '../service/user.service';
 import {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthUser, Role } from '@kordis/shared/auth';
+import { AuthUser, Role } from '@kordis/shared/model';
 import { TEST_USERS } from '@kordis/shared/test-helpers';
 
 import { AUTH_SERVICE } from '../services/auth-service';

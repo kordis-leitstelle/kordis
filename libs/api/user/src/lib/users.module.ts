@@ -2,7 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { DynamicModule, Module } from '@nestjs/common';
 import { registerEnumType } from '@nestjs/graphql';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { CreateUserHandler } from './core/command/create-user.command';
 import { DeactivateUserHandler } from './core/command/deactivate-user.command';

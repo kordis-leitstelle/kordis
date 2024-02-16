@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 import { TEST_USERS } from '@kordis/shared/test-helpers';
 
 import { UserEntity } from '../../core/entity/user.entity';

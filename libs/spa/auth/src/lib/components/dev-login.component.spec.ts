@@ -4,7 +4,7 @@ import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';

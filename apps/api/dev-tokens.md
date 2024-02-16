@@ -14,4 +14,5 @@ in-memory store of the
 | testorgadmin | d8e3e5f2-fb05-4c47-b869-5a558e1f57e5 | dff7584efe2c174eee8bae45                         | Test                          | Org Admin                   | testorgadmin@kordis-leitstelle.de | Organization Admin          | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiJkOGUzZTVmMi1mYjA1LTRjNDctYjg2OS01YTU1OGUxZjU3ZTUiLCJnaXZlbl9uYW1lIjoiVGVzdCIsImZhbWlseV9uYW1lIjoiT3JnIEFkbWluIiwiZXh0ZW5zaW9uX09yZ2FuaXphdGlvbklkIjoiZGZmNzU4NGVmZTJjMTc0ZWVlOGJhZTQ1IiwiZXh0ZW5zaW9uX1JvbGUiOiJvcmdhbml6YXRpb25fYWRtaW4iLCJlbWFpbHMiOlsidGVzdG9yZ2FkbWluQGtvcmRpcy1sZWl0c3RlbGxlLmRlIl19.-AKJ8UJltumkThrJ3tU76ciyHfKOp3uMrNvO_HvgH3M` |
 
 The claims will be mapped to the
-[AuthUser](../../libs/shared/auth/src/lib/auth-user.model.ts) Model in the
+[AuthUser](../../libs/shared/model/src/lib/auth-user.model.ts) Model in the
+[AuthInterceptor](../../libs/api/auth/src/lib/interceptors/auth.interceptor.ts).

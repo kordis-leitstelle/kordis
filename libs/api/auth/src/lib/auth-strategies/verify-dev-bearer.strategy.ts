@@ -1,17 +1,15 @@
 import { Request } from 'express';
 
-import { AuthUser, Role } from '@kordis/shared/auth';
+import { AuthUser, Role } from '@kordis/shared/model';
 
-export abstract class AuthUserExtractorStrategy {
-	abstract getUserFromRequest(req: Request): AuthUser | null;
-}
+import { VerifyAuthUserStrategy } from './verify-auth-user.strategy';
 
-export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy {
-	getUserFromRequest(req: Request): AuthUser | null {
+export class VerifyDevBearerStrategy extends VerifyAuthUserStrategy {
+	verifyUserFromRequest(req: Request): Promise<AuthUser | null> {
 		const authHeaderValue = req.headers['authorization'];
 
 		if (!authHeaderValue) {
-			return null;
+			return Promise.resolve(null);
 		}
 
 		const payloadBuffer = Buffer.from(authHeaderValue.split('.')[1], 'base64');
@@ -25,13 +23,13 @@ export class ExtractUserFromMsPrincipleHeader extends AuthUserExtractorStrategy 
 			extension_Role: string;
 		};
 
-		return {
-			id: decodedToken['oid'] || decodedToken['sub'],
+		return Promise.resolve({
+			id: decodedToken['oid'] ?? decodedToken['sub'],
 			email: decodedToken['emails'][0],
 			firstName: decodedToken['given_name'],
 			lastName: decodedToken['family_name'],
 			organizationId: decodedToken['extension_OrganizationId'],
 			role: decodedToken['extension_Role'] as Role,
-		};
+		});
 	}
 }

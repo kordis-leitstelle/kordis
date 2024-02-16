@@ -1,5 +1,5 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CallHandler } from '@nestjs/common';
+import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
@@ -8,36 +8,36 @@ import {
 	createGqlContextForRequest,
 	createHttpContextForRequest,
 } from '@kordis/api/test-helpers';
-import { AuthUser, Role } from '@kordis/shared/auth';
+import { AuthUser, Role } from '@kordis/shared/model';
 
-import { AuthUserExtractorStrategy } from '../auth-user-extractor-strategies/auth-user-extractor.strategy';
+import { VerifyAuthUserStrategy } from '../auth-strategies/verify-auth-user.strategy';
 import { PresentableUnauthorizedException } from '../errors/presentable-unauthorized.exception';
 import { AuthInterceptor } from './auth.interceptor';
 
 describe('AuthInterceptor', () => {
-	let mockAuthUserExtractor: AuthUserExtractorStrategy;
+	let mockAuthUserExtractor: VerifyAuthUserStrategy;
 	let mockReflector: DeepMocked<Reflector>;
 	let service: AuthInterceptor;
 	beforeEach(() => {
-		mockAuthUserExtractor = new (class extends AuthUserExtractorStrategy {
+		mockAuthUserExtractor = new (class extends VerifyAuthUserStrategy {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			getUserFromRequest(req: KordisRequest): AuthUser | null {
-				return null;
+			verifyUserFromRequest(req: KordisRequest): Promise<AuthUser | null> {
+				return Promise.resolve(null);
 			}
 		})();
 		mockReflector = createMock<Reflector>();
 		service = new AuthInterceptor(mockAuthUserExtractor, mockReflector);
 	});
 
-	it('should throw unauthorized http exception without auth header', async () => {
+	it('should throw unauthorized http exception', async () => {
 		jest
-			.spyOn(mockAuthUserExtractor, 'getUserFromRequest')
-			.mockReturnValueOnce(null);
+			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
+			.mockResolvedValueOnce(null);
 
 		await expect(
 			firstValueFrom(
-				service.intercept(
-					createGqlContextForRequest(createMock<KordisRequest>()),
+				await service.intercept(
+					createMock<ExecutionContext>(),
 					createMock<CallHandler>(),
 				),
 			),
@@ -46,8 +46,8 @@ describe('AuthInterceptor', () => {
 
 	it('should throw unauthorized http exception with PresentableUnauthorizedException', async () => {
 		jest
-			.spyOn(mockAuthUserExtractor, 'getUserFromRequest')
-			.mockReturnValueOnce({
+			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
+			.mockResolvedValueOnce({
 				id: '123',
 				firstName: 'foo',
 				lastName: 'bar',
@@ -59,23 +59,25 @@ describe('AuthInterceptor', () => {
 
 		await expect(
 			firstValueFrom(
-				service.intercept(
-					createGqlContextForRequest(createMock<KordisRequest>()),
+				await service.intercept(
+					createMock<ExecutionContext>(),
 					createMock<CallHandler>(),
 				),
 			),
 		).rejects.toThrow(PresentableUnauthorizedException);
 	});
 
-	it('should continue request pipeline', async () => {
-		jest.spyOn(mockAuthUserExtractor, 'getUserFromRequest').mockReturnValue({
-			id: '123',
-			firstName: 'foo',
-			lastName: 'bar',
-			email: 'foo@bar.de',
-			organizationId: '123',
-			role: Role.USER,
-		});
+	it('should continue request pipeline for authenticated request', async () => {
+		jest
+			.spyOn(mockAuthUserExtractor, 'verifyUserFromRequest')
+			.mockResolvedValue({
+				id: '123',
+				firstName: 'foo',
+				lastName: 'bar',
+				email: 'foo@bar.de',
+				organizationId: '123',
+				role: Role.USER,
+			});
 		mockReflector.get.mockReturnValue(undefined);
 
 		const handler = createMock<CallHandler>({
@@ -87,13 +89,34 @@ describe('AuthInterceptor', () => {
 		const gqlCtx = createGqlContextForRequest(createMock<KordisRequest>());
 
 		await expect(
-			firstValueFrom(service.intercept(gqlCtx, handler)),
+			firstValueFrom(await service.intercept(gqlCtx, handler)),
 		).resolves.toBeTruthy();
 
 		const httpCtx = createHttpContextForRequest(createMock<KordisRequest>());
 
 		await expect(
-			firstValueFrom(service.intercept(httpCtx, handler)),
+			firstValueFrom(await service.intercept(httpCtx, handler)),
+		).resolves.toBeTruthy();
+	});
+
+	it('should continue request pipeline for health-check request', async () => {
+		const handler = createMock<CallHandler>({
+			handle(): Observable<boolean> {
+				return of(true);
+			},
+		});
+
+		await expect(
+			firstValueFrom(
+				await service.intercept(
+					createHttpContextForRequest(
+						createMock<KordisRequest>({
+							path: '/health-check',
+						}),
+					),
+					handler,
+				),
+			),
 		).resolves.toBeTruthy();
 	});
 });

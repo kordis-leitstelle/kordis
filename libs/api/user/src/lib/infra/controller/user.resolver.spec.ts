@@ -7,7 +7,7 @@ import {
 	PresentableNotFoundException,
 } from '@kordis/api/shared';
 import { expectIterableNotToHaveNext } from '@kordis/api/test-helpers';
-import { AuthUser, Role } from '@kordis/shared/auth';
+import { AuthUser, Role } from '@kordis/shared/model';
 
 import { CreateUserCommand } from '../../core/command/create-user.command';
 import { DeactivateUserCommand } from '../../core/command/deactivate-user.command';

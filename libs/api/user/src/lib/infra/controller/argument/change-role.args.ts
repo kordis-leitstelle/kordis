@@ -1,7 +1,7 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 @ArgsType()
 export class ChangeRoleArgs {

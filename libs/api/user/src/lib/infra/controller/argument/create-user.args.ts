@@ -1,7 +1,7 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 @ArgsType()
 export class CreateUserArgs {

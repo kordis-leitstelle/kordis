@@ -9,7 +9,7 @@ import {
 	shareReplay,
 } from 'rxjs';
 
-import { AuthUser, Role } from '@kordis/shared/auth';
+import { AuthUser, Role } from '@kordis/shared/model';
 
 import { AuthService } from './auth-service';
 

@@ -1,4 +1,4 @@
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 // keep in sync with the apps/api/dev-tokens.md file!
 export const TEST_USERS = [

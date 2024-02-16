@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AuthUser } from '@kordis/shared/auth';
+import { AuthUser } from '@kordis/shared/model';
 
 export interface AuthService {
 	readonly user$: Observable<AuthUser | null>;

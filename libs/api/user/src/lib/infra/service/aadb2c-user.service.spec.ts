@@ -5,7 +5,7 @@ import { Test } from '@nestjs/testing';
 import { AxiosResponse } from 'axios';
 import { of, throwError } from 'rxjs';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { UserNotFoundException } from '../../core/exception/user-not-found.exception';
 import { AADB2CUserService } from './aadb2c-user.service';

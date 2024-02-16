@@ -15,12 +15,17 @@
 				"polyfills": ["zone.js"],
 				"tsConfig": "apps/spa/tsconfig.app.json",
 				"inlineStyleLanguage": "css",
-				"assets": ["apps/spa/src/favicon.ico", "apps/spa/src/assets"],
+				"assets": [
+					"apps/spa/src/favicon.ico",
+					"apps/spa/src/manifest.webmanifest",
+					"apps/spa/src/assets"
+				],
 				"styles": [
 					"./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
 					"apps/spa/src/styles.css"
 				],
-				"scripts": []
+				"scripts": [],
+				"serviceWorker": "apps/spa/ngsw-config.json"
 			},
 			"configurations": {
 				"production": {

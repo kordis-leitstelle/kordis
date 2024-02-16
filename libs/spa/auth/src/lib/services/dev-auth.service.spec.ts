@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { createServiceFactory } from '@ngneat/spectator/jest';
 import { firstValueFrom } from 'rxjs';
 
-import { Role } from '@kordis/shared/auth';
+import { Role } from '@kordis/shared/model';
 
 import { DevAuthService } from './dev-auth.service';
 

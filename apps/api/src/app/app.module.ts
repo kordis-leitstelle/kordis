@@ -1,26 +1,31 @@
 import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
 import * as path from 'path';
-import * as process from 'process';
 
 import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
-import { SharedKernel, errorFormatterFactory } from '@kordis/api/shared';
+import {
+	MongoEncryptionClientProvider,
+	errorFormatterFactory,
+	getMongoEncrKmsFromConfig,
+} from '@kordis/api/shared';
 import { UsersModule } from '@kordis/api/user';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
+import { HealthCheckController } from './controllers/health-check.controller';
 import environment from './environment';
 
-const IS_NON_CI_PROD =
-	process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS;
+const isNextOrProdEnv = ['next', 'prod'].includes(
+	process.env.ENVIRONMENT_NAME ?? '',
+);
 
 const FEATURE_MODULES = [
 	OrganizationModule,
@@ -29,9 +34,8 @@ const FEATURE_MODULES = [
 	),
 ];
 const UTILITY_MODULES = [
-	SharedKernel,
-	AuthModule,
-	ObservabilityModule.forRoot(IS_NON_CI_PROD ? 'sentry' : 'dev'),
+	AuthModule.forRoot(process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev'),
+	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
 ];
 
 @Module({
@@ -46,10 +50,7 @@ const UTILITY_MODULES = [
 			imports: [ConfigModule],
 			driver: ApolloDriver,
 			useFactory: (config: ConfigService) => ({
-				autoSchemaFile:
-					config.get('NODE_ENV') !== 'production'
-						? path.join(process.cwd(), 'apps/api/src/schema.gql')
-						: true,
+				autoSchemaFile: true,
 				playground: config.get('NODE_ENV') !== 'production',
 				formatError: errorFormatterFactory(
 					config.get('NODE_ENV') === 'production',
@@ -59,10 +60,30 @@ const UTILITY_MODULES = [
 		}),
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
-			useFactory: (config: ConfigService) => ({
-				uri: config.getOrThrow<string>('MONGODB_URI'),
-			}),
-			inject: [ConfigService],
+			useFactory: async (
+				config: ConfigService,
+				encrManager: MongoEncryptionClientProvider,
+			) => {
+				const uri = config.getOrThrow<string>('MONGODB_URI');
+				const { kms, masterKey, provider } = getMongoEncrKmsFromConfig(config);
+
+				await encrManager.init(
+					uri,
+					provider,
+					kms.keyVaultNamespace,
+					kms.kmsProviders,
+					masterKey,
+				);
+
+				return {
+					uri,
+					autoEncryption: {
+						...kms,
+						bypassAutoEncryption: true,
+					},
+				};
+			},
+			inject: [ConfigService, MongoEncryptionClientProvider],
 		}),
 		AutomapperModule.forRoot({
 			strategyInitializer: classes(),
@@ -71,6 +92,6 @@ const UTILITY_MODULES = [
 		...FEATURE_MODULES,
 	],
 	providers: [AppService, AppResolver],
-	controllers: [GraphqlSubscriptionsController],
+	controllers: [GraphqlSubscriptionsController, HealthCheckController],
 })
 export class AppModule {}
