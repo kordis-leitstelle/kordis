@@ -1,7 +1,9 @@
 import { test as setup } from '@playwright/test';
 
+import { TEST_USERS } from '@kordis/shared/test-helpers';
+
 import { LoginPo } from './page-objects/login.po';
-import { TestUsernames, getAuthStoragePath, testUsernames } from './test-users';
+import { TestUsernames, getAuthStoragePath } from './test-users';
 
 // Documentation: https://playwright.dev/docs/auth#multiple-signed-in-roles
 
@@ -25,13 +27,13 @@ setup('authenticate as testusers', async ({ browser }) => {
 			await context.close();
 		}
 	} else {
-		for (const username of testUsernames) {
+		for (const user of TEST_USERS) {
 			const context = await browser.newContext();
 			const page = await context.newPage();
-			await new LoginPo(page).loginViaDevAuth(username);
+			await new LoginPo(page).loginViaDevAuth(user.userName);
 			await page.waitForURL('/protected');
 
-			await context.storageState({ path: getAuthStoragePath(username) });
+			await context.storageState({ path: getAuthStoragePath(user.userName) });
 			await context.close();
 		}
 	}

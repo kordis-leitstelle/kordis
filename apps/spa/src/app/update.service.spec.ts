@@ -25,6 +25,10 @@ describe('UpdateService', () => {
 			],
 		});
 		TestBed.inject(UpdateService);
+		Object.defineProperty(window, 'location', {
+			value: { reload: jest.fn(), hash: {} },
+		});
+		windowSpy.mockReturnValue(true);
 	});
 
 	afterEach(() => {
@@ -34,7 +38,6 @@ describe('UpdateService', () => {
 	it('should ask for update permission when a new version is ready', () =>
 		new Promise<void>((done) => {
 			swUpdateMock.versionUpdates.subscribe(() => {
-				console.log('hi');
 				expect(windowSpy).toHaveBeenCalled();
 				done();
 			});
@@ -44,10 +47,6 @@ describe('UpdateService', () => {
 		}));
 
 	it('should reload page if permission given', () => {
-		Object.defineProperty(window, 'location', {
-			value: { reload: jest.fn(), hash: {} },
-		});
-		windowSpy.mockReturnValue(true);
 		const reloadSpy = jest.spyOn(window.location, 'reload');
 
 		versionUpdateSubject$.next({

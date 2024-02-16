@@ -5,6 +5,8 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { Role } from '@kordis/shared/model';
+
 import { AUTH_SERVICE } from '../services/auth-service';
 import { DevAuthService } from '../services/dev-auth.service';
 import { DevAuthInterceptor } from './dev-auth.interceptor';
@@ -39,13 +41,14 @@ describe('DevAuthInterceptor', () => {
 
 	it('should add an Authorization header with Bearer token when token is present', () => {
 		const token =
-			'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJvaWQiOiIxYTJiM2M0ZCIsImVtYWlscyI6WyJqb2huLmRvZUBleGFtcGxlLmNvbSJdLCJnaXZlbl9uYW1lIjoiSm9obiIsImZhbWlseV9uYW1lIjoiRG9lIiwiZXh0ZW5zaW9uX09yZ2FuaXNhdGlvbiI6InRlc3RvcmcifQ.';
+			'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJvaWQiOiIxYTJiM2M0ZCIsImVtYWlscyI6WyJqb2huLmRvZUBleGFtcGxlLmNvbSJdLCJnaXZlbl9uYW1lIjoiSm9obiIsImZhbWlseV9uYW1lIjoiRG9lIiwiZXh0ZW5zaW9uX09yZ2FuaXphdGlvbklkIjoidGVzdG9yZyIsImV4dGVuc2lvbl9Sb2xlIjoidXNlciJ9.';
 		authService.setSession({
 			id: '1a2b3c4d',
 			firstName: 'John',
 			lastName: 'Doe',
 			email: 'john.doe@example.com',
-			organization: 'testorg',
+			organizationId: 'testorg',
+			role: Role.USER,
 		});
 
 		httpClient.get('/test').subscribe();

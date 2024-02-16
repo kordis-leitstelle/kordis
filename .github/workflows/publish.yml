@@ -37,7 +37,7 @@ jobs:
     needs: build-and-publish-images
     steps:
       - name: Trigger Next Deployment
-        uses: peter-evans/repository-dispatch@v4
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.INFRA_PAT }}
           repository: kordis-leitstelle/infrastructure

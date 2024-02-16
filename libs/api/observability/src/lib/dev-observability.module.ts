@@ -10,5 +10,6 @@ import { PinoLogger } from './services/pino-logger.service';
 			useValue: new PinoLogger(true),
 		},
 	],
+	exports: [KORDIS_LOGGER_SERVICE],
 })
 export class DevObservabilityModule {}

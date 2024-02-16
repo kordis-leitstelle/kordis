@@ -37,7 +37,6 @@ export class AuthModule {
 		return {
 			module: AuthModule,
 			imports: [AUTH_MODULES[authProvider]],
-			exports: [VerifyAuthUserStrategy],
 			providers: [
 				{
 					provide: APP_INTERCEPTOR,

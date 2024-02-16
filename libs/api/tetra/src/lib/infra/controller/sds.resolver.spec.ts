@@ -36,7 +36,7 @@ describe('SDSResolver', () => {
 			const orgId = 'orgId';
 
 			await resolver.sendSDS(
-				{ organization: orgId } as AuthUser,
+				{ organizationId: orgId } as AuthUser,
 				issi,
 				message,
 				isFlash,
@@ -58,7 +58,7 @@ describe('SDSResolver', () => {
 
 			await expect(
 				resolver.sendSDS(
-					{ organization: 'orgId' } as AuthUser,
+					{ organizationId: 'orgId' } as AuthUser,
 					issi,
 					message,
 					isFlash,
@@ -70,7 +70,7 @@ describe('SDSResolver', () => {
 
 			await expect(
 				resolver.sendSDS(
-					{ organization: ' ' } as AuthUser,
+					{ organizationId: ' ' } as AuthUser,
 					issi,
 					message,
 					isFlash,

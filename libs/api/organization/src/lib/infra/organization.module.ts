@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CreateOrganizationHandler } from '../core/command/create-organization.command';
@@ -19,7 +18,6 @@ import {
 		MongooseModule.forFeature([
 			{ name: OrganizationDocument.name, schema: OrganizationSchema },
 		]),
-		CqrsModule,
 	],
 	providers: [
 		OrganizationProfile,

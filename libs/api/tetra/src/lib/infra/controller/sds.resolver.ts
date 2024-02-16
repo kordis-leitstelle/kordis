@@ -1,7 +1,7 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-import { User } from '@kordis/api/auth';
+import { RequestUser } from '@kordis/api/auth';
 import { AuthUser } from '@kordis/shared/model';
 
 import { SendTetraSDSCommand } from '../../core/command/send-tetra-sds.command';
@@ -14,7 +14,7 @@ export class SDSResolver {
 
 	@Mutation(() => Boolean)
 	async sendSDS(
-		@User() user: AuthUser,
+		@RequestUser() { organizationId }: AuthUser,
 		@Args('issi')
 		issi: string,
 		@Args('message') message: string,
@@ -22,7 +22,7 @@ export class SDSResolver {
 	): Promise<boolean> {
 		try {
 			await this.commandBus.execute(
-				new SendTetraSDSCommand(user.organization, issi, message, !!isFlash),
+				new SendTetraSDSCommand(organizationId, issi, message, !!isFlash),
 			);
 		} catch (error) {
 			if (error instanceof SdsNotAbleToSendException) {

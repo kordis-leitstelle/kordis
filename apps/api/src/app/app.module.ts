@@ -12,11 +12,11 @@ import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import {
 	MongoEncryptionClientProvider,
-	SharedKernel,
 	errorFormatterFactory,
 	getMongoEncrKmsFromConfig,
 } from '@kordis/api/shared';
 import { TetraModule } from '@kordis/api/tetra';
+import { UsersModule } from '@kordis/api/user';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
@@ -28,10 +28,13 @@ const isNextOrProdEnv = ['next', 'prod'].includes(
 	process.env.ENVIRONMENT_NAME ?? '',
 );
 
-const FEATURE_MODULES = [OrganizationModule, TetraModule];
+const FEATURE_MODULES = [
+	OrganizationModule,
+	TetraModule,
+	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
+];
 const UTILITY_MODULES = [
-	SharedKernel,
-	AuthModule.forRoot(isNextOrProdEnv ? 'aadb2c' : 'dev'),
+	AuthModule.forRoot(process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev'),
 	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
 ];
 
@@ -48,9 +51,6 @@ const UTILITY_MODULES = [
 			driver: ApolloDriver,
 			useFactory: (config: ConfigService) => ({
 				autoSchemaFile: true,
-				subscriptions: {
-					'graphql-ws': true,
-				},
 				playground: config.get('NODE_ENV') !== 'production',
 				formatError: errorFormatterFactory(
 					config.get('NODE_ENV') === 'production',
@@ -59,7 +59,7 @@ const UTILITY_MODULES = [
 			inject: [ConfigService],
 		}),
 		MongooseModule.forRootAsync({
-			imports: [ConfigModule, SharedKernel],
+			imports: [ConfigModule],
 			useFactory: async (
 				config: ConfigService,
 				encrManager: MongoEncryptionClientProvider,

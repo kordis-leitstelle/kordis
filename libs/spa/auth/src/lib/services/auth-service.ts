@@ -10,6 +10,8 @@ export interface AuthService {
 	login(): void;
 
 	logout(): void;
+
+	getAccessToken(): string;
 }
 
 export const AUTH_SERVICE = new InjectionToken<AuthService>('AUTH_SERVICE');
