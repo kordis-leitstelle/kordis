@@ -9,7 +9,7 @@ import { AuthUser, Role } from '@kordis/shared/model';
 
 import { RequestUser } from './req-user.decorator';
 
-describe('req-user.decorator', () => {
+describe('Request User Decorator', () => {
 	it('should return user from request', () => {
 		const user: AuthUser = {
 			id: 'id123',

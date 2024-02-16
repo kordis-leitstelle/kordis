@@ -29,9 +29,7 @@ const isNextOrProdEnv = ['next', 'prod'].includes(
 
 const FEATURE_MODULES = [
 	OrganizationModule,
-	UsersModule.forRoot(
-		process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev',
-	),
+	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
 ];
 const UTILITY_MODULES = [
 	AuthModule.forRoot(process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev'),
