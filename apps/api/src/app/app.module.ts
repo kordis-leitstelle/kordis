@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AutomapperModule } from '@timonmasberg/automapper-nestjs';
 import * as path from 'path';
+import * as process from 'process';
 
 import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
@@ -20,14 +21,11 @@ import environment from './environment';
 
 const IS_NON_CI_PROD =
 	process.env.NODE_ENV === 'production' && !process.env.GITHUB_ACTIONS;
-const IS_NEXT_DEPLOYMENT = process.env.ENVIRONMENT_NAME === 'next';
-const IS_PROD_DEPLOYMENT = process.env.ENVIRONMENT_NAME === 'prod';
 
 const FEATURE_MODULES = [
 	OrganizationModule,
 	UsersModule.forRoot(
-		// todo: auslagernnin USER_AUTH_PROVIDER
-		IS_NEXT_DEPLOYMENT || IS_PROD_DEPLOYMENT ? 'aadb2c' : 'dev',
+		process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev',
 	),
 ];
 const UTILITY_MODULES = [
