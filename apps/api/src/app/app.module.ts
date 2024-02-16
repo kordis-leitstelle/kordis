@@ -12,6 +12,7 @@ import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import {
 	MongoEncryptionClientProvider,
+	SharedKernel,
 	errorFormatterFactory,
 	getMongoEncrKmsFromConfig,
 } from '@kordis/api/shared';
@@ -34,8 +35,9 @@ const FEATURE_MODULES = [
 	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
 ];
 const UTILITY_MODULES = [
-	AuthModule.forRoot(process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev'),
+	SharedKernel,
 	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
+	AuthModule.forRoot(process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev'),
 ];
 
 @Module({
