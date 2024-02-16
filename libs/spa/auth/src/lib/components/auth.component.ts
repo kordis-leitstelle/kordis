@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
 
@@ -56,6 +57,7 @@ export class AuthComponent {
 	) {
 		this.hasAuthError$ = activatedRoute.queryParams.pipe(
 			map((params) => !!params['error']),
+			takeUntilDestroyed(),
 		);
 	}
 
