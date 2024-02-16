@@ -66,7 +66,7 @@ jobs:
           docker run -d -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb kordis-api:${{ github.sha }}
           docker run -d -p 4200:8080 -e API_URL=http://localhost:3000 kordis-spa:${{ github.sha }}
       - name: Run E2Es
-        run: npx wait-on -t 30s tcp:3000 && npx wait-on -t 30s http://localhost:4200 && npx nx e2e spa-e2e --skipInstall
+        run: npx wait-on -t 30s http://localhost:3000/health-check && npx wait-on -t 30s http://localhost:4200 && npx nx e2e spa-e2e --skipInstall
         env:
           E2E_BASE_URL: http://localhost:4200/
       - uses: actions/upload-artifact@v4
