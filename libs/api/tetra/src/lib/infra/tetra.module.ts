@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -24,6 +25,7 @@ import { TetraConfigMapperProfile } from './tetra-config.mapper-profile';
 			},
 		]),
 		CqrsModule,
+		HttpModule,
 	],
 	controllers: [TetraControlWebhookController],
 	providers: [
