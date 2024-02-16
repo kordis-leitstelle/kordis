@@ -38,7 +38,7 @@ export class AuthInterceptor implements NestInterceptor {
 		} else {
 			req = context.switchToHttp().getRequest<KordisRequest>();
 
-			if (req.path === '/health-check') {
+			if (req.path === '/health-check' || req.path.startsWith('/webhooks')) {
 				return next.handle();
 			}
 		}

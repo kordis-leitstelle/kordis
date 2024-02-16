@@ -1,5 +1,5 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CallHandler, ExecutionContext } from '@nestjs/common';
+import { CallHandler } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, firstValueFrom, of } from 'rxjs';
 
@@ -37,7 +37,7 @@ describe('AuthInterceptor', () => {
 		await expect(
 			firstValueFrom(
 				await service.intercept(
-					createMock<ExecutionContext>(),
+					createGqlContextForRequest(createMock<KordisRequest>()),
 					createMock<CallHandler>(),
 				),
 			),
@@ -60,7 +60,7 @@ describe('AuthInterceptor', () => {
 		await expect(
 			firstValueFrom(
 				await service.intercept(
-					createMock<ExecutionContext>(),
+					createGqlContextForRequest(createMock<KordisRequest>()),
 					createMock<CallHandler>(),
 				),
 			),
@@ -92,31 +92,38 @@ describe('AuthInterceptor', () => {
 			firstValueFrom(await service.intercept(gqlCtx, handler)),
 		).resolves.toBeTruthy();
 
-		const httpCtx = createHttpContextForRequest(createMock<KordisRequest>());
+		const httpCtx = createHttpContextForRequest(
+			createMock<KordisRequest>({
+				path: '/graphql',
+			}),
+		);
 
 		await expect(
 			firstValueFrom(await service.intercept(httpCtx, handler)),
 		).resolves.toBeTruthy();
 	});
 
-	it('should continue request pipeline for health-check request', async () => {
-		const handler = createMock<CallHandler>({
-			handle(): Observable<boolean> {
-				return of(true);
-			},
-		});
+	it.each(['/health-check', '/webhooks/foo', '/webhooks/bar'])(
+		'should continue request pipeline for %p and webhook request',
+		async (path: string) => {
+			const handler = createMock<CallHandler>({
+				handle(): Observable<boolean> {
+					return of(true);
+				},
+			});
 
-		await expect(
-			firstValueFrom(
-				await service.intercept(
-					createHttpContextForRequest(
-						createMock<KordisRequest>({
-							path: '/health-check',
-						}),
+			await expect(
+				firstValueFrom(
+					await service.intercept(
+						createHttpContextForRequest(
+							createMock<KordisRequest>({
+								path,
+							}),
+						),
+						handler,
 					),
-					handler,
 				),
-			),
-		).resolves.toBeTruthy();
-	});
+			).resolves.toBeTruthy();
+		},
+	);
 });
