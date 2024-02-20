@@ -27,7 +27,6 @@ nz-layout {
 			'deployments deployments';
 		grid-template-columns: 3fr 2fr;
 		grid-template-rows: 3fr 2fr;
-		/* height: 100%; */
 		min-height: 720px;
 		min-width: 1280px;
 		padding: 8px;
