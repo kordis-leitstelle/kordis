@@ -20,10 +20,10 @@ describe('DashboardComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule, DashboardComponent],
+			imports: [BrowserAnimationsModule],
 			providers: [
 				{ provide: AUTH_SERVICE, useValue: authServiceMock },
-				{ provide: NzModalService, useValue: { create: jest.fn() } },
+				{ provide: NzModalService, useValue: modalServiceMock },
 			],
 		}).compileComponents();
 	});
