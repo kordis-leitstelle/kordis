@@ -25,6 +25,7 @@
 			"@kordis/shared/model": ["libs/shared/model/src/index.ts"],
 			"@kordis/shared/test-helpers": ["libs/shared/test-helpers/src/index.ts"],
 			"@kordis/spa/auth": ["libs/spa/auth/src/index.ts"],
+			"@kordis/spa/dashboard": ["libs/spa/dashboard/src/index.ts"],
 			"@kordis/spa/graphql": ["libs/spa/graphql/src/index.ts"],
 			"@kordis/spa/observability": ["libs/spa/observability/src/index.ts"]
 		}

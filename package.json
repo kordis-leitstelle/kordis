@@ -35,6 +35,7 @@
     "@commitlint/config-conventional": "^18.1.0",
     "@commitlint/config-nx-scopes": "^18.3.0",
     "@golevelup/ts-jest": "^0.3.5",
+    "@graphql-codegen/cli": "5.0.2",
     "@nestjs/schematics": "10.0.2",
     "@nestjs/testing": "10.2.4",
     "@ngneat/spectator": "^16.0.0",
@@ -73,6 +74,7 @@
     "jest-environment-jsdom": "29.5.0",
     "jest-environment-node": "^29.5.0",
     "jest-preset-angular": "13.1.4",
+    "jsonc-eslint-parser": "^2.1.0",
     "lcov-result-merger": "^5.0.0",
     "mongo-migrate-ts": "^1.4.0",
     "nx": "17.2.8",
@@ -82,8 +84,7 @@
     "ts-jest": "29.1.0",
     "ts-node": "10.9.2",
     "typescript": "5.2.2",
-    "wait-on": "^7.0.1",
-    "@graphql-codegen/cli": "5.0.2"
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "@angular/animations": "17.0.2",
@@ -95,8 +96,8 @@
     "@angular/platform-browser-dynamic": "17.0.2",
     "@angular/pwa": "^17.0.5",
     "@angular/router": "17.0.2",
-    "@apollo/client": "^3.8.10",
     "@angular/service-worker": "17.0.2",
+    "@apollo/client": "^3.8.10",
     "@apollo/server": "^4.5.0",
     "@automapper/classes": "^8.8.1",
     "@automapper/core": "^8.8.1",

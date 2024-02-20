@@ -10,6 +10,7 @@ import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
+import { DashboardComponent } from '@kordis/spa/dashboard';
 import { GraphqlModule } from '@kordis/spa/graphql';
 import {
 	NoopObservabilityModule,
@@ -53,6 +54,7 @@ registerLocaleData(de);
 			// or after 30 seconds (whichever comes first).
 			registrationStrategy: 'registerWhenStable:30000',
 		}),
+		DashboardComponent,
 	],
 	providers: [
 		{
