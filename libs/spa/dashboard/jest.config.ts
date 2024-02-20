@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-	displayName: 'dashboard',
+	displayName: 'spa-dashboard',
 	preset: '../../../jest.preset.js',
 	setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
 	coverageDirectory: '../../../coverage/libs/spa/dashboard',
