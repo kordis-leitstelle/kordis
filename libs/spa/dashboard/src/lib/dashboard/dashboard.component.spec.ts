@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { createMock } from '@golevelup/ts-jest';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { of } from 'rxjs';
 
 import { AUTH_SERVICE, AuthService } from '@kordis/spa/auth';
@@ -14,21 +14,20 @@ describe('DashboardComponent', () => {
 	const authServiceMock = createMock<AuthService>({
 		user$: of(null),
 	});
-	const modalServiceMock = createMock<NzModalService>({
-		create: () => ({}),
-	});
+	const modalServiceMock = createMock<NzModalService>();
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule],
-			providers: [
-				{ provide: AUTH_SERVICE, useValue: authServiceMock },
-				{ provide: NzModalService, useValue: modalServiceMock },
-			],
+			providers: [{ provide: AUTH_SERVICE, useValue: authServiceMock }],
 		}).compileComponents();
-	});
 
-	beforeEach(() => {
+		TestBed.overrideModule(NzModalModule, {
+			set: {
+				providers: [{ provide: NzModalService, useValue: modalServiceMock }],
+			},
+		});
+
 		fixture = TestBed.createComponent(DashboardComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
