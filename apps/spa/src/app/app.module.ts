@@ -19,13 +19,12 @@ import {
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
-import { ProtectedComponent } from './component/protected.component';
 import routes from './routes';
 
 registerLocaleData(de);
 
 @NgModule({
-	declarations: [AppComponent, ProtectedComponent],
+	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
