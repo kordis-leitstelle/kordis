@@ -63,9 +63,10 @@ jobs:
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Start API and SPA containers
         run: |
-          docker run -d -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb kordis-api:${{ github.sha }}
-          docker run -d -p 4200:8080 -e API_URL=http://localhost:3000 -e AUTH_PROVIDER=dev kordis-spa:${{ github.sha }}
+          docker run -d --name kordis-api-container -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb kordis-api:${{ github.sha }}
+          docker run -d --name kordis-spa-container -p 4200:8080 -e API_URL=http://localhost:3000 -e AUTH_PROVIDER=dev kordis-spa:${{ github.sha }}
       - name: Run E2Es
+        id: e2e-tests
         run: npx wait-on -t 30s tcp:3000 && npx wait-on -t 30s http://localhost:4200 && npx nx e2e spa-e2e --skipInstall
         env:
           E2E_BASE_URL: http://localhost:4200/
@@ -75,6 +76,11 @@ jobs:
           name: e2e-test-results
           path: test-results/
           if-no-files-found: ignore
+      - name: Print Container Logs
+        if: ${{ failure() && steps.e2e-tests.conclusion == 'failure' }}
+        run: |
+          docker logs kordis-api-container
+          docker logs kordis-spa-container
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
