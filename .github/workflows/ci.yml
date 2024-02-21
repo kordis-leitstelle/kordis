@@ -79,8 +79,12 @@ jobs:
       - name: Print Container Logs
         if: ${{ failure() && steps.e2e-tests.conclusion == 'failure' }}
         run: |
+          echo "::group::Kordis API Container Logs"
           docker logs kordis-api-container
+          echo "::endgroup::"
+          echo "::group::Kordis SPA Container Logs"
           docker logs kordis-spa-container
+          echo "::endgroup::"
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
