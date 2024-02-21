@@ -21,7 +21,7 @@ setup('authenticate as testusers', async ({ browser }) => {
 			const context = await browser.newContext();
 			const page = await context.newPage();
 			await new LoginPo(page).loginWithB2C(username, password);
-			await page.waitForURL('/protected');
+			await page.waitForURL('/dashboard');
 
 			await context.storageState({ path: getAuthStoragePath(username) });
 			await context.close();
@@ -31,7 +31,7 @@ setup('authenticate as testusers', async ({ browser }) => {
 			const context = await browser.newContext();
 			const page = await context.newPage();
 			await new LoginPo(page).loginViaDevAuth(user.userName);
-			await page.waitForURL('/protected');
+			await page.waitForURL('/dashboard');
 
 			await context.storageState({ path: getAuthStoragePath(user.userName) });
 			await context.close();

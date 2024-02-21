@@ -12,9 +12,9 @@ test('should get redirected to auth as unauthenticated', async ({ page }) => {
 test.describe('as authenticated', () => {
 	asUser('testuser');
 
-	test('should get initially redirected to /protected', async ({ page }) => {
+	test('should get initially redirected to /dashboard', async ({ page }) => {
 		await page.goto('/');
-		await page.waitForURL('/protected');
-		await expect(page).toHaveURL('/protected');
+		await page.waitForURL('/dashboard');
+		await expect(page).toHaveURL('/dashboard');
 	});
 });
