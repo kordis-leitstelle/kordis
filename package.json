@@ -37,7 +37,7 @@
     "@golevelup/ts-jest": "^0.3.5",
     "@nestjs/schematics": "10.0.2",
     "@nestjs/testing": "10.2.4",
-    "@ngneat/spectator": "^16.0.0",
+    "@ngneat/spectator": "^17.0.0",
     "@nx/angular": "17.2.8",
     "@nx/devkit": "17.2.8",
     "@nx/eslint": "17.2.8",
