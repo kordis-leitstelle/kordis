@@ -1,21 +1,20 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from '@kordis/spa/auth';
-
-import { ProtectedComponent } from './component/protected.component';
+import { DashboardComponent } from '@kordis/spa/dashboard';
 
 const routes: Routes = [
 	{
 		path: '',
-		redirectTo: 'protected',
+		redirectTo: 'dashbaord',
 		pathMatch: 'full',
 	},
 	{
-		path: 'protected',
-		component: ProtectedComponent,
+		path: 'dashboard',
+		component: DashboardComponent,
 		canActivate: [authGuard],
 	},
-	{ path: '**', redirectTo: 'protected' },
+	{ path: '**', redirectTo: 'dashboard' },
 ];
 
 export default routes;
