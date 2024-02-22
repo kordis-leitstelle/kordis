@@ -63,7 +63,7 @@ jobs:
         run: ./tools/db/kordis-db.sh init e2edb
       - name: Start API and SPA containers
         run: |
-          docker run -d --name kordis-api-container -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb kordis-api:${{ github.sha }}
+          docker run -d --name kordis-api-container -p 3000:3333 -e MONGODB_URI=mongodb://host.docker.internal:27017/e2edb -e AUTH_PROVIDER=dev kordis-api:${{ github.sha }}
           docker run -d --name kordis-spa-container -p 4200:8080 -e API_URL=http://localhost:3000 -e AUTH_PROVIDER=dev kordis-spa:${{ github.sha }}
       - name: Run E2Es
         id: e2e-tests
