@@ -7,12 +7,11 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-	BrowserTracing,
-	Replay,
 	TraceService,
+	browserTracingIntegration,
 	createErrorHandler,
 	init as initSentry,
-	instrumentAngularRouting,
+	replayIntegration,
 } from '@sentry/angular-ivy';
 
 import {
@@ -64,12 +63,7 @@ export class SentryObservabilityModule {
 	): void {
 		initSentry({
 			dsn,
-			integrations: [
-				new BrowserTracing({
-					routingInstrumentation: instrumentAngularRouting,
-				}),
-				new Replay(),
-			],
+			integrations: [browserTracingIntegration(), replayIntegration()],
 			environment,
 			release,
 			tracesSampleRate: 1.0,

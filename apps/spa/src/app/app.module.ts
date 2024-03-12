@@ -72,6 +72,12 @@ registerLocaleData(de);
 							},
 						);
 					},
+					createScriptURL: (string) => {
+						if (string.startsWith('blob:' + window.location.origin)) {
+							return string;
+						}
+						return '';
+					},
 				});
 			},
 			multi: true,
