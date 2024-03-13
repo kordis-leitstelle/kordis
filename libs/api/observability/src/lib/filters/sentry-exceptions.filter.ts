@@ -7,11 +7,7 @@ import { KordisLogger } from '../services/kordis-logger.interface';
 
 @Catch()
 export class SentryExceptionsFilter implements ExceptionFilter {
-	readonly logger: KordisLogger;
-
-	constructor(_logger: Logger) {
-		this.logger = _logger;
-	}
+	private readonly logger: KordisLogger = new Logger();
 
 	catch(exception: unknown): void {
 		if (exception instanceof PresentableException) {
