@@ -8,6 +8,7 @@ import { AUTH_SERVICE, AuthService } from '@kordis/spa/auth';
 
 import { DashboardComponent } from './dashboard.component';
 
+// TODO: implement tests for integrating protocol component
 describe('DashboardComponent', () => {
 	let component: DashboardComponent;
 	let fixture: ComponentFixture<DashboardComponent>;
