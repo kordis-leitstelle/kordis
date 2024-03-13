@@ -72,9 +72,12 @@ registerLocaleData(de);
 							},
 						);
 					},
-					createScriptURL: (string) => {
-						if (string.startsWith('blob:' + window.location.origin)) {
-							return string;
+					createScriptURL: (s) => {
+						if (
+							s === 'ngsw-worker.js' ||
+							s.startsWith('blob:' + window.location.origin)
+						) {
+							return s;
 						}
 						return '';
 					},
