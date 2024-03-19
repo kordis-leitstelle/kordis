@@ -53,7 +53,7 @@ jobs:
           RELEASE_VERSION: ${{ github.sha }}
       - name: Build
         run: |
-          npx nx run-many -t build --all --parallel=3
+          npx nx run-many -t build --prod --all --parallel=3
           docker build -t kordis-api:${{ github.sha }} -f ./apps/api/Dockerfile --build-arg NODE_VERSION=$(cat .nvmrc | tr -cd '[:digit:].') . &
           docker build -t kordis-spa:${{ github.sha }} -f ./apps/spa/docker/Dockerfile . &
           wait
