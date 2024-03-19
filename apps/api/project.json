@@ -15,14 +15,13 @@
 				"tsConfig": "apps/api/tsconfig.app.json",
 				"assets": ["apps/api/src/assets"],
 				"webpackConfig": "apps/api/webpack.config.js",
-				"generatePackageJson": true,
-				"isolatedConfig": true,
-				"babelUpwardRootMode": true
+				"isolatedConfig": true
 			},
 			"configurations": {
 				"production": {
 					"optimization": true,
 					"extractLicenses": true,
+					"generatePackageJson": true,
 					"inspect": false
 				}
 			}
