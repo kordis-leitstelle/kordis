@@ -66,10 +66,6 @@
 			"options": {
 				"jestConfig": "apps/api/jest.config.ts"
 			}
-		},
-		"docker-build": {
-			"dependsOn": ["build"],
-			"command": "docker build --build-arg NODE_VERSION=$(cat .nvmrc | tr -cd [:digit:].) -f apps/api/Dockerfile . -t api"
 		}
 	},
 	"tags": []
