@@ -38,7 +38,7 @@ import { AUTH_SERVICE, AuthService } from '../services/auth-service';
 					<img
 						class="cover-image"
 						alt="Kordis"
-						ngSrc="/assets/login-bg.jpg"
+						ngSrc="/assets/login-bg.webp"
 						fill
 						priority
 					/>
