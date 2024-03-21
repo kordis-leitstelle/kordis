@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
@@ -24,5 +24,5 @@ import { ProtocolEntry } from './protocol.model';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProtocolComponent {
-	@Input({ required: true }) protocolEntries: ProtocolEntry[] = [];
+	public protocolEntries = input<ProtocolEntry[]>([]);
 }
