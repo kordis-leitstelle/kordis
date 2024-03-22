@@ -1,12 +1,38 @@
 {
   "migrations": [
     {
+      "version": "18.1.0-beta.3",
+      "description": "Moves affected.defaultBase to defaultBase in `nx.json`",
+      "implementation": "./src/migrations/update-17-2-0/move-default-base",
+      "package": "nx",
+      "name": "move-default-base-to-nx-json-root"
+    },
+    {
       "cli": "nx",
-      "version": "17.2.1-beta.0",
-      "description": "Add webpack.config.js file when webpackConfig is not defined",
-      "implementation": "./src/migrations/update-17-2-1/webpack-config-setup",
-      "package": "@nx/webpack",
-      "name": "update-17-2-1-webpack-config-setup"
+      "version": "18.1.0-beta.1",
+      "requires": {
+        "@angular/core": ">=17.2.0"
+      },
+      "description": "Update the @angular/cli package version to ~17.2.0.",
+      "factory": "./src/migrations/update-18-1-0/update-angular-cli",
+      "package": "@nx/angular",
+      "name": "update-angular-cli-version-17-2-0"
+    },
+    {
+      "cli": "nx",
+      "version": "18.1.1-beta.0",
+      "description": "Ensure targetDefaults inputs for task hashing when '@nx/angular:webpack-browser' is used are correct for Module Federation.",
+      "factory": "./src/migrations/update-18-1-1/fix-target-defaults-inputs",
+      "package": "@nx/angular",
+      "name": "fix-target-defaults-for-webpack-browser"
+    },
+    {
+      "cli": "nx",
+      "version": "18.1.0-beta.3",
+      "description": "Remove invalid baseUrl option from @nx/playwright:playwright targets in project.json.",
+      "implementation": "./src/migrations/update-18-1-0/remove-baseUrl-from-project-json",
+      "package": "@nx/playwright",
+      "name": "18-1-0-remove-baseUrl-from-project-json"
     }
   ]
 }

@@ -15,14 +15,13 @@
 				"tsConfig": "apps/api/tsconfig.app.json",
 				"assets": ["apps/api/src/assets"],
 				"webpackConfig": "apps/api/webpack.config.js",
-				"generatePackageJson": true,
-				"isolatedConfig": true,
-				"babelUpwardRootMode": true
+				"isolatedConfig": true
 			},
 			"configurations": {
 				"production": {
 					"optimization": true,
 					"extractLicenses": true,
+					"generatePackageJson": true,
 					"inspect": false
 				}
 			}
@@ -67,10 +66,6 @@
 			"options": {
 				"jestConfig": "apps/api/jest.config.ts"
 			}
-		},
-		"docker-build": {
-			"dependsOn": ["build"],
-			"command": "docker build --build-arg NODE_VERSION=$(cat .nvmrc | tr -cd [:digit:].) -f apps/api/Dockerfile . -t api"
 		}
 	},
 	"tags": []
