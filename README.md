@@ -18,16 +18,16 @@ control centres
 Kordis is a software for the coordination of rescue stations and units, for
 logging operations and radio traffic, and for information processing in the
 domain of emergency services. The software aims to provide a modern and simple
-UI and workflow, as well as a safe and complient solution for volunteer staff 
-and for professional users while having a powerful set of features comparable 
+UI and workflow, as well as a safe and complient solution for volunteer staff
+and for professional users while having a powerful set of features comparable
 with commercial solutions.
 
 ## For Users
 
-This is currently under development. We aim to start feature development in 
-September 2024. If you want to use or/and test Kordis, 
-<a href="mailto:info@kordis-leitstelle.de">please reach out to us</a>.
-If you found a bug or have a feature request, please
+This is currently under development. We aim to start feature development in
+September 2024. If you want to use or/and test Kordis,
+<a href="mailto:info@kordis-leitstelle.de">please reach out to us</a>. If you
+found a bug or have a feature request, please
 [open an issue](https://github.com/kordis-leitstelle/kordis/issues/new/choose).
 Security Issues can be reported via Email to
 [info@kordis-leitstelle.de](mailto:info@kordis-leitstelle.de).
