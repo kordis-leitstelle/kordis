@@ -1,10 +1,10 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { Role } from '@kordis/shared/model';
 
 @ObjectType()
 export class UserEntity {
-	@Field()
+	@Field(() => ID)
 	id: string;
 
 	@Field()
