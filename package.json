@@ -110,7 +110,7 @@
     "@nestjs/mongoose": "^10.0.4",
     "@nestjs/platform-express": "10.3.3",
     "@opentelemetry/instrumentation-graphql": "^0.39.0",
-    "@opentelemetry/instrumentation-mongoose": "^0.36.0",
+    "@opentelemetry/instrumentation-mongoose": "^0.37.0",
     "@opentelemetry/instrumentation-pino": "^0.36.0",
     "@opentelemetry/sdk-node": "^0.49.0",
     "@opentelemetry/sdk-trace-base": "^1.14.0",
