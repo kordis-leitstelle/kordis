@@ -9,7 +9,8 @@ running on your maschine.
 The data for the test database is within the [`data`](./data/) folder. If you
 want to create a new collection, use the [`template.ts`](./data/template.ts) as
 a starter for your file. The naming of the file should be
-`<collection name>.data.ts`.  
+`<collection name>.data.ts`. To generate an MongoDB ObjectId, you can use
+[this online tool](https://observablehq.com/@hugodf/mongodb-objectid-generator).
 Please adjust the test data in your branch if you introduce migrations!
 
 ### Start
