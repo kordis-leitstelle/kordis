@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
-import { GraphQLSubscriptionService } from './graphql';
+import { DataLoaderContainer, GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 
@@ -9,6 +9,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 @Module({
 	imports: [CqrsModule],
 	providers: [
+		DataLoaderContainer,
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
@@ -18,6 +19,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
 		CqrsModule,
+		DataLoaderContainer,
 	],
 })
 export class SharedKernel {}
