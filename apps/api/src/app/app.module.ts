@@ -11,6 +11,8 @@ import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import {
+	DataLoaderContainer,
+	DataLoaderContextProvider,
 	MongoEncryptionClientProvider,
 	SharedKernel,
 	errorFormatterFactory,
@@ -51,14 +53,21 @@ const UTILITY_MODULES = [
 		GraphQLModule.forRootAsync<ApolloDriverConfig>({
 			imports: [ConfigModule],
 			driver: ApolloDriver,
-			useFactory: (config: ConfigService) => ({
+			useFactory: (
+				config: ConfigService,
+				dataLoaderContainer: DataLoaderContainer,
+			) => ({
 				autoSchemaFile: true,
 				playground: config.get('NODE_ENV') !== 'production',
 				formatError: errorFormatterFactory(
 					config.get('NODE_ENV') === 'production',
 				),
+				context: (ctx: object) => ({
+					...ctx,
+					loadersProvider: new DataLoaderContextProvider(dataLoaderContainer),
+				}),
 			}),
-			inject: [ConfigService],
+			inject: [ConfigService, DataLoaderContainer],
 		}),
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
