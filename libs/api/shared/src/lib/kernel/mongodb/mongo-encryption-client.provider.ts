@@ -1,42 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import mongoose from 'mongoose';
+import { createConnection, mongo } from 'mongoose';
 
 @Injectable()
 export class MongoEncryptionClientProvider {
-	private keyId?: mongoose.mongo.UUID;
-	private encryptionClient?: mongoose.mongo.ClientEncryption;
+	private keyId?: mongo.UUID;
+	private encryptionClient?: mongo.ClientEncryption;
 
 	async init(
 		uri: string,
-		provider: mongoose.mongo.ClientEncryptionDataKeyProvider,
+		provider: mongo.ClientEncryptionDataKeyProvider,
 		keyVaultNamespace: string,
-		kmsProviders: mongoose.mongo.AutoEncryptionOptions['kmsProviders'],
-		masterKey: mongoose.mongo.ClientEncryptionCreateDataKeyProviderOptions['masterKey'],
+		kmsProviders: mongo.AutoEncryptionOptions['kmsProviders'],
+		masterKey: mongo.ClientEncryptionCreateDataKeyProviderOptions['masterKey'],
 	): Promise<void> {
-		const conn = await mongoose
-			.createConnection(uri, {
-				autoEncryption: {
-					keyVaultNamespace,
-					kmsProviders,
-					bypassAutoEncryption: true,
-				},
-			})
-			.asPromise();
-
-		this.encryptionClient = new mongoose.mongo.ClientEncryption(
-			conn.getClient(),
-			{
+		const conn = await createConnection(uri, {
+			autoEncryption: {
 				keyVaultNamespace,
 				kmsProviders,
+				bypassAutoEncryption: true,
 			},
-		);
+		}).asPromise();
+
+		this.encryptionClient = new mongo.ClientEncryption(conn.getClient(), {
+			keyVaultNamespace,
+			kmsProviders,
+		});
 
 		this.keyId = await this.encryptionClient.createDataKey(provider, {
 			masterKey,
 		});
 	}
 
-	getClient(): mongoose.mongo.ClientEncryption {
+	getClient(): mongo.ClientEncryption {
 		if (!this.encryptionClient) {
 			throw new Error('Client is not ready yet!');
 		}
@@ -44,7 +39,7 @@ export class MongoEncryptionClientProvider {
 		return this.encryptionClient;
 	}
 
-	getKeyId(): mongoose.mongo.UUID {
+	getKeyId(): mongo.UUID {
 		if (!this.keyId) {
 			throw new Error('Key ID is not ready yet!');
 		}
