@@ -3,7 +3,8 @@ set -e
 
 MONGO_CONTAINER_NAME="kordis-dev-db"
 MONGO_DB_IMAGE_NAME="mongo:7"
-LOCAL_MONGO_URI="mongodb://127.0.0.1:27017"
+MONGO_HOST="${MONGO_HOST:-127.0.0.1}"
+LOCAL_MONGO_URI="mongodb://$MONGO_HOST:27017"
 EXEC_PATH=$(dirname "${BASH_SOURCE[0]}")
 
 ensure_running() {
@@ -30,7 +31,7 @@ ensure_running() {
 	done
 
 	if [ "$should_initiate" = true ]; then
-		docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }]})"
+		docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: '$MONGO_HOST:27017' }]})"
 	fi
 }
 
@@ -53,6 +54,7 @@ init() {
 		echo "Error: You did not specify a database name."
 		exit 1
 	fi
+
 	db_name="$1"
 	conn_uri="$LOCAL_MONGO_URI/$db_name?replicaSet=rs0"
 
@@ -82,7 +84,7 @@ from_remote() {
 	remote_db_name=${remote_conn_uri##*/}
 	remote_db_name=${remote_db_name%%\?*}
 	local_db_name="$2"
-	local_conn_uri="$LOCAL_MONGO_URI/$local_db_name"
+	local_conn_uri="$LOCAL_MONGO_URI/$local_db_name?replicaSet=rs0"
 	echo "Cloning the remote Database $remote_db_name into $local_db_name"
 
 	ensure_clean_db "$local_db_name"
