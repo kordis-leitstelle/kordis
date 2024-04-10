@@ -7,6 +7,7 @@ LOCAL_MONGO_URI="mongodb://127.0.0.1:27017"
 EXEC_PATH=$(dirname "${BASH_SOURCE[0]}")
 
 ensure_running() {
+	should_initiate=false
 	if docker ps -a --format '{{.Names}}' | grep -q "^${MONGO_CONTAINER_NAME}\$"; then
 		if docker ps --format '{{.Names}}' | grep -q "^${MONGO_CONTAINER_NAME}\$"; then
 			echo "MongoDB already running."
@@ -15,7 +16,8 @@ ensure_running() {
 			echo "MongoDB started."
 		fi
 	else
-		docker run -d --name "${MONGO_CONTAINER_NAME}" -p 27017:27017 "${MONGO_DB_IMAGE_NAME}" >/dev/null
+		docker run -d --name "${MONGO_CONTAINER_NAME}" -p 27017:27017 "${MONGO_DB_IMAGE_NAME}" --replSet rs0 --bind_ip_all >/dev/null
+		should_initiate=true
 		echo "MongoDB created and started."
 	fi
 
@@ -26,6 +28,10 @@ ensure_running() {
 	until docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "quit()" >/dev/null 2>&1; do
 		sleep 1
 	done
+
+	if [ "$should_initiate" = true ]; then
+		docker exec $MONGO_CONTAINER_NAME mongosh --quiet --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }]})"
+	fi
 }
 
 ensure_clean_db() {
@@ -48,7 +54,7 @@ init() {
 		exit 1
 	fi
 	db_name="$1"
-	conn_uri="$LOCAL_MONGO_URI/$db_name"
+	conn_uri="$LOCAL_MONGO_URI/$db_name?replicaSet=rs0"
 
 	ensure_running
 	ensure_clean_db "$db_name"
