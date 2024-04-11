@@ -3,7 +3,6 @@ import { Router, Routes } from '@angular/router';
 import { switchMap } from 'rxjs';
 
 import { AUTH_SERVICE, authGuard } from '@kordis/spa/core/auth';
-import { loadDashboardView } from '@kordis/spa/view/dashboard';
 
 const routes: Routes = [
 	{
@@ -30,7 +29,8 @@ const routes: Routes = [
 	},
 	{
 		path: 'dashboard',
-		loadComponent: loadDashboardView,
+		loadComponent: () =>
+			import('@kordis/spa/view/dashboard').then((m) => m.DashboardComponent),
 		canActivate: [authGuard],
 	},
 	{ path: '**', redirectTo: 'dashboard' },
