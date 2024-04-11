@@ -6,10 +6,20 @@ import { BaseModel } from './base-entity.model';
 
 export abstract class BaseDocument extends Document implements BaseModel {
 	@Prop()
-	@AutoMap()
-	readonly createdAt: Date;
+	createdAt: Date;
 
 	@Prop()
-	@AutoMap()
-	readonly updatedAt: Date;
+	updatedAt: Date;
+
+	constructor() {
+		super();
+		this.schema.pre('save', function (next) {
+			const savedAt = new Date();
+			if (this.isNew) {
+				this.createdAt = savedAt;
+			}
+			this.updatedAt = savedAt;
+			next();
+		});
+	}
 }
