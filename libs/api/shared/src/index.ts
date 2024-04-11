@@ -6,3 +6,4 @@ export * from './lib/kernel/graphql';
 export * from './lib/kernel/mongodb';
 export * from './lib/kernel/shared-kernel.module';
 export * from './lib/exceptions';
+export * from './lib/models/base.mapper-profile';

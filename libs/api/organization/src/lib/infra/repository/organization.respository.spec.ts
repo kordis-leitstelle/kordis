@@ -5,7 +5,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import { Mutable } from '@kordis/api/shared';
+import { Mutable, SharedKernel } from '@kordis/api/shared';
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
@@ -20,6 +20,7 @@ describe('ImplOrganizationRepository', () => {
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [
+				SharedKernel,
 				AutomapperModule.forRoot({
 					strategyInitializer: classes(),
 				}),
@@ -75,6 +76,7 @@ describe('ImplOrganizationRepository', () => {
 			const orgDoc: Mutable<DeepMocked<OrganizationDocument>> =
 				createMock<OrganizationDocument>();
 			orgDoc._id = orgId;
+			orgDoc.orgId = orgId;
 			orgDoc.name = orgName;
 			orgDoc.geoSettings = geoSettings;
 			orgDoc.createdAt = createdAt;
@@ -82,6 +84,7 @@ describe('ImplOrganizationRepository', () => {
 
 			const mappedOrg: Mutable<OrganizationEntity> = new OrganizationEntity();
 			mappedOrg.id = orgId;
+			mappedOrg.orgId = orgId;
 			mappedOrg.name = orgName;
 			mappedOrg.geoSettings = geoSettings;
 			mappedOrg.createdAt = createdAt;

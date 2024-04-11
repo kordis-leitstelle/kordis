@@ -37,3 +37,10 @@ export class OrganizationDocument extends BaseDocument {
 
 export const OrganizationSchema =
 	SchemaFactory.createForClass(OrganizationDocument);
+
+OrganizationSchema.pre('save', function (next) {
+	if (this.isNew) {
+		this.orgId = this._id;
+	}
+	next();
+});
