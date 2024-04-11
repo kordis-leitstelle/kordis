@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { IsNotEmpty, IsString } from 'class-validator';
 
@@ -16,9 +17,12 @@ export class BaseEntityModel extends Validatable implements BaseModel {
 	@IsString()
 	@IsNotEmpty()
 	@Field()
+	@AutoMap()
 	orgId: string;
 	@Field()
+	@AutoMap()
 	readonly createdAt: Date = new Date();
 	@Field()
+	@AutoMap()
 	readonly updatedAt: Date;
 }

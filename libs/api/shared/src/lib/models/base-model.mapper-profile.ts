@@ -27,18 +27,6 @@ export class BaseModelProfile extends AutomapperProfile {
 					(d) => d.id,
 					mapFrom((s) => s._id.toString()),
 				),
-				forMember(
-					(d) => d.orgId,
-					mapFrom((s) => s.orgId),
-				),
-				forMember(
-					(d) => d.updatedAt,
-					mapFrom((s) => s.updatedAt),
-				),
-				forMember(
-					(d) => d.createdAt,
-					mapFrom((s) => s.createdAt),
-				),
 			);
 		};
 	}

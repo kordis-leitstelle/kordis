@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
@@ -8,8 +8,16 @@ import { Model } from 'mongoose';
 import { Mutable, SharedKernel } from '@kordis/api/shared';
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
-import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
-import { OrganizationProfile } from '../organization.mapper-profile';
+import {
+	BBox,
+	Coordinate,
+	Organization as OrganizationEntity,
+	OrganizationGeoSettings,
+} from '../../core/entity/organization.entity';
+import {
+	OrganizationProfile,
+	OrganizationValueObjectsProfile,
+} from '../organization.mapper-profile';
 import { OrganizationDocument } from '../schema/organization.schema';
 import { ImplOrganizationRepository } from './organization.repository';
 
@@ -28,6 +36,7 @@ describe('ImplOrganizationRepository', () => {
 			providers: [
 				ImplOrganizationRepository,
 				OrganizationProfile,
+				OrganizationValueObjectsProfile,
 				{
 					provide: getModelToken(OrganizationDocument.name),
 					useValue: createMock<Model<OrganizationDocument>>(),
@@ -73,8 +82,7 @@ describe('ImplOrganizationRepository', () => {
 			const createdAt = new Date();
 			const updatedAt = new Date();
 
-			const orgDoc: Mutable<DeepMocked<OrganizationDocument>> =
-				createMock<OrganizationDocument>();
+			const orgDoc: Mutable<OrganizationDocument> = {} as OrganizationDocument;
 			orgDoc._id = orgId;
 			orgDoc.orgId = orgId;
 			orgDoc.name = orgName;
@@ -86,7 +94,19 @@ describe('ImplOrganizationRepository', () => {
 			mappedOrg.id = orgId;
 			mappedOrg.orgId = orgId;
 			mappedOrg.name = orgName;
-			mappedOrg.geoSettings = geoSettings;
+			mappedOrg.geoSettings = new OrganizationGeoSettings();
+			mappedOrg.geoSettings.bbox = new BBox();
+			mappedOrg.geoSettings.bbox.bottomRight = new Coordinate();
+			mappedOrg.geoSettings.bbox.bottomRight.lat =
+				geoSettings.bbox.bottomRight.lat;
+			mappedOrg.geoSettings.bbox.bottomRight.lon =
+				geoSettings.bbox.bottomRight.lon;
+			mappedOrg.geoSettings.bbox.topLeft = new Coordinate();
+			mappedOrg.geoSettings.bbox.topLeft.lat = geoSettings.bbox.topLeft.lat;
+			mappedOrg.geoSettings.bbox.topLeft.lon = geoSettings.bbox.topLeft.lon;
+			mappedOrg.geoSettings.centroid = new Coordinate();
+			mappedOrg.geoSettings.centroid.lat = geoSettings.centroid.lat;
+			mappedOrg.geoSettings.centroid.lon = geoSettings.centroid.lon;
 			mappedOrg.createdAt = createdAt;
 			mappedOrg.updatedAt = updatedAt;
 
@@ -94,7 +114,7 @@ describe('ImplOrganizationRepository', () => {
 
 			const result = await repository.findById(orgId);
 
-			expect(result).toStrictEqual<OrganizationEntity>(mappedOrg);
+			expect(result).toEqual(mappedOrg);
 		});
 
 		it('should return null if organization is not found', async () => {

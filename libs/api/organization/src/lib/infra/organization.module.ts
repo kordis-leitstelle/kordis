@@ -6,7 +6,10 @@ import { UpdateOrganizationGeoSettingsHandler } from '../core/command/update-org
 import { GetOrganizationHandler } from '../core/query/get-organization.query';
 import { ORGANIZATION_REPOSITORY } from '../core/repository/organization.repository';
 import { OrganizationResolver } from './controller/organization.resolver';
-import { OrganizationProfile } from './organization.mapper-profile';
+import {
+	OrganizationProfile,
+	OrganizationValueObjectsProfile,
+} from './organization.mapper-profile';
 import { ImplOrganizationRepository } from './repository/organization.repository';
 import {
 	OrganizationDocument,
@@ -21,6 +24,7 @@ import {
 	],
 	providers: [
 		OrganizationProfile,
+		OrganizationValueObjectsProfile,
 		{
 			provide: ORGANIZATION_REPOSITORY,
 			useClass: ImplOrganizationRepository,
