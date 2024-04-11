@@ -2,12 +2,12 @@ By utilizing the [DataLoader](https://github.com/graphql/dataloader) pattern, we
 can reduce the number of queries made to the database by batching them together.
 This is especially useful when we have a list of IDs that we want to fetch from
 the database. Instead of making a query for each ID, we can batch them together
-and make a single query to fetch all the data we need (O(N^2) to O(1)). This is
-also known as the n+1 problem. One specific use case would be if you want have
-stored ids of some external entity in one domain and you want to provide the
-complete object, you have have to query the external entity for each id. With
-the dataloader you can batch the ids and query the external entities all in one
-request (e.g. see [deployment](../../../../../../deployment) domain).
+and make a single query to fetch all the data we need. This is also known as the
+n+1 problem. One specific use case would be if you have stored ids of some
+external entity in one domain and you want to provide the complete object, you
+have have to query the external entity for each id. With the dataloader you can
+batch the ids and query the external entities all in one request (e.g. see
+[deployment](../../../../../../deployment) domain).
 
 ## Usage
 
