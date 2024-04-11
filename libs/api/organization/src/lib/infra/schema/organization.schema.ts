@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { BaseDocument } from '@kordis/api/shared';
 
-@Schema({ id: false })
+@Schema({ _id: false })
 export class Coordinate {
 	@Prop()
 	@AutoMap()
@@ -13,7 +13,7 @@ export class Coordinate {
 	lon: number;
 }
 
-@Schema({ id: false })
+@Schema({ _id: false })
 export class BBox {
 	@Prop()
 	@AutoMap()
@@ -23,7 +23,7 @@ export class BBox {
 	bottomRight: Coordinate;
 }
 
-@Schema({ id: false })
+@Schema({ _id: false })
 export class OrganizationGeoSettings {
 	@Prop()
 	@AutoMap()
