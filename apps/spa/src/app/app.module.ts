@@ -9,13 +9,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
-import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
-import { DashboardComponent } from '@kordis/spa/dashboard';
-import { GraphqlModule } from '@kordis/spa/graphql';
+import { AuthModule, DevAuthModule } from '@kordis/spa/core/auth';
+import { GraphqlModule } from '@kordis/spa/core/graphql';
 import {
 	NoopObservabilityModule,
 	SentryObservabilityModule,
-} from '@kordis/spa/observability';
+} from '@kordis/spa/core/observability';
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
@@ -53,7 +52,6 @@ registerLocaleData(de);
 			// or after 30 seconds (whichever comes first).
 			registrationStrategy: 'registerWhenStable:30000',
 		}),
-		DashboardComponent,
 	],
 	providers: [
 		{

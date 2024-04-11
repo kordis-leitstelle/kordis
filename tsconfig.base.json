@@ -24,10 +24,13 @@
 			"@kordis/api/user": ["libs/api/user/src/index.ts"],
 			"@kordis/shared/model": ["libs/shared/model/src/index.ts"],
 			"@kordis/shared/test-helpers": ["libs/shared/test-helpers/src/index.ts"],
-			"@kordis/spa/auth": ["libs/spa/auth/src/index.ts"],
-			"@kordis/spa/dashboard": ["libs/spa/dashboard/src/index.ts"],
-			"@kordis/spa/graphql": ["libs/spa/graphql/src/index.ts"],
-			"@kordis/spa/observability": ["libs/spa/observability/src/index.ts"]
+			"@kordis/spa/core/auth": ["libs/spa/core/auth/src/index.ts"],
+			"@kordis/spa/core/graphql": ["libs/spa/core/graphql/src/index.ts"],
+			"@kordis/spa/core/observability": [
+				"libs/spa/core/observability/src/index.ts"
+			],
+			"@kordis/spa/view/auth": ["libs/spa/view/auth/src/index.ts"],
+			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]
