@@ -1,10 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import mongoose from 'mongoose';
+import { mongo } from 'mongoose';
 
 type KMS = {
 	keyVaultNamespace: string;
-	kmsProviders: mongoose.mongo.AutoEncryptionOptions['kmsProviders'];
+	kmsProviders: mongo.AutoEncryptionOptions['kmsProviders'];
 };
 
 type MasterKey =
@@ -17,13 +17,12 @@ type MasterKey =
 export function getMongoEncrKmsFromConfig(config: ConfigService): {
 	kms: KMS;
 	masterKey: MasterKey;
-	provider: mongoose.mongo.ClientEncryptionDataKeyProvider;
+	provider: mongo.ClientEncryptionDataKeyProvider;
 } {
-	const kmsProvider =
-		config.get<mongoose.mongo.ClientEncryptionDataKeyProvider>(
-			'MONGODB_ENCR_KMS_PROVIDER',
-			'local',
-		);
+	const kmsProvider = config.get<mongo.ClientEncryptionDataKeyProvider>(
+		'MONGODB_ENCR_KMS_PROVIDER',
+		'local',
+	);
 
 	let kms: KMS;
 	let masterKey: MasterKey;
@@ -37,7 +36,7 @@ export function getMongoEncrKmsFromConfig(config: ConfigService): {
 			keyVaultNamespace: config.getOrThrow<string>('MONGODB_ENCR_KV_NAMESPACE'),
 			kmsProviders: JSON.parse(
 				config.getOrThrow<string>('MONGODB_ENCR_KMS_PROVIDER_CREDS'),
-			) as mongoose.mongo.AutoEncryptionOptions['kmsProviders'],
+			) as mongo.AutoEncryptionOptions['kmsProviders'],
 		};
 		masterKey = JSON.parse(
 			config.getOrThrow<string>('MONGODB_ENCR_MASTER_KEY'),

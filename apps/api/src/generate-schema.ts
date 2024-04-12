@@ -17,5 +17,8 @@ const generateSchema = async (): Promise<void> => {
 	// eslint-disable-next-line no-console
 	console.log(`Scheme generated successfully at ${outputPath}`);
 };
-// eslint-disable-next-line no-console
-generateSchema().catch(console.log);
+
+generateSchema()
+	.then(() => process.exit())
+	// eslint-disable-next-line no-console
+	.catch(console.log);

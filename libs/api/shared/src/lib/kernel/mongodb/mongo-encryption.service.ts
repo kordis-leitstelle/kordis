@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import mongoose from 'mongoose';
+import { mongo } from 'mongoose';
 
 import { MongoEncryptionClientProvider } from './mongo-encryption-client.provider';
 
@@ -15,7 +15,7 @@ export class MongoEncryptionService {
 	encrypt(
 		value: string,
 		encrType: 'Random' | 'Deterministic',
-	): Promise<mongoose.mongo.Binary> {
+	): Promise<mongo.Binary> {
 		return this.encryptionClientProvider.getClient().encrypt(value, {
 			keyId: this.encryptionClientProvider.getKeyId(),
 			algorithm: `${ENCR_ALGO}-${encrType}`,
