@@ -18,17 +18,16 @@ control centres
 Kordis is a software for the coordination of rescue stations and units, for
 logging operations and radio traffic, and for information processing in the
 domain of emergency services. The software aims to provide a modern and simple
-UI and workflow for volunteer staff and for professional users while having a
-powerful set of features comparable with commercial solutions.
+UI and workflow, as well as a safe and complient solution for volunteer staff
+and for professional users while having a powerful set of features comparable
+with commercial solutions.
 
 ## For Users
 
-If you want to use Kordis, <a href="mailto:info@kordis-leitstelle.de">please
-reach out to us</a>. You can also self-host Kordis, please keep the
-<a href="#license">license</a> in mind. To self-host you manually have to set up
-the [Kordis Landscape](docs/landscape.md) or adapt the codebase to your needs.
-
-If you found a bug or have a feature request, please
+This is currently under development. We aim to start feature development in
+September 2024. If you want to use or/and test Kordis,
+<a href="mailto:info@kordis-leitstelle.de">please reach out to us</a>. If you
+found a bug or have a feature request, please
 [open an issue](https://github.com/kordis-leitstelle/kordis/issues/new/choose).
 Security Issues can be reported via Email to
 [info@kordis-leitstelle.de](mailto:info@kordis-leitstelle.de).
@@ -68,14 +67,3 @@ Jasper Herzberg (Owner, Maintainer) -
 Timon Masberg (Owner, Maintainer) -
 [LinkedIn](https://www.linkedin.com/in/timon-masberg/),
 [contact@timonmasberg.com](mailto:contact@timonmasberg.com)
-
-## Acknowledgments
-
-We receive support from the following awesome companies:
-
-- [Cartesius](https://cartesius.io/) for geospatial tools such as location
-  intelligence, address autocompletion and validation and geocoding
-  (Sponsorship)
-- [Microsoft Azure](https://azure.microsoft.com/) for cloud hosting and
-  developer support (Sponsorship)
-- [Sentry](https://sentry.com/) for performance and error tracking (Sponsorship)

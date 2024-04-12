@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Logger } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
 import * as Sentry from '@sentry/node';
 
 import { PresentableException } from '@kordis/api/shared';
@@ -11,15 +12,22 @@ describe('SentryExceptionsFilter', () => {
 	let addBreadcrumbMock: jest.Mock;
 	let captureExceptionMock: jest.Mock;
 	let logger: DeepMocked<Logger>;
+
 	beforeEach(async () => {
 		addBreadcrumbMock = jest.fn();
 		captureExceptionMock = jest.fn();
-		logger = createMock<Logger>();
-
 		(Sentry.addBreadcrumb as jest.Mock) = addBreadcrumbMock;
 		(Sentry.captureException as jest.Mock) = captureExceptionMock;
+		logger = createMock<Logger>();
 
-		sentryExceptionsFilter = new SentryExceptionsFilter(logger);
+		const moduleRef = await Test.createTestingModule({
+			providers: [SentryExceptionsFilter],
+		}).compile();
+
+		moduleRef.useLogger(logger);
+		sentryExceptionsFilter = moduleRef.get<SentryExceptionsFilter>(
+			SentryExceptionsFilter,
+		);
 	});
 
 	afterEach(() => {

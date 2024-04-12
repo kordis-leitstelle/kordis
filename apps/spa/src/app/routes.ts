@@ -1,21 +1,39 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router, Routes } from '@angular/router';
+import { switchMap } from 'rxjs';
 
-import { authGuard } from '@kordis/spa/auth';
-
-import { ProtectedComponent } from './component/protected.component';
+import { AUTH_SERVICE, authGuard } from '@kordis/spa/core/auth';
 
 const routes: Routes = [
 	{
 		path: '',
-		redirectTo: 'protected',
+		redirectTo: 'dashboard',
 		pathMatch: 'full',
 	},
 	{
-		path: 'protected',
-		component: ProtectedComponent,
+		path: 'auth',
+		loadChildren: () =>
+			import('@kordis/spa/view/auth').then((m) => m.AuthViewModule),
+		canActivate: [
+			() => {
+				const auth = inject(AUTH_SERVICE);
+				const router = inject(Router);
+
+				return auth.isAuthenticated$.pipe(
+					switchMap(async (isAuthenticated) =>
+						isAuthenticated ? router.navigate(['/protected']) : true,
+					),
+				);
+			},
+		],
+	},
+	{
+		path: 'dashboard',
+		loadComponent: () =>
+			import('@kordis/spa/view/dashboard').then((m) => m.DashboardComponent),
 		canActivate: [authGuard],
 	},
-	{ path: '**', redirectTo: 'protected' },
+	{ path: '**', redirectTo: 'dashboard' },
 ];
 
 export default routes;

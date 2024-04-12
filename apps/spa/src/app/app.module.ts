@@ -9,22 +9,21 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
-import { AuthModule, DevAuthModule } from '@kordis/spa/auth';
-import { GraphqlModule } from '@kordis/spa/graphql';
+import { AuthModule, DevAuthModule } from '@kordis/spa/core/auth';
+import { GraphqlModule } from '@kordis/spa/core/graphql';
 import {
 	NoopObservabilityModule,
 	SentryObservabilityModule,
-} from '@kordis/spa/observability';
+} from '@kordis/spa/core/observability';
 
 import { environment } from '../environments/environment';
 import { AppComponent } from './component/app.component';
-import { ProtectedComponent } from './component/protected.component';
 import routes from './routes';
 
 registerLocaleData(de);
 
 @NgModule({
-	declarations: [AppComponent, ProtectedComponent],
+	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
@@ -70,6 +69,15 @@ registerLocaleData(de);
 								USE_PROFILES: { html: true, svg: true },
 							},
 						);
+					},
+					createScriptURL: (s) => {
+						if (
+							s === 'ngsw-worker.js' ||
+							s.startsWith('blob:' + window.location.origin)
+						) {
+							return s;
+						}
+						return '';
 					},
 				});
 			},

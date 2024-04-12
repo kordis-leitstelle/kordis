@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { validate } from 'class-validator';
 
 import { ValidationException } from '../exceptions';
@@ -12,12 +12,12 @@ export interface BaseModel {
 
 @ObjectType()
 export abstract class BaseEntityModel implements BaseModel {
-	@Field()
+	@Field(() => ID)
 	readonly id: string;
-	@Field(() => String)
+	@Field()
 	@AutoMap()
 	readonly createdAt: Date = new Date();
-	@Field(() => String)
+	@Field()
 	@AutoMap()
 	readonly updatedAt: Date;
 

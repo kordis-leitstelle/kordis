@@ -23,6 +23,40 @@
 	</head>
 	<body>
 		<noscript>Bitte aktivieren Sie JavaScript um Kordis zu nutzen.</noscript>
-		<kordis-root ngCspNonce="csp_nonce"></kordis-root>
+		<kordis-root ngCspNonce="csp_nonce">
+			<style>
+				.loader-container {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					position: fixed;
+					width: 100%;
+					height: 100vh;
+				}
+
+				.loader {
+					width: 72px;
+					height: 72px;
+					border: 8px solid #1890ff;
+					border-bottom-color: transparent;
+					border-radius: 50%;
+					box-sizing: border-box;
+					animation: rotation 1s linear infinite;
+				}
+
+				@keyframes rotation {
+					0% {
+						transform: rotate(0deg);
+					}
+					100% {
+						transform: rotate(360deg);
+					}
+				}
+			</style>
+
+			<div class="loader-container">
+				<span class="loader"></span>
+			</div>
+		</kordis-root>
 	</body>
 </html>

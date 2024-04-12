@@ -4,6 +4,10 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { DataLoaderContainer, GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
+import {
+	UNIT_OF_WORK_SERVICE,
+	UnitOfWorkServiceImpl,
+} from './service/unit-of-work.service';
 
 @Global()
 @Module({
@@ -13,6 +17,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
+		{ provide: UNIT_OF_WORK_SERVICE, useClass: UnitOfWorkServiceImpl },
 	],
 	exports: [
 		GraphQLSubscriptionService,
@@ -20,6 +25,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 		MongoEncryptionService,
 		CqrsModule,
 		DataLoaderContainer,
+		UNIT_OF_WORK_SERVICE,
 	],
 })
 export class SharedKernel {}
