@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'dist/schema.gql'
+schema: 'apps/api/src/schema.gql'
 generates:
   libs/shared/model/src/lib/gql.model.ts:
     plugins:
