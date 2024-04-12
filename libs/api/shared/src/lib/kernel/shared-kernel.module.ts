@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
-import { GraphQLSubscriptionService } from './graphql';
+import { DataLoaderContainer, GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 import {
@@ -13,6 +13,7 @@ import {
 @Module({
 	imports: [CqrsModule],
 	providers: [
+		DataLoaderContainer,
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
@@ -23,6 +24,7 @@ import {
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
 		CqrsModule,
+		DataLoaderContainer,
 		UNIT_OF_WORK_SERVICE,
 	],
 })

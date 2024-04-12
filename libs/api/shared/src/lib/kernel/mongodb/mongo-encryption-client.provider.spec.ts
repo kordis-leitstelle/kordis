@@ -1,17 +1,15 @@
 import { MongoEncryptionClientProvider } from './mongo-encryption-client.provider';
 
 jest.mock('mongoose', () => ({
-	default: {
-		createConnection: jest.fn().mockReturnValue({
-			asPromise: jest.fn().mockResolvedValue({
-				getClient: jest.fn().mockReturnValue({}),
-			}),
+	createConnection: jest.fn().mockReturnValue({
+		asPromise: jest.fn().mockResolvedValue({
+			getClient: jest.fn().mockReturnValue({}),
 		}),
-		mongo: {
-			ClientEncryption: jest.fn().mockImplementation(() => ({
-				createDataKey: jest.fn().mockResolvedValue('someKeyId'),
-			})),
-		},
+	}),
+	mongo: {
+		ClientEncryption: jest.fn().mockImplementation(() => ({
+			createDataKey: jest.fn().mockResolvedValue('someKeyId'),
+		})),
 	},
 }));
 
