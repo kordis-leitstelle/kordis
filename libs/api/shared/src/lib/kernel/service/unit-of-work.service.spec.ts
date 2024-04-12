@@ -1,9 +1,13 @@
 import { createMock } from '@golevelup/ts-jest';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
-import { ClientSession, Connection } from 'mongoose';
+import { ClientSession, Connection, SessionOperation } from 'mongoose';
 
-import { UnitOfWork, UnitOfWorkServiceImpl } from './unit-of-work.service';
+import {
+	UnitOfWork,
+	UnitOfWorkServiceImpl,
+	runDbOperation,
+} from './unit-of-work.service';
 
 describe('UnitOfWorkServiceImpl', () => {
 	let service: UnitOfWorkServiceImpl;
@@ -102,5 +106,32 @@ describe('UnitOfWork', () => {
 	it('should end session', async () => {
 		await unitOfWork[Symbol.asyncDispose]();
 		expect(mockSession.endSession).toHaveBeenCalled();
+	});
+});
+
+describe('runDbOperation', () => {
+	let mockOperation: SessionOperation & { exec: () => Promise<void> };
+	let mockSession: ClientSession;
+
+	beforeEach(() => {
+		mockOperation = {
+			session: jest.fn(),
+			exec: jest.fn().mockResolvedValue(undefined),
+		};
+		mockSession = createMock<ClientSession>();
+	});
+
+	it('should execute operation with session if provided', async () => {
+		await runDbOperation(mockOperation, { session: mockSession });
+
+		expect(mockOperation.session).toHaveBeenCalledWith(mockSession);
+		expect(mockOperation.exec).toHaveBeenCalled();
+	});
+
+	it('should execute operation without session if not provided', async () => {
+		await runDbOperation(mockOperation);
+
+		expect(mockOperation.session).not.toHaveBeenCalled();
+		expect(mockOperation.exec).toHaveBeenCalled();
 	});
 });
