@@ -11,7 +11,7 @@ const generateSchema = async (): Promise<void> => {
 	await app.init();
 
 	const { schema } = app.get(GraphQLSchemaHost);
-	const outputPath = join(process.cwd(), 'dist/schema.gql');
+	const outputPath = join(process.cwd(), 'apps/api/src/schema.gql');
 	writeFileSync(outputPath, printSchema(schema));
 	await app.close();
 	// eslint-disable-next-line no-console
