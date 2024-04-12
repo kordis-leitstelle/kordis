@@ -5,6 +5,10 @@ import { BaseModelProfile } from '../models/base-model.mapper-profile';
 import { GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
+import {
+	UNIT_OF_WORK_SERVICE,
+	UnitOfWorkServiceImpl,
+} from './service/unit-of-work.service';
 
 @Global()
 @Module({
@@ -14,6 +18,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
+		{ provide: UNIT_OF_WORK_SERVICE, useClass: UnitOfWorkServiceImpl },
 	],
 	exports: [
 		BaseModelProfile,
@@ -21,6 +26,7 @@ import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
 		CqrsModule,
+		UNIT_OF_WORK_SERVICE,
 	],
 })
 export class SharedKernel {}

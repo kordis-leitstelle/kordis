@@ -13,6 +13,7 @@
 				"importOrderSeparation": true,
 				"importOrderSortSpecifiers": true,
 				"importOrderParserPlugins": [
+					"explicitResourceManagement",
 					"classProperties",
 					"decorators-legacy",
 					"typescript"

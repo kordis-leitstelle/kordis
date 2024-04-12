@@ -5,7 +5,11 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import { Mutable, SharedKernel } from '@kordis/api/shared';
+import {
+	Mutable,
+	SharedKernel,
+	UNIT_OF_WORK_SERVICE,
+} from '@kordis/api/shared';
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import {
@@ -42,7 +46,10 @@ describe('ImplOrganizationRepository', () => {
 					useValue: createMock<Model<OrganizationDocument>>(),
 				},
 			],
-		}).compile();
+		})
+			.overrideProvider(UNIT_OF_WORK_SERVICE)
+			.useValue(null)
+			.compile();
 
 		repository = moduleRef.get<ImplOrganizationRepository>(
 			ImplOrganizationRepository,
