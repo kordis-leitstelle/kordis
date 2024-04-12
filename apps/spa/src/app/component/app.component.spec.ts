@@ -2,8 +2,8 @@ import { createMock } from '@golevelup/ts-jest';
 import { SpectatorRouting, createRoutingFactory } from '@ngneat/spectator/jest';
 import { ReplaySubject, of } from 'rxjs';
 
-import { AUTH_SERVICE, DevAuthService } from '@kordis/spa/auth';
-import { GraphqlService } from '@kordis/spa/graphql';
+import { AUTH_SERVICE, DevAuthService } from '@kordis/spa/core/auth';
+import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import { AppComponent } from './app.component';
 

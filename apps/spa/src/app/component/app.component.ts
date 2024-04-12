@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NEVER, switchMap } from 'rxjs';
 
-import { AUTH_SERVICE } from '@kordis/spa/auth';
-import { GraphqlService, gql } from '@kordis/spa/graphql';
-import { TraceComponent } from '@kordis/spa/observability';
+import { AUTH_SERVICE } from '@kordis/spa/core/auth';
+import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { TraceComponent } from '@kordis/spa/core/observability';
 
 @Component({
 	selector: 'kordis-root',
