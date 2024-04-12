@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { ClientSession, Connection, SessionOperation } from 'mongoose';
 
-export interface MongoUoWSessionProvider {
+export interface DbSessionProvider {
 	session: ClientSession;
 }
 
 export const UNIT_OF_WORK_SERVICE = Symbol('UNIT_OF_WORK_SERVICE');
 
-export class UnitOfWork implements MongoUoWSessionProvider, AsyncDisposable {
+export class UnitOfWork implements DbSessionProvider, AsyncDisposable {
 	constructor(readonly session: ClientSession) {}
 
 	async commit(): Promise<void> {
@@ -28,7 +28,7 @@ export interface UnitOfWorkService {
 	startUnitOfWork(): Promise<UnitOfWork>;
 
 	asTransaction(
-		work: (uow: UnitOfWork) => Promise<void>,
+		work: (uow: DbSessionProvider) => Promise<void>,
 		retries?: number,
 	): Promise<void>;
 }
@@ -49,7 +49,7 @@ export class UnitOfWorkServiceImpl implements UnitOfWorkService {
 	 * @param retries Number of retries to attempt if the transaction fails (error is thrown)
 	 */
 	async asTransaction(
-		work: (uow: UnitOfWork) => Promise<void>,
+		work: (uow: DbSessionProvider) => Promise<void>,
 		retries = 0,
 	): Promise<void> {
 		await using uow = await this.startUnitOfWork();
@@ -75,7 +75,7 @@ export class UnitOfWorkServiceImpl implements UnitOfWorkService {
 
 export function runDbOperation<T = void>(
 	op: SessionOperation & { exec: () => Promise<T> },
-	uow?: UnitOfWork,
+	uow?: DbSessionProvider,
 ): Promise<T> {
 	if (uow) {
 		op.session(uow.session);

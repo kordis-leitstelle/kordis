@@ -7,7 +7,7 @@ export * from './lib/kernel/shared-kernel.module';
 export * from './lib/exceptions';
 export {
 	UnitOfWorkService,
-	MongoUoWSessionProvider,
+	DbSessionProvider,
 	UNIT_OF_WORK_SERVICE,
 	UnitOfWork,
 	runDbOperation,
