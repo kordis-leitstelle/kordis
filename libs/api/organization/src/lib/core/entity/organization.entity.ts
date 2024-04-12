@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { Field, Float, InputType, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import {
@@ -18,10 +19,12 @@ import { IsBBox } from './bbox.validator';
 export class Coordinate {
 	@IsLatitude({ message: 'Der Wert muss ein gültiger Längengrad sein.' })
 	@Field(() => Float)
+	@AutoMap()
 	lat: number;
 
 	@IsLongitude({ message: 'Der Wert muss ein gültiger Breitengrad sein.' })
 	@Field(() => Float)
+	@AutoMap()
 	lon: number;
 }
 
@@ -31,11 +34,13 @@ export class BBox {
 	@ValidateNested()
 	@Type(() => Coordinate)
 	@Field()
+	@AutoMap()
 	topLeft: Coordinate;
 
 	@ValidateNested()
 	@Type(() => Coordinate)
 	@Field()
+	@AutoMap()
 	bottomRight: Coordinate;
 }
 
@@ -45,6 +50,7 @@ export class OrganizationGeoSettings {
 	@ValidateNested()
 	@Type(() => Coordinate)
 	@Field()
+	@AutoMap()
 	centroid: Coordinate;
 
 	@ValidateNested()
@@ -54,6 +60,7 @@ export class OrganizationGeoSettings {
 	})
 	@Type(() => BBox)
 	@Field()
+	@AutoMap()
 	bbox: BBox;
 }
 
@@ -62,10 +69,12 @@ export class Organization extends BaseEntityModel {
 	@IsString()
 	@IsNotEmpty({ message: 'Der Organisationsname darf nicht leer sein.' })
 	@Field()
+	@AutoMap()
 	name: string;
 
 	@ValidateNested()
 	@Type(() => OrganizationGeoSettings)
 	@Field()
+	@AutoMap()
 	geoSettings: OrganizationGeoSettings;
 }

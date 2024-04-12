@@ -1,7 +1,7 @@
 import { validate } from 'class-validator';
 
 import { ValidationException } from '../exceptions/core/validation.exception';
-import { BaseEntityModel } from './base-entity.model';
+import { Validatable } from './validatable.model';
 
 declare function fail(error?: any): never;
 
@@ -9,15 +9,15 @@ jest.mock('class-validator', () => ({
 	validate: jest.fn(),
 }));
 
-describe('BaseEntityModel', () => {
-	class ProxyBaseEntityModel extends BaseEntityModel {}
+describe('ValidatableModel', () => {
+	class ProxyValidatable extends Validatable {}
 
 	afterEach(() => {
 		jest.clearAllMocks();
 	});
 
 	it('should throw ValidationException when there are validation errors', async () => {
-		const model = new ProxyBaseEntityModel();
+		const model = new ProxyValidatable();
 		(validate as jest.Mock).mockResolvedValue([
 			{
 				property: 'name',
@@ -35,7 +35,7 @@ describe('BaseEntityModel', () => {
 			error = e;
 		} finally {
 			expect(error).toBeInstanceOf(ValidationException);
-			expect(error.message).toBe('ProxyBaseEntityModel validation failed.');
+			expect(error.message).toBe('ProxyValidatable validation failed.');
 			expect(error.errors).toEqual([
 				{ path: ['name'], errors: ['Name should not be empty'] },
 			]);
@@ -45,7 +45,7 @@ describe('BaseEntityModel', () => {
 	});
 
 	it('should not throw any exception when there are no validation errors', async () => {
-		const model = new ProxyBaseEntityModel();
+		const model = new ProxyValidatable();
 		(validate as jest.Mock).mockResolvedValue([]);
 
 		await expect(model.validOrThrow()).resolves.toBeUndefined();

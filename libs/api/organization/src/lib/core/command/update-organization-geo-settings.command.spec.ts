@@ -46,6 +46,7 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 		org.id = orgId;
 		org.name = 'org name';
 		org.geoSettings = {} as OrganizationGeoSettings;
+		org.validOrThrow = jest.fn();
 
 		repositoryMock.findById.mockResolvedValueOnce(org);
 		repositoryMock.update.mockResolvedValueOnce(undefined);

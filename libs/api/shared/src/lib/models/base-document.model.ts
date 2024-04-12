@@ -4,12 +4,28 @@ import { Document } from 'mongoose';
 
 import { BaseModel } from './base-entity.model';
 
-export abstract class BaseDocument extends Document implements BaseModel {
-	@Prop()
+export class BaseDocument extends Document implements BaseModel {
+	@Prop({ index: true })
 	@AutoMap()
-	readonly createdAt: Date;
+	orgId: string;
 
 	@Prop()
 	@AutoMap()
-	readonly updatedAt: Date;
+	createdAt: Date;
+
+	@Prop()
+	@AutoMap()
+	updatedAt: Date;
+
+	constructor() {
+		super();
+		this.schema.pre('save', function (next) {
+			const savedAt = new Date();
+			if (this.isNew) {
+				this.createdAt = savedAt;
+			}
+			this.updatedAt = savedAt;
+			next();
+		});
+	}
 }
