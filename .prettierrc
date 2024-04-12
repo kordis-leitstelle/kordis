@@ -6,13 +6,19 @@
 	"proseWrap": "always",
 	"overrides": [
 		{
-			"files": ["*.ts"],
+			"files": [
+				"*.ts"
+			],
 			"options": {
 				"parser": "typescript",
-				"importOrder": ["^@kordis/(.*)$", "^[./]"],
+				"importOrder": [
+					"^@kordis/(.*)$",
+					"^[./]"
+				],
 				"importOrderSeparation": true,
 				"importOrderSortSpecifiers": true,
 				"importOrderParserPlugins": [
+					"explicitResourceManagement",
 					"classProperties",
 					"decorators-legacy",
 					"typescript"
@@ -20,5 +26,7 @@
 			}
 		}
 	],
-	"plugins": ["@trivago/prettier-plugin-sort-imports"]
+	"plugins": [
+		"@trivago/prettier-plugin-sort-imports"
+	]
 }
