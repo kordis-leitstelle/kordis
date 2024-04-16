@@ -35,6 +35,7 @@
     "@commitlint/config-conventional": "^19.1.0",
     "@commitlint/config-nx-scopes": "^19.2.1",
     "@golevelup/ts-jest": "^0.4.0",
+    "@graphql-codegen/cli": "5.0.2",
     "@nestjs/schematics": "10.1.1",
     "@nestjs/testing": "10.3.3",
     "@ngneat/spectator": "^18.0.1",
@@ -54,6 +55,7 @@
     "@schematics/angular": "17.3.2",
     "@swc-node/register": "1.9.0",
     "@swc/core": "~1.4.0",
+    "@swc/helpers": "~0.5.2",
     "@total-typescript/ts-reset": "^0.3.7",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/dompurify": "^3.0.5",
@@ -82,8 +84,7 @@
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "typescript": "5.4.3",
-    "wait-on": "^7.0.1",
-    "@graphql-codegen/cli": "5.0.2"
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "@angular/animations": "17.3.2",
@@ -95,8 +96,8 @@
     "@angular/platform-browser-dynamic": "17.3.2",
     "@angular/pwa": "17.3.2",
     "@angular/router": "17.3.2",
-    "@apollo/client": "^3.8.10",
     "@angular/service-worker": "17.3.2",
+    "@apollo/client": "^3.8.10",
     "@automapper/classes": "^8.8.1",
     "@automapper/core": "^8.8.1",
     "@automapper/nestjs": "^8.8.1",

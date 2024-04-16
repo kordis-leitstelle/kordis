@@ -9,6 +9,7 @@ import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
 import { ObservabilityModule } from '@kordis/api/observability';
+import { OperationModule } from '@kordis/api/operation';
 import { OrganizationModule } from '@kordis/api/organization';
 import {
 	DataLoaderContainer,
@@ -34,6 +35,7 @@ const isNextOrProdEnv = ['next', 'prod'].includes(
 const FEATURE_MODULES = [
 	OrganizationModule,
 	TetraModule,
+	OperationModule,
 	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
 ];
 const UTILITY_MODULES = [
