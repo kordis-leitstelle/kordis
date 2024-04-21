@@ -65,7 +65,9 @@ export class UnitOfWorkServiceImpl implements UnitOfWorkService {
 				break;
 			} catch (e) {
 				await uow.rollback();
-				if (tries++ >= retries) {
+
+				tries++;
+				if (tries >= retries) {
 					throw e;
 				}
 			}
