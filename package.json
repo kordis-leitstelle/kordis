@@ -10,6 +10,7 @@
   "scripts": {
     "ng": "nx",
     "serve:api": "nx serve api",
+    "serve:api:debug": "nx serve api -c debug",
     "serve:spa": "nx serve spa",
     "postinstall": "node ./decorate-angular-cli.js",
     "prepare": "husky install",
