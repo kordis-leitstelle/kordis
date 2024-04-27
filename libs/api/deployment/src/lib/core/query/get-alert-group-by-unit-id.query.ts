@@ -21,7 +21,6 @@ export class GetAlertGroupByUnitIdHandler {
 		private readonly repository: UnitAssignmentRepository,
 	) {}
 
-	// todo: checken ob das hier geht! aggregate
 	async execute({
 		orgId,
 		unitId,
