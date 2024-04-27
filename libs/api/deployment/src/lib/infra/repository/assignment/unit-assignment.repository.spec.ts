@@ -5,9 +5,9 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
+import { BaseModelProfile } from '@kordis/api/shared';
 import { mockModelMethodResults } from '@kordis/api/test-helpers';
 
-import { BaseModelProfile } from '../../../../../../shared/src/lib/models/base-model.mapper-profile';
 import {
 	DeploymentAlertGroup,
 	DeploymentUnit,
