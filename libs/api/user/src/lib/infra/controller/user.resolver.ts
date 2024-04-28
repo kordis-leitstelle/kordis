@@ -152,14 +152,13 @@ export class UserResolver {
 		return true;
 	}
 
-	@Subscription(() => UserDeactivated, {
-		resolve: (payload) => payload,
-	})
+	@Subscription(() => UserDeactivated)
 	currentUserDeactivated(
 		@RequestUser() { id }: AuthUser,
 	): AsyncIterableIterator<UserDeactivated> {
 		return this.graphqlSubscriptions.getSubscriptionIteratorForEvent(
 			UserDeactivatedEvent,
+			'currentUserDeactivated',
 			{
 				filter: ({ userId }: UserDeactivatedEvent) => userId === id,
 			},
