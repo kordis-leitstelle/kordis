@@ -30,6 +30,11 @@ export class DeploymentAssignmentRepositoryImpl
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
+	/*
+	 * Get assignment of a unit or alert group.
+	 * @param orgId The organization id.
+	 * @param entityId The id of the unit or the alert group.
+	 */
 	async getAssignment(
 		orgId: string,
 		entityId: string,
@@ -64,6 +69,10 @@ export class DeploymentAssignmentRepositoryImpl
 		return null;
 	}
 
+	/*
+	 * Get unassigned units and alert groups.
+	 * @param orgId The organization id.
+	 */
 	async getUnassigned(
 		orgId: string,
 	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
@@ -143,6 +152,12 @@ export class DeploymentAssignmentRepositoryImpl
 		]).then(([units, alertGroups]) => [...units, ...alertGroups]);
 	}
 
+	/*
+	 * Removes all assignments (units and alert groups with their units) of a deployment,
+	 * @param orgId The organization id.
+	 * @param deploymentId The deployment id.
+	 * @param uow The unit of work.
+	 */
 	async removeAssignmentsOfDeployment(
 		orgId: string,
 		deploymentId: string,

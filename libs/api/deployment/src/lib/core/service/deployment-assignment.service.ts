@@ -48,8 +48,6 @@ export class DeploymentAssignmentService {
 			flatAlertGroupUnitIds.push(...alertGroup.unitIds);
 		}
 
-		// wenn eine einheit weggeordnet wird von einer alertgruppe, dann muss sie auch aus der alertgruppe entfernt werden
-
 		// first remove all assignments
 		await this.deploymentAssignmentRepository.removeAssignmentsOfDeployment(
 			orgId,
