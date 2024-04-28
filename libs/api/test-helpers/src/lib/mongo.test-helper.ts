@@ -33,6 +33,7 @@ export function mockModelMethodResult(
 			...document,
 			toObject: jest.fn().mockReturnValue(document),
 		}),
+		populate: jest.fn().mockReturnThis(),
 		lean: jest.fn().mockReturnValue({
 			...document,
 			toObject: jest.fn().mockReturnValue(document),
@@ -54,6 +55,7 @@ export function mockModelMethodResults(
 		lean: jest.fn().mockReturnValue({
 			exec: jest.fn().mockReturnValue(documents),
 		}),
+		populate: jest.fn().mockReturnThis(),
 		exec: jest.fn().mockReturnValue(documents),
 	} as any);
 
