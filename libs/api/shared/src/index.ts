@@ -14,3 +14,4 @@ export {
 	UnitOfWork,
 	runDbOperation,
 } from './lib/kernel/service/unit-of-work.service';
+export { BaseModelProfile } from './lib/models/base-model.mapper-profile';

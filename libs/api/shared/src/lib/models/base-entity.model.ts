@@ -13,6 +13,7 @@ export interface BaseModel {
 @ObjectType({ isAbstract: true })
 export class BaseEntityModel extends Validatable implements BaseModel {
 	@Field(() => ID)
+	@AutoMap()
 	readonly id: string;
 	@IsString()
 	@IsNotEmpty()
@@ -22,7 +23,7 @@ export class BaseEntityModel extends Validatable implements BaseModel {
 	@Field()
 	@AutoMap()
 	readonly createdAt: Date = new Date();
-	@Field()
+	@Field({ nullable: true })
 	@AutoMap()
 	readonly updatedAt: Date;
 }
