@@ -313,7 +313,7 @@ describe('UserResolver', () => {
 
 			await expect(subscriptionIterable.next()).resolves.toEqual(
 				expect.objectContaining({
-					value: { userId: 'userid' },
+					value: { currentUserDeactivated: { userId: 'userid' } },
 				}),
 			);
 		});

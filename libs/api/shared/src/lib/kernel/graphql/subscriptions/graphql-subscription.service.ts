@@ -1,12 +1,20 @@
 import { Injectable, OnModuleDestroy, Type } from '@nestjs/common';
 import { EventBus, IEvent, ofType } from '@nestjs/cqrs';
-import { Observable, Subject, filter, map, share, takeUntil } from 'rxjs';
+import {
+	Observable,
+	Subject,
+	concatMap,
+	filter,
+	map,
+	share,
+	takeUntil,
+} from 'rxjs';
 
 import { observableToAsyncIterable } from './observable-to-asynciterable.helper';
 
 export type SubscriptionOperators<TInitial, TReturn> = Partial<{
-	map: (payload: TInitial) => TReturn;
 	filter: (payload: TInitial) => boolean;
+	map: (payload: TInitial) => TReturn | Promise<TReturn>;
 }>;
 
 @Injectable()
@@ -32,21 +40,30 @@ export class GraphQLSubscriptionService implements OnModuleDestroy {
 		@template TEvent The event type.
 		@template TReturn The return type of the AsyncIterableIterator. This is the type passed to the subscription handler (potentially user facing).
 		@param {TEvent} event The event type to subscribe to.
-		@param {SubscriptionOperators<TEvent, TReturn>} [operators] Optional operators to apply to the event stream.
+		@param {string} fieldName The Graphql field name to use for the payload. The event payload will always get mapped to this field name AFTER all operations.
+		@param {SubscriptionOperators<TEvent, TReturn>} [operators] Optional operators to apply to the event stream. Executed in the order of filter, map.
 		@returns {AsyncIterableIterator<TReturn>} An AsyncIterableIterator of events for the specified event type with the operators applied where TReturn is the type of each emitted item.
 	 **/
 	getSubscriptionIteratorForEvent<TEvent extends Type, TReturn>(
 		event: TEvent,
+		fieldName: string,
 		operators?: SubscriptionOperators<InstanceType<TEvent>, TReturn>,
 	): AsyncIterableIterator<TReturn> {
 		let typeEventStream$ = this.eventStream$.pipe(ofType(event));
 
-		if (operators?.map) {
-			typeEventStream$ = typeEventStream$.pipe(map(operators.map));
-		}
 		if (operators?.filter) {
 			typeEventStream$ = typeEventStream$.pipe(filter(operators.filter));
 		}
+		if (operators?.map) {
+			typeEventStream$ = typeEventStream$.pipe(
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				concatMap(async (payload) => operators.map!(payload)),
+			);
+		}
+
+		typeEventStream$ = typeEventStream$.pipe(
+			map((payload) => ({ [fieldName]: payload })),
+		);
 
 		return observableToAsyncIterable(typeEventStream$);
 	}
