@@ -40,7 +40,7 @@ the target domain (the domain that receives the commands), since, as described,
 we believe it acts as an interface. But, it should never be part of the domains
 module and therefore never use specific providers. It should only communicate
 via Commands and Queries, as the whole idea is, the Saga could live somewhere
-else in the system, and it should not be dependent on the domain module.**
+else in the system, and it should not depend on the domain module.**
 
 ## Consequences
 
@@ -51,7 +51,7 @@ easier to add new sources of events or change the logic of how events are
 processed, as these changes are encapsulated within the Sagas.<br>
 Maintainability: By centralizing the logic for cross-domain interactions within
 Sagas, the system becomes more maintainable. Each Saga can be independently
-developed, tested, and modified, any in the future also independently
+developed, tested, and modified, and in the future also independently
 deployed.<br> <br> **Drawbacks:**<br> Complexity: Introducing Sagas adds a layer
 of complexity to the system, requiring developers to understand the event-driven
 model and the specifics of Saga implementation.<br> Debugging and Tracing:

@@ -35,9 +35,9 @@ manager is allowed to throw "Domain"-specific events and implement reactive
 components to these events, such as GraphQL Subscription Handlers. The
 interaction with Domains should be done via Commands and Queries, as the whole
 idea is, the Manager could live somewhere else in the system, and it should not
-be dependent on the domain module. The Manager should not use specific providers
-from the domain module. This makes sure that we can outsource the Manager and
-Domains and let them interact through a Bus.
+depend on the domain module. The Manager must not use specific providers from
+the domain module. This makes sure that we can outsource the Manager and Domains
+and let them interact through a Bus.
 
 ## Consequences
 
