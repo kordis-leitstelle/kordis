@@ -131,19 +131,17 @@ describe('DeploymentAssignmentRepositoryImpl', () => {
 		const orgId = 'orgId';
 		const deploymentId = '662b83b325f7a66dd0fd53de';
 
-		const fnSpy = jest.spyOn(deploymentAssignmentModel, 'updateMany');
 		await repository.removeAssignmentsOfDeployment(orgId, deploymentId);
-		expect(fnSpy).toHaveBeenCalled();
+		expect(deploymentAssignmentModel.updateMany).toHaveBeenCalled();
 	});
 
 	it('should assign entities to deployment', async () => {
 		const orgId = 'orgId';
 		const deploymentId = '662b83b325f7a66dd0fd53de';
 		const entityIds = ['entityId1', 'entityId2'];
-		const fnSpy = jest.spyOn(deploymentAssignmentModel, 'updateMany');
 
 		await repository.assignEntitiesToDeployment(orgId, deploymentId, entityIds);
 
-		expect(fnSpy).toHaveBeenCalled();
+		expect(deploymentAssignmentModel.updateMany).toHaveBeenCalled();
 	});
 });

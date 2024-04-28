@@ -75,25 +75,21 @@ describe('UnitAssignmentRepositoryImpl', () => {
 		const orgId = 'orgId';
 		const alertGroupIds = ['alertGroupId1', 'alertGroupId2'];
 
-		const fnSpy = jest.spyOn(unitAssignmentModel, 'updateMany');
-
 		await repository.removeAlertGroupAssignmentsByAlertGroups(
 			orgId,
 			alertGroupIds,
 		);
 
-		expect(fnSpy).toHaveBeenCalled();
+		expect(unitAssignmentModel.updateMany).toHaveBeenCalled();
 	});
 
 	it('should remove alert group assignments from units', async () => {
 		const orgId = 'orgId';
 		const unitIds = ['unitId1', 'unitId2'];
 
-		const fnSpy = jest.spyOn(unitAssignmentModel, 'updateMany');
-
 		await repository.removeAlertGroupAssignmentsFromUnits(orgId, unitIds);
 
-		expect(fnSpy).toHaveBeenCalled();
+		expect(unitAssignmentModel.updateMany).toHaveBeenCalled();
 	});
 
 	it('should set alert group assignment', async () => {
@@ -101,10 +97,8 @@ describe('UnitAssignmentRepositoryImpl', () => {
 		const unitIds = ['unitId1', 'unitId2'];
 		const alertGroupId = 'alertGroupId';
 
-		const fnSpy = jest.spyOn(unitAssignmentModel, 'updateMany');
-
 		await repository.setAlertGroupAssignment(orgId, unitIds, alertGroupId);
 
-		expect(fnSpy).toHaveBeenCalled();
+		expect(unitAssignmentModel.updateMany).toHaveBeenCalled();
 	});
 });

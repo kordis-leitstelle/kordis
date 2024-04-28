@@ -119,11 +119,9 @@ describe('RescueStationDeploymentRepositoryImpl', () => {
 		const data = new RescueStationEntityDTO();
 		data.note = 'note';
 
-		const updateOneSpy = jest.spyOn(rescueStationDeploymentModel, 'updateOne');
-
 		await repository.updateOne(orgId, id, data);
 
-		expect(updateOneSpy).toHaveBeenCalledWith(
+		expect(rescueStationDeploymentModel.updateOne).toHaveBeenCalledWith(
 			{ orgId, _id: id },
 			{ $set: data },
 		);
