@@ -5,7 +5,6 @@ import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import DataLoader from 'dataloader';
 
-import { RescueStationDeploymentViewModel } from '@kordis/api/deployment';
 import { DataLoaderContextProvider } from '@kordis/api/shared';
 import { UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
@@ -20,6 +19,7 @@ import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-enti
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
 import { RescueStationDtoMapperProfile } from '../mapper/rescue-station-dto.mapper-profile';
 import { RescueStationViewModelProfile } from '../mapper/rescue-station-view-model.mapper';
+import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
 import {
 	DeploymentResolver,
 	DeploymentUnitResolver,

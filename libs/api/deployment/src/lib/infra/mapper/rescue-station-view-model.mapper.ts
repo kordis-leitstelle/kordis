@@ -8,9 +8,8 @@ import {
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { RescueStationDeploymentViewModel } from '@kordis/api/deployment';
-
 import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-deployment.entity';
+import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
 
 @Injectable()
 export class RescueStationViewModelProfile extends AutomapperProfile {
