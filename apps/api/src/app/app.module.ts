@@ -37,6 +37,7 @@ const FEATURE_MODULES = [
 	UnitModule,
 	TetraModule,
 ];
+const SAGA_MODULES = [UnitsSagaModule];
 const UTILITY_MODULES = [
 	SharedKernel,
 	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
@@ -103,8 +104,9 @@ const UTILITY_MODULES = [
 		}),
 		...UTILITY_MODULES,
 		...FEATURE_MODULES,
+		...SAGA_MODULES,
 	],
-	providers: [AppService, AppResolver],
+	providers: [AppService],
 	controllers: [GraphqlSubscriptionsController, HealthCheckController],
 })
 export class AppModule {}
