@@ -6,7 +6,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { AlertGroupEntity } from '../../core/entity/alert-group.entity';
 import { UnitEntity } from '../../core/entity/unit.entity';
-import { GetAlertGroupsByIdQuery } from '../../core/query/get-alert-groups-by-id.query';
+import { GetAlertGroupByIdQuery } from '../../core/query/get-alert-group-by-id.query';
 import { GetAlertGroupsByOrgQuery } from '../../core/query/get-alert-groups-by.org.query';
 import { AlertGroupViewModel } from '../alert-group.view-model';
 
@@ -27,7 +27,7 @@ export class AlertGroupResolver {
 		@RequestUser() { organizationId }: AuthUser,
 	): Promise<AlertGroupEntity[]> {
 		return this.queryBus.execute(
-			new GetAlertGroupsByIdQuery(organizationId, id),
+			new GetAlertGroupByIdQuery(organizationId, id),
 		);
 	}
 }

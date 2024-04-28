@@ -5,16 +5,16 @@ import {
 	ALERT_GROUP_REPOSITORY,
 	AlertGroupRepository,
 } from '../repository/alert-group.repository';
-import { GetAlertGroupsByIdHandler } from './get-alert-groups-by-id.query';
+import { GetAlertGroupByIdHandler } from './get-alert-group-by-id.query';
 
 describe('GetAlertGroupsByIdHandler', () => {
-	let getAlertGroupsByIdHandler: GetAlertGroupsByIdHandler;
+	let getAlertGroupsByIdHandler: GetAlertGroupByIdHandler;
 	let mockAlertGroupRepository: jest.Mocked<AlertGroupRepository>;
 
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
 			providers: [
-				GetAlertGroupsByIdHandler,
+				GetAlertGroupByIdHandler,
 				{
 					provide: ALERT_GROUP_REPOSITORY,
 					useValue: {
@@ -24,8 +24,8 @@ describe('GetAlertGroupsByIdHandler', () => {
 			],
 		}).compile();
 
-		getAlertGroupsByIdHandler = moduleRef.get<GetAlertGroupsByIdHandler>(
-			GetAlertGroupsByIdHandler,
+		getAlertGroupsByIdHandler = moduleRef.get<GetAlertGroupByIdHandler>(
+			GetAlertGroupByIdHandler,
 		);
 		mockAlertGroupRepository = moduleRef.get<jest.Mocked<AlertGroupRepository>>(
 			ALERT_GROUP_REPOSITORY,

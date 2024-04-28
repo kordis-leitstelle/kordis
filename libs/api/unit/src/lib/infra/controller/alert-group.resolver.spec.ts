@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import { AuthUser } from '@kordis/shared/model';
 
 import { AlertGroupEntity } from '../../core/entity/alert-group.entity';
-import { GetAlertGroupsByIdQuery } from '../../core/query/get-alert-groups-by-id.query';
+import { GetAlertGroupByIdQuery } from '../../core/query/get-alert-group-by-id.query';
 import { GetAlertGroupsByOrgQuery } from '../../core/query/get-alert-groups-by.org.query';
 import { AlertGroupResolver } from './alert-group.resolver';
 
@@ -59,7 +59,7 @@ describe('AlertGroupResolver', () => {
 
 		expect(result).toEqual(mockAlertGroup);
 		expect(mockQueryBus.execute).toHaveBeenCalledWith(
-			new GetAlertGroupsByIdQuery('orgId', 'id'),
+			new GetAlertGroupByIdQuery('orgId', 'id'),
 		);
 	});
 });

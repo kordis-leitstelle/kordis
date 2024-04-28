@@ -7,16 +7,16 @@ import {
 	AlertGroupRepository,
 } from '../repository/alert-group.repository';
 
-export class GetAlertGroupsByIdQuery {
+export class GetAlertGroupByIdQuery {
 	constructor(
 		readonly orgId: string,
 		readonly id: string,
 	) {}
 }
 
-@QueryHandler(GetAlertGroupsByIdQuery)
-export class GetAlertGroupsByIdHandler
-	implements IQueryHandler<GetAlertGroupsByIdQuery>
+@QueryHandler(GetAlertGroupByIdQuery)
+export class GetAlertGroupByIdHandler
+	implements IQueryHandler<GetAlertGroupByIdQuery>
 {
 	constructor(
 		@Inject(ALERT_GROUP_REPOSITORY)
@@ -26,7 +26,7 @@ export class GetAlertGroupsByIdHandler
 	async execute({
 		orgId,
 		id,
-	}: GetAlertGroupsByIdQuery): Promise<AlertGroupEntity> {
+	}: GetAlertGroupByIdQuery): Promise<AlertGroupEntity> {
 		return this.repository.findById(orgId, id);
 	}
 }

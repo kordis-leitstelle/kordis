@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { UpdateUnitNoteHandler } from '../core/command/update-unit-note.command';
 import { UpdateUnitStatusHandler } from '../core/command/update-unit-status.command';
-import { GetAlertGroupsByIdHandler } from '../core/query/get-alert-groups-by-id.query';
+import { GetAlertGroupByIdHandler } from '../core/query/get-alert-group-by-id.query';
 import { GetAlertGroupsByIdsHandler } from '../core/query/get-alert-groups-by-ids.query';
 import { GetAlertGroupsByOrgHandler } from '../core/query/get-alert-groups-by.org.query';
 import { GetUnitByIdHandler } from '../core/query/get-unit-by-id.query';
@@ -51,7 +51,7 @@ import { UnitDocument, UnitSchema } from './schema/unit.schema';
 		GetUnitsByIdsHandler,
 		GetUnitByIdHandler,
 		GetAlertGroupsByIdsHandler,
-		GetAlertGroupsByIdHandler,
+		GetAlertGroupByIdHandler,
 		GetAlertGroupsByOrgHandler,
 		UpdateUnitNoteHandler,
 		UpdateUnitStatusHandler,
