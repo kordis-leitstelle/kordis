@@ -29,8 +29,10 @@ describe('GraphQLSubscriptionService', () => {
 
 	describe('getSubscriptionIteratorForEvent', () => {
 		it('should return requested event via AsyncIterator', async () => {
-			const subscriptionIterator =
-				service.getSubscriptionIteratorForEvent(TestEvent);
+			const subscriptionIterator = service.getSubscriptionIteratorForEvent(
+				TestEvent,
+				'someField',
+			);
 
 			eventBus.publish(new TestEvent('event of interest 1'));
 			eventBus.publish(new TestEvent2('not interesting'));
@@ -40,13 +42,17 @@ describe('GraphQLSubscriptionService', () => {
 			await expect(subscriptionIterator.next()).resolves.toEqual({
 				done: false,
 				value: {
-					someProperty: 'event of interest 1',
+					someField: {
+						someProperty: 'event of interest 1',
+					},
 				},
 			});
 			await expect(subscriptionIterator.next()).resolves.toEqual({
 				done: false,
 				value: {
-					someProperty: 'event of interest 2',
+					someField: {
+						someProperty: 'event of interest 2',
+					},
 				},
 			});
 		});
@@ -59,6 +65,7 @@ describe('GraphQLSubscriptionService', () => {
 
 			const subscriptionIterator = service.getSubscriptionIteratorForEvent(
 				TestEvent,
+				'someField',
 				{ filter, map },
 			);
 
@@ -69,8 +76,27 @@ describe('GraphQLSubscriptionService', () => {
 			await expect(subscriptionIterator.next()).resolves.toEqual({
 				done: false,
 				value: {
-					someProperty: 'bar',
+					someField: {
+						someProperty: 'bar',
+					},
 				},
+			});
+		});
+
+		it('should wait for map promise to complete', async () => {
+			const expected = { mapped: true };
+			const map = jest.fn(() => Promise.resolve(expected));
+			const subscriptionIterator = service.getSubscriptionIteratorForEvent(
+				TestEvent,
+				'someField',
+				{ map },
+			);
+
+			eventBus.publish(new TestEvent('foo'));
+
+			await expect(subscriptionIterator.next()).resolves.toEqual({
+				done: false,
+				value: { someField: expected },
 			});
 		});
 
@@ -79,6 +105,7 @@ describe('GraphQLSubscriptionService', () => {
 
 			const subscriptionIterator = service.getSubscriptionIteratorForEvent(
 				TestEvent,
+				'someField',
 				{ filter },
 			);
 
@@ -88,15 +115,19 @@ describe('GraphQLSubscriptionService', () => {
 			await expect(subscriptionIterator.next()).resolves.toEqual({
 				done: false,
 				value: {
-					someProperty: 'foobar',
+					someField: {
+						someProperty: 'foobar',
+					},
 				},
 			});
 		});
 	});
 
 	it('should complete iterator on module destroy', async () => {
-		const subscriptionIterator =
-			service.getSubscriptionIteratorForEvent(TestEvent);
+		const subscriptionIterator = service.getSubscriptionIteratorForEvent(
+			TestEvent,
+			'someField',
+		);
 		service.onModuleDestroy();
 		await expect(subscriptionIterator.next()).resolves.toEqual({ done: true });
 	});

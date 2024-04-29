@@ -70,7 +70,7 @@ describe('HandleTetraControlWebhookHandler', () => {
 		});
 
 		expect(eventBus.publish).toHaveBeenCalledWith(
-			new NewTetraStatusEvent('orgId', 'sender', 1, date, 'tetracontrol'),
+			new NewTetraStatusEvent('orgId', 'sender', 1, date, 'TetraControl'),
 		);
 	});
 
@@ -89,7 +89,7 @@ describe('HandleTetraControlWebhookHandler', () => {
 		});
 
 		expect(eventBus.publish).toHaveBeenCalledWith(
-			new NewTetraStatusEvent('orgId', 'sender', 1, date, 'tetracontrol'),
+			new NewTetraStatusEvent('orgId', 'sender', 1, date, 'TetraControl'),
 		);
 	});
 });

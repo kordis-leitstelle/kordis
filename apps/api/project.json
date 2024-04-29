@@ -23,6 +23,10 @@
 					"extractLicenses": true,
 					"generatePackageJson": true,
 					"inspect": false
+				},
+				"debug": {
+					"inspect": true,
+					"sourceMap": true
 				}
 			}
 		},
@@ -34,6 +38,9 @@
 			"configurations": {
 				"production": {
 					"buildTarget": "api:build:production"
+				},
+				"debug": {
+					"buildTarget": "api:build:debug"
 				}
 			}
 		},

@@ -47,7 +47,7 @@ export class HandleTetraControlWebhookHandler
 						payload.sender,
 						parseInt(payload.data.status),
 						this.getSanitizedTimestamp(payload.timestamp),
-						'tetracontrol',
+						'TetraControl',
 					),
 				);
 				break;

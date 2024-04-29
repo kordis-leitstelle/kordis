@@ -20,9 +20,9 @@ import {
 	getMongoEncrKmsFromConfig,
 } from '@kordis/api/shared';
 import { TetraModule } from '@kordis/api/tetra';
+import { UnitModule, UnitsSagaModule } from '@kordis/api/unit';
 import { UsersModule } from '@kordis/api/user';
 
-import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphqlSubscriptionsController } from './controllers/graphql-subscriptions.controller';
 import { HealthCheckController } from './controllers/health-check.controller';
@@ -34,10 +34,12 @@ const isNextOrProdEnv = ['next', 'prod'].includes(
 
 const FEATURE_MODULES = [
 	OrganizationModule,
+	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
+	UnitModule,
 	TetraModule,
 	OperationModule,
-	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
 ];
+const SAGA_MODULES = [UnitsSagaModule];
 const UTILITY_MODULES = [
 	SharedKernel,
 	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
@@ -94,6 +96,7 @@ const UTILITY_MODULES = [
 						...kms,
 						bypassAutoEncryption: true,
 					},
+					ignoreUndefined: true,
 				};
 			},
 			inject: [ConfigService, MongoEncryptionClientProvider],
@@ -103,8 +106,9 @@ const UTILITY_MODULES = [
 		}),
 		...UTILITY_MODULES,
 		...FEATURE_MODULES,
+		...SAGA_MODULES,
 	],
-	providers: [AppService, AppResolver],
+	providers: [AppService],
 	controllers: [GraphqlSubscriptionsController, HealthCheckController],
 })
 export class AppModule {}
