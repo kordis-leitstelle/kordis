@@ -41,12 +41,6 @@ export class StatusSaga {
 							>(new GetUnitByRCSIDQuery(event.orgId, event.issi));
 						} catch (error) {
 							if (error instanceof UnitNotFoundException) {
-								this.logger.warn(
-									'Received status for unit that is not in the database',
-									{
-										event,
-									},
-								);
 								return null;
 							}
 
