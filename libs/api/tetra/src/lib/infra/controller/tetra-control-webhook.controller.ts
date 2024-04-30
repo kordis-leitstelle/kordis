@@ -33,8 +33,9 @@ export class TetraControlWebhookController {
 		@Body() payload: TetraControlStatusPayload,
 		@Query('key') key: string,
 		@Ip() ip: string,
-	): Promise<void> {
+	): Promise<{ success: true }> {
 		this.logger.log('Received tetra control webhook', { payload });
+
 		try {
 			await this.commandBus.execute(
 				new HandleTetraControlWebhookCommand(payload, key),
@@ -54,5 +55,9 @@ export class TetraControlWebhookController {
 
 			throw error;
 		}
+
+		return {
+			success: true,
+		};
 	}
 }
