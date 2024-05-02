@@ -27,7 +27,7 @@ export const TEST_USERS = [
 		deactivated: false,
 		firstName: 'Test',
 		lastName: 'Org Admin',
-		userName: 'testadmin',
+		userName: 'testorgadmin',
 		organizationId: 'dff7584efe2c174eee8bae45',
 		email: 'testorgadmin@kordis-leitstelle.de',
 		role: Role.ORGANIZATION_ADMIN,
