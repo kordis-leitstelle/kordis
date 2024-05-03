@@ -24,7 +24,7 @@ export interface UnitAssignmentRepository {
 		uow?: DbSessionProvider | undefined,
 	): Promise<void>;
 
-	getAlertGroupOfUnit(
+	findAlertGroupOfUnit(
 		orgId: string,
 		unitId: string,
 	): Promise<DeploymentAlertGroup | null>;

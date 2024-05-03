@@ -37,7 +37,7 @@ describe('GetAlertGroupByUnitIdHandler', () => {
 		await handler.execute(command);
 
 		expect(
-			mockUnitAssignmentRepository.getAlertGroupOfUnit,
+			mockUnitAssignmentRepository.findAlertGroupOfUnit,
 		).toHaveBeenCalledWith(orgId, unitId);
 	});
 });

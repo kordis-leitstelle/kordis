@@ -25,6 +25,6 @@ export class GetAlertGroupByUnitIdHandler {
 		orgId,
 		unitId,
 	}: GetAlertGroupByUnitIdQuery): Promise<DeploymentAlertGroup | null> {
-		return this.repository.getAlertGroupOfUnit(orgId, unitId);
+		return this.repository.findAlertGroupOfUnit(orgId, unitId);
 	}
 }

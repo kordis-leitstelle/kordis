@@ -60,7 +60,7 @@ describe('UnitAssignmentRepositoryImpl', () => {
 
 		mockModelMethodResults(unitAssignmentModel, mockResult, 'aggregate');
 
-		const result = await repository.getAlertGroupOfUnit(orgId, unitId);
+		const result = await repository.findAlertGroupOfUnit(orgId, unitId);
 
 		const expectedResult = new DeploymentAlertGroup();
 		expectedResult.alertGroup = { id: 'alertGroupId' };

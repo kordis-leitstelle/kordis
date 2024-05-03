@@ -22,7 +22,7 @@ export class UnitAssignmentRepositoryImpl implements UnitAssignmentRepository {
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
-	async getAlertGroupOfUnit(
+	async findAlertGroupOfUnit(
 		orgId: string,
 		unitId: string,
 	): Promise<DeploymentAlertGroup | null> {
