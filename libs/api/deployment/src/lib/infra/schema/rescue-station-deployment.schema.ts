@@ -1,6 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+import { Coordinate } from '@kordis/api/shared';
+
 import { RescueStationStrength as RescueStationStrengthValueObject } from '../../core/entity/rescue-station-deployment.entity';
 import { DeploymentDocumentContract } from './deployment.schema';
 
@@ -23,20 +25,7 @@ const RescueStationStrengthSchema = SchemaFactory.createForClass(
 	RescueStationStrength,
 );
 
-@Schema()
-export class RescueStationCoordinates {
-	@Prop()
-	@AutoMap()
-	lat: number;
-
-	@Prop()
-	@AutoMap()
-	lon: number;
-}
-
-const RescueStationCoordinatesSchema = SchemaFactory.createForClass(
-	RescueStationCoordinates,
-);
+const RescueStationCoordinatesSchema = SchemaFactory.createForClass(Coordinate);
 
 @Schema()
 export class RescueStationAddress {
@@ -59,7 +48,7 @@ const RescueStationAddressSchema =
 @Schema()
 export class RescueStationLocation {
 	@Prop({ type: RescueStationCoordinatesSchema })
-	coordinates: RescueStationCoordinates;
+	coordinate: Coordinate;
 
 	@Prop({ type: RescueStationAddressSchema })
 	address: RescueStationAddress;

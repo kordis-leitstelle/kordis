@@ -4,15 +4,13 @@ import { Type } from 'class-transformer';
 import {
 	IsBoolean,
 	IsInt,
-	IsLatitude,
-	IsLongitude,
 	IsNotEmpty,
 	IsString,
 	Min,
 	ValidateNested,
 } from 'class-validator';
 
-import { Validatable } from '@kordis/api/shared';
+import { Coordinate, Validatable } from '@kordis/api/shared';
 import { UnitViewModel } from '@kordis/api/unit';
 
 import { BaseDeploymentEntity } from './deployment.entity';
@@ -47,19 +45,6 @@ export class RescueStationStrength extends Validatable {
 }
 
 @ObjectType()
-export class RescueStationCoordinates {
-	@Field()
-	@IsLatitude()
-	@AutoMap()
-	lat: number;
-
-	@Field()
-	@IsLongitude()
-	@AutoMap()
-	lon: number;
-}
-
-@ObjectType()
 export class RescueStationAddress {
 	@Field()
 	@IsString()
@@ -82,11 +67,11 @@ export class RescueStationAddress {
 
 @ObjectType()
 export class RescueStationLocation {
-	@Field(() => RescueStationCoordinates)
+	@Field(() => Coordinate)
 	@ValidateNested()
-	@Type(() => RescueStationCoordinates)
+	@Type(() => Coordinate)
 	@AutoMap()
-	coordinates: RescueStationCoordinates;
+	coordinate: Coordinate;
 
 	@Field(() => RescueStationAddress)
 	@ValidateNested()

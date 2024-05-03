@@ -1,32 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { Field, Float, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import {
-	IsLatitude,
-	IsLongitude,
 	IsNotEmpty,
 	IsString,
 	Validate,
 	ValidateNested,
 } from 'class-validator';
 
-import { BaseEntityModel } from '@kordis/api/shared';
+import { BaseEntityModel, Coordinate } from '@kordis/api/shared';
 
 import { IsBBox } from './bbox.validator';
-
-@ObjectType()
-@InputType('CoordinateInput')
-export class Coordinate {
-	@IsLatitude({ message: 'Der Wert muss ein gültiger Längengrad sein.' })
-	@Field(() => Float)
-	@AutoMap()
-	lat: number;
-
-	@IsLongitude({ message: 'Der Wert muss ein gültiger Breitengrad sein.' })
-	@Field(() => Float)
-	@AutoMap()
-	lon: number;
-}
 
 @ObjectType()
 @InputType('BBoxInput')

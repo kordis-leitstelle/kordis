@@ -20,7 +20,7 @@ const collectionData: CollectionData<RescueStationDeploymentDocument> = {
 					postalCode: '22559',
 					street: 'Rissener Ufer 29',
 				},
-				coordinates: {
+				coordinate: {
 					lat: 53.56397,
 					lon: 9.75567,
 				},
@@ -46,7 +46,7 @@ const collectionData: CollectionData<RescueStationDeploymentDocument> = {
 					postalCode: '21037',
 					street: 'Hohendeich',
 				},
-				coordinates: {
+				coordinate: {
 					lat: 53.44475,
 					lon: 10.11029,
 				},
@@ -72,7 +72,7 @@ const collectionData: CollectionData<RescueStationDeploymentDocument> = {
 					postalCode: '21109',
 					street: ' Finkenrieker Hauptdeich 5',
 				},
-				coordinates: {
+				coordinate: {
 					lat: 53.47438,
 					lon: 10.00176,
 				},

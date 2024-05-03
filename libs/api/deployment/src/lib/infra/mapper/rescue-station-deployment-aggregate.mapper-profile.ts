@@ -9,12 +9,11 @@ import {
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { BaseMapperProfile } from '@kordis/api/shared';
+import { BaseMapperProfile, Coordinate } from '@kordis/api/shared';
 
 import { BaseDeploymentEntity } from '../../core/entity/deployment.entity';
 import {
 	RescueStationAddress as RescueStationAddressValueObject,
-	RescueStationCoordinates as RescueStationCoordinatesValueObject,
 	RescueStationDeploymentEntity,
 	RescueStationLocation as RescueStationLocationValueObject,
 	RescueStationStrength as RescueStationStrengthValueObject,
@@ -22,7 +21,6 @@ import {
 import { DeploymentAggregate } from '../repository/deployment/abstract-deployment.repository';
 import {
 	RescueStationAddress,
-	RescueStationCoordinates,
 	RescueStationDeploymentDocument,
 	RescueStationLocation,
 	RescueStationStrength,
@@ -58,16 +56,7 @@ export class RescueStationDeploymentValueObjectProfile extends AutomapperProfile
 			);
 			createMap(mapper, RescueStationAddress, RescueStationAddressValueObject);
 			createMap(mapper, RescueStationAddressValueObject, RescueStationAddress);
-			createMap(
-				mapper,
-				RescueStationCoordinates,
-				RescueStationCoordinatesValueObject,
-			);
-			createMap(
-				mapper,
-				RescueStationCoordinatesValueObject,
-				RescueStationCoordinates,
-			);
+			createMap(mapper, Coordinate, Coordinate);
 		};
 	}
 }
