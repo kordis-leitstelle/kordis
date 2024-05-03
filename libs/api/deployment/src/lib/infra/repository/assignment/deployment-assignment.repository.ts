@@ -165,6 +165,7 @@ export class DeploymentAssignmentRepositoryImpl
 	): Promise<void> {
 		const operation = this.deploymentAssignmentModel.updateMany(
 			{
+				orgId,
 				deploymentId: new Types.ObjectId(deploymentId),
 			},
 			{
@@ -192,6 +193,7 @@ export class DeploymentAssignmentRepositoryImpl
 	): Promise<void> {
 		const operation = this.deploymentAssignmentModel.updateMany(
 			{
+				orgId,
 				entityId: { $in: entityIds },
 			},
 			{
