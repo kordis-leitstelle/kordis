@@ -24,8 +24,8 @@ import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-
 import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
 import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-entities.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
-import { ALERT_GROUPS_DATA_LOADER } from '../repository/data-loader/alert-groups.data-loader';
-import { UNITS_DATA_LOADER } from '../repository/data-loader/units.data-loader';
+import { ALERT_GROUPS_DATA_LOADER } from '../data-loader/alert-groups.data-loader';
+import { UNITS_DATA_LOADER } from '../data-loader/units.data-loader';
 import {
 	DeploymentAssignment,
 	RescueStationDeploymentViewModel,

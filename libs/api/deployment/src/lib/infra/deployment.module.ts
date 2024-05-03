@@ -24,6 +24,8 @@ import {
 	DeploymentUnitResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
 } from './controller/deployment.resolver';
+import { AlertGroupsDataLoader } from './data-loader/alert-groups.data-loader';
+import { UnitsDataLoader } from './data-loader/units.data-loader';
 import { DeploymentAggregateProfile } from './mapper/deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentProfile } from './mapper/deployment-assignment.mapper-profile';
 import {
@@ -34,8 +36,6 @@ import { RescueStationDtoMapperProfile } from './mapper/rescue-station-dto.mappe
 import { RescueStationViewModelProfile } from './mapper/rescue-station-view-model.mapper';
 import { DeploymentAssignmentRepositoryImpl } from './repository/assignment/deployment-assignment.repository';
 import { UnitAssignmentRepositoryImpl } from './repository/assignment/unit-assignment.repository';
-import { AlertGroupsDataLoader } from './repository/data-loader/alert-groups.data-loader';
-import { UnitsDataLoader } from './repository/data-loader/units.data-loader';
 import { RescueStationDeploymentRepositoryImpl } from './repository/deployment/rescue-station-deployment.repository';
 import {
 	AlertGroupAssignmentDocument,
