@@ -5,7 +5,7 @@ import { SignInRescueStationHandler } from '../core/command/sign-in-rescue-stati
 import { SignOffRescueStationHandler } from '../core/command/sign-off-rescue-station.command';
 import { UpdateSignedInRescueStationHandler } from '../core/command/update-signed-in-rescue-station.command';
 import { GetAlertGroupByUnitIdHandler } from '../core/query/get-alert-group-by-unit-id.query';
-import { GetUnitAssignmentHandler } from '../core/query/get-deployable-entity.assignment';
+import { GetUnitAssignmentHandlerHandler } from '../core/query/get-current-assignment-of-entity.query';
 import { GetDeploymentsHandler } from '../core/query/get-deployments.query';
 import { GetRescueStationDeploymentHandler } from '../core/query/get-rescue-station-deployment.query';
 import { GetUnassignedEntitiesHandler } from '../core/query/get-unassigned-entities.query';
@@ -78,7 +78,7 @@ const CQRS_HANDLERS = [
 	UpdateSignedInRescueStationHandler,
 	GetUnassignedEntitiesHandler,
 	GetAlertGroupByUnitIdHandler,
-	GetUnitAssignmentHandler,
+	GetUnitAssignmentHandlerHandler,
 ];
 const RESOLVERS = [
 	DeploymentResolver,

@@ -6,7 +6,7 @@ import { AlertGroupViewModel, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { GetAlertGroupByUnitIdQuery } from '../../core/query/get-alert-group-by-unit-id.query';
-import { GetDeployableEntityAssignment } from '../../core/query/get-deployable-entity.assignment';
+import { GetCurrentAssignmentOfEntity } from '../../core/query/get-current-assignment-of-entity.query';
 import {
 	AlertGroupAssignmentResolver,
 	EntityRescueStationAssignment,
@@ -44,7 +44,7 @@ describe('UnitAssignmentResolver', () => {
 		);
 
 		expect(mockQueryBus.execute).toHaveBeenCalledWith(
-			new GetDeployableEntityAssignment(orgId, unitId),
+			new GetCurrentAssignmentOfEntity(orgId, unitId),
 		);
 		expect(result).toEqual(mockEntityRescueStationAssignment);
 	});
@@ -101,7 +101,7 @@ describe('AlertGroupAssignmentResolver', () => {
 		);
 
 		expect(mockQueryBus.execute).toHaveBeenCalledWith(
-			new GetDeployableEntityAssignment(orgId, alertGroupId),
+			new GetCurrentAssignmentOfEntity(orgId, alertGroupId),
 		);
 		expect(result).toEqual(mockEntityRescueStationAssignment);
 	});

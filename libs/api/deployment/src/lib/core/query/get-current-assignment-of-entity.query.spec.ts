@@ -7,19 +7,19 @@ import {
 	DeploymentAssignmentRepository,
 } from '../repository/deployment-assignment.repository';
 import {
-	GetDeployableEntityAssignment,
-	GetUnitAssignmentHandler,
-} from './get-deployable-entity.assignment';
+	GetCurrentAssignmentOfEntity,
+	GetUnitAssignmentHandlerHandler,
+} from './get-current-assignment-of-entity.query';
 
-describe('GetUnitAssignmentHandler', () => {
-	let handler: GetUnitAssignmentHandler;
+describe('GetUnitAssignmentHandlerHandler', () => {
+	let handler: GetUnitAssignmentHandlerHandler;
 	const mockDeploymentAssignmentRepository =
 		createMock<DeploymentAssignmentRepository>();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				GetUnitAssignmentHandler,
+				GetUnitAssignmentHandlerHandler,
 				{
 					provide: DEPLOYMENT_ASSIGNMENT_REPOSITORY,
 					useValue: mockDeploymentAssignmentRepository,
@@ -27,13 +27,15 @@ describe('GetUnitAssignmentHandler', () => {
 			],
 		}).compile();
 
-		handler = module.get<GetUnitAssignmentHandler>(GetUnitAssignmentHandler);
+		handler = module.get<GetUnitAssignmentHandlerHandler>(
+			GetUnitAssignmentHandlerHandler,
+		);
 	});
 
 	it('should get assignment of entity', async () => {
 		const orgId = 'orgId';
 		const entityId = 'entityId';
-		const command = new GetDeployableEntityAssignment(orgId, entityId);
+		const command = new GetCurrentAssignmentOfEntity(orgId, entityId);
 
 		const mockDeployment = new RescueStationDeploymentEntity();
 		mockDeployment.note = 'foo';

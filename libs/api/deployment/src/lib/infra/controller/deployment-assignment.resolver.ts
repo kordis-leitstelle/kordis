@@ -12,7 +12,7 @@ import { AlertGroupViewModel, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { GetAlertGroupByUnitIdQuery } from '../../core/query/get-alert-group-by-unit-id.query';
-import { GetDeployableEntityAssignment } from '../../core/query/get-deployable-entity.assignment';
+import { GetCurrentAssignmentOfEntity } from '../../core/query/get-current-assignment-of-entity.query';
 import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
 
 @ObjectType()
@@ -31,7 +31,7 @@ export class UnitAssignmentResolver {
 		@Parent() unit: UnitViewModel,
 	): Promise<EntityRescueStationAssignment | null> {
 		return this.queryBus.execute(
-			new GetDeployableEntityAssignment(organizationId, unit.id),
+			new GetCurrentAssignmentOfEntity(organizationId, unit.id),
 		);
 	}
 
@@ -56,7 +56,7 @@ export class AlertGroupAssignmentResolver {
 		@Parent() alertGroup: AlertGroupViewModel,
 	): Promise<EntityRescueStationAssignment | null> {
 		return this.queryBus.execute(
-			new GetDeployableEntityAssignment(organizationId, alertGroup.id),
+			new GetCurrentAssignmentOfEntity(organizationId, alertGroup.id),
 		);
 	}
 }

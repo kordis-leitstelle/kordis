@@ -7,16 +7,16 @@ import {
 	DeploymentAssignmentRepository,
 } from '../repository/deployment-assignment.repository';
 
-export class GetDeployableEntityAssignment {
+export class GetCurrentAssignmentOfEntity {
 	constructor(
 		readonly orgId: string,
 		readonly entityId: string,
 	) {}
 }
 
-@QueryHandler(GetDeployableEntityAssignment)
-export class GetUnitAssignmentHandler
-	implements IQueryHandler<GetDeployableEntityAssignment>
+@QueryHandler(GetCurrentAssignmentOfEntity)
+export class GetUnitAssignmentHandlerHandler
+	implements IQueryHandler<GetCurrentAssignmentOfEntity>
 {
 	constructor(
 		@Inject(DEPLOYMENT_ASSIGNMENT_REPOSITORY)
@@ -26,7 +26,7 @@ export class GetUnitAssignmentHandler
 	async execute({
 		orgId,
 		entityId,
-	}: GetDeployableEntityAssignment): Promise<RescueStationDeploymentEntity | null> {
+	}: GetCurrentAssignmentOfEntity): Promise<RescueStationDeploymentEntity | null> {
 		return this.repository.getAssignment(orgId, entityId);
 	}
 }
