@@ -3,17 +3,15 @@ import { createMap } from '@automapper/core';
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { BaseMapperProfile } from '@kordis/api/shared';
+import { BaseMapperProfile, Coordinate } from '@kordis/api/shared';
 
 import {
 	BBox as BBoxEntity,
-	Coordinate as CoordinateEntity,
 	Organization as OrganizationEntity,
 	OrganizationGeoSettings as OrganizationGeoSettingsEntity,
 } from '../core/entity/organization.entity';
 import {
 	BBox as BBoxDocument,
-	Coordinate as CoordinateDocument,
 	OrganizationDocument,
 	OrganizationGeoSettings as OrganizationGeoSettingsDocument,
 } from './schema/organization.schema';
@@ -32,7 +30,7 @@ export class OrganizationValueObjectsProfile extends AutomapperProfile {
 				OrganizationGeoSettingsEntity,
 			);
 			createMap(mapper, BBoxDocument, BBoxEntity);
-			createMap(mapper, CoordinateDocument, CoordinateEntity);
+			createMap(mapper, Coordinate, Coordinate);
 		};
 	}
 }

@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
+import { DeploymentModule } from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OperationModule } from '@kordis/api/operation';
 import { OrganizationModule } from '@kordis/api/organization';
@@ -38,6 +39,7 @@ const FEATURE_MODULES = [
 	UnitModule,
 	TetraModule,
 	OperationModule,
+	DeploymentModule,
 ];
 const SAGA_MODULES = [UnitsSagaModule];
 const UTILITY_MODULES = [
