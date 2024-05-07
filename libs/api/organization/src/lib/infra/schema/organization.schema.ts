@@ -1,17 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { BaseDocument } from '@kordis/api/shared';
-
-@Schema({ _id: false })
-export class Coordinate {
-	@Prop()
-	@AutoMap()
-	lat: number;
-	@Prop()
-	@AutoMap()
-	lon: number;
-}
+import { BaseDocument, Coordinate } from '@kordis/api/shared';
 
 @Schema({ _id: false })
 export class BBox {

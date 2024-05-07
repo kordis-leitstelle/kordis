@@ -6,6 +6,7 @@ import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
 import {
+	Coordinate,
 	Mutable,
 	SharedKernel,
 	UNIT_OF_WORK_SERVICE,
@@ -14,7 +15,6 @@ import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import {
 	BBox,
-	Coordinate,
 	Organization as OrganizationEntity,
 	OrganizationGeoSettings,
 } from '../../core/entity/organization.entity';
