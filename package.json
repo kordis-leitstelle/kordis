@@ -112,7 +112,7 @@
     "@nestjs/platform-express": "10.3.3",
     "@opentelemetry/instrumentation-graphql": "^0.40.0",
     "@opentelemetry/instrumentation-mongoose": "^0.38.0",
-    "@opentelemetry/instrumentation-pino": "^0.38.0",
+    "@opentelemetry/instrumentation-pino": "^0.39.0",
     "@opentelemetry/sdk-node": "^0.51.0",
     "@opentelemetry/sdk-trace-base": "^1.14.0",
     "@sentry/angular-ivy": "^7.109.0",
