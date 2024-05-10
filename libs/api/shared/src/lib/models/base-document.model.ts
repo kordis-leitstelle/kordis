@@ -1,10 +1,13 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 import { BaseModel } from './base-entity.model';
 
-export class BaseDocument extends Document implements BaseModel {
+export class BaseDocument implements BaseModel, Pick<Document, '_id'> {
+	@AutoMap()
+	_id?: Types.ObjectId;
+
 	@Prop({ index: true })
 	@AutoMap()
 	orgId: string;
@@ -16,16 +19,4 @@ export class BaseDocument extends Document implements BaseModel {
 	@Prop()
 	@AutoMap()
 	updatedAt: Date;
-
-	constructor() {
-		super();
-		this.schema.pre('save', function (next) {
-			const savedAt = new Date();
-			if (this.isNew) {
-				this.createdAt = savedAt;
-			}
-			this.updatedAt = savedAt;
-			next();
-		});
-	}
 }

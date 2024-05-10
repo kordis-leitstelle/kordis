@@ -25,7 +25,7 @@ export class BaseModelProfile extends AutomapperProfile {
 				BaseEntityModel,
 				forMember(
 					(d) => d.id,
-					mapFrom((s) => s._id.toString()),
+					mapFrom((s) => s._id?.toString()),
 				),
 			);
 		};
