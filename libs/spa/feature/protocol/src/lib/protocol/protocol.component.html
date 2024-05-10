@@ -1,0 +1,45 @@
+<nz-table
+	#basicTable
+	[nzData]="protocolEntries()"
+	nzSize="small"
+	[nzShowPagination]="false"
+	[nzFrontPagination]="false"
+	[nzTotal]="protocolEntries.length"
+	class="table"
+	krdNzTableFullHeight
+>
+	<thead>
+		<tr>
+			<th class="time">Zeit</th>
+			<th class="sender">Von</th>
+			<th class="recipient">An</th>
+			<th class="message">Nachricht</th>
+			<th class="channel">K</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (entry of basicTable.data; track entry.id) {
+			<tr>
+				<td
+					class="time"
+					nz-tooltip
+					[nzTooltipTitle]="entry.time.toLocaleString()"
+				>
+					{{ entry.time | krdProtocolEntryTime }}
+				</td>
+				<td class="sender">
+					<krd-unit-chip [unit]="entry.sender"></krd-unit-chip>
+				</td>
+				<td class="recipient">
+					@if (entry.recipient) {
+						<krd-unit-chip [unit]="entry.recipient"></krd-unit-chip>
+					}
+				</td>
+				<td class="message">
+					{{ entry.payload.message }}
+				</td>
+				<td class="channel">{{ entry.channel }}</td>
+			</tr>
+		}
+	</tbody>
+</nz-table>
