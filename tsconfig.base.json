@@ -19,6 +19,7 @@
 			"@kordis/api/deployment": ["libs/api/deployment/src/index.ts"],
 			"@kordis/api/observability": ["libs/api/observability/src/index.ts"],
 			"@kordis/api/organization": ["libs/api/organization/src/index.ts"],
+			"@kordis/api/protocol": ["libs/api/protocol/src/index.ts"],
 			"@kordis/api/shared": ["libs/api/shared/src/index.ts"],
 			"@kordis/api/test-helpers": ["libs/api/test-helpers/src/index.ts"],
 			"@kordis/api/tetra": ["libs/api/tetra/src/index.ts"],
