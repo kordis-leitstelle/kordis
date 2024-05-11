@@ -5,7 +5,10 @@ import { CreateCommunicationMessageHandler } from './core/command/create-communi
 import { GetProtocolEntriesHandler } from './core/query/get-protocol-entries.query';
 import { PROTOCOL_ENTRY_REPOSITORY } from './core/repository/protocol-entry.repository';
 import { CommunicationMessageResolver } from './infra/controller/communication-message.resolver';
-import { ProtocolEntryResolver } from './infra/controller/protocol-entry.resolver';
+import {
+	ProtocolEntryResolver,
+	RegisteredUnitResolver,
+} from './infra/controller/protocol-entry.resolver';
 import { ImplProtocolEntryRepository } from './infra/repository/protocol-entry.repository';
 import { CommunicationMessageSchema } from './infra/schema/communication-message.schema';
 import {
@@ -45,6 +48,7 @@ import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile
 		},
 		ProtocolEntryResolver,
 		CommunicationMessageResolver,
+		RegisteredUnitResolver,
 		CreateCommunicationMessageHandler,
 		GetProtocolEntriesHandler,
 	],

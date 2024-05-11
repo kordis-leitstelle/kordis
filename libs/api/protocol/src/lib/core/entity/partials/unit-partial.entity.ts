@@ -1,15 +1,17 @@
 import { AutoMap } from '@automapper/classes';
 import { Field, InputType, ObjectType, createUnionType } from '@nestjs/graphql';
 
+import { UnitViewModel } from '@kordis/api/unit';
+
 @ObjectType({ isAbstract: true })
 export abstract class Unit {}
 
 @ObjectType()
 @InputType('RegisteredUnitInput')
 export class RegisteredUnit extends Unit {
-	@Field()
+	@Field(() => UnitViewModel)
 	@AutoMap()
-	id: string;
+	unit: { id: string };
 }
 
 @ObjectType()

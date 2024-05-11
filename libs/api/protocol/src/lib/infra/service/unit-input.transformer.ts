@@ -10,7 +10,7 @@ export class UnitInputTransformer {
 	static transform(input: UnitInput): RegisteredUnit | UnknownUnit {
 		switch (input.type) {
 			case UnitInputType.REGISTERED_UNIT:
-				return plainToClass(RegisteredUnit, { id: input.id });
+				return plainToClass(RegisteredUnit, { unit: { id: input.id } });
 			case UnitInputType.UNKNOWN_UNIT:
 				return plainToClass(UnknownUnit, { name: input.name });
 			default:

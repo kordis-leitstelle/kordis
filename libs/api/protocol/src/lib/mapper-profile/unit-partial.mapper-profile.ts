@@ -1,5 +1,5 @@
 import type { Mapper } from '@automapper/core';
-import { createMap } from '@automapper/core';
+import { createMap, forMember, mapFrom } from '@automapper/core';
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -58,11 +58,29 @@ export class UnitPartialProfile extends AutomapperProfile {
 	override get profile() {
 		return (mapper: Mapper): void => {
 			// document --> entity
-			createMap(mapper, RegisteredUnitDocument, RegisteredUnit);
+			createMap(
+				mapper,
+				RegisteredUnitDocument,
+				RegisteredUnit,
+				forMember(
+					(d) => d.unit,
+					mapFrom((s) => ({
+						id: s.unitId,
+					})),
+				),
+			);
 			createMap(mapper, UnknownUnitDocument, UnknownUnit);
 
 			// entity --> document
-			createMap(mapper, RegisteredUnit, RegisteredUnitDocument);
+			createMap(
+				mapper,
+				RegisteredUnit,
+				RegisteredUnitDocument,
+				forMember(
+					(d) => d.unitId,
+					mapFrom((s) => s.unit.id),
+				),
+			);
 			createMap(mapper, UnknownUnit, UnknownUnitDocument);
 		};
 	}

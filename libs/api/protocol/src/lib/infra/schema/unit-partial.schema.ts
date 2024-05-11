@@ -17,7 +17,7 @@ export class RegisteredUnitDocument extends UnitDocument {
 
 	@Prop()
 	@AutoMap()
-	id: string;
+	unitId: string;
 }
 
 @Schema({ _id: false })
