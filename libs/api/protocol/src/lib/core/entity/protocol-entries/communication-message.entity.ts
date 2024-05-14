@@ -17,5 +17,5 @@ export class CommunicationMessagePayload {
 export class CommunicationMessage extends ProtocolCommunicationEntryBase {
 	@Field(() => CommunicationMessagePayload)
 	@AutoMap()
-	override payload: CommunicationMessagePayload;
+	payload: CommunicationMessagePayload;
 }

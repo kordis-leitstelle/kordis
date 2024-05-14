@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Query } from 'mongoose';
 
 import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
 import { ProtocolEntryRepository } from '../../core/repository/protocol-entry.repository';
@@ -25,14 +25,54 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 		return entity;
 	}
 
-	async getPaginatedProtocolEntries(
-		organizationId: string,
-	): Promise<ProtocolEntryBase[]> {
-		const orgDoc = await this.protocolEntryModel
+	async getProtocolEntryCount(organizationId: string): Promise<number> {
+		return await this.protocolEntryModel
 			.find({ orgId: organizationId })
-			.lean()
-			.exec();
+			.countDocuments();
+	}
 
-		return orgDoc.map((entry) => this.mapper.map(entry));
+	async getProtocolEntries(
+		organizationId: string,
+		count: number,
+		sort: 'asc' | 'desc',
+		startingFrom?: Date,
+	): Promise<ProtocolEntryBase[]> {
+		const query = this.getQueryForSlice(
+			organizationId,
+			sort,
+			startingFrom,
+		).limit(count);
+
+		const protocolEntries = await query.lean().exec();
+
+		return protocolEntries.map((entry) => this.mapper.map(entry));
+	}
+
+	private getQueryForSlice(
+		organizationId: string,
+		sort: 'asc' | 'desc',
+		startingFrom?: Date,
+	): Query<ProtocolEntryBaseDocument[], ProtocolEntryBaseDocument> {
+		const query = this.protocolEntryModel
+			// we assume there are no two protocol entries with the exact same timestamp
+			.find({ orgId: organizationId })
+			.sort({ time: sort });
+
+		if (startingFrom) {
+			const comparator = sort === 'asc' ? '$gt' : '$lt';
+			query.find({ time: { [comparator]: startingFrom.toISOString() } });
+		}
+		return query;
+	}
+
+	async hasProtocolEntries(
+		organizationId: string,
+		sort: 'asc' | 'desc',
+		startingFrom?: Date,
+	): Promise<boolean> {
+		const query = this.getQueryForSlice(organizationId, sort, startingFrom);
+		const protocolEntry = await query.findOne();
+
+		return protocolEntry !== null;
 	}
 }

@@ -11,7 +11,7 @@ import {
 import { UnitUnion } from '../partials/unit-partial.entity';
 
 @ObjectType({ isAbstract: true })
-export abstract class ProtocolEntryBase extends BaseEntityModel {
+export class ProtocolEntryBase extends BaseEntityModel {
 	@Field()
 	@AutoMap()
 	time: Date;
@@ -19,8 +19,6 @@ export abstract class ProtocolEntryBase extends BaseEntityModel {
 	@Field(() => UnitUnion)
 	@AutoMap()
 	sender: typeof UnitUnion;
-
-	abstract payload: object;
 
 	@Field()
 	@AutoMap()

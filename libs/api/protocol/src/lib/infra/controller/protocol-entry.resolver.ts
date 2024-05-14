@@ -1,5 +1,6 @@
 import { QueryBus } from '@nestjs/cqrs';
 import {
+	Args,
 	Context,
 	Parent,
 	Query,
@@ -13,21 +14,45 @@ import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { RegisteredUnit } from '../../core/entity/partials/unit-partial.entity';
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
-import { ProtocolEntryUnion } from '../../core/entity/protocol.entity';
 import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.query';
+import { ProtocolEntryConnectionBuilder } from '../service/protocol-entry-connection.builder';
+import { ProtocolEntryConnection } from '../view-model/protocol-entry.connection';
+import { ProtocolEntryConnectionArgs } from '../view-model/protocol-entry.connection-args';
 
 @Resolver()
 export class ProtocolEntryResolver {
 	constructor(private readonly queryBus: QueryBus) {}
 
-	@Query(() => [ProtocolEntryUnion])
+	@Query(() => ProtocolEntryConnection, {
+		description: 'Returns protocol entries sorted by time desc.',
+	})
 	async protocolEntries(
 		@RequestUser() reqUser: AuthUser,
-	): Promise<ProtocolEntryBase[]> {
-		return await this.queryBus.execute<GetProtocolEntriesQuery>(
-			new GetProtocolEntriesQuery(reqUser.organizationId),
+		@Args() connectionArgs: ProtocolEntryConnectionArgs,
+	): Promise<ProtocolEntryConnection> {
+		const connbuilder = new ProtocolEntryConnectionBuilder(connectionArgs);
+
+		const startingFrom = connbuilder.beforeCursor
+			? new Date(Number(connbuilder.beforeCursor.parameters.time))
+			: connbuilder.afterCursor
+				? new Date(Number(connbuilder.afterCursor.parameters.time))
+				: undefined;
+
+		const protocolEntrySlice = await this.queryBus.execute(
+			new GetProtocolEntriesQuery(
+				reqUser.organizationId,
+				connbuilder.edgesPerPage,
+				connbuilder.beforeCursor ? 'asc' : 'desc',
+				startingFrom,
+			),
 		);
+
+		return connbuilder.build({
+			hasNextPage: protocolEntrySlice.hasNext,
+			hasPreviousPage: protocolEntrySlice.hasPrevious,
+			totalEdges: protocolEntrySlice.totalEdges,
+			nodes: protocolEntrySlice.nodes,
+		});
 	}
 }
 

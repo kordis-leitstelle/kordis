@@ -36,6 +36,7 @@
     "@commitlint/config-conventional": "^19.1.0",
     "@commitlint/config-nx-scopes": "^19.2.1",
     "@golevelup/ts-jest": "^0.4.0",
+    "@graphql-codegen/cli": "5.0.2",
     "@nestjs/schematics": "10.1.1",
     "@nestjs/testing": "10.3.3",
     "@ngneat/spectator": "^18.0.1",
@@ -83,8 +84,7 @@
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "typescript": "5.4.3",
-    "wait-on": "^7.0.1",
-    "@graphql-codegen/cli": "5.0.2"
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "@angular/animations": "17.3.2",
@@ -96,8 +96,8 @@
     "@angular/platform-browser-dynamic": "17.3.2",
     "@angular/pwa": "17.3.2",
     "@angular/router": "17.3.2",
-    "@apollo/client": "^3.8.10",
     "@angular/service-worker": "17.3.2",
+    "@apollo/client": "^3.8.10",
     "@automapper/classes": "^8.8.1",
     "@automapper/core": "^8.8.1",
     "@automapper/nestjs": "^8.8.1",
@@ -130,6 +130,7 @@
     "jwks-rsa": "^3.0.1",
     "mongodb-client-encryption": "^6.0.0",
     "mongoose": "^8.0.0",
+    "nestjs-graphql-connection": "^1.0.3",
     "ng-zorro-antd": "^17.1.0",
     "pino": "^9.0.0",
     "pino-pretty": "^11.0.0",
