@@ -36,7 +36,7 @@ describe('GraphqlService', () => {
 			variables,
 		});
 		expect(result).toEqual({
-			data: { foo: 'bar' },
+			foo: 'bar',
 		});
 	});
 
@@ -62,13 +62,11 @@ describe('GraphqlService', () => {
 		});
 
 		await expect(firstValueFrom($)).resolves.toEqual({
-			data: { foo: 'bar' },
-			errors: null,
+			foo: 'bar',
 		});
 
 		await expect(refresh(variables)).resolves.toEqual({
-			data: { foo: 'refreshed' },
-			errors: null,
+			foo: 'refreshed',
 		});
 	});
 
@@ -96,9 +94,7 @@ describe('GraphqlService', () => {
 			},
 		});
 		expect(result).toEqual({
-			data: {
-				foo: 'bar',
-			},
+			foo: 'bar',
 		});
 	});
 
@@ -123,8 +119,6 @@ describe('GraphqlService', () => {
 				useZone: false,
 			},
 		);
-		expect(result).toEqual({
-			data: { foo: 'bar' },
-		});
+		expect(result).toEqual({ foo: 'bar' });
 	});
 });
