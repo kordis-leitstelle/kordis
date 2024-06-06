@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { DataLoaderContainer } from '@kordis/api/shared';
-import { GetUnitsByIdsQuery } from '@kordis/api/unit';
+
+import { GetUnitsByIdsQuery } from '../core/query/get-units-by-ids.query';
 
 export const UNITS_DATA_LOADER = Symbol('UNITS_DATA_LOADER');
 

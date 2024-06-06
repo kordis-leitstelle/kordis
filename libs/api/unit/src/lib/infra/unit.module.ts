@@ -12,6 +12,8 @@ import { GetUnitsByIdsHandler } from '../core/query/get-units-by-ids.query';
 import { GetUnitsByOrgHandler } from '../core/query/get-units-by-org.query';
 import { ALERT_GROUP_REPOSITORY } from '../core/repository/alert-group.repository';
 import { UNIT_REPOSITORY } from '../core/repository/unit.repository';
+import { AlertGroupsDataLoader } from '../data-loader/alert-groups.data-loader';
+import { UnitsDataLoader } from '../data-loader/units.data-loader';
 import { AlertGroupResolver } from './controller/alert-group.resolver';
 import { UnitResolver } from './controller/unit.resolver';
 import { AlertGroupProfile } from './mapper/alert-group.mapper-profile';
@@ -57,6 +59,8 @@ import { UnitDocument, UnitSchema } from './schema/unit.schema';
 		UpdateUnitStatusHandler,
 		UnitResolver,
 		AlertGroupResolver,
+		UnitsDataLoader,
+		AlertGroupsDataLoader,
 	],
 })
 export class UnitModule {}
