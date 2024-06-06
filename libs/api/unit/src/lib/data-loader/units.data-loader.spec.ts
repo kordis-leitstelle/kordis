@@ -3,8 +3,8 @@ import { QueryBus } from '@nestjs/cqrs';
 import DataLoader from 'dataloader';
 
 import { DataLoaderContainer } from '@kordis/api/shared';
-import { GetUnitsByIdsQuery } from '@kordis/api/unit';
 
+import { GetUnitsByIdsQuery } from '../core/query/get-units-by-ids.query';
 import { UNITS_DATA_LOADER, UnitsDataLoader } from './units.data-loader';
 
 describe('UnitsDataLoader', () => {

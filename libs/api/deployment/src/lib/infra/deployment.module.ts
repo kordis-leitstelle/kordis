@@ -24,8 +24,6 @@ import {
 	DeploymentUnitResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
 } from './controller/deployment.resolver';
-import { AlertGroupsDataLoader } from './data-loader/alert-groups.data-loader';
-import { UnitsDataLoader } from './data-loader/units.data-loader';
 import { DeploymentAggregateProfile } from './mapper/deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentProfile } from './mapper/deployment-assignment.mapper-profile';
 import {
@@ -88,7 +86,6 @@ const RESOLVERS = [
 	AlertGroupAssignmentResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
 ];
-const DATA_LOADERS = [UnitsDataLoader, AlertGroupsDataLoader];
 const MAPPER_PROFILES = [
 	DeploymentAggregateProfile,
 	DeploymentAssignmentProfile,
@@ -138,7 +135,6 @@ const DOMAIN_SERVICES = [
 		...REPOSITORIES,
 		...CQRS_HANDLERS,
 		...RESOLVERS,
-		...DATA_LOADERS,
 		...MAPPER_PROFILES,
 		...DOMAIN_SERVICES,
 	],
