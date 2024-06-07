@@ -18,9 +18,9 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 
 		const protocolEntryDoc = await this.protocolEntryModel.create(document);
 
-		const entity = (await this.mapper.map(
+		const entity = this.mapper.map(
 			protocolEntryDoc.toObject() as ProtocolEntryBaseDocument,
-		)) as unknown as T;
+		) as unknown as T;
 
 		return entity;
 	}
