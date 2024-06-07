@@ -7,7 +7,9 @@ import {
 import { UnitInput, UnitInputType } from '../view-model/unit-input.view-model';
 
 export class UnitInputTransformer {
-	static async transform(input: UnitInput): Promise<RegisteredUnit | UnknownUnit> {
+	static async transform(
+		input: UnitInput,
+	): Promise<RegisteredUnit | UnknownUnit> {
 		await input.validOrThrow();
 
 		switch (input.type) {

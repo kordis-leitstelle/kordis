@@ -8,8 +8,8 @@ import { CommunicationMessage } from '../entity/protocol-entries/communication-m
 import { ProtocolEntryCreatedEvent } from '../event/protocol-entry-created.event';
 import { ProtocolEntryRepository } from '../repository/protocol-entry.repository';
 import {
-    CreateCommunicationMessageCommand,
-    CreateCommunicationMessageHandler,
+	CreateCommunicationMessageCommand,
+	CreateCommunicationMessageHandler,
 } from './create-communication-message.command';
 
 describe('CreateCommunicationMessageCommand', () => {

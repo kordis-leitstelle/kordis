@@ -2,12 +2,12 @@ import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-    PROTOCOL_ENTRY_REPOSITORY,
-    ProtocolEntryRepository,
+	PROTOCOL_ENTRY_REPOSITORY,
+	ProtocolEntryRepository,
 } from '../repository/protocol-entry.repository';
 import {
-    GetProtocolEntriesHandler,
-    GetProtocolEntriesQuery,
+	GetProtocolEntriesHandler,
+	GetProtocolEntriesQuery,
 } from './get-protocol-entries.query';
 
 describe('GetProtocolEntriesHandler', () => {

@@ -5,9 +5,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import {
-    mockModelMethodResult
-} from '@kordis/api/test-helpers';
+import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
 import { ProtocolEntryMapper } from '../../mapper-profile/protocol-entry.mapper';
