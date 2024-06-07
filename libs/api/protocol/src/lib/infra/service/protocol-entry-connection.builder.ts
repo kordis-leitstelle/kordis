@@ -46,6 +46,6 @@ export class ProtocolEntryConnectionBuilder extends ConnectionBuilder<
 			return new Date(Number(this.afterCursor.parameters.time));
 		}
 
-		return;
+		return undefined;
 	}
 }
