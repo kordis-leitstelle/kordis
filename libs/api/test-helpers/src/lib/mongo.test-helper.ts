@@ -24,7 +24,7 @@ export function uowMockProvider() {
 export function mockModelMethodResult(
 	model: Model<any>,
 	document: Record<string, any> | null,
-	method: 'findById' | 'findOne' | 'findOneAndUpdate',
+	method: 'findById' | 'findOne' | 'findOneAndUpdate' | 'create',
 ) {
 	const spy = jest.spyOn(model, method as any);
 
@@ -39,6 +39,7 @@ export function mockModelMethodResult(
 			toObject: jest.fn().mockReturnValue(document),
 			exec: jest.fn().mockReturnValue(document),
 		}),
+		toObject: jest.fn().mockReturnValue(document),
 	} as any);
 
 	return spy;
