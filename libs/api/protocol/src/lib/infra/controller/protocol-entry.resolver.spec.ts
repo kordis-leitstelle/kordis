@@ -1,13 +1,21 @@
 import { createMock } from '@golevelup/ts-jest';
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { plainToInstance } from 'class-transformer';
+import DataLoader from 'dataloader';
 
+import { DataLoaderContextProvider } from '@kordis/api/shared';
+import { UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { Page } from '../../core/entity/page.entity';
+import { RegisteredUnit } from '../../core/entity/partials/unit-partial.entity';
 import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
 import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.query';
-import { ProtocolEntryResolver } from './protocol-entry.resolver';
+import {
+	ProtocolEntryResolver,
+	RegisteredUnitResolver,
+} from './protocol-entry.resolver';
 
 describe('ProtocolEntryResolver', () => {
 	let resolver: ProtocolEntryResolver;
@@ -51,5 +59,35 @@ describe('ProtocolEntryResolver', () => {
 		expect(result.pageInfo.hasNextPage).toBe(true);
 		expect(result.pageInfo.hasPreviousPage).toBe(false);
 		expect(result.edges).toHaveLength(2);
+	});
+});
+
+describe('RegisteredUnitResolver', () => {
+	let resolver: RegisteredUnitResolver;
+	const mockLoadersProvider = createMock<DataLoaderContextProvider>();
+
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			providers: [RegisteredUnitResolver],
+		}).compile();
+
+		resolver = module.get<RegisteredUnitResolver>(RegisteredUnitResolver);
+	});
+
+	it('Should return units by registered units', async () => {
+		const unit = plainToInstance(RegisteredUnit, {
+			unit: { id: '66630bb3ad305edf39bc9729' },
+		});
+		const mockUnit = {} as UnitViewModel;
+
+		const mockDataLoader = createMock<DataLoader<string, UnitViewModel>>();
+		mockDataLoader.load.mockResolvedValueOnce(mockUnit);
+		mockLoadersProvider.getLoader.mockReturnValueOnce(mockDataLoader);
+
+		const result = await resolver.unit(unit, {
+			loadersProvider: mockLoadersProvider,
+		});
+
+		expect(result).toBe(mockUnit);
 	});
 });
