@@ -32,11 +32,7 @@ export class ProtocolEntryResolver {
 	): Promise<ProtocolEntryConnection> {
 		const connbuilder = new ProtocolEntryConnectionBuilder(connectionArgs);
 
-		const startingFrom = connbuilder.beforeCursor
-			? new Date(Number(connbuilder.beforeCursor.parameters.time))
-			: connbuilder.afterCursor
-				? new Date(Number(connbuilder.afterCursor.parameters.time))
-				: undefined;
+		const startingFrom = connbuilder.getStartDate();
 
 		const protocolEntrySlice = await this.queryBus.execute(
 			new GetProtocolEntriesQuery(

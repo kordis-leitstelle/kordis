@@ -36,4 +36,16 @@ export class ProtocolEntryConnectionBuilder extends ConnectionBuilder<
 	public createCursor(node: ProtocolEntryBase): ProtocolEntryCursor {
 		return new Cursor({ time: node.time.getTime() });
 	}
+
+	public getStartDate(): Date | undefined {
+		if (this.beforeCursor) {
+			return new Date(Number(this.beforeCursor.parameters.time));
+		}
+
+		if (this.afterCursor) {
+			return new Date(Number(this.afterCursor.parameters.time));
+		}
+
+		return;
+	}
 }
