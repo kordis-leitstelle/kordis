@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
 import {
 	RegisteredUnit,
@@ -7,12 +7,14 @@ import {
 import { UnitInput, UnitInputType } from '../view-model/unit-input.view-model';
 
 export class UnitInputTransformer {
-	static transform(input: UnitInput): RegisteredUnit | UnknownUnit {
+	static async transform(input: UnitInput): Promise<RegisteredUnit | UnknownUnit> {
+		await input.validOrThrow();
+
 		switch (input.type) {
 			case UnitInputType.REGISTERED_UNIT:
-				return plainToClass(RegisteredUnit, { unit: { id: input.id } });
+				return plainToInstance(RegisteredUnit, { unit: { id: input.id } });
 			case UnitInputType.UNKNOWN_UNIT:
-				return plainToClass(UnknownUnit, { name: input.name });
+				return plainToInstance(UnknownUnit, { name: input.name });
 			default:
 				throw new Error(`Invalid UnitInputType ${input.type}`);
 		}

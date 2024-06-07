@@ -31,8 +31,8 @@ export class CommunicationMessageResolver {
 			return await this.commandBus.execute(
 				new CreateCommunicationMessageCommand(
 					new Date(),
-					UnitInputTransformer.transform(sender),
-					UnitInputTransformer.transform(recipient),
+					await UnitInputTransformer.transform(sender),
+					await UnitInputTransformer.transform(recipient),
 					message,
 					channel,
 					reqUser,

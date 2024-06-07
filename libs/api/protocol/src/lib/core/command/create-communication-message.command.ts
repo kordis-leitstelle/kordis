@@ -13,7 +13,7 @@ import {
 	CommunicationMessage,
 	CommunicationMessagePayload,
 } from '../entity/protocol-entries/communication-message.entity';
-import { CommunicationMessageCreatedEvent } from '../event/communication-message-created.event';
+import { ProtocolEntryCreatedEvent } from '../event/protocol-entry-created.event';
 import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
@@ -55,7 +55,12 @@ export class CreateCommunicationMessageHandler
 
 		this.logger.log('Communication message created', { commMsgId: commMsg.id });
 
-		this.eventBus.publish(new CommunicationMessageCreatedEvent(commMsg));
+		this.eventBus.publish(
+			new ProtocolEntryCreatedEvent(
+				command.requestUser.organizationId,
+				commMsg,
+			),
+		);
 
 		return commMsg;
 	}
