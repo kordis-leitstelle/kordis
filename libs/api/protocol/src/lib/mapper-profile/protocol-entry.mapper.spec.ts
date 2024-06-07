@@ -59,6 +59,9 @@ const testCases: {
 			searchableText:
 				'one medium dry vodka martini mixed like you said, sir, but not stirred.',
 			time: new Date('1956-03-26'),
+			orgId: 'orgId-123',
+			createdAt: undefined,
+			updatedAt: undefined,
 		}),
 		documentName: CommunicationMessageDocument.name,
 		document: plainToInstance(CommunicationMessageDocument, {
@@ -85,7 +88,9 @@ const testCases: {
 			searchableText:
 				'one medium dry vodka martini mixed like you said, sir, but not stirred.',
 			time: new Date('1956-03-26'),
-			orgId: undefined,
+			orgId: 'orgId-123',
+			createdAt: undefined,
+			updatedAt: undefined,
 		}),
 	},
 ];
@@ -128,9 +133,9 @@ describe('ProtocolEntryMapper - Test all protocol entry mappings', () => {
 	test.each(testCases)(
 		'Should map document $documentName to entity $entityName',
 		async ({ entity, document }) => {
-			const result = await mapper.map(entity);
+			const result = await mapper.map(document);
 
-			expect(result).toEqual(document);
+			expect(result).toEqual(entity);
 		},
 	);
 
