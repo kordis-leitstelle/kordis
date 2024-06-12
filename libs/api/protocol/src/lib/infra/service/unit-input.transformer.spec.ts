@@ -42,10 +42,26 @@ const unsuccessfulCases: { case: string; input: UnitInput }[] = [
 		}),
 	},
 	{
+		case: 'registered unit is passed with name and set',
+		input: plainToInstance(UnitInput, {
+			type: 'REGISTERED_UNIT',
+			name: 'TestUnit',
+			id: '66622000cd0f5780cf0c0046',
+		}),
+	},
+	{
 		case: 'unknown unit is passed but id is set instead of name',
 		input: plainToInstance(UnitInput, {
 			type: 'UNKNOWN_UNIT',
 			id: '66622000cd0f5780cf0c0046',
+		}),
+	},
+	{
+		case: 'unknown unit is passed with id and name set',
+		input: plainToInstance(UnitInput, {
+			type: 'UNKNOWN_UNIT',
+			id: '66622000cd0f5780cf0c0046',
+			name: 'TestUnit',
 		}),
 	},
 	{

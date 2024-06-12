@@ -5,10 +5,13 @@ import {
 	IsNotEmpty,
 	IsString,
 	MaxLength,
+	Validate,
 	ValidateIf,
 } from 'class-validator';
 
 import { Validatable } from '@kordis/api/shared';
+
+import { IsValidUnitInputType } from '../validators/is-valid-unit-input-type.constraint';
 
 export enum UnitInputType {
 	REGISTERED_UNIT = 'REGISTERED_UNIT',
@@ -23,6 +26,10 @@ registerEnumType(UnitInputType, {
 export class UnitInput extends Validatable {
 	@Field()
 	@IsEnum(UnitInputType)
+	@Validate(IsValidUnitInputType, {
+		message:
+			'Es dürfen nur die id bei bekannten Einheiten oder der name bei unbekannten Namen gesetzt sein.',
+	})
 	type: UnitInputType;
 
 	@Field({ nullable: true })
