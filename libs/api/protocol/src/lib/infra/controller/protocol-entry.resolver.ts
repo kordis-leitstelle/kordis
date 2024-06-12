@@ -34,7 +34,7 @@ export class ProtocolEntryResolver {
 
 		const startingFrom = connbuilder.getStartDate();
 
-		const protocolEntrySlice = await this.queryBus.execute(
+		const protocolEntryPage = await this.queryBus.execute(
 			new GetProtocolEntriesQuery(
 				reqUser.organizationId,
 				connbuilder.edgesPerPage,
@@ -44,10 +44,10 @@ export class ProtocolEntryResolver {
 		);
 
 		return connbuilder.build({
-			hasNextPage: protocolEntrySlice.hasNext,
-			hasPreviousPage: protocolEntrySlice.hasPrevious,
-			totalEdges: protocolEntrySlice.totalEdges,
-			nodes: protocolEntrySlice.nodes,
+			hasNextPage: protocolEntryPage.hasNext,
+			hasPreviousPage: protocolEntryPage.hasPrevious,
+			totalEdges: protocolEntryPage.totalEdges,
+			nodes: protocolEntryPage.nodes,
 		});
 	}
 }

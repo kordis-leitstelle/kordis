@@ -39,12 +39,12 @@ export class GetProtocolEntriesHandler
 			startingFrom,
 		);
 
-		const slice = new Page<ProtocolEntryBase>();
-		slice.nodes = protocolEntries;
-		slice.totalEdges =
+		const page = new Page<ProtocolEntryBase>();
+		page.nodes = protocolEntries;
+		page.totalEdges =
 			await this.repository.getProtocolEntryCount(organizationId);
 
-		slice.hasNext =
+		page.hasNext =
 			direction === 'subsequent' && protocolEntries.length === 0
 				? false
 				: await this.repository.hasProtocolEntries(
@@ -52,7 +52,7 @@ export class GetProtocolEntriesHandler
 						'subsequent',
 						protocolEntries.at(-1)?.time,
 					);
-		slice.hasPrevious =
+		page.hasPrevious =
 			direction === 'preceding' && protocolEntries.length === 0
 				? false
 				: await this.repository.hasProtocolEntries(
@@ -61,6 +61,6 @@ export class GetProtocolEntriesHandler
 						protocolEntries.at(0)?.time,
 					);
 
-		return slice;
+		return page;
 	}
 }
