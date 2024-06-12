@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { DataLoaderContainer } from '@kordis/api/shared';
-import { GetAlertGroupsByIdsQuery } from '@kordis/api/unit';
+
+import { GetAlertGroupsByIdsQuery } from '../core/query/get-alert-groups-by-ids.query';
 
 export const ALERT_GROUPS_DATA_LOADER = Symbol('ALERT_GROUPS_DATA_LOADER');
 

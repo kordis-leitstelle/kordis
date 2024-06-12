@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import {
 	Coordinate,
@@ -74,7 +74,7 @@ describe('ImplOrganizationRepository', () => {
 
 	describe('findById', () => {
 		it('should return mapped organization entity', async () => {
-			const orgId = 'org-id';
+			const orgId = new Types.ObjectId().toString();
 			const orgName = 'org-name';
 			const geoSettings = {
 				bbox: {
@@ -90,7 +90,7 @@ describe('ImplOrganizationRepository', () => {
 			const updatedAt = new Date();
 
 			const orgDoc: Mutable<OrganizationDocument> = {} as OrganizationDocument;
-			orgDoc._id = orgId;
+			orgDoc._id = new Types.ObjectId(orgId);
 			orgDoc.orgId = orgId;
 			orgDoc.name = orgName;
 			orgDoc.geoSettings = geoSettings;
