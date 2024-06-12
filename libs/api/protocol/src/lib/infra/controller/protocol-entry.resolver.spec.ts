@@ -52,7 +52,7 @@ describe('ProtocolEntryResolver', () => {
 		);
 
 		expect(mockQueryBus.execute).toHaveBeenCalledWith(
-			new GetProtocolEntriesQuery(orgId, count, 'desc'),
+			new GetProtocolEntriesQuery(orgId, count, 'subsequent'),
 		);
 
 		expect(result.pageInfo.totalEdges).toBe(100);

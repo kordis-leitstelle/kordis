@@ -58,7 +58,7 @@ describe('GetProtocolEntriesHandler', () => {
 		});
 
 		const count = 20;
-		const sort = 'asc';
+		const sort = 'preceding';
 		const startingFrom = new Date();
 		const command = new GetProtocolEntriesQuery(
 			orgId,

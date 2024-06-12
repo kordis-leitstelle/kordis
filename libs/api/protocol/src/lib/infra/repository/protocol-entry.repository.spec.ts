@@ -85,7 +85,7 @@ describe('ProtocolEntryRepositoryImpl', () => {
 		const result = await repository.getProtocolEntries(
 			'org-id',
 			42,
-			'asc',
+			'preceding',
 			new Date(),
 		);
 
@@ -99,6 +99,7 @@ describe('ProtocolEntryRepositoryImpl', () => {
 
 	it('should return whether there are more protocol entries', async () => {
 		const queryMockFn = {
+			select: jest.fn().mockReturnThis(),
 			find: jest.fn().mockReturnThis(),
 			sort: jest.fn().mockReturnThis(),
 			findOne: jest.fn().mockResolvedValue({} as ProtocolEntryBase),
@@ -107,7 +108,7 @@ describe('ProtocolEntryRepositoryImpl', () => {
 
 		const result = await repository.hasProtocolEntries(
 			'org-id',
-			'asc',
+			'preceding',
 			new Date(),
 		);
 
