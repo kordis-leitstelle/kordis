@@ -1,4 +1,3 @@
-import { UsePipes, ValidationPipe } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
@@ -19,7 +18,6 @@ export class CommunicationMessageResolver {
 	constructor(private readonly commandBus: CommandBus) {}
 
 	@Mutation(() => CommunicationMessage)
-	@UsePipes(new ValidationPipe({ transform: true }))
 	async createCommunicationMessage(
 		@RequestUser() reqUser: AuthUser,
 		@Args('sender', { type: () => UnitInput }) sender: UnitInput,

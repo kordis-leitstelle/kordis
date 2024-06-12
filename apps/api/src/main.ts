@@ -15,6 +15,7 @@ async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule, { cors: true, bufferLogs: true });
 	app.useLogger(app.get(Logger));
 	app.useGlobalPipes(new ValidationPipe({
+			transform: true,
 			exceptionFactory: (errors) => PresentableValidationException.fromClassValidationErrors(errors)
 		}
 	));
