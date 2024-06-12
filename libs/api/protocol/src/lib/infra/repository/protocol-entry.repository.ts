@@ -25,8 +25,8 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 		return entity;
 	}
 
-	async getProtocolEntryCount(organizationId: string): Promise<number> {
-		return await this.protocolEntryModel
+	getProtocolEntryCount(organizationId: string): Promise<number> {
+		return this.protocolEntryModel
 			.find({ orgId: organizationId })
 			.countDocuments();
 	}
@@ -71,7 +71,7 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 		startingFrom?: Date,
 	): Promise<boolean> {
 		const query = this.getQueryForSlice(organizationId, sort, startingFrom);
-		const protocolEntry = await query.findOne();
+		const protocolEntry = await query.select('_id').findOne();
 
 		return protocolEntry !== null;
 	}
