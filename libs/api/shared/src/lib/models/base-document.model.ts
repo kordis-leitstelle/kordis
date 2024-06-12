@@ -12,10 +12,10 @@ export class BaseDocument implements BaseModel, Pick<Document, '_id'> {
 	orgId: string;
 
 	@Prop()
-	@AutoMap()
+	@AutoMap({ isGetterOnly: true })
 	createdAt: Date;
 
 	@Prop()
-	@AutoMap()
+	@AutoMap({ isGetterOnly: true })
 	updatedAt: Date;
 }

@@ -11,6 +11,7 @@ import { AuthModule } from '@kordis/api/auth';
 import { DeploymentModule } from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
+import { ProtocolModule } from '@kordis/api/protocol';
 import {
 	DataLoaderContainer,
 	DataLoaderContextProvider,
@@ -34,6 +35,7 @@ const isNextOrProdEnv = ['next', 'prod'].includes(
 
 const FEATURE_MODULES = [
 	OrganizationModule,
+	ProtocolModule,
 	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
 	UnitModule,
 	TetraModule,
