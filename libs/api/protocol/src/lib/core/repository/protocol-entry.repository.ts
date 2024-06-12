@@ -7,16 +7,19 @@ export interface ProtocolEntryRepository {
 
 	getProtocolEntryCount(organizationId: string): Promise<number>;
 
+	/**
+	 * Returns the protocol entries sorted by time desc.
+	 */
 	getProtocolEntries(
 		organizationId: string,
 		count: number,
-		sort: 'asc' | 'desc',
+		direction: 'preceding' | 'subsequent',
 		startingFrom?: Date,
 	): Promise<ProtocolEntryBase[]>;
 
 	hasProtocolEntries(
 		organizationId: string,
-		sort: 'asc' | 'desc',
+		direction: 'preceding' | 'subsequent',
 		startingFrom?: Date,
 	): Promise<boolean>;
 }

@@ -12,7 +12,7 @@ export class GetProtocolEntriesQuery {
 	constructor(
 		public readonly organizationId: string,
 		public readonly count: number,
-		public readonly sort: 'asc' | 'desc',
+		public readonly direction: 'preceding' | 'subsequent',
 		public readonly startingFrom?: Date,
 	) {}
 }
@@ -29,19 +29,15 @@ export class GetProtocolEntriesHandler
 	async execute({
 		organizationId,
 		count,
-		sort,
+		direction,
 		startingFrom,
 	}: GetProtocolEntriesQuery): Promise<Page<ProtocolEntryBase>> {
 		const protocolEntries = await this.repository.getProtocolEntries(
 			organizationId,
 			count,
-			sort,
+			direction,
 			startingFrom,
 		);
-
-		if (sort === 'asc') {
-			protocolEntries.reverse();
-		}
 
 		const slice = new Page<ProtocolEntryBase>();
 		slice.nodes = protocolEntries;
@@ -49,19 +45,19 @@ export class GetProtocolEntriesHandler
 			await this.repository.getProtocolEntryCount(organizationId);
 
 		slice.hasNext =
-			sort === 'desc' && protocolEntries.length === 0
+			direction === 'subsequent' && protocolEntries.length === 0
 				? false
 				: await this.repository.hasProtocolEntries(
 						organizationId,
-						'desc',
+						'subsequent',
 						protocolEntries.at(-1)?.time,
 					);
 		slice.hasPrevious =
-			sort === 'asc' && protocolEntries.length === 0
+			direction === 'preceding' && protocolEntries.length === 0
 				? false
 				: await this.repository.hasProtocolEntries(
 						organizationId,
-						'asc',
+						'preceding',
 						protocolEntries.at(0)?.time,
 					);
 

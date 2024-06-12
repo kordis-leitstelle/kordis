@@ -34,21 +34,25 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 	async getProtocolEntries(
 		organizationId: string,
 		count: number,
-		sort: 'asc' | 'desc',
+		direction: 'preceding' | 'subsequent',
 		startingFrom?: Date,
 	): Promise<ProtocolEntryBase[]> {
-		const query = this.getQueryForSlice(
+		const query = this.getQueryForSubset(
 			organizationId,
-			sort,
+			direction === 'preceding' ? 'asc' : 'desc',
 			startingFrom,
 		).limit(count);
 
 		const protocolEntries = await query.lean().exec();
 
+		if (direction === 'preceding') {
+			protocolEntries.reverse();
+		}
+
 		return protocolEntries.map((entry) => this.mapper.map(entry));
 	}
 
-	private getQueryForSlice(
+	private getQueryForSubset(
 		organizationId: string,
 		sort: 'asc' | 'desc',
 		startingFrom?: Date,
@@ -67,10 +71,14 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 
 	async hasProtocolEntries(
 		organizationId: string,
-		sort: 'asc' | 'desc',
+		direction: 'preceding' | 'subsequent',
 		startingFrom?: Date,
 	): Promise<boolean> {
-		const query = this.getQueryForSlice(organizationId, sort, startingFrom);
+		const query = this.getQueryForSubset(
+			organizationId,
+			direction === 'preceding' ? 'asc' : 'desc',
+			startingFrom,
+		);
 		const protocolEntry = await query.select('_id').findOne();
 
 		return protocolEntry !== null;

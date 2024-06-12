@@ -38,7 +38,7 @@ export class ProtocolEntryResolver {
 			new GetProtocolEntriesQuery(
 				reqUser.organizationId,
 				connbuilder.edgesPerPage,
-				connbuilder.beforeCursor ? 'asc' : 'desc',
+				connbuilder.beforeCursor ? 'preceding' : 'subsequent',
 				startingFrom,
 			),
 		);
