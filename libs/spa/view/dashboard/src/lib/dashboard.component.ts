@@ -15,9 +15,8 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 import { TraceComponent } from '@kordis/spa/core/observability';
-import { ProtocolComponent } from '@kordis/spa/feature/protocol';
+import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 
-import { ProtocolMockData } from './protocol-mock-data';
 
 @Component({
 	selector: 'krd-dashboard-view',
@@ -32,7 +31,7 @@ import { ProtocolMockData } from './protocol-mock-data';
 		NzMenuModule,
 		NzModalModule,
 		NzAvatarModule,
-		ProtocolComponent,
+		ProtocolViewComponent,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
@@ -43,9 +42,6 @@ export class DashboardComponent {
 	private readonly authService = inject(AUTH_SERVICE);
 	readonly user$ = this.authService.user$;
 	private readonly modal = inject(NzModalService);
-
-	// TODO: load protocol entries from backend
-	public protocolEntries = ProtocolMockData;
 
 	logout(): void {
 		this.authService.logout();
