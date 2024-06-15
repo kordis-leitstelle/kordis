@@ -17,10 +17,6 @@ nz-layout {
 			color: var(--ant-primary-color);
 			font-size: 24px;
 		}
-
-		nz-avatar {
-			cursor: pointer;
-		}
 	}
 
 	nz-content {
