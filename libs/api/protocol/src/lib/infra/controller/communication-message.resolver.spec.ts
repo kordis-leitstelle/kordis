@@ -7,6 +7,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { CommunicationMessage } from '../../core/entity/protocol-entries/communication-message.entity';
 import { UnitInput, UnitInputType } from '../view-model/unit-input.view-model';
+import { BaseCreateMessageArgs } from './base-create-message.args';
 import { CommunicationMessageResolver } from './communication-message.resolver';
 
 describe('CommunicationMessageResolver', () => {
@@ -47,10 +48,12 @@ describe('CommunicationMessageResolver', () => {
 
 		const result = await resolver.createCommunicationMessage(
 			user,
-			sender,
-			recipient,
+			plainToInstance(BaseCreateMessageArgs, {
+				sender,
+				recipient,
+				channel,
+			}),
 			message,
-			channel,
 		);
 
 		expect(mockCommandBus.execute).toHaveBeenCalledWith(

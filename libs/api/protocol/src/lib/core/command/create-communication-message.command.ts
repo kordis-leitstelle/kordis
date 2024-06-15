@@ -18,15 +18,19 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../repository/protocol-entry.repository';
+import { BaseCreateMessageCommand } from './base-create-message.command';
+import { setBaseDataFromCommandOnEntity } from './helper/set-base-data-from-command-on.entity';
 
-export class CreateCommunicationMessageCommand {
+export class CreateCommunicationMessageCommand
+	implements BaseCreateMessageCommand
+{
 	constructor(
-		public readonly time: Date,
-		public readonly sender: RegisteredUnit | UnknownUnit,
-		public readonly recipient: RegisteredUnit | UnknownUnit,
-		public readonly message: string,
-		public readonly channel: string,
-		public readonly requestUser: AuthUser,
+		readonly time: Date,
+		readonly sender: RegisteredUnit | UnknownUnit,
+		readonly recipient: RegisteredUnit | UnknownUnit,
+		readonly message: string,
+		readonly channel: string,
+		readonly requestUser: AuthUser,
 	) {}
 }
 
@@ -49,7 +53,7 @@ export class CreateCommunicationMessageHandler
 	): Promise<CommunicationMessage> {
 		let commMsg = this.createCommunicationMessageFromCommand(command);
 
-		commMsg.validOrThrow();
+		await commMsg.validOrThrow();
 
 		commMsg = await this.repository.create(commMsg);
 
@@ -65,31 +69,22 @@ export class CreateCommunicationMessageHandler
 		return commMsg;
 	}
 
-	private createCommunicationMessageFromCommand({
-		time,
-		sender,
-		recipient,
-		message,
-		channel,
-		requestUser,
-	}: CreateCommunicationMessageCommand): CommunicationMessage {
+	private createCommunicationMessageFromCommand(
+		cmd: CreateCommunicationMessageCommand,
+	): CommunicationMessage {
 		const msgPayload = new CommunicationMessagePayload();
-		msgPayload.message = message;
+		msgPayload.message = cmd.message;
 
 		const producer = new UserProducer();
-		producer.userId = requestUser.id;
-		producer.firstName = requestUser.firstName;
-		producer.lastName = requestUser.lastName;
+		producer.userId = cmd.requestUser.id;
+		producer.firstName = cmd.requestUser.firstName;
+		producer.lastName = cmd.requestUser.lastName;
 
 		const commMsg = new CommunicationMessage();
-		commMsg.time = time;
-		commMsg.sender = sender;
-		commMsg.recipient = recipient;
+		setBaseDataFromCommandOnEntity(cmd, commMsg);
+
 		commMsg.payload = msgPayload;
-		commMsg.producer = producer;
-		commMsg.channel = channel;
-		commMsg.searchableText = message;
-		commMsg.orgId = requestUser.organizationId;
+		commMsg.searchableText = cmd.message;
 
 		return commMsg;
 	}

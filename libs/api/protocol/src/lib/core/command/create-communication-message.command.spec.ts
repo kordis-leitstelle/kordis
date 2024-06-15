@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { EventBus } from '@nestjs/cqrs';
 import { plainToInstance } from 'class-transformer';
-import { after, before } from 'node:test';
+import { before } from 'node:test';
 
 import { AuthUser } from '@kordis/shared/model';
 
@@ -44,6 +44,7 @@ describe('CreateCommunicationMessageCommand', () => {
 		const recipient = new UnknownUnit();
 		recipient.name = 'Alice';
 		const time = new Date('1913-10-19T00:00:00');
+		console.log(time);
 		const message = '🛥️';
 		const channel = 'D';
 		const authUser = {
@@ -80,7 +81,10 @@ describe('CreateCommunicationMessageCommand', () => {
 
 		await handler.execute(command);
 
-		expect(repositoryMock.create).toHaveBeenCalledWith(expectedCommMsg);
+		expect(repositoryMock.create).toHaveBeenCalledWith({
+			...expectedCommMsg,
+			createdAt: expect.any(Date),
+		});
 		expect(eventBusMock.publish).toHaveBeenCalledWith(
 			new ProtocolEntryCreatedEvent('org-id', expectedCommMsg),
 		);

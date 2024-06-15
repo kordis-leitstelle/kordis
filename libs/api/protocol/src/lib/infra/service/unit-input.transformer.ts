@@ -10,8 +10,6 @@ export class UnitInputTransformer {
 	static async transform(
 		input: UnitInput,
 	): Promise<RegisteredUnit | UnknownUnit> {
-		await input.validOrThrow();
-
 		switch (input.type) {
 			case UnitInputType.REGISTERED_UNIT:
 				return plainToInstance(RegisteredUnit, { unit: { id: input.id } });
