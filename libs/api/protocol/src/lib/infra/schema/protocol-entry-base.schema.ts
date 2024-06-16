@@ -72,22 +72,21 @@ ProtocolEntryBaseSchema.index({ orgId: 1, time: 1 }, { unique: false });
 ProtocolEntryBaseSchema.index({ orgId: 1 }, { unique: false });
 
 @Schema()
-export class ProtocolCommunicationEntryBase extends ProtocolEntryBaseDocument {
+export class ProtocolCommunicationEntryBaseDocument extends ProtocolEntryBaseDocument {
 	@Prop()
 	@AutoMap()
 	recipient: UnitDocument;
 
 	@Prop()
 	@AutoMap()
-	override producer: UserProducerDocument;
+	channel: string;
 
 	@Prop()
-	@AutoMap()
-	channel: string;
+	override producer: UserProducerDocument;
 }
 
 export const ProtocolCommunicationEntryBaseSchema =
-	SchemaFactory.createForClass(ProtocolCommunicationEntryBase);
+	SchemaFactory.createForClass(ProtocolCommunicationEntryBaseDocument);
 const recipientPath =
 	ProtocolCommunicationEntryBaseSchema.path<MongooseSchema.Types.Subdocument>(
 		'recipient',

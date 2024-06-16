@@ -30,7 +30,7 @@ export class ProtocolEntryBase extends BaseEntityModel {
 }
 
 @ObjectType({ isAbstract: true })
-export abstract class ProtocolCommunicationEntryBase extends ProtocolEntryBase {
+export class ProtocolCommunicationEntryBase extends ProtocolEntryBase {
 	@Field(() => UnitUnion)
 	@AutoMap()
 	recipient: typeof UnitUnion;
