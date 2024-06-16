@@ -5,7 +5,7 @@ import {
 	UnknownUnit,
 } from '../entity/partials/unit-partial.entity';
 
-export interface BaseCreateMessageCommand {
+export interface BaseCreateCommunicationMessageCommand {
 	readonly time: Date;
 	readonly sender: RegisteredUnit | UnknownUnit;
 	readonly recipient: RegisteredUnit | UnknownUnit;

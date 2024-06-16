@@ -6,10 +6,12 @@ import {
 	UnknownUnit,
 } from '../../entity/partials/unit-partial.entity';
 import { ProtocolCommunicationEntryBase } from '../../entity/protocol-entries/protocol-entry-base.entity';
-import { BaseCreateMessageCommand } from '../base-create-message.command';
-import { setBaseDataFromCommandOnEntity } from './set-base-data-from-command-on.entity';
+import { BaseCreateCommunicationMessageCommand } from '../base-create-communication-message.command';
+import { setCommunicationMessageBaseFromCommandOnEntity } from './set-communication-message-base-from-command-on.entity';
 
-class MockBaseCreateMessageCommand implements BaseCreateMessageCommand {
+class MockBaseCreateMessageCommand
+	implements BaseCreateCommunicationMessageCommand
+{
 	time: Date;
 	sender: RegisteredUnit | UnknownUnit;
 	recipient: RegisteredUnit | UnknownUnit;
@@ -39,7 +41,7 @@ describe('setBaseDataFromCommandOnEntity', () => {
 
 		const entity = new MockProtocolCommunicationEntryBase();
 
-		setBaseDataFromCommandOnEntity(cmd, entity);
+		setCommunicationMessageBaseFromCommandOnEntity(cmd, entity);
 
 		expect(entity.time).toEqual(cmd.time);
 		expect(entity.sender).toEqual(cmd.sender);

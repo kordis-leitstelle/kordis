@@ -44,7 +44,6 @@ describe('CreateCommunicationMessageCommand', () => {
 		const recipient = new UnknownUnit();
 		recipient.name = 'Alice';
 		const time = new Date('1913-10-19T00:00:00');
-		console.log(time);
 		const message = '🛥️';
 		const channel = 'D';
 		const authUser = {

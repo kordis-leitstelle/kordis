@@ -46,4 +46,15 @@ describe('UnitInputTransformer', () => {
 			expect(result).toEqual(expectedOutput);
 		},
 	);
+
+	it('should throw an error if the unit type is not supported', async () => {
+		const input = plainToInstance(UnitInput, {
+			type: 'SOME_RANDOM_UNIT_TYPE',
+			name: 'UnknwonTestUnit',
+		});
+
+		await expect(UnitInputTransformer.transform(input)).rejects.toThrow(
+			'Invalid UnitInputType SOME_RANDOM_UNIT_TYPE',
+		);
+	});
 });
