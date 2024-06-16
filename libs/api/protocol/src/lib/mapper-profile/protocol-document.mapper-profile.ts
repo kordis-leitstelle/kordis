@@ -16,8 +16,8 @@ import {
 	CommunicationMessagePayload,
 } from '../core/entity/protocol-entries/communication-message.entity';
 import {
-	ProtocolCommunicationEntryBase,
 	ProtocolEntryBase,
+	ProtocolMessageEntryBase,
 } from '../core/entity/protocol-entries/protocol-entry-base.entity';
 import {
 	CommunicationMessageDocument,
@@ -25,26 +25,22 @@ import {
 } from '../infra/schema/communication-message.schema';
 import { UserProducerDocument } from '../infra/schema/producer-partial.schema';
 import {
-	ProtocolCommunicationEntryBaseDocument,
 	ProtocolEntryBaseDocument,
+	ProtocolMessageEntryBaseDocument,
 } from '../infra/schema/protocol-entry-base.schema';
-import { unitDocumentToEntityMapper } from './unit-partial.mapper-profile';
+import { unitEntityToDocumentMapper } from './unit-partial.mapper-profile';
 
-export abstract class ProtocolBaseToEntity extends AutomapperProfile {
+export abstract class ProtocolEntryBaseDocumentProfile extends AutomapperProfile {
 	protected override get mappingConfigurations(): MappingConfiguration[] {
 		return [
 			extend(
 				createMap(
 					this.mapper,
-					ProtocolEntryBaseDocument,
 					ProtocolEntryBase,
-					forMember(
-						(d) => d.id,
-						mapFrom((s) => s._id?.toString()),
-					),
+					ProtocolEntryBaseDocument,
 					forMember(
 						(d) => d.sender,
-						mapFrom((s) => unitDocumentToEntityMapper(this.mapper, s.sender)),
+						mapFrom((s) => unitEntityToDocumentMapper(this.mapper, s.sender)),
 					),
 				),
 			),
@@ -52,24 +48,24 @@ export abstract class ProtocolBaseToEntity extends AutomapperProfile {
 	}
 }
 
-export abstract class BaseCommunicationMessageToEntityProfile extends ProtocolBaseToEntity {
+export abstract class ProtocolMessageEntryBaseDocumentProfile extends ProtocolEntryBaseDocumentProfile {
 	protected override get mappingConfigurations(): MappingConfiguration[] {
 		return [
 			...super.mappingConfigurations,
 			extend(
 				createMap(
 					this.mapper,
-					ProtocolCommunicationEntryBaseDocument,
-					ProtocolCommunicationEntryBase,
+					ProtocolMessageEntryBase,
+					ProtocolMessageEntryBaseDocument,
 					forMember(
 						(d) => d.recipient,
 						mapFrom((s) =>
-							unitDocumentToEntityMapper(this.mapper, s.recipient),
+							unitEntityToDocumentMapper(this.mapper, s.recipient),
 						),
 					),
 					forMember(
 						(d) => d.producer,
-						mapWith(UserProducer, UserProducerDocument, (s) => s.producer),
+						mapWith(UserProducerDocument, UserProducer, (s) => s.producer),
 					),
 				),
 			),
@@ -78,7 +74,7 @@ export abstract class BaseCommunicationMessageToEntityProfile extends ProtocolBa
 }
 
 @Injectable()
-export class CommunicationMessagePayloadToEntityProfile extends AutomapperProfile {
+export class CommunicationMessagePayloadDocumentProfile extends AutomapperProfile {
 	constructor(@Inject(getMapperToken()) mapper: Mapper) {
 		super(mapper);
 	}
@@ -87,22 +83,22 @@ export class CommunicationMessagePayloadToEntityProfile extends AutomapperProfil
 		return (mapper: Mapper): void => {
 			createMap(
 				mapper,
-				CommunicationMessagePayloadDocument,
 				CommunicationMessagePayload,
+				CommunicationMessagePayloadDocument,
 			);
 		};
 	}
 }
 
 @Injectable()
-export class CommunicationMessageToEntityProfile extends BaseCommunicationMessageToEntityProfile {
+export class CommunicationMessageDocumentProfile extends ProtocolMessageEntryBaseDocumentProfile {
 	constructor(@Inject(getMapperToken()) mapper: Mapper) {
 		super(mapper);
 	}
 
 	override get profile() {
 		return (mapper: Mapper): void => {
-			createMap(mapper, CommunicationMessageDocument, CommunicationMessage);
+			createMap(mapper, CommunicationMessage, CommunicationMessageDocument);
 		};
 	}
 }

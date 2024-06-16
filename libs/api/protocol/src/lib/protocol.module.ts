@@ -18,23 +18,23 @@ import {
 } from './infra/schema/protocol-entry-base.schema';
 import { ProducerPartialProfile } from './mapper-profile/producer-partial.mapper-profile';
 import {
-	CommunicationMessagePayloadToEntityProfile,
-	CommunicationMessageToEntityProfile,
-} from './mapper-profile/protocol-document-entity.mapper-profile';
+	CommunicationMessageDocumentProfile,
+	CommunicationMessagePayloadDocumentProfile,
+} from './mapper-profile/protocol-document.mapper-profile';
 import {
-	CommunicationMessagePayloadToDocumentProfile,
-	CommunicationMessageToDocumentProfile,
-} from './mapper-profile/protocol-entity-document.mapper-profile';
+	CommunicationMessagePayloadProfile,
+	CommunicationMessageProfile,
+} from './mapper-profile/protocol-entity.mapper-profile';
 import { ProtocolEntryMapper } from './mapper-profile/protocol-entry.mapper';
 import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile';
 
 const MAPPER_PROFILES = [
 	UnitPartialProfile,
 	ProducerPartialProfile,
-	CommunicationMessageToDocumentProfile,
-	CommunicationMessagePayloadToDocumentProfile,
-	CommunicationMessageToEntityProfile,
-	CommunicationMessagePayloadToEntityProfile,
+	CommunicationMessageDocumentProfile,
+	CommunicationMessagePayloadDocumentProfile,
+	CommunicationMessageProfile,
+	CommunicationMessagePayloadProfile,
 ];
 const COMMAND_HANDLERS = [
 	CreateCommunicationMessageHandler,

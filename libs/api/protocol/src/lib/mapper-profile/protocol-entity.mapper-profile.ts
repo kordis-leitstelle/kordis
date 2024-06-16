@@ -10,14 +10,16 @@ import {
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { BaseMapperProfile } from '@kordis/api/shared';
+
 import { UserProducer } from '../core/entity/partials/producer-partial.entity';
 import {
 	CommunicationMessage,
 	CommunicationMessagePayload,
 } from '../core/entity/protocol-entries/communication-message.entity';
 import {
-	ProtocolCommunicationEntryBase,
 	ProtocolEntryBase,
+	ProtocolMessageEntryBase,
 } from '../core/entity/protocol-entries/protocol-entry-base.entity';
 import {
 	CommunicationMessageDocument,
@@ -25,22 +27,23 @@ import {
 } from '../infra/schema/communication-message.schema';
 import { UserProducerDocument } from '../infra/schema/producer-partial.schema';
 import {
-	ProtocolCommunicationEntryBaseDocument,
 	ProtocolEntryBaseDocument,
+	ProtocolMessageEntryBaseDocument,
 } from '../infra/schema/protocol-entry-base.schema';
-import { unitEntityToDocumentMapper } from './unit-partial.mapper-profile';
+import { unitDocumentToEntityMapper } from './unit-partial.mapper-profile';
 
-export abstract class ProtocolBaseToDocument extends AutomapperProfile {
+export abstract class ProtocolEntryBaseProfile extends BaseMapperProfile {
 	protected override get mappingConfigurations(): MappingConfiguration[] {
 		return [
+			...super.mappingConfigurations,
 			extend(
 				createMap(
 					this.mapper,
-					ProtocolEntryBase,
 					ProtocolEntryBaseDocument,
+					ProtocolEntryBase,
 					forMember(
 						(d) => d.sender,
-						mapFrom((s) => unitEntityToDocumentMapper(this.mapper, s.sender)),
+						mapFrom((s) => unitDocumentToEntityMapper(this.mapper, s.sender)),
 					),
 				),
 			),
@@ -48,24 +51,24 @@ export abstract class ProtocolBaseToDocument extends AutomapperProfile {
 	}
 }
 
-export abstract class BaseCommunicationMessageToDocumentProfile extends ProtocolBaseToDocument {
+export abstract class ProtocolMessageEntryBaseProfile extends ProtocolEntryBaseProfile {
 	protected override get mappingConfigurations(): MappingConfiguration[] {
 		return [
 			...super.mappingConfigurations,
 			extend(
 				createMap(
 					this.mapper,
-					ProtocolCommunicationEntryBase,
-					ProtocolCommunicationEntryBaseDocument,
+					ProtocolMessageEntryBaseDocument,
+					ProtocolMessageEntryBase,
 					forMember(
 						(d) => d.recipient,
 						mapFrom((s) =>
-							unitEntityToDocumentMapper(this.mapper, s.recipient),
+							unitDocumentToEntityMapper(this.mapper, s.recipient),
 						),
 					),
 					forMember(
 						(d) => d.producer,
-						mapWith(UserProducerDocument, UserProducer, (s) => s.producer),
+						mapWith(UserProducer, UserProducerDocument, (s) => s.producer),
 					),
 				),
 			),
@@ -74,7 +77,7 @@ export abstract class BaseCommunicationMessageToDocumentProfile extends Protocol
 }
 
 @Injectable()
-export class CommunicationMessagePayloadToDocumentProfile extends AutomapperProfile {
+export class CommunicationMessagePayloadProfile extends AutomapperProfile {
 	constructor(@Inject(getMapperToken()) mapper: Mapper) {
 		super(mapper);
 	}
@@ -83,22 +86,22 @@ export class CommunicationMessagePayloadToDocumentProfile extends AutomapperProf
 		return (mapper: Mapper): void => {
 			createMap(
 				mapper,
-				CommunicationMessagePayload,
 				CommunicationMessagePayloadDocument,
+				CommunicationMessagePayload,
 			);
 		};
 	}
 }
 
 @Injectable()
-export class CommunicationMessageToDocumentProfile extends BaseCommunicationMessageToDocumentProfile {
+export class CommunicationMessageProfile extends ProtocolMessageEntryBaseProfile {
 	constructor(@Inject(getMapperToken()) mapper: Mapper) {
 		super(mapper);
 	}
 
 	override get profile() {
 		return (mapper: Mapper): void => {
-			createMap(mapper, CommunicationMessage, CommunicationMessageDocument);
+			createMap(mapper, CommunicationMessageDocument, CommunicationMessage);
 		};
 	}
 }

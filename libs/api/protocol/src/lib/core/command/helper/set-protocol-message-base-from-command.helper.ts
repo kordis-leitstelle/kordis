@@ -1,10 +1,10 @@
 import { UserProducer } from '../../entity/partials/producer-partial.entity';
-import { ProtocolCommunicationEntryBase } from '../../entity/protocol-entries/protocol-entry-base.entity';
-import { BaseCreateCommunicationMessageCommand } from '../base-create-communication-message.command';
+import { ProtocolMessageEntryBase } from '../../entity/protocol-entries/protocol-entry-base.entity';
+import { BaseCreateMessageCommand } from '../base-create-message.command';
 
-export function setCommunicationMessageBaseFromCommandOnEntity(
-	cmd: BaseCreateCommunicationMessageCommand,
-	entity: ProtocolCommunicationEntryBase,
+export function setProtocolMessageBaseFromCommandHelper(
+	cmd: BaseCreateMessageCommand,
+	entity: ProtocolMessageEntryBase,
 ): void {
 	const producer = new UserProducer();
 	producer.userId = cmd.requestUser.id;

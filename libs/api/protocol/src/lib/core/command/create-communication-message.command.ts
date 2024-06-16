@@ -18,11 +18,11 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../repository/protocol-entry.repository';
-import { BaseCreateCommunicationMessageCommand } from './base-create-communication-message.command';
-import { setCommunicationMessageBaseFromCommandOnEntity } from './helper/set-communication-message-base-from-command-on.entity';
+import { BaseCreateMessageCommand } from './base-create-message.command';
+import { setProtocolMessageBaseFromCommandHelper } from './helper/set-protocol-message-base-from-command.helper';
 
 export class CreateCommunicationMessageCommand
-	implements BaseCreateCommunicationMessageCommand
+	implements BaseCreateMessageCommand
 {
 	constructor(
 		readonly time: Date,
@@ -81,7 +81,7 @@ export class CreateCommunicationMessageHandler
 		producer.lastName = cmd.requestUser.lastName;
 
 		const commMsg = new CommunicationMessage();
-		setCommunicationMessageBaseFromCommandOnEntity(cmd, commMsg);
+		setProtocolMessageBaseFromCommandHelper(cmd, commMsg);
 
 		commMsg.payload = msgPayload;
 		commMsg.searchableText = cmd.message;

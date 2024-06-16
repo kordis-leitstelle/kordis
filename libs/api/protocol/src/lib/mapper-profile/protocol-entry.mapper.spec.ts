@@ -28,13 +28,13 @@ import {
 } from '../infra/schema/unit-partial.schema';
 import { ProducerPartialProfile } from './producer-partial.mapper-profile';
 import {
-	CommunicationMessagePayloadToEntityProfile,
-	CommunicationMessageToEntityProfile,
-} from './protocol-document-entity.mapper-profile';
+	CommunicationMessageDocumentProfile,
+	CommunicationMessagePayloadDocumentProfile,
+} from './protocol-document.mapper-profile';
 import {
-	CommunicationMessagePayloadToDocumentProfile,
-	CommunicationMessageToDocumentProfile,
-} from './protocol-entity-document.mapper-profile';
+	CommunicationMessagePayloadProfile,
+	CommunicationMessageProfile,
+} from './protocol-entity.mapper-profile';
 import { ProtocolEntryMapper } from './protocol-entry.mapper';
 import { UnitPartialProfile } from './unit-partial.mapper-profile';
 
@@ -120,10 +120,10 @@ describe('ProtocolEntryMapper - Test all protocol entry mappings', () => {
 				BaseModelProfile,
 				ProducerPartialProfile,
 				UnitPartialProfile,
-				CommunicationMessageToDocumentProfile,
-				CommunicationMessagePayloadToDocumentProfile,
-				CommunicationMessageToEntityProfile,
-				CommunicationMessagePayloadToEntityProfile,
+				CommunicationMessageDocumentProfile,
+				CommunicationMessagePayloadDocumentProfile,
+				CommunicationMessageProfile,
+				CommunicationMessagePayloadProfile,
 				ProtocolEntryMapper,
 			],
 		}).compile();

@@ -5,13 +5,11 @@ import {
 	RegisteredUnit,
 	UnknownUnit,
 } from '../../entity/partials/unit-partial.entity';
-import { ProtocolCommunicationEntryBase } from '../../entity/protocol-entries/protocol-entry-base.entity';
-import { BaseCreateCommunicationMessageCommand } from '../base-create-communication-message.command';
-import { setCommunicationMessageBaseFromCommandOnEntity } from './set-communication-message-base-from-command-on.entity';
+import { ProtocolMessageEntryBase } from '../../entity/protocol-entries/protocol-entry-base.entity';
+import { BaseCreateMessageCommand } from '../base-create-message.command';
+import { setProtocolMessageBaseFromCommandHelper } from './set-protocol-message-base-from-command.helper';
 
-class MockBaseCreateMessageCommand
-	implements BaseCreateCommunicationMessageCommand
-{
+class MockBaseCreateMessageCommand implements BaseCreateMessageCommand {
 	time: Date;
 	sender: RegisteredUnit | UnknownUnit;
 	recipient: RegisteredUnit | UnknownUnit;
@@ -19,9 +17,9 @@ class MockBaseCreateMessageCommand
 	requestUser: AuthUser;
 }
 
-class MockProtocolCommunicationEntryBase extends ProtocolCommunicationEntryBase {}
+class MockProtocolMessageEntryBase extends ProtocolMessageEntryBase {}
 
-describe('setBaseDataFromCommandOnEntity', () => {
+describe('setProtocolMessageBaseFromCommandHelper', () => {
 	it('should set base data from command on entity', () => {
 		const cmd = new MockBaseCreateMessageCommand();
 		cmd.time = new Date();
@@ -39,9 +37,9 @@ describe('setBaseDataFromCommandOnEntity', () => {
 			organizationId: 'orgId',
 		} as AuthUser;
 
-		const entity = new MockProtocolCommunicationEntryBase();
+		const entity = new MockProtocolMessageEntryBase();
 
-		setCommunicationMessageBaseFromCommandOnEntity(cmd, entity);
+		setProtocolMessageBaseFromCommandHelper(cmd, entity);
 
 		expect(entity.time).toEqual(cmd.time);
 		expect(entity.sender).toEqual(cmd.sender);
