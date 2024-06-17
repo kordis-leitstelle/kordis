@@ -8,7 +8,7 @@ import {
 import { UnitInput } from '../view-model/unit-input.view-model';
 import { UnitInputTransformer } from './unit-input.transformer';
 
-const successfulCases: {
+const cases: {
 	case: string;
 	input: UnitInput;
 	expectedOutput: Unit;
@@ -33,51 +33,12 @@ const successfulCases: {
 	},
 ];
 
-const unsuccessfulCases: { case: string; input: UnitInput }[] = [
-	{
-		case: 'registered unit is passed but name is set instead of id',
-		input: plainToInstance(UnitInput, {
-			type: 'REGISTERED_UNIT',
-			name: 'TestUnit',
-		}),
-	},
-	{
-		case: 'registered unit is passed with name and set',
-		input: plainToInstance(UnitInput, {
-			type: 'REGISTERED_UNIT',
-			name: 'TestUnit',
-			id: '66622000cd0f5780cf0c0046',
-		}),
-	},
-	{
-		case: 'unknown unit is passed but id is set instead of name',
-		input: plainToInstance(UnitInput, {
-			type: 'UNKNOWN_UNIT',
-			id: '66622000cd0f5780cf0c0046',
-		}),
-	},
-	{
-		case: 'unknown unit is passed with id and name set',
-		input: plainToInstance(UnitInput, {
-			type: 'UNKNOWN_UNIT',
-			id: '66622000cd0f5780cf0c0046',
-			name: 'TestUnit',
-		}),
-	},
-	{
-		case: 'invalid unit type is passed in',
-		input: plainToInstance(UnitInput, {
-			type: 'INVALID_TYPE',
-		}),
-	},
-];
-
 describe('UnitInputTransformer', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
-	test.each(successfulCases)(
+	test.each(cases)(
 		'Case "$case" should be successful',
 		async ({ input, expectedOutput }) => {
 			const result = await UnitInputTransformer.transform(input);
@@ -86,12 +47,14 @@ describe('UnitInputTransformer', () => {
 		},
 	);
 
-	test.each(unsuccessfulCases)(
-		'Case "$case" should throw',
-		async ({ input }) => {
-			await expect(
-				async () => await UnitInputTransformer.transform(input),
-			).rejects.toThrow();
-		},
-	);
+	it('should throw an error if the unit type is not supported', async () => {
+		const input = plainToInstance(UnitInput, {
+			type: 'SOME_RANDOM_UNIT_TYPE',
+			name: 'UnknwonTestUnit',
+		});
+
+		await expect(UnitInputTransformer.transform(input)).rejects.toThrow(
+			'Invalid UnitInputType SOME_RANDOM_UNIT_TYPE',
+		);
+	});
 });

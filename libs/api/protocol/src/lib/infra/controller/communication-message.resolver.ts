@@ -10,8 +10,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { CreateCommunicationMessageCommand } from '../../core/command/create-communication-message.command';
 import { CommunicationMessage } from '../../core/entity/protocol-entries/communication-message.entity';
-import { UnitInputTransformer } from '../service/unit-input.transformer';
-import { UnitInput } from '../view-model/unit-input.view-model';
+import { BaseCreateMessageArgs } from './base-create-message.args';
 
 @Resolver()
 export class CommunicationMessageResolver {
@@ -20,19 +19,17 @@ export class CommunicationMessageResolver {
 	@Mutation(() => CommunicationMessage)
 	async createCommunicationMessage(
 		@RequestUser() reqUser: AuthUser,
-		@Args('sender', { type: () => UnitInput }) sender: UnitInput,
-		@Args('recipient', { type: () => UnitInput }) recipient: UnitInput,
+		@Args() baseCreateMessageArgs: BaseCreateMessageArgs,
 		@Args('message') message: string,
-		@Args('channel') channel: string,
 	): Promise<CommunicationMessage> {
 		try {
 			return await this.commandBus.execute(
 				new CreateCommunicationMessageCommand(
 					new Date(),
-					await UnitInputTransformer.transform(sender),
-					await UnitInputTransformer.transform(recipient),
+					await baseCreateMessageArgs.getTransformedSender(),
+					await baseCreateMessageArgs.getTransformedRecipient(),
 					message,
-					channel,
+					baseCreateMessageArgs.channel,
 					reqUser,
 				),
 			);

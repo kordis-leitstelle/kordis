@@ -28,7 +28,7 @@ export class UnitInput extends Validatable {
 	@IsEnum(UnitInputType)
 	@Validate(IsValidUnitInputType, {
 		message:
-			'Es dürfen nur die id bei bekannten Einheiten oder der name bei unbekannten Namen gesetzt sein.',
+			'Es dürfen nur die id bei bekannten Einheiten oder der Name bei unbekannten Einheiten gesetzt sein.',
 	})
 	type: UnitInputType;
 
@@ -42,6 +42,9 @@ export class UnitInput extends Validatable {
 	@ValidateIf((u) => u.type === UnitInputType.UNKNOWN_UNIT)
 	@IsString()
 	@IsNotEmpty()
-	@MaxLength(20)
+	@MaxLength(20, {
+		message:
+			'Der Name einer unbekannten Einheit darf maximal 20 Zeichen lang sein.',
+	})
 	name?: string;
 }

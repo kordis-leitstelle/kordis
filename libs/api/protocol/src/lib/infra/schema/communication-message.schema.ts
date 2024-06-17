@@ -2,8 +2,8 @@ import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import {
-	ProtocolCommunicationEntryBase,
 	ProtocolEntryType,
+	ProtocolMessageEntryBaseDocument,
 } from './protocol-entry-base.schema';
 
 @Schema({ _id: false })
@@ -14,7 +14,7 @@ export class CommunicationMessagePayloadDocument {
 }
 
 @Schema()
-export class CommunicationMessageDocument extends ProtocolCommunicationEntryBase {
+export class CommunicationMessageDocument extends ProtocolMessageEntryBaseDocument {
 	override type = ProtocolEntryType.COMMUNICATION_MESSAGE_ENTRY;
 
 	@Prop()
