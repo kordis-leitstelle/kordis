@@ -17,9 +17,34 @@ import {
 	ProtocolEntryType,
 } from './infra/schema/protocol-entry-base.schema';
 import { ProducerPartialProfile } from './mapper-profile/producer-partial.mapper-profile';
+import {
+	CommunicationMessageDocumentProfile,
+	CommunicationMessagePayloadDocumentProfile,
+} from './mapper-profile/protocol-document.mapper-profile';
+import {
+	CommunicationMessagePayloadProfile,
+	CommunicationMessageProfile,
+} from './mapper-profile/protocol-entity.mapper-profile';
 import { ProtocolEntryMapper } from './mapper-profile/protocol-entry.mapper';
-import { CommunicationMessageProfile } from './mapper-profile/protocol.mapper-profile';
 import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile';
+
+const MAPPER_PROFILES = [
+	UnitPartialProfile,
+	ProducerPartialProfile,
+	CommunicationMessageDocumentProfile,
+	CommunicationMessagePayloadDocumentProfile,
+	CommunicationMessageProfile,
+	CommunicationMessagePayloadProfile,
+];
+const COMMAND_HANDLERS = [
+	CreateCommunicationMessageHandler,
+	GetProtocolEntriesHandler,
+];
+const RESOLVERS = [
+	ProtocolEntryResolver,
+	CommunicationMessageResolver,
+	RegisteredUnitResolver,
+];
 
 @Module({
 	imports: [
@@ -36,22 +61,15 @@ import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile
 			},
 		]),
 	],
-	controllers: [],
 	providers: [
-		UnitPartialProfile,
-		ProducerPartialProfile,
-		CommunicationMessageProfile,
+		...MAPPER_PROFILES,
+		...RESOLVERS,
+		...COMMAND_HANDLERS,
 		ProtocolEntryMapper,
 		{
 			provide: PROTOCOL_ENTRY_REPOSITORY,
 			useClass: ImplProtocolEntryRepository,
 		},
-		ProtocolEntryResolver,
-		CommunicationMessageResolver,
-		RegisteredUnitResolver,
-		CreateCommunicationMessageHandler,
-		GetProtocolEntriesHandler,
 	],
-	exports: [],
 })
 export class ProtocolModule {}

@@ -27,8 +27,15 @@ import {
 	UnknownUnitDocument,
 } from '../infra/schema/unit-partial.schema';
 import { ProducerPartialProfile } from './producer-partial.mapper-profile';
+import {
+	CommunicationMessageDocumentProfile,
+	CommunicationMessagePayloadDocumentProfile,
+} from './protocol-document.mapper-profile';
+import {
+	CommunicationMessagePayloadProfile,
+	CommunicationMessageProfile,
+} from './protocol-entity.mapper-profile';
 import { ProtocolEntryMapper } from './protocol-entry.mapper';
-import { CommunicationMessageProfile } from './protocol.mapper-profile';
 import { UnitPartialProfile } from './unit-partial.mapper-profile';
 
 const fakeTime = new Date('1953-04-13');
@@ -113,7 +120,10 @@ describe('ProtocolEntryMapper - Test all protocol entry mappings', () => {
 				BaseModelProfile,
 				ProducerPartialProfile,
 				UnitPartialProfile,
+				CommunicationMessageDocumentProfile,
+				CommunicationMessagePayloadDocumentProfile,
 				CommunicationMessageProfile,
+				CommunicationMessagePayloadProfile,
 				ProtocolEntryMapper,
 			],
 		}).compile();
