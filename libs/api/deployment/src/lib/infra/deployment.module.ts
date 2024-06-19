@@ -13,7 +13,6 @@ import { DEPLOYMENT_ASSIGNMENT_REPOSITORY } from '../core/repository/deployment-
 import { RESCUE_STATION_DEPLOYMENT_REPOSITORY } from '../core/repository/rescue-station-deployment.repository';
 import { UNIT_ASSIGNMENT_REPOSITORY } from '../core/repository/unit-assignment.repository';
 import { DeploymentAssignmentService } from '../core/service/deployment-assignment.service';
-import { StrengthFromCommandFactory } from '../core/service/strength-from-command.factory';
 import {
 	AlertGroupAssignmentResolver,
 	UnitAssignmentResolver,
@@ -92,10 +91,7 @@ const MAPPER_PROFILES = [
 	RescueStationDeploymentValueObjectProfile,
 	RescueStationDtoMapperProfile,
 ];
-const DOMAIN_SERVICES = [
-	DeploymentAssignmentService,
-	StrengthFromCommandFactory,
-];
+const DOMAIN_SERVICES = [DeploymentAssignmentService];
 
 @Module({
 	imports: [

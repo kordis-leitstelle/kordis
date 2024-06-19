@@ -1,13 +1,7 @@
 import { RescueStationStrength } from '../entity/rescue-station-deployment.entity';
-import { StrengthFromCommandFactory } from './strength-from-command.factory';
+import { createStrengthFromCommand } from './strength-from-command.factory';
 
 describe('StrengthFromCommandFactory', () => {
-	let factory: StrengthFromCommandFactory;
-
-	beforeEach(() => {
-		factory = new StrengthFromCommandFactory();
-	});
-
 	it('should create a RescueStationStrength from command', () => {
 		const command = {
 			leaders: 1,
@@ -15,7 +9,7 @@ describe('StrengthFromCommandFactory', () => {
 			helpers: 3,
 		};
 
-		const strength = factory.create(command);
+		const strength = createStrengthFromCommand(command);
 
 		expect(strength).toBeInstanceOf(RescueStationStrength);
 		expect(strength.leaders).toEqual(command.leaders);
