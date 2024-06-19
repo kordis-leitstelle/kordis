@@ -35,18 +35,25 @@ import {
 } from '../rescue-station.view-model';
 import { RescueStationFilterArgs } from './rescue-station-filter.args';
 
-@Resolver()
+@Resolver(() => RescueStationDeploymentViewModel)
 export class DeploymentResolver {
 	constructor(
 		private readonly queryBus: QueryBus,
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
+	@ResolveField()
+	async assignments(
+		@Parent() entity: RescueStationDeploymentEntity,
+	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
+		return [...entity.assignedUnits, ...entity.assignedAlertGroups];
+	}
+
 	@Query(() => [RescueStationDeploymentViewModel])
 	async rescueStationDeployments(
 		@RequestUser() { organizationId }: AuthUser,
 		@Args({ nullable: true }) filter?: RescueStationFilterArgs,
-	): Promise<RescueStationDeploymentViewModel[]> {
+	): Promise<RescueStationDeploymentEntity[]> {
 		const filterDto: RescueStationEntityDTO | undefined = filter
 			? await this.mapper.mapAsync(
 					filter,
@@ -55,16 +62,10 @@ export class DeploymentResolver {
 				)
 			: undefined;
 
-		const deployments = await this.queryBus.execute<
+		return this.queryBus.execute<
 			GetDeploymentsQuery,
 			RescueStationDeploymentEntity[]
 		>(new GetDeploymentsQuery(organizationId, filterDto));
-
-		return this.mapper.mapArrayAsync(
-			deployments,
-			RescueStationDeploymentEntity,
-			RescueStationDeploymentViewModel,
-		);
 	}
 
 	@Query(() => [DeploymentAssignment])

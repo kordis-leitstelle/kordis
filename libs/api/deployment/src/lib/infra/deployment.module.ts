@@ -31,7 +31,6 @@ import {
 	RescueStationDeploymentValueObjectProfile,
 } from './mapper/rescue-station-deployment-aggregate.mapper-profile';
 import { RescueStationDtoMapperProfile } from './mapper/rescue-station-dto.mapper-profile';
-import { RescueStationViewModelProfile } from './mapper/rescue-station-view-model.mapper';
 import { DeploymentAssignmentRepositoryImpl } from './repository/assignment/deployment-assignment.repository';
 import { UnitAssignmentRepositoryImpl } from './repository/assignment/unit-assignment.repository';
 import { RescueStationDeploymentRepositoryImpl } from './repository/deployment/rescue-station-deployment.repository';
@@ -92,7 +91,6 @@ const MAPPER_PROFILES = [
 	RescueStationDeploymentAggregateProfile,
 	RescueStationDeploymentValueObjectProfile,
 	RescueStationDtoMapperProfile,
-	RescueStationViewModelProfile,
 ];
 const DOMAIN_SERVICES = [
 	DeploymentAssignmentService,
