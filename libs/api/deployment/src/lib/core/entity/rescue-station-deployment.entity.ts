@@ -82,6 +82,11 @@ export class RescueStationLocation {
 
 @ObjectType({ isAbstract: true })
 export class RescueStationDeploymentEntity extends BaseDeploymentEntity {
+	@Field()
+	@IsString()
+	@AutoMap()
+	callSign: string;
+
 	@Field(() => RescueStationStrength)
 	@ValidateNested()
 	@Type(() => RescueStationStrength)
