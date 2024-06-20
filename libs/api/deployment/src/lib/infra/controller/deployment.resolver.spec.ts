@@ -18,7 +18,6 @@ import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
 import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-entities.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
 import { RescueStationDtoMapperProfile } from '../mapper/rescue-station-dto.mapper-profile';
-import { RescueStationViewModelProfile } from '../mapper/rescue-station-view-model.mapper';
 import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
 import {
 	DeploymentResolver,
@@ -26,6 +25,35 @@ import {
 	RescueStationDeploymentDefaultUnitsResolver,
 } from './deployment.resolver';
 import { RescueStationFilterArgs } from './rescue-station-filter.args';
+
+const getMockDeployment1 = () => {
+	const deploymentResult = new RescueStationDeploymentEntity();
+	deploymentResult.note = 'somenote';
+	const deploymentUnit1 = new DeploymentUnit();
+	deploymentUnit1.unit = { id: 'deploymentUnitId1' };
+	deploymentResult.assignedUnits = [deploymentUnit1];
+	const deploymentAlertGroup1 = new DeploymentAlertGroup();
+	deploymentAlertGroup1.alertGroup = { id: 'deploymentAlertGroupId1' };
+	const deploymentUnit3 = new DeploymentUnit();
+	deploymentUnit3.unit = { id: 'deploymentUnitId3' };
+	deploymentAlertGroup1.assignedUnits = [deploymentUnit3];
+	deploymentResult.assignedAlertGroups = [deploymentAlertGroup1];
+	return deploymentResult;
+};
+const getMockDeployment2 = () => {
+	const deploymentResult = new RescueStationDeploymentEntity();
+	deploymentResult.note = 'someothernote';
+	const deploymentUnit2 = new DeploymentUnit();
+	deploymentUnit2.unit = { id: 'deploymentUnitId2' };
+	deploymentResult.assignedUnits = [deploymentUnit2];
+	const deploymentAlertGroup2 = new DeploymentAlertGroup();
+	deploymentAlertGroup2.alertGroup = { id: 'deploymentAlertGroupId2' };
+	const deploymentUnit4 = new DeploymentUnit();
+	deploymentUnit4.unit = { id: 'deploymentUnitId4' };
+	deploymentAlertGroup2.assignedUnits = [deploymentUnit4];
+	deploymentResult.assignedAlertGroups = [deploymentAlertGroup2];
+	return deploymentResult;
+};
 
 describe('DeploymentResolver', () => {
 	let resolver: DeploymentResolver;
@@ -41,7 +69,6 @@ describe('DeploymentResolver', () => {
 			providers: [
 				DeploymentResolver,
 				RescueStationDtoMapperProfile,
-				RescueStationViewModelProfile,
 				{ provide: QueryBus, useValue: mockQueryBus },
 			],
 		}).compile();
@@ -49,39 +76,18 @@ describe('DeploymentResolver', () => {
 		resolver = module.get<DeploymentResolver>(DeploymentResolver);
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it('should find rescue station deployments by orgId', async () => {
 		const orgId = 'orgId';
 		const filter = new RescueStationFilterArgs();
 		filter.signedIn = true;
 
-		const deploymentResult1 = new RescueStationDeploymentEntity();
-		deploymentResult1.note = 'somenote';
-		const deploymentUnit1 = new DeploymentUnit();
-		deploymentUnit1.unit = { id: 'deploymentUnitId1' };
-		deploymentResult1.assignedUnits = [deploymentUnit1];
-		const deploymentAlertGroup1 = new DeploymentAlertGroup();
-		deploymentAlertGroup1.alertGroup = { id: 'deploymentAlertGroupId1' };
-		const deploymentUnit3 = new DeploymentUnit();
-		deploymentUnit3.unit = { id: 'deploymentUnitId3' };
-		deploymentAlertGroup1.assignedUnits = [deploymentUnit3];
-		deploymentResult1.assignedAlertGroups = [deploymentAlertGroup1];
-
-		const deploymentResult2 = new RescueStationDeploymentEntity();
-		deploymentResult2.note = 'someothernote';
-		const deploymentUnit2 = new DeploymentUnit();
-		deploymentUnit2.unit = { id: 'deploymentUnitId2' };
-		deploymentResult2.assignedUnits = [deploymentUnit2];
-		const deploymentAlertGroup2 = new DeploymentAlertGroup();
-		deploymentAlertGroup2.alertGroup = { id: 'deploymentAlertGroupId2' };
-		const deploymentUnit4 = new DeploymentUnit();
-		deploymentUnit4.unit = { id: 'deploymentUnitId4' };
-		deploymentAlertGroup2.assignedUnits = [deploymentUnit4];
-
-		deploymentResult2.assignedAlertGroups = [deploymentAlertGroup2];
-
 		mockQueryBus.execute.mockResolvedValueOnce([
-			deploymentResult1,
-			deploymentResult2,
+			getMockDeployment1(),
+			getMockDeployment2(),
 		]);
 
 		const result = await resolver.rescueStationDeployments(
@@ -97,22 +103,18 @@ describe('DeploymentResolver', () => {
 		expect(result.length).toBe(2);
 		expect(result[0].note).toBe('somenote');
 		expect(result[1].note).toBe('someothernote');
-		expect(result[0].assignments).toEqual([
+	});
+
+	it('should resolve assignments of rescue station deployment', async () => {
+		const result = await resolver.assignments(getMockDeployment1());
+
+		expect(result).toEqual([
 			{
 				unit: { id: 'deploymentUnitId1' },
 			},
 			{
 				alertGroup: { id: 'deploymentAlertGroupId1' },
 				assignedUnits: [{ unit: { id: 'deploymentUnitId3' } }],
-			},
-		]);
-		expect(result[1].assignments).toEqual([
-			{
-				unit: { id: 'deploymentUnitId2' },
-			},
-			{
-				alertGroup: { id: 'deploymentAlertGroupId2' },
-				assignedUnits: [{ unit: { id: 'deploymentUnitId4' } }],
 			},
 		]);
 	});

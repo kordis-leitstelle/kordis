@@ -13,6 +13,7 @@ const collectionData: CollectionData<RescueStationDeploymentDocument> = {
 			orgId: 'dff7584efe2c174eee8bae45',
 			name: 'DLRG Einsatzzentrale HH',
 			type: DeploymentType.RESCUE_STATION,
+			callSign: 'HH 10/0',
 			defaultUnitIds: [],
 			location: {
 				address: {
@@ -39,6 +40,7 @@ const collectionData: CollectionData<RescueStationDeploymentDocument> = {
 			name: 'DLRG RW Hohendeich',
 			type: DeploymentType.RESCUE_STATION,
 			orgId: 'dff7584efe2c174eee8bae45',
+			callSign: 'HH 13/0',
 			defaultUnitIds: [],
 			location: {
 				address: {
@@ -64,6 +66,7 @@ const collectionData: CollectionData<RescueStationDeploymentDocument> = {
 			referenceId: '661d516bb912a6f426c13dea',
 			name: 'DLRG RW Süderelbe',
 			type: DeploymentType.RESCUE_STATION,
+			callSign: 'HH 16/0',
 			orgId: 'dff7584efe2c174eee8bae45',
 			defaultUnitIds: ['661d52f2459197edda093912'],
 			location: {
