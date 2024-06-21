@@ -7,13 +7,14 @@ import {
 	GetRescueStationDeploymentQuery,
 	RescueStationDeploymentViewModel,
 } from '@kordis/api/deployment';
+import { BaseCreateMessageArgs } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { StartSignInProcessCommand } from '../../core/command/start-sign-in-process.command';
 import { StartSignOffProcessCommand } from '../../core/command/start-sign-off-process.command';
-import { StartUpdateSignedInRescueStationProcessCommand } from '../../core/command/update-signed-in-rescue-station.command';
-import { UpdateRescueStationArgs } from '../argument/update-rescue-station.argument';
+import { StartSignOnProcessCommand } from '../../core/command/start-sign-on-process.command';
+import { StartUpdateSignedInRescueStationProcessCommand } from '../../core/command/start-update-signed-in-rescue-station-process.command';
+import { UpdateRescueStationInput } from '../argument/update-rescue-station.argument';
 
 @Resolver()
 export class RescueStationResolver {
@@ -24,20 +25,22 @@ export class RescueStationResolver {
 
 	@Mutation(() => RescueStationDeploymentViewModel)
 	async updateSignedInRescueStation(
-		@RequestUser() { organizationId }: AuthUser,
-		@Args() args: UpdateRescueStationArgs,
+		@RequestUser() reqUser: AuthUser,
+		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
+		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
 				new StartUpdateSignedInRescueStationProcessCommand(
-					organizationId,
-					args,
+					reqUser,
+					rescueStationData,
+					await protocolMessageData.asTransformedPayload(),
 				),
 			);
 			return this.queryBus.execute(
 				new GetRescueStationDeploymentQuery(
-					organizationId,
-					args.rescueStationId,
+					reqUser.organizationId,
+					rescueStationData.rescueStationId,
 				),
 			);
 		} catch (e) {
@@ -48,15 +51,23 @@ export class RescueStationResolver {
 
 	@Mutation(() => RescueStationDeploymentViewModel)
 	async signOffRescueStation(
-		@RequestUser() { organizationId }: AuthUser,
+		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationId') rescueStationId: string,
+		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
-				new StartSignOffProcessCommand(organizationId, rescueStationId),
+				new StartSignOffProcessCommand(
+					reqUser,
+					rescueStationId,
+					await protocolMessageData.asTransformedPayload(),
+				),
 			);
 			return this.queryBus.execute(
-				new GetRescueStationDeploymentQuery(organizationId, rescueStationId),
+				new GetRescueStationDeploymentQuery(
+					reqUser.organizationId,
+					rescueStationId,
+				),
 			);
 		} catch (e) {
 			this.throwPresentable(e);
@@ -66,17 +77,22 @@ export class RescueStationResolver {
 
 	@Mutation(() => RescueStationDeploymentViewModel)
 	async signInRescueStation(
-		@RequestUser() { organizationId }: AuthUser,
-		@Args() args: UpdateRescueStationArgs,
+		@RequestUser() reqUser: AuthUser,
+		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
+		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
-				new StartSignInProcessCommand(organizationId, args),
+				new StartSignOnProcessCommand(
+					reqUser,
+					rescueStationData,
+					await protocolMessageData.asTransformedPayload(),
+				),
 			);
 			return this.queryBus.execute(
 				new GetRescueStationDeploymentQuery(
-					organizationId,
-					args.rescueStationId,
+					reqUser.organizationId,
+					rescueStationData.rescueStationId,
 				),
 			);
 		} catch (e) {

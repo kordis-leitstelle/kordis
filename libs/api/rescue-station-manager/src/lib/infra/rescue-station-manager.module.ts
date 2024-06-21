@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { StartSignInProcessHandler } from '../core/command/start-sign-in-process.command';
+import { MessageCommandRescueStationDetailsFactory } from '../core/command/message-command-rescue-station-details.factory';
 import { StartSignOffProcessHandler } from '../core/command/start-sign-off-process.command';
-import { UpdateSignedInRescueStationHandler } from '../core/command/update-signed-in-rescue-station.command';
+import { StartSignOnProcessHandler } from '../core/command/start-sign-on-process.command';
+import { StartUpdateSignedInRescueStationProcessHandler } from '../core/command/start-update-signed-in-rescue-station-process.command';
 import { RescueStationSubscriptionResolver } from './controller/rescue-station-subscription.resolver';
 import { RescueStationResolver } from './controller/rescue-station.resolver';
 
@@ -10,9 +11,10 @@ import { RescueStationResolver } from './controller/rescue-station.resolver';
 	providers: [
 		RescueStationSubscriptionResolver,
 		RescueStationResolver,
-		StartSignInProcessHandler,
+		StartSignOnProcessHandler,
 		StartSignOffProcessHandler,
-		UpdateSignedInRescueStationHandler,
+		StartUpdateSignedInRescueStationProcessHandler,
+		MessageCommandRescueStationDetailsFactory,
 	],
 })
 export class RescueStationManagerModule {}

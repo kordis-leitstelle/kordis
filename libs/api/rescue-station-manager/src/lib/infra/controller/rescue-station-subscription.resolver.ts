@@ -12,8 +12,8 @@ import {
 } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { RescueStationSignedInEvent } from '../../core/event/rescue-station-signed-in.event';
 import { RescueStationSignedOffEvent } from '../../core/event/rescue-station-signed-off.event';
+import { RescueStationSignedOnEvent } from '../../core/event/rescue-station-signed-on.event';
 import { SignedInRescueStationUpdatedEvent } from '../../core/event/signed-in-rescue-station-updated.event';
 
 @Resolver()
@@ -28,7 +28,7 @@ export class RescueStationSubscriptionResolver {
 		@RequestUser() { organizationId: authUserOrgId }: AuthUser,
 	): AsyncIterableIterator<RescueStationDeploymentViewModel> {
 		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
-			RescueStationSignedInEvent,
+			RescueStationSignedOnEvent,
 			'rescueStationSignedIn',
 			this.operatorFactory(authUserOrgId),
 		);
@@ -60,7 +60,7 @@ export class RescueStationSubscriptionResolver {
 		authOrgId: string,
 	): SubscriptionOperators<
 		| RescueStationSignedOffEvent
-		| RescueStationSignedInEvent
+		| RescueStationSignedOnEvent
 		| SignedInRescueStationUpdatedEvent,
 		RescueStationDeploymentViewModel
 	> {

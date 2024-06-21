@@ -1,15 +1,53 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CommandBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { plainToInstance } from 'class-transformer';
 
 import { DeploymentNotFoundException } from '@kordis/api/deployment';
+import { BaseCreateMessageArgs, UnitInput } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { StartSignInProcessCommand } from '../../core/command/start-sign-in-process.command';
 import { StartSignOffProcessCommand } from '../../core/command/start-sign-off-process.command';
-import { StartUpdateSignedInRescueStationProcessCommand } from '../../core/command/update-signed-in-rescue-station.command';
+import { StartSignOnProcessCommand } from '../../core/command/start-sign-on-process.command';
+import { StartUpdateSignedInRescueStationProcessCommand } from '../../core/command/start-update-signed-in-rescue-station-process.command';
 import { RescueStationResolver } from './rescue-station.resolver';
+
+const PROTOCOL_ARGS_DATA = plainToInstance(BaseCreateMessageArgs, {
+	sender: plainToInstance(UnitInput, {
+		type: 'REGISTERED_UNIT',
+		id: 'senderId',
+	}),
+	recipient: plainToInstance(UnitInput, {
+		type: 'UNKNOWN_UNIT',
+		name: 'recipientName',
+	}),
+	channel: 'channel',
+});
+
+const RS_ARGS_DATA = {
+	rescueStationId: 'rescueStationId',
+	assignedAlertGroups: [],
+	assignedUnitIds: [],
+	note: 'note',
+	strength: {
+		leaders: 1,
+		subLeaders: 1,
+		helpers: 1,
+	},
+};
+
+const EXPECTED_PROTOCOL_DATA = {
+	sender: {
+		unit: { id: 'senderId' },
+	},
+	recipient: {
+		name: 'recipientName',
+	},
+	channel: 'channel',
+};
+
+const AUTH_USER = { organizationId: 'orgId' } as AuthUser;
 
 describe('RescueStationResolver', () => {
 	let resolver: RescueStationResolver;
@@ -33,25 +71,19 @@ describe('RescueStationResolver', () => {
 	});
 
 	describe('updateSignedInRescueStation', () => {
-		const args = {
-			rescueStationId: 'rescueStationId',
-			assignedAlertGroups: [],
-			assignedUnitIds: [],
-			note: 'note',
-			strength: {
-				leaders: 1,
-				subLeaders: 1,
-				helpers: 1,
-			},
-		};
 		it('should update signed in rescue station', async () => {
 			await resolver.updateSignedInRescueStation(
-				{ organizationId: 'orgId' } as AuthUser,
-				args,
+				AUTH_USER,
+				RS_ARGS_DATA,
+				PROTOCOL_ARGS_DATA,
 			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartUpdateSignedInRescueStationProcessCommand('orgId', args),
+				new StartUpdateSignedInRescueStationProcessCommand(
+					AUTH_USER,
+					RS_ARGS_DATA,
+					EXPECTED_PROTOCOL_DATA,
+				),
 			);
 		});
 
@@ -64,12 +96,17 @@ describe('RescueStationResolver', () => {
 
 			const result = await resolver.updateSignedInRescueStation(
 				{ organizationId: 'orgId' } as AuthUser,
-				args,
+				RS_ARGS_DATA,
+				PROTOCOL_ARGS_DATA,
 			);
 
 			expect(result).toEqual(expectedResult);
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartUpdateSignedInRescueStationProcessCommand('orgId', args),
+				new StartUpdateSignedInRescueStationProcessCommand(
+					AUTH_USER,
+					RS_ARGS_DATA,
+					EXPECTED_PROTOCOL_DATA,
+				),
 			);
 		});
 
@@ -78,8 +115,9 @@ describe('RescueStationResolver', () => {
 
 			await expect(
 				resolver.updateSignedInRescueStation(
-					{ organizationId: 'orgId' } as AuthUser,
-					args,
+					AUTH_USER,
+					RS_ARGS_DATA,
+					PROTOCOL_ARGS_DATA,
 				),
 			).rejects.toThrow(PresentableNotFoundException);
 		});
@@ -89,12 +127,17 @@ describe('RescueStationResolver', () => {
 		it('should sign off rescue station', async () => {
 			const rescueStationId = 'rescueStationId';
 			await resolver.signOffRescueStation(
-				{ organizationId: 'orgId' } as AuthUser,
+				AUTH_USER,
 				rescueStationId,
+				PROTOCOL_ARGS_DATA,
 			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignOffProcessCommand('orgId', rescueStationId),
+				new StartSignOffProcessCommand(
+					AUTH_USER,
+					rescueStationId,
+					EXPECTED_PROTOCOL_DATA,
+				),
 			);
 		});
 
@@ -104,13 +147,18 @@ describe('RescueStationResolver', () => {
 			queryBus.execute.mockResolvedValue(expectedResult);
 
 			const result = await resolver.signOffRescueStation(
-				{ organizationId: 'orgId' } as AuthUser,
+				AUTH_USER,
 				'rescueStationId',
+				PROTOCOL_ARGS_DATA,
 			);
 
 			expect(result).toEqual(expectedResult);
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignOffProcessCommand('orgId', 'rescueStationId'),
+				new StartSignOffProcessCommand(
+					AUTH_USER,
+					'rescueStationId',
+					EXPECTED_PROTOCOL_DATA,
+				),
 			);
 		});
 
@@ -119,34 +167,28 @@ describe('RescueStationResolver', () => {
 
 			await expect(
 				resolver.signOffRescueStation(
-					{ organizationId: 'orgId' } as AuthUser,
+					AUTH_USER,
 					'rescueStationId',
+					PROTOCOL_ARGS_DATA,
 				),
 			).rejects.toThrow(PresentableNotFoundException);
 		});
 	});
 
 	describe('signInRescueStation', () => {
-		const args = {
-			rescueStationId: 'rescueStationId',
-			assignedAlertGroups: [],
-			assignedUnitIds: [],
-			note: 'note',
-			strength: {
-				leaders: 1,
-				subLeaders: 1,
-				helpers: 1,
-			},
-		};
-
 		it('should sign in rescue station', async () => {
 			await resolver.signInRescueStation(
-				{ organizationId: 'orgId' } as AuthUser,
-				args,
+				AUTH_USER,
+				RS_ARGS_DATA,
+				PROTOCOL_ARGS_DATA,
 			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignInProcessCommand('orgId', args),
+				new StartSignOnProcessCommand(
+					AUTH_USER,
+					RS_ARGS_DATA,
+					EXPECTED_PROTOCOL_DATA,
+				),
 			);
 		});
 
@@ -158,13 +200,18 @@ describe('RescueStationResolver', () => {
 			queryBus.execute.mockResolvedValue(expectedResult);
 
 			const result = await resolver.signInRescueStation(
-				{ organizationId: 'orgId' } as AuthUser,
-				args,
+				AUTH_USER,
+				RS_ARGS_DATA,
+				PROTOCOL_ARGS_DATA,
 			);
 
 			expect(result).toEqual(expectedResult);
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignInProcessCommand('orgId', args),
+				new StartSignOnProcessCommand(
+					AUTH_USER,
+					RS_ARGS_DATA,
+					EXPECTED_PROTOCOL_DATA,
+				),
 			);
 		});
 
@@ -173,8 +220,9 @@ describe('RescueStationResolver', () => {
 
 			await expect(
 				resolver.signInRescueStation(
-					{ organizationId: 'orgId' } as AuthUser,
-					args,
+					AUTH_USER,
+					RS_ARGS_DATA,
+					PROTOCOL_ARGS_DATA,
 				),
 			).rejects.toThrow(PresentableNotFoundException);
 		});

@@ -5,14 +5,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GraphQLSubscriptionService } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { RescueStationSignedInEvent } from '../../core/event/rescue-station-signed-in.event';
 import { RescueStationSignedOffEvent } from '../../core/event/rescue-station-signed-off.event';
+import { RescueStationSignedOnEvent } from '../../core/event/rescue-station-signed-on.event';
 import { SignedInRescueStationUpdatedEvent } from '../../core/event/signed-in-rescue-station-updated.event';
 import { RescueStationSubscriptionResolver } from './rescue-station-subscription.resolver';
 
 describe('RescueStationSubscriptionResolver', () => {
 	let resolver: RescueStationSubscriptionResolver;
-	let gqlSubscriptionService: GraphQLSubscriptionService;
 	let eventBus: EventBus;
 
 	beforeEach(async () => {
@@ -30,9 +29,6 @@ describe('RescueStationSubscriptionResolver', () => {
 		resolver = module.get<RescueStationSubscriptionResolver>(
 			RescueStationSubscriptionResolver,
 		);
-		gqlSubscriptionService = module.get<GraphQLSubscriptionService>(
-			GraphQLSubscriptionService,
-		);
 		eventBus = module.get<EventBus>(EventBus);
 		module.get<DeepMocked<QueryBus>>(QueryBus).execute.mockResolvedValue({
 			id: 'rescueStationId',
@@ -45,7 +41,7 @@ describe('RescueStationSubscriptionResolver', () => {
 		} as AuthUser);
 
 		eventBus.publish(
-			new RescueStationSignedInEvent('orgId', 'rescueStationId'),
+			new RescueStationSignedOnEvent('orgId', 'rescueStationId'),
 		);
 		const result = await iterator.next();
 

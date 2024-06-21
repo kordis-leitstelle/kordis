@@ -12,6 +12,7 @@ import { DeploymentModule } from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OrganizationModule } from '@kordis/api/organization';
 import { ProtocolModule } from '@kordis/api/protocol';
+import { RescueStationManagerModule } from '@kordis/api/rescue-station-manager';
 import {
 	DataLoaderContainer,
 	DataLoaderContextProvider,
@@ -40,6 +41,7 @@ const FEATURE_MODULES = [
 	UnitModule,
 	TetraModule,
 	DeploymentModule,
+	RescueStationManagerModule,
 ];
 const SAGA_MODULES = [UnitsSagaModule];
 const UTILITY_MODULES = [

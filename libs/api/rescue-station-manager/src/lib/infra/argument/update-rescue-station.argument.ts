@@ -1,4 +1,4 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
@@ -7,8 +7,8 @@ import {
 	RescueStationStrengthArg,
 } from './rescue-station.argument';
 
-@ArgsType()
-export class UpdateRescueStationArgs {
+@InputType()
+export class UpdateRescueStationInput {
 	@Field()
 	@IsString()
 	@IsNotEmpty()
