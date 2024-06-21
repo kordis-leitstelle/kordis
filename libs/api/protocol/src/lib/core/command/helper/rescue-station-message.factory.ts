@@ -50,20 +50,26 @@ export class RescueStationMessageFactory {
 		actionPrefix: string,
 		{ rescueStation }: CreateRescueStationSignOnMessageCommand,
 	): string {
-		const strength = rescueStation.strength;
+		const { strength, units, alertGroups, name, callSign } = rescueStation;
 		const strengthString = `${strength.leaders}/${strength.subLeaders}/${strength.helpers}/${strength.leaders + strength.subLeaders + strength.helpers}`;
 
-		const unitString = rescueStation.units
-			.map(({ name, callSign }) => `${name} ${callSign}`)
-			.join(', ');
+		const unitStrings = units.map(
+			({ name, callSign }) => `${name} ${callSign}`,
+		);
+		const unitString = unitStrings.length
+			? `einheiten ${unitStrings.join(', ')} `
+			: '';
 
-		const alertGroupString = rescueStation.alertGroups
-			.map(
-				({ name, units }) =>
-					`${name} ${units.map(({ name, callSign }) => `${name} ${callSign}`)}`,
-			)
-			.join(', ');
+		const alertGroupStrings = alertGroups.map(({ name, units }) => {
+			const unitNames = units
+				.map(({ name, callSign }) => `${name} ${callSign}`)
+				.join(', ');
+			return `${name} ${unitNames}`;
+		});
+		const alertGroupString = alertGroupStrings.length
+			? `alarmgruppen ${alertGroupStrings.join(', ')}`
+			: '';
 
-		return `${actionPrefix} rettungswache ${rescueStation.name} ${rescueStation.callSign} stärke ${strengthString} ${unitString ? `einheiten ${unitString} ` : ''}${alertGroupString ? `alarmgruppen ${alertGroupString}` : ''}`.trimEnd();
+		return `${actionPrefix} rettungswache ${name} ${callSign} stärke ${strengthString} ${unitString}${alertGroupString}`.trimEnd();
 	}
 }
