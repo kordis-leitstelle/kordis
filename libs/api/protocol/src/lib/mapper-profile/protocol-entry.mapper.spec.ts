@@ -19,7 +19,7 @@ import { ProtocolEntryBase } from '../core/entity/protocol-entries/protocol-entr
 import {
 	CommunicationMessageDocument,
 	CommunicationMessagePayloadDocument,
-} from '../infra/schema/communication-message.schema';
+} from '../infra/schema/communication/communication-message.schema';
 import { UserProducerDocument } from '../infra/schema/producer-partial.schema';
 import { ProtocolEntryBaseDocument } from '../infra/schema/protocol-entry-base.schema';
 import {
