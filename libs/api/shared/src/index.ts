@@ -1,7 +1,7 @@
 export * from './lib/exceptions';
 export * from './lib/kernel/graphql';
 export * from './lib/kernel/mongodb';
-export * from './lib/kernel/service/retain-order.mutator';
+export * from './lib/kernel/service/retain-order.service';
 export {
 	DbSessionProvider,
 	UNIT_OF_WORK_SERVICE,

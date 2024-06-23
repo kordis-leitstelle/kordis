@@ -1,9 +1,9 @@
-import { RetainOrderMutator } from './retain-order.mutator';
+import { RetainOrderService } from './retain-order.service';
 
 describe('RetainOrderMutator', () => {
-	const mutator = new RetainOrderMutator('TestEntites');
+	const mutator = new RetainOrderService();
 
-	it('should retain id order if enabled in options', async () => {
+	it('should retain id order if enabled in options', () => {
 		const result = mutator.retainOrderIfEnabled(
 			{ retainOrder: true },
 			['1', '2'],
@@ -13,7 +13,7 @@ describe('RetainOrderMutator', () => {
 		expect(result).toEqual([{ id: '1' }, { id: '2' }]);
 	});
 
-	it('should not retain id order if disabled in options', async () => {
+	it('should not retain id order if disabled in options', () => {
 		const result = mutator.retainOrderIfEnabled(
 			{ retainOrder: false },
 			['1', '2'],
@@ -23,7 +23,7 @@ describe('RetainOrderMutator', () => {
 		expect(result).toEqual([{ id: '2' }, { id: '1' }]);
 	});
 
-	it('should sort by id order', async () => {
+	it('should sort by id order', () => {
 		const result = mutator.sortByIdOrder(
 			['1', '2'],
 			[{ id: '2' }, { id: '1' }],
@@ -32,7 +32,16 @@ describe('RetainOrderMutator', () => {
 		expect(result).toEqual([{ id: '1' }, { id: '2' }]);
 	});
 
-	it('should throw error on missing entitiy', async () => {
-		expect(() => mutator.sortByIdOrder(['1', '2'], [{ id: '1' }])).toThrow();
+	it('should throw error on missing entity', () => {
+		expect(() =>
+			mutator.sortByIdOrder(
+				['1', '2'],
+				[
+					new (class TestEntity {
+						id = '1';
+					})(),
+				],
+			),
+		).toThrow('Missing TestEntity for ids: 2');
 	});
 });

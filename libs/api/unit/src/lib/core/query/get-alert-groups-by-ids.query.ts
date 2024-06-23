@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { RetainOrderMutator, RetainOrderOptions } from '@kordis/api/shared';
+import { RetainOrderOptions, RetainOrderService } from '@kordis/api/shared';
 
 import { AlertGroupEntity } from '../entity/alert-group.entity';
 import {
@@ -20,11 +20,10 @@ export class GetAlertGroupsByIdsQuery {
 export class GetAlertGroupsByIdsHandler
 	implements IQueryHandler<GetAlertGroupsByIdsQuery>
 {
-	private readonly mutator = new RetainOrderMutator('alert groups');
-
 	constructor(
 		@Inject(ALERT_GROUP_REPOSITORY)
 		private readonly repository: AlertGroupRepository,
+		private readonly mutator: RetainOrderService,
 	) {}
 
 	async execute({

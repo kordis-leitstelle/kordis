@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { RetainOrderMutator, RetainOrderOptions } from '@kordis/api/shared';
+import { RetainOrderOptions, RetainOrderService } from '@kordis/api/shared';
 
 import { UnitEntity } from '../entity/unit.entity';
 import { UNIT_REPOSITORY, UnitRepository } from '../repository/unit.repository';
@@ -15,11 +15,10 @@ export class GetUnitsByIdsQuery {
 
 @QueryHandler(GetUnitsByIdsQuery)
 export class GetUnitsByIdsHandler implements IQueryHandler<GetUnitsByIdsQuery> {
-	private readonly mutator = new RetainOrderMutator('units');
-
 	constructor(
 		@Inject(UNIT_REPOSITORY)
 		private readonly repository: UnitRepository,
+		private readonly mutator: RetainOrderService,
 	) {}
 
 	async execute({ ids, options }: GetUnitsByIdsQuery): Promise<UnitEntity[]> {

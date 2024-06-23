@@ -1,6 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 
+import { RetainOrderService } from '@kordis/api/shared';
+
 import { UnitEntity } from '../entity/unit.entity';
 import { UNIT_REPOSITORY, UnitRepository } from '../repository/unit.repository';
 import {
@@ -22,6 +24,7 @@ describe('GetUnitsByIdsHandler', () => {
 						findByIds: jest.fn(),
 					},
 				},
+				RetainOrderService,
 			],
 		}).compile();
 

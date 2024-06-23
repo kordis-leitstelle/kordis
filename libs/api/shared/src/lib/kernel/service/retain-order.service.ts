@@ -2,9 +2,7 @@ export interface RetainOrderOptions {
 	retainOrder: boolean;
 }
 
-export class RetainOrderMutator {
-	constructor(private readonly entityType: string) {}
-
+export class RetainOrderService {
 	public retainOrderIfEnabled<T extends { id: string }>(
 		{ retainOrder }: RetainOrderOptions,
 		ids: string[],
@@ -36,7 +34,7 @@ export class RetainOrderMutator {
 				(id) => entities.find((entity) => entity?.id === id) === undefined,
 			);
 			throw new Error(
-				`Missing ${this.entityType} for ids: ${missingIds.join(',')}`,
+				`Missing ${entities[0]?.constructor.name} for ids: ${missingIds.join(',')}`,
 			);
 		}
 	}

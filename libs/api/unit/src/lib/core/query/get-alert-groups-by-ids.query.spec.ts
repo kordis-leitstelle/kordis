@@ -1,5 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { plainToClass, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
+
+import { RetainOrderService } from '@kordis/api/shared';
 
 import { AlertGroupEntity } from '../entity/alert-group.entity';
 import {
@@ -25,6 +27,7 @@ describe('GetAlertGroupsByIdsHandler', () => {
 						findByIds: jest.fn(),
 					},
 				},
+				RetainOrderService,
 			],
 		}).compile();
 
@@ -39,7 +42,7 @@ describe('GetAlertGroupsByIdsHandler', () => {
 	it('should return alert groups by ids', async () => {
 		const entity1 = plainToInstance(AlertGroupEntity, { id: '1' });
 		const entity2 = plainToInstance(AlertGroupEntity, { id: '2' });
-		mockAlertGroupRepository.findByIds.mockResolvedValue([entity1, entity2]);
+		mockAlertGroupRepository.findByIds.mockResolvedValue([entity2, entity1]);
 
 		const result = await getAlertGroupsByIdsHandler.execute(
 			new GetAlertGroupsByIdsQuery(['1', '2'], { retainOrder: true }),
