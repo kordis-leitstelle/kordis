@@ -17,7 +17,6 @@ import {
 	RescueStationDeploymentValueObjectProfile,
 } from '../../mapper/rescue-station-deployment-aggregate.mapper-profile';
 import { RescueStationDtoMapperProfile } from '../../mapper/rescue-station-dto.mapper-profile';
-import { RescueStationViewModelProfile } from '../../mapper/rescue-station-view-model.mapper';
 import { RescueStationDeploymentDocument } from '../../schema/rescue-station-deployment.schema';
 import { RescueStationDeploymentRepositoryImpl } from './rescue-station-deployment.repository';
 
@@ -40,7 +39,6 @@ describe('RescueStationDeploymentRepositoryImpl', () => {
 				RescueStationDeploymentAggregateProfile,
 				RescueStationDeploymentValueObjectProfile,
 				RescueStationDtoMapperProfile,
-				RescueStationViewModelProfile,
 				{
 					provide: getModelToken(RescueStationDeploymentDocument.name),
 					useValue: createMock<Model<RescueStationDeploymentDocument>>(),

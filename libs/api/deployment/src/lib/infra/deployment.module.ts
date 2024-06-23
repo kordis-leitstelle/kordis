@@ -13,7 +13,6 @@ import { DEPLOYMENT_ASSIGNMENT_REPOSITORY } from '../core/repository/deployment-
 import { RESCUE_STATION_DEPLOYMENT_REPOSITORY } from '../core/repository/rescue-station-deployment.repository';
 import { UNIT_ASSIGNMENT_REPOSITORY } from '../core/repository/unit-assignment.repository';
 import { DeploymentAssignmentService } from '../core/service/deployment-assignment.service';
-import { StrengthFromCommandFactory } from '../core/service/strength-from-command.factory';
 import {
 	AlertGroupAssignmentResolver,
 	UnitAssignmentResolver,
@@ -24,8 +23,6 @@ import {
 	DeploymentUnitResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
 } from './controller/deployment.resolver';
-import { AlertGroupsDataLoader } from './data-loader/alert-groups.data-loader';
-import { UnitsDataLoader } from './data-loader/units.data-loader';
 import { DeploymentAggregateProfile } from './mapper/deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentProfile } from './mapper/deployment-assignment.mapper-profile';
 import {
@@ -33,7 +30,6 @@ import {
 	RescueStationDeploymentValueObjectProfile,
 } from './mapper/rescue-station-deployment-aggregate.mapper-profile';
 import { RescueStationDtoMapperProfile } from './mapper/rescue-station-dto.mapper-profile';
-import { RescueStationViewModelProfile } from './mapper/rescue-station-view-model.mapper';
 import { DeploymentAssignmentRepositoryImpl } from './repository/assignment/deployment-assignment.repository';
 import { UnitAssignmentRepositoryImpl } from './repository/assignment/unit-assignment.repository';
 import { RescueStationDeploymentRepositoryImpl } from './repository/deployment/rescue-station-deployment.repository';
@@ -88,19 +84,14 @@ const RESOLVERS = [
 	AlertGroupAssignmentResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
 ];
-const DATA_LOADERS = [UnitsDataLoader, AlertGroupsDataLoader];
 const MAPPER_PROFILES = [
 	DeploymentAggregateProfile,
 	DeploymentAssignmentProfile,
 	RescueStationDeploymentAggregateProfile,
 	RescueStationDeploymentValueObjectProfile,
 	RescueStationDtoMapperProfile,
-	RescueStationViewModelProfile,
 ];
-const DOMAIN_SERVICES = [
-	DeploymentAssignmentService,
-	StrengthFromCommandFactory,
-];
+const DOMAIN_SERVICES = [DeploymentAssignmentService];
 
 @Module({
 	imports: [
@@ -138,7 +129,6 @@ const DOMAIN_SERVICES = [
 		...REPOSITORIES,
 		...CQRS_HANDLERS,
 		...RESOLVERS,
-		...DATA_LOADERS,
 		...MAPPER_PROFILES,
 		...DOMAIN_SERVICES,
 	],

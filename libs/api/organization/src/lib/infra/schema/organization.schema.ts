@@ -39,7 +39,7 @@ export const OrganizationSchema =
 
 OrganizationSchema.pre('save', function (next) {
 	if (this.isNew) {
-		this.orgId = this._id;
+		this.orgId = this._id.toString();
 	}
 	next();
 });

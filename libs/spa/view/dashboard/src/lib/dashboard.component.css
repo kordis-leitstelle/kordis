@@ -1,5 +1,3 @@
-@import '../../../../../../node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css';
-
 nz-layout {
 	--header-size: 64px;
 
@@ -25,8 +23,8 @@ nz-layout {
 		grid-template-areas:
 			'protocol operations'
 			'deployments deployments';
-		grid-template-columns: 3fr 2fr;
-		grid-template-rows: 3fr 2fr;
+		grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+		grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
 		min-height: 720px;
 		min-width: 1280px;
 		padding: 8px;

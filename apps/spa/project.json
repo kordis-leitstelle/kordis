@@ -22,6 +22,7 @@
 				],
 				"styles": [
 					"./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+					"./node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css",
 					"apps/spa/src/styles.css"
 				],
 				"scripts": [],

@@ -1,25 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
-import { GraphQLError } from 'graphql';
 import { Observable, map } from 'rxjs';
-
-export interface GraphqlQueryResult<TData> {
-	data: TData;
-	errors?: ReadonlyArray<GraphQLError>;
-}
-
-export interface GraphqlMutationResult<TData> {
-	data?: TData | null;
-	errors?: ReadonlyArray<GraphQLError>;
-	extensions?: Record<string, unknown>;
-}
-
-export interface GraphqlSubscriptionResult<TData> {
-	data?: TData | null;
-	errors?: ReadonlyArray<GraphQLError>;
-	extensions?: Record<string, unknown>;
-}
 
 @Injectable({
 	providedIn: 'root',
@@ -29,29 +11,22 @@ export class GraphqlService {
 
 	queryOnce$<TData = unknown>(
 		query: DocumentNode,
-		variables: Record<string, unknown>,
-	): Observable<GraphqlQueryResult<TData>> {
+		variables?: Record<string, unknown>,
+	): Observable<TData> {
 		return this.apollo
 			.query<TData>({
 				query,
 				variables,
 			})
-			.pipe(
-				map(({ data, errors }) => ({
-					data,
-					errors,
-				})),
-			);
+			.pipe(map(({ data }) => data));
 	}
 
 	query<TData = unknown>(
 		query: DocumentNode,
-		variables: Record<string, unknown>,
+		variables?: Record<string, unknown>,
 	): {
-		$: Observable<GraphqlQueryResult<TData>>;
-		refresh: (
-			variables: Record<string, unknown>,
-		) => Promise<GraphqlQueryResult<TData>>;
+		$: Observable<TData>;
+		refresh: (variables: Record<string, unknown>) => Promise<TData>;
 	} {
 		const queryRef = this.apollo.watchQuery<TData>({
 			query,
@@ -59,27 +34,17 @@ export class GraphqlService {
 		});
 
 		return {
-			$: queryRef.valueChanges.pipe(
-				map(({ data, errors }) => ({
-					data,
-					errors,
-				})),
-			),
-			refresh: (
-				variables: Record<string, unknown>,
-			): Promise<GraphqlQueryResult<TData>> =>
-				queryRef.refetch(variables).then(({ data, errors }) => ({
-					data,
-					errors,
-				})),
+			$: queryRef.valueChanges.pipe(map(({ data }) => data)),
+			refresh: (variables: Record<string, unknown>): Promise<TData> =>
+				queryRef.refetch(variables).then(({ data }) => data),
 		};
 	}
 
 	mutate$<TData = unknown>(
 		mutation: DocumentNode,
-		variables: Record<string, unknown>,
+		variables?: Record<string, unknown>,
 		optimisticResponse?: TData,
-	): Observable<GraphqlMutationResult<TData>> {
+	): Observable<TData> {
 		return this.apollo
 			.mutate<TData>({
 				mutation,
@@ -88,19 +53,13 @@ export class GraphqlService {
 					? { __typename: 'Mutation', ...optimisticResponse }
 					: undefined,
 			})
-			.pipe(
-				map(({ data, errors, extensions }) => ({
-					data,
-					errors,
-					extensions,
-				})),
-			);
+			.pipe(map(({ data }) => data as TData));
 	}
 
 	subscribe$<TData = unknown>(
 		query: DocumentNode,
 		variables?: Record<string, unknown>,
-	): Observable<GraphqlSubscriptionResult<TData>> {
+	): Observable<TData> {
 		return this.apollo
 			.subscribe<TData>(
 				{
@@ -111,12 +70,6 @@ export class GraphqlService {
 					useZone: false,
 				},
 			)
-			.pipe(
-				map(({ data, errors, extensions }) => ({
-					data,
-					errors,
-					extensions,
-				})),
-			);
+			.pipe(map(({ data }) => data as TData));
 	}
 }

@@ -8,7 +8,7 @@ import {
 	RescueStationDeploymentRepository,
 } from '../repository/rescue-station-deployment.repository';
 import { DeploymentAssignmentService } from '../service/deployment-assignment.service';
-import { StrengthFromCommandFactory } from '../service/strength-from-command.factory';
+import { createStrengthFromCommand } from '../service/strength-from-command.factory';
 
 export class UpdateSignedInRescueStationCommand {
 	constructor(
@@ -36,7 +36,6 @@ export class UpdateSignedInRescueStationHandler
 		@Inject(RESCUE_STATION_DEPLOYMENT_REPOSITORY)
 		private readonly rescueStationDeploymentRepository: RescueStationDeploymentRepository,
 		private readonly deploymentAssignmentService: DeploymentAssignmentService,
-		private readonly strengthFactory: StrengthFromCommandFactory,
 		@Inject(UNIT_OF_WORK_SERVICE)
 		private readonly uow: UnitOfWorkService,
 	) {}
@@ -51,7 +50,7 @@ export class UpdateSignedInRescueStationHandler
 				uow,
 			);
 
-			const strength = this.strengthFactory.create(command.strength);
+			const strength = createStrengthFromCommand(command.strength);
 			await strength.validOrThrow();
 
 			await this.rescueStationDeploymentRepository.updateOne(

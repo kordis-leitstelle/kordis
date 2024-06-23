@@ -60,6 +60,10 @@ const RescueStationLocationSchema = SchemaFactory.createForClass(
 
 @Schema()
 export class RescueStationDeploymentDocument extends DeploymentDocumentContract {
+	@Prop()
+	@AutoMap()
+	callSign: string;
+
 	@Prop({ type: RescueStationStrengthSchema })
 	@AutoMap(() => RescueStationStrengthValueObject)
 	strength: RescueStationStrength;

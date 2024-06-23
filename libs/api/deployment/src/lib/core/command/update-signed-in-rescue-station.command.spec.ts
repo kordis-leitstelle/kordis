@@ -8,7 +8,6 @@ import {
 	RescueStationDeploymentRepository,
 } from '../repository/rescue-station-deployment.repository';
 import { DeploymentAssignmentService } from '../service/deployment-assignment.service';
-import { StrengthFromCommandFactory } from '../service/strength-from-command.factory';
 import {
 	UpdateSignedInRescueStationCommand,
 	UpdateSignedInRescueStationHandler,
@@ -25,7 +24,6 @@ describe('UpdateSignedInRescueStationHandler', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				UpdateSignedInRescueStationHandler,
-				StrengthFromCommandFactory,
 				{
 					provide: RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 					useValue: mockRescueStationDeploymentRepository,

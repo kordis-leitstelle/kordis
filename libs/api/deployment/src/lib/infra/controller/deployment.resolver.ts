@@ -13,7 +13,12 @@ import {
 
 import { RequestUser } from '@kordis/api/auth';
 import { DataLoaderContextProvider } from '@kordis/api/shared';
-import { AlertGroupViewModel, UnitViewModel } from '@kordis/api/unit';
+import {
+	ALERT_GROUPS_DATA_LOADER,
+	AlertGroupViewModel,
+	UNITS_DATA_LOADER,
+	UnitViewModel,
+} from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import {
@@ -24,26 +29,31 @@ import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-
 import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
 import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-entities.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
-import { ALERT_GROUPS_DATA_LOADER } from '../data-loader/alert-groups.data-loader';
-import { UNITS_DATA_LOADER } from '../data-loader/units.data-loader';
 import {
 	DeploymentAssignment,
 	RescueStationDeploymentViewModel,
 } from '../rescue-station.view-model';
 import { RescueStationFilterArgs } from './rescue-station-filter.args';
 
-@Resolver()
+@Resolver(() => RescueStationDeploymentViewModel)
 export class DeploymentResolver {
 	constructor(
 		private readonly queryBus: QueryBus,
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
+	@ResolveField()
+	async assignments(
+		@Parent() entity: RescueStationDeploymentEntity,
+	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
+		return [...entity.assignedUnits, ...entity.assignedAlertGroups];
+	}
+
 	@Query(() => [RescueStationDeploymentViewModel])
 	async rescueStationDeployments(
 		@RequestUser() { organizationId }: AuthUser,
 		@Args({ nullable: true }) filter?: RescueStationFilterArgs,
-	): Promise<RescueStationDeploymentViewModel[]> {
+	): Promise<RescueStationDeploymentEntity[]> {
 		const filterDto: RescueStationEntityDTO | undefined = filter
 			? await this.mapper.mapAsync(
 					filter,
@@ -52,16 +62,10 @@ export class DeploymentResolver {
 				)
 			: undefined;
 
-		const deployments = await this.queryBus.execute<
+		return this.queryBus.execute<
 			GetDeploymentsQuery,
 			RescueStationDeploymentEntity[]
 		>(new GetDeploymentsQuery(organizationId, filterDto));
-
-		return this.mapper.mapArrayAsync(
-			deployments,
-			RescueStationDeploymentEntity,
-			RescueStationDeploymentViewModel,
-		);
 	}
 
 	@Query(() => [DeploymentAssignment])
