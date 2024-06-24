@@ -33,15 +33,8 @@ describe('RetainOrderMutator', () => {
 	});
 
 	it('should throw error on missing entity', () => {
-		expect(() =>
-			mutator.sortByIdOrder(
-				['1', '2'],
-				[
-					new (class TestEntity {
-						id = '1';
-					})(),
-				],
-			),
-		).toThrow('Missing TestEntity for ids: 2');
+		expect(() => mutator.sortByIdOrder(['1', '2'], [{ id: '1' }])).toThrow(
+			'Missing entities for ids: 2',
+		);
 	});
 });

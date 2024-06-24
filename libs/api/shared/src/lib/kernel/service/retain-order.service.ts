@@ -33,9 +33,7 @@ export class RetainOrderService {
 			const missingIds = ids.filter(
 				(id) => entities.find((entity) => entity?.id === id) === undefined,
 			);
-			throw new Error(
-				`Missing ${entities[0]?.constructor.name} for ids: ${missingIds.join(',')}`,
-			);
+			throw new Error(`Missing entities for ids: ${missingIds.join(',')}`);
 		}
 	}
 }
