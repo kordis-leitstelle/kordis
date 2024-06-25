@@ -6,13 +6,13 @@ import { UpdateSignedInRescueStationCommand } from '@kordis/api/deployment';
 import { AuthUser } from '@kordis/shared/model';
 
 import { SignedInRescueStationUpdatedEvent } from '../event/signed-in-rescue-station-updated.event';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
 import {
-	StartUpdateSignedInRescueStationProcessCommand,
-	StartUpdateSignedInRescueStationProcessHandler,
-} from './start-update-signed-in-rescue-station-process.command';
+	LaunchUpdateSignedInRescueStationProcessCommand,
+	LaunchUpdateSignedInRescueStationProcessHandler,
+} from './launch-update-signed-in-rescue-station-process.command';
+import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
 
-const COMMAND = new StartUpdateSignedInRescueStationProcessCommand(
+const COMMAND = new LaunchUpdateSignedInRescueStationProcessCommand(
 	{
 		organizationId: 'orgId',
 	} as AuthUser,
@@ -43,8 +43,8 @@ const COMMAND = new StartUpdateSignedInRescueStationProcessCommand(
 	},
 );
 
-describe('StartUpdateSignedInRescueStationProcessHandler', () => {
-	let handler: StartUpdateSignedInRescueStationProcessHandler;
+describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
+	let handler: LaunchUpdateSignedInRescueStationProcessHandler;
 	let commandBus: CommandBus;
 	let eventBus: EventBus;
 
@@ -56,15 +56,15 @@ describe('StartUpdateSignedInRescueStationProcessHandler', () => {
 					provide: MessageCommandRescueStationDetailsFactory,
 					useValue: createMock<MessageCommandRescueStationDetailsFactory>(),
 				},
-				StartUpdateSignedInRescueStationProcessHandler,
+				LaunchUpdateSignedInRescueStationProcessHandler,
 			],
 		})
 			.overrideProvider(CommandBus)
 			.useValue(createMock<CommandBus>())
 			.compile();
 
-		handler = module.get<StartUpdateSignedInRescueStationProcessHandler>(
-			StartUpdateSignedInRescueStationProcessHandler,
+		handler = module.get<LaunchUpdateSignedInRescueStationProcessHandler>(
+			LaunchUpdateSignedInRescueStationProcessHandler,
 		);
 		commandBus = module.get<CommandBus>(CommandBus);
 		eventBus = module.get<EventBus>(EventBus);

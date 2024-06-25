@@ -5,18 +5,18 @@ import {
 	ICommandHandler,
 } from '@nestjs/cqrs';
 
-import { UpdateSignedInRescueStationCommand } from '@kordis/api/deployment';
+import { SignInRescueStationCommand } from '@kordis/api/deployment';
 import {
 	CreateRescueStationSignOnMessageCommand,
 	MessageUnit,
 } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
-import { SignedInRescueStationUpdatedEvent } from '../event/signed-in-rescue-station-updated.event';
+import { RescueStationSignedOnEvent } from '../event/rescue-station-signed-on.event';
 import { CommandRescueStationData } from './command-rescue-station-data.model';
 import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
 
-export class StartUpdateSignedInRescueStationProcessCommand {
+export class LaunchSignOnProcessCommand {
 	constructor(
 		readonly reqUser: AuthUser,
 		readonly rescueStationData: CommandRescueStationData,
@@ -28,9 +28,9 @@ export class StartUpdateSignedInRescueStationProcessCommand {
 	) {}
 }
 
-@CommandHandler(StartUpdateSignedInRescueStationProcessCommand)
-export class StartUpdateSignedInRescueStationProcessHandler
-	implements ICommandHandler<StartUpdateSignedInRescueStationProcessCommand>
+@CommandHandler(LaunchSignOnProcessCommand)
+export class LaunchSignOnProcessHandler
+	implements ICommandHandler<LaunchSignOnProcessCommand>
 {
 	constructor(
 		private readonly commandBus: CommandBus,
@@ -42,9 +42,9 @@ export class StartUpdateSignedInRescueStationProcessHandler
 		reqUser,
 		rescueStationData,
 		communicationMessageData,
-	}: StartUpdateSignedInRescueStationProcessCommand): Promise<void> {
+	}: LaunchSignOnProcessCommand): Promise<void> {
 		await this.commandBus.execute(
-			new UpdateSignedInRescueStationCommand(
+			new SignInRescueStationCommand(
 				reqUser.organizationId,
 				rescueStationData.rescueStationId,
 				rescueStationData.strength,
@@ -53,8 +53,9 @@ export class StartUpdateSignedInRescueStationProcessHandler
 				rescueStationData.assignedAlertGroups,
 			),
 		);
-		await this.eventBus.publish(
-			new SignedInRescueStationUpdatedEvent(
+
+		this.eventBus.publish(
+			new RescueStationSignedOnEvent(
 				reqUser.organizationId,
 				rescueStationData.rescueStationId,
 			),

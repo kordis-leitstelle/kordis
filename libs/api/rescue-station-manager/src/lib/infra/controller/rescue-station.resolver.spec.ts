@@ -8,9 +8,9 @@ import { BaseCreateMessageArgs, UnitInput } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { StartSignOffProcessCommand } from '../../core/command/start-sign-off-process.command';
-import { StartSignOnProcessCommand } from '../../core/command/start-sign-on-process.command';
-import { StartUpdateSignedInRescueStationProcessCommand } from '../../core/command/start-update-signed-in-rescue-station-process.command';
+import { LaunchSignOffProcessCommand } from '../../core/command/launch-sign-off-process.command';
+import { LaunchSignOnProcessCommand } from '../../core/command/launch-sign-on-process.command';
+import { LaunchUpdateSignedInRescueStationProcessCommand } from '../../core/command/launch-update-signed-in-rescue-station-process.command';
 import { RescueStationResolver } from './rescue-station.resolver';
 
 const PROTOCOL_ARGS_DATA = plainToInstance(BaseCreateMessageArgs, {
@@ -79,7 +79,7 @@ describe('RescueStationResolver', () => {
 			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartUpdateSignedInRescueStationProcessCommand(
+				new LaunchUpdateSignedInRescueStationProcessCommand(
 					AUTH_USER,
 					RS_ARGS_DATA,
 					EXPECTED_PROTOCOL_DATA,
@@ -102,7 +102,7 @@ describe('RescueStationResolver', () => {
 
 			expect(result).toEqual(expectedResult);
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartUpdateSignedInRescueStationProcessCommand(
+				new LaunchUpdateSignedInRescueStationProcessCommand(
 					AUTH_USER,
 					RS_ARGS_DATA,
 					EXPECTED_PROTOCOL_DATA,
@@ -133,7 +133,7 @@ describe('RescueStationResolver', () => {
 			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignOffProcessCommand(
+				new LaunchSignOffProcessCommand(
 					AUTH_USER,
 					rescueStationId,
 					EXPECTED_PROTOCOL_DATA,
@@ -154,7 +154,7 @@ describe('RescueStationResolver', () => {
 
 			expect(result).toEqual(expectedResult);
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignOffProcessCommand(
+				new LaunchSignOffProcessCommand(
 					AUTH_USER,
 					'rescueStationId',
 					EXPECTED_PROTOCOL_DATA,
@@ -184,7 +184,7 @@ describe('RescueStationResolver', () => {
 			);
 
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignOnProcessCommand(
+				new LaunchSignOnProcessCommand(
 					AUTH_USER,
 					RS_ARGS_DATA,
 					EXPECTED_PROTOCOL_DATA,
@@ -207,7 +207,7 @@ describe('RescueStationResolver', () => {
 
 			expect(result).toEqual(expectedResult);
 			expect(commandBus.execute).toHaveBeenCalledWith(
-				new StartSignOnProcessCommand(
+				new LaunchSignOnProcessCommand(
 					AUTH_USER,
 					RS_ARGS_DATA,
 					EXPECTED_PROTOCOL_DATA,

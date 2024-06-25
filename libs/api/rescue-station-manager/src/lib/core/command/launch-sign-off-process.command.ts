@@ -19,7 +19,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { RescueStationSignedOffEvent } from '../event/rescue-station-signed-off.event';
 
-export class StartSignOffProcessCommand {
+export class LaunchSignOffProcessCommand {
 	constructor(
 		readonly reqUser: AuthUser,
 		readonly rescueStationId: string,
@@ -31,9 +31,9 @@ export class StartSignOffProcessCommand {
 	) {}
 }
 
-@CommandHandler(StartSignOffProcessCommand)
-export class StartSignOffProcessHandler
-	implements ICommandHandler<StartSignOffProcessCommand>
+@CommandHandler(LaunchSignOffProcessCommand)
+export class LaunchSignOffProcessHandler
+	implements ICommandHandler<LaunchSignOffProcessCommand>
 {
 	constructor(
 		private readonly commandBus: CommandBus,
@@ -41,7 +41,7 @@ export class StartSignOffProcessHandler
 		private readonly eventBus: EventBus,
 	) {}
 
-	async execute(cmd: StartSignOffProcessCommand): Promise<void> {
+	async execute(cmd: LaunchSignOffProcessCommand): Promise<void> {
 		await this.commandBus.execute(
 			new SignOffRescueStationCommand(
 				cmd.reqUser.organizationId,
@@ -60,7 +60,7 @@ export class StartSignOffProcessHandler
 	}
 
 	private async executeMessageCommand(
-		cmd: StartSignOffProcessCommand,
+		cmd: LaunchSignOffProcessCommand,
 	): Promise<void> {
 		const rs: RescueStationDeploymentViewModel = await this.queryBus.execute(
 			new GetRescueStationDeploymentQuery(

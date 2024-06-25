@@ -6,13 +6,13 @@ import { SignInRescueStationCommand } from '@kordis/api/deployment';
 import { AuthUser } from '@kordis/shared/model';
 
 import { RescueStationSignedOnEvent } from '../event/rescue-station-signed-on.event';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
 import {
-	StartSignOnProcessCommand,
-	StartSignOnProcessHandler,
-} from './start-sign-on-process.command';
+	LaunchSignOnProcessCommand,
+	LaunchSignOnProcessHandler,
+} from './launch-sign-on-process.command';
+import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
 
-const COMMAND = new StartSignOnProcessCommand(
+const COMMAND = new LaunchSignOnProcessCommand(
 	{
 		organizationId: 'orgId',
 	} as AuthUser,
@@ -43,8 +43,8 @@ const COMMAND = new StartSignOnProcessCommand(
 	},
 );
 
-describe('StartSignOnProcessHandler', () => {
-	let handler: StartSignOnProcessHandler;
+describe('LaunchSignOnProcessHandler', () => {
+	let handler: LaunchSignOnProcessHandler;
 	let commandBus: CommandBus;
 	let eventBus: EventBus;
 
@@ -56,14 +56,16 @@ describe('StartSignOnProcessHandler', () => {
 					provide: MessageCommandRescueStationDetailsFactory,
 					useValue: createMock<MessageCommandRescueStationDetailsFactory>(),
 				},
-				StartSignOnProcessHandler,
+				LaunchSignOnProcessHandler,
 			],
 		})
 			.overrideProvider(CommandBus)
 			.useValue(createMock<CommandBus>())
 			.compile();
 
-		handler = module.get<StartSignOnProcessHandler>(StartSignOnProcessHandler);
+		handler = module.get<LaunchSignOnProcessHandler>(
+			LaunchSignOnProcessHandler,
+		);
 		commandBus = module.get<CommandBus>(CommandBus);
 		eventBus = module.get<EventBus>(EventBus);
 	});

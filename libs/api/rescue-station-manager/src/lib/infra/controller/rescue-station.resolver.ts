@@ -11,9 +11,9 @@ import { BaseCreateMessageArgs } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { StartSignOffProcessCommand } from '../../core/command/start-sign-off-process.command';
-import { StartSignOnProcessCommand } from '../../core/command/start-sign-on-process.command';
-import { StartUpdateSignedInRescueStationProcessCommand } from '../../core/command/start-update-signed-in-rescue-station-process.command';
+import { LaunchSignOffProcessCommand } from '../../core/command/launch-sign-off-process.command';
+import { LaunchSignOnProcessCommand } from '../../core/command/launch-sign-on-process.command';
+import { LaunchUpdateSignedInRescueStationProcessCommand } from '../../core/command/launch-update-signed-in-rescue-station-process.command';
 import { UpdateRescueStationInput } from '../argument/update-rescue-station.argument';
 
 @Resolver()
@@ -31,7 +31,7 @@ export class RescueStationResolver {
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
-				new StartUpdateSignedInRescueStationProcessCommand(
+				new LaunchUpdateSignedInRescueStationProcessCommand(
 					reqUser,
 					rescueStationData,
 					await protocolMessageData.asTransformedPayload(),
@@ -57,7 +57,7 @@ export class RescueStationResolver {
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
-				new StartSignOffProcessCommand(
+				new LaunchSignOffProcessCommand(
 					reqUser,
 					rescueStationId,
 					await protocolMessageData.asTransformedPayload(),
@@ -83,7 +83,7 @@ export class RescueStationResolver {
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
-				new StartSignOnProcessCommand(
+				new LaunchSignOnProcessCommand(
 					reqUser,
 					rescueStationData,
 					await protocolMessageData.asTransformedPayload(),

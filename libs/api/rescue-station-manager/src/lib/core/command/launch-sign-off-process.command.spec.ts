@@ -8,12 +8,12 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { RescueStationSignedOffEvent } from '../event/rescue-station-signed-off.event';
 import {
-	StartSignOffProcessCommand,
-	StartSignOffProcessHandler,
-} from './start-sign-off-process.command';
+	LaunchSignOffProcessCommand,
+	LaunchSignOffProcessHandler,
+} from './launch-sign-off-process.command';
 
-describe('StartSignOffProcessCommand', () => {
-	let handler: StartSignOffProcessHandler;
+describe('LaunchSignOffProcessCommand', () => {
+	let handler: LaunchSignOffProcessHandler;
 	let commandBus: CommandBus;
 	let mockQueryBus: DeepMocked<QueryBus>;
 	let eventBus: EventBus;
@@ -21,7 +21,7 @@ describe('StartSignOffProcessCommand', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [CqrsModule],
-			providers: [StartSignOffProcessHandler],
+			providers: [LaunchSignOffProcessHandler],
 		})
 			.overrideProvider(CommandBus)
 			.useValue(createMock<CommandBus>())
@@ -29,8 +29,8 @@ describe('StartSignOffProcessCommand', () => {
 			.useValue(createMock<QueryBus>())
 			.compile();
 
-		handler = module.get<StartSignOffProcessHandler>(
-			StartSignOffProcessHandler,
+		handler = module.get<LaunchSignOffProcessHandler>(
+			LaunchSignOffProcessHandler,
 		);
 		commandBus = module.get<CommandBus>(CommandBus);
 		mockQueryBus = module.get<DeepMocked<QueryBus>>(QueryBus);
@@ -42,7 +42,7 @@ describe('StartSignOffProcessCommand', () => {
 	});
 
 	it('should fire StartSignOffProcessCommand and CreateRescueStationSignOffMessageCommand', async () => {
-		const command = new StartSignOffProcessCommand(
+		const command = new LaunchSignOffProcessCommand(
 			{
 				organizationId: 'orgId',
 			} as AuthUser,
@@ -92,7 +92,7 @@ describe('StartSignOffProcessCommand', () => {
 	});
 
 	it('should RescueStationSignedOffEvent event after station signed off', async () => {
-		const command = new StartSignOffProcessCommand(
+		const command = new LaunchSignOffProcessCommand(
 			{
 				organizationId: 'orgId',
 			} as AuthUser,
