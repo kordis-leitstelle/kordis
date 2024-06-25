@@ -5,6 +5,7 @@ import { BaseModelProfile } from '../models/base-model.mapper-profile';
 import { DataLoaderContainer, GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
+import { RetainOrderService } from './service/retain-order.service';
 import {
 	UNIT_OF_WORK_SERVICE,
 	UnitOfWorkServiceImpl,
@@ -19,15 +20,17 @@ import {
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
+		RetainOrderService,
 		{ provide: UNIT_OF_WORK_SERVICE, useClass: UnitOfWorkServiceImpl },
 	],
 	exports: [
 		BaseModelProfile,
+		CqrsModule,
+		DataLoaderContainer,
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
 		MongoEncryptionService,
-		CqrsModule,
-		DataLoaderContainer,
+		RetainOrderService,
 		UNIT_OF_WORK_SERVICE,
 	],
 })

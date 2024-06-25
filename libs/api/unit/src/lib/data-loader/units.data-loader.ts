@@ -13,7 +13,9 @@ export class UnitsDataLoader {
 		loaderContainer.registerLoadingFunction(
 			UNITS_DATA_LOADER,
 			async (unitIds: readonly string[]) =>
-				bus.execute(new GetUnitsByIdsQuery(unitIds as string[])),
+				bus.execute(
+					new GetUnitsByIdsQuery(unitIds as string[], { retainOrder: true }),
+				),
 		);
 	}
 }
