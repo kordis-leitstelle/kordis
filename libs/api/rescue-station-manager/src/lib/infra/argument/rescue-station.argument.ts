@@ -2,6 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import {
 	ArrayNotEmpty,
 	IsInt,
+	IsMongoId,
 	IsNotEmpty,
 	IsString,
 	Min,
@@ -35,7 +36,7 @@ export class RescueStationAssignedAlertGroupArg {
 	alertGroupId: string;
 
 	@Field(() => [String])
-	@IsString({ each: true })
+	@IsMongoId({ each: true })
 	@IsNotEmpty({ each: true })
 	@ArrayNotEmpty({
 		message:

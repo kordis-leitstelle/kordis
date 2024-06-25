@@ -1,6 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+	IsMongoId,
+	IsNotEmpty,
+	IsString,
+	ValidateNested,
+} from 'class-validator';
 
 import {
 	RescueStationAssignedAlertGroupArg,
@@ -10,7 +15,7 @@ import {
 @InputType()
 export class UpdateRescueStationInput {
 	@Field()
-	@IsString()
+	@IsMongoId()
 	@IsNotEmpty()
 	rescueStationId: string;
 
@@ -27,7 +32,7 @@ export class UpdateRescueStationInput {
 		description:
 			'The Units to assign. If a Unit is currently assigned to another Rescue Station it will be released first. Units currently assigned to an operation will result in an error!',
 	})
-	@IsString({ each: true })
+	@IsMongoId({ each: true })
 	assignedUnitIds: string[];
 
 	@Field(() => [RescueStationAssignedAlertGroupArg], {
