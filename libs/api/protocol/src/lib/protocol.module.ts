@@ -35,33 +35,45 @@ import {
 import { ProtocolEntryMapper } from './mapper-profile/protocol-entry.mapper';
 import { RescueStationMessagePayloadDocumentProfile } from './mapper-profile/rescue-station/rescue-station-message-payload-document.mapper-profile';
 import { RescueStationMessagePayloadProfile } from './mapper-profile/rescue-station/rescue-station-message-payload-entity.mapper-profile';
+import { RescueStationSignOffMessageDocumentProfile } from './mapper-profile/rescue-station/rescue-station-sign-off-message-document.mapper-profile';
+import {
+	RescueStationSignOffMessageEntityProfile,
+	RescueStationSignOffMessagePayloadEntityProfile,
+} from './mapper-profile/rescue-station/rescue-station-sign-off-message-entity.mapper-profile';
 import { RescueStationSignOnMessageDocumentProfile } from './mapper-profile/rescue-station/rescue-station-sign-on-message-document.mapper-profile';
 import { RescueStationSignOnMessageEntityProfile } from './mapper-profile/rescue-station/rescue-station-sign-on-message-entity.mapper-profile';
+import { RescueStationUpdateMessageDocumentProfile } from './mapper-profile/rescue-station/rescue-station-update-message-document.mapper-profile';
+import { RescueStationUpdateMessageEntityProfile } from './mapper-profile/rescue-station/rescue-station-update-message-entity.mapper-profile';
 import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile';
 
 const MAPPER_PROFILES = [
-	UnitPartialProfile,
-	ProtocolEntryMapper,
-	ProducerPartialProfile,
 	CommunicationMessageDocumentProfile,
 	CommunicationMessagePayloadDocumentProfile,
-	CommunicationMessageProfile,
 	CommunicationMessagePayloadProfile,
-	RescueStationSignOnMessageEntityProfile,
-	RescueStationMessagePayloadProfile,
+	CommunicationMessageProfile,
+	ProducerPartialProfile,
+	ProtocolEntryMapper,
 	RescueStationMessagePayloadDocumentProfile,
+	RescueStationMessagePayloadProfile,
+	RescueStationSignOffMessageDocumentProfile,
+	RescueStationSignOffMessageEntityProfile,
+	RescueStationSignOffMessagePayloadEntityProfile,
 	RescueStationSignOnMessageDocumentProfile,
+	RescueStationSignOnMessageEntityProfile,
+	RescueStationUpdateMessageDocumentProfile,
+	RescueStationUpdateMessageEntityProfile,
+	UnitPartialProfile,
 ];
 const COMMAND_HANDLERS = [
 	CreateCommunicationMessageHandler,
-	GetProtocolEntriesHandler,
-	CreateRescueStationSignOnMessageHandler,
 	CreateRescueStationSignOffMessageHandler,
+	CreateRescueStationSignOnMessageHandler,
 	CreateRescueStationUpdateMessageHandler,
+	GetProtocolEntriesHandler,
 ];
 const RESOLVERS = [
-	ProtocolEntryResolver,
 	CommunicationMessageResolver,
+	ProtocolEntryResolver,
 	RegisteredUnitResolver,
 ];
 
