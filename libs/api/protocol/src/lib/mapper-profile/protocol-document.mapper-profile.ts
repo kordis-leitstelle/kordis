@@ -22,7 +22,7 @@ import {
 import {
 	CommunicationMessageDocument,
 	CommunicationMessagePayloadDocument,
-} from '../infra/schema/communication-message.schema';
+} from '../infra/schema/communication/communication-message.schema';
 import { UserProducerDocument } from '../infra/schema/producer-partial.schema';
 import {
 	ProtocolEntryBaseDocument,
