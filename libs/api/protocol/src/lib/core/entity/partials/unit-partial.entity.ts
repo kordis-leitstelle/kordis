@@ -3,7 +3,7 @@ import { Field, InputType, ObjectType, createUnionType } from '@nestjs/graphql';
 
 import { UnitViewModel } from '@kordis/api/unit';
 
-export type MessageUnit = RegisteredUnit | UnknownUnit;
+export type MessageUnit = typeof UnitUnion;
 
 @ObjectType({ isAbstract: true })
 export abstract class Unit {}
