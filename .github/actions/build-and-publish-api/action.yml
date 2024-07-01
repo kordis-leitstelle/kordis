@@ -42,7 +42,7 @@ runs:
       run: echo "node-version=$(cat .nvmrc | tr -cd '[:digit:].')" >> $GITHUB_OUTPUT
       shell: bash
     - name: Build and push image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./
         file: ./apps/api/Dockerfile
