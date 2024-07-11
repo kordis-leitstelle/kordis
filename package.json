@@ -116,7 +116,7 @@
     "@opentelemetry/sdk-node": "^0.52.0",
     "@opentelemetry/sdk-trace-base": "^1.14.0",
     "@sentry/angular-ivy": "^7.109.0",
-    "@sentry/node": "^7.109.0",
+    "@sentry/node": "^8.0.0",
     "@sentry/opentelemetry-node": "^7.109.0",
     "angular-oauth2-oidc": "^17.0.2",
     "apollo-angular": "^7.0.0",
