@@ -39,7 +39,7 @@
     "@graphql-codegen/cli": "5.0.2",
     "@nestjs/schematics": "10.1.1",
     "@nestjs/testing": "10.3.3",
-    "@ngneat/spectator": "^18.0.1",
+    "@ngneat/spectator": "^19.0.0",
     "@nx/angular": "18.2.4",
     "@nx/devkit": "18.2.4",
     "@nx/eslint": "18.2.4",
