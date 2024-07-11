@@ -131,7 +131,7 @@
     "mongodb-client-encryption": "^6.0.0",
     "mongoose": "^8.0.0",
     "nestjs-graphql-connection": "^1.0.3",
-    "ng-zorro-antd": "^17.1.0",
+    "ng-zorro-antd": "^18.0.0",
     "pino": "^9.0.0",
     "pino-pretty": "^11.0.0",
     "reflect-metadata": "^0.1.13",
