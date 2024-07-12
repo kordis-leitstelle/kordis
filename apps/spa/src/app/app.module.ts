@@ -4,12 +4,11 @@ import {
 	withInterceptorsFromDi,
 } from '@angular/common/http';
 import de from '@angular/common/locales/de';
-import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import DOMPurify from 'dompurify';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/core/auth';
@@ -57,35 +56,6 @@ registerLocaleData(de);
 		}),
 	],
 	providers: [
-		{
-			provide: APP_INITIALIZER,
-			// we need to use a global tt policy here mainly for the ant design icons
-			useFactory: () => () => {
-				globalThis.trustedTypes.createPolicy('default', {
-					// https://github.com/angular/angular/issues/31329 can't use Angular DomSanitizer here
-					createHTML: (s) => {
-						return DOMPurify.sanitize(
-							s
-								// hack so chrome won't complain about inline styles (mainly from svg icons)
-								.replace('<style />', ''),
-							{
-								USE_PROFILES: { html: true, svg: true },
-							},
-						);
-					},
-					createScriptURL: (s) => {
-						if (
-							s === 'ngsw-worker.js' ||
-							s.startsWith('blob:' + window.location.origin)
-						) {
-							return s;
-						}
-						return '';
-					},
-				});
-			},
-			multi: true,
-		},
 		{ provide: NZ_I18N, useValue: de_DE },
 		provideHttpClient(withInterceptorsFromDi()),
 	],

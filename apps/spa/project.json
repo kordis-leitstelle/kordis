@@ -61,7 +61,7 @@
 				"development": {
 					"buildTarget": "spa:build:development",
 					"headers": {
-						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; object-src 'none'; base-uri 'self'; connect-src 'self' localhost:*; img-src 'self'; style-src 'self' 'nonce-csp_nonce'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
+						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; connect-src 'self' localhost:* *.ingest.sentry.io; img-src 'self'; style-src 'self' 'nonce-csp_nonce'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
 					}
 				}
 			},
