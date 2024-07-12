@@ -13,6 +13,7 @@ import { ObservabilityModule } from '@kordis/api/observability';
 import { OperationModule } from '@kordis/api/operation';
 import { OrganizationModule } from '@kordis/api/organization';
 import { ProtocolModule } from '@kordis/api/protocol';
+import { RescueStationManagerModule } from '@kordis/api/rescue-station-manager';
 import {
 	DataLoaderContainer,
 	DataLoaderContextProvider,
@@ -30,10 +31,6 @@ import { GraphqlSubscriptionsController } from './controllers/graphql-subscripti
 import { HealthCheckController } from './controllers/health-check.controller';
 import environment from './environment';
 
-const isNextOrProdEnv = ['next', 'prod'].includes(
-	process.env.ENVIRONMENT_NAME ?? '',
-);
-
 const FEATURE_MODULES = [
 	OrganizationModule,
 	ProtocolModule,
@@ -42,11 +39,12 @@ const FEATURE_MODULES = [
 	TetraModule,
 	OperationModule,
 	DeploymentModule,
+	RescueStationManagerModule,
 ];
 const SAGA_MODULES = [UnitsSagaModule];
 const UTILITY_MODULES = [
 	SharedKernel,
-	ObservabilityModule.forRoot(isNextOrProdEnv ? 'sentry' : 'dev'),
+	ObservabilityModule.forRoot(process.env.SENTRY_KEY ? 'sentry' : 'dev'),
 	AuthModule.forRoot(process.env.AUTH_PROVIDER === 'aadb2c' ? 'aadb2c' : 'dev'),
 ];
 

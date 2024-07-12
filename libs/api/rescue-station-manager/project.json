@@ -1,0 +1,20 @@
+{
+	"name": "api-rescue-station-manager",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/api/rescue-station-manager/src",
+	"projectType": "library",
+	"targets": {
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/api/rescue-station-manager/jest.config.ts"
+			}
+		}
+	},
+	"tags": []
+}

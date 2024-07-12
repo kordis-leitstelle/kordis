@@ -1,11 +1,17 @@
 import { Test } from '@nestjs/testing';
+import { plainToInstance } from 'class-transformer';
+
+import { RetainOrderService } from '@kordis/api/shared';
 
 import { AlertGroupEntity } from '../entity/alert-group.entity';
 import {
 	ALERT_GROUP_REPOSITORY,
 	AlertGroupRepository,
 } from '../repository/alert-group.repository';
-import { GetAlertGroupsByIdsHandler } from './get-alert-groups-by-ids.query';
+import {
+	GetAlertGroupsByIdsHandler,
+	GetAlertGroupsByIdsQuery,
+} from './get-alert-groups-by-ids.query';
 
 describe('GetAlertGroupsByIdsHandler', () => {
 	let getAlertGroupsByIdsHandler: GetAlertGroupsByIdsHandler;
@@ -21,6 +27,7 @@ describe('GetAlertGroupsByIdsHandler', () => {
 						findByIds: jest.fn(),
 					},
 				},
+				RetainOrderService,
 			],
 		}).compile();
 
@@ -33,15 +40,13 @@ describe('GetAlertGroupsByIdsHandler', () => {
 	});
 
 	it('should return alert groups by ids', async () => {
-		const entity1 = new AlertGroupEntity();
-		entity1.name = 'Alert Group 1';
-		const entity2 = new AlertGroupEntity();
-		entity2.name = 'Alert Group 2';
-		mockAlertGroupRepository.findByIds.mockResolvedValue([entity1, entity2]);
+		const entity1 = plainToInstance(AlertGroupEntity, { id: '1' });
+		const entity2 = plainToInstance(AlertGroupEntity, { id: '2' });
+		mockAlertGroupRepository.findByIds.mockResolvedValue([entity2, entity1]);
 
-		const result = await getAlertGroupsByIdsHandler.execute({
-			ids: ['1', '2'],
-		});
+		const result = await getAlertGroupsByIdsHandler.execute(
+			new GetAlertGroupsByIdsQuery(['1', '2'], { retainOrder: true }),
+		);
 
 		expect(result).toEqual([entity1, entity2]);
 		expect(mockAlertGroupRepository.findByIds).toHaveBeenCalledWith(['1', '2']);

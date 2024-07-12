@@ -1,5 +1,5 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { setUser as sentrySetUser } from '@sentry/angular-ivy';
+import { setUser as sentrySetUser } from '@sentry/angular';
 
 import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
 

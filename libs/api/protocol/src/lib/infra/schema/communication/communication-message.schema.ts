@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
 	ProtocolEntryType,
 	ProtocolMessageEntryBaseDocument,
-} from './protocol-entry-base.schema';
+} from '../protocol-entry-base.schema';
 
 @Schema({ _id: false })
 export class CommunicationMessagePayloadDocument {

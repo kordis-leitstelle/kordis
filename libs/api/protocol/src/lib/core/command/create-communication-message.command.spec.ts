@@ -1,7 +1,6 @@
 import { createMock } from '@golevelup/ts-jest';
 import { EventBus } from '@nestjs/cqrs';
 import { plainToInstance } from 'class-transformer';
-import { before } from 'node:test';
 
 import { AuthUser } from '@kordis/shared/model';
 
@@ -23,7 +22,7 @@ describe('CreateCommunicationMessageCommand', () => {
 	const repositoryMock = createMock<ProtocolEntryRepository>();
 	const eventBusMock = createMock<EventBus>();
 
-	before(() => {
+	beforeAll(() => {
 		jest.useFakeTimers({ now: new Date(0) });
 	});
 

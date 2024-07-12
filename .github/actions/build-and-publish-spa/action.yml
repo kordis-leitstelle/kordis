@@ -43,7 +43,7 @@ runs:
         npx --yes generate-license-file@3.0.1 --input package.json --output dist/apps/spa/browser/assets/third-party-licenses.txt --ci
       shell: bash
     - name: Build and push image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./
         file: ./apps/spa/docker/Dockerfile

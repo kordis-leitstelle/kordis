@@ -1,11 +1,18 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, ModulesContainer } from '@nestjs/core';
-import { init as initSentry } from '@sentry/node';
+import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
+import { MongooseInstrumentation } from '@opentelemetry/instrumentation-mongoose';
+import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
+import {
+	addOpenTelemetryInstrumentation,
+	init as initSentry,
+	validateOpenTelemetrySetup,
+} from '@sentry/node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 import { SentryExceptionsFilter } from './filters/sentry-exceptions.filter';
 import { SentryOTelUserContextInterceptor } from './interceptors/sentry-otel-user-context.interceptor';
-import oTelSDK from './oTelSdk';
 import { KORDIS_LOGGER_SERVICE } from './services/kordis-logger-service.interface';
 import { SentryLogger } from './services/sentry-logger.service';
 import { wrapProvidersWithTracingSpans } from './trace-wrapper';
@@ -38,11 +45,20 @@ export class SentryObservabilityModule implements OnModuleInit {
 		initSentry({
 			dsn: this.config.get('SENTRY_KEY'),
 			tracesSampleRate: 1.0,
-			instrumenter: 'otel',
+			profilesSampleRate: 1.0,
 			environment: this.config.get('ENVIRONMENT_NAME') ?? 'local-dev',
 			release: this.config.get('RELEASE_VERSION') ?? '0.0.0-development',
+			integrations: [nodeProfilingIntegration()],
 		});
+
+		addOpenTelemetryInstrumentation(
+			new GraphQLInstrumentation(),
+			new MongooseInstrumentation(),
+			new PinoInstrumentation(),
+		);
+
+		validateOpenTelemetrySetup();
+
 		wrapProvidersWithTracingSpans(this.modulesContainer);
-		oTelSDK.start();
 	}
 }

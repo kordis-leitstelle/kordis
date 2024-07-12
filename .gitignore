@@ -49,3 +49,4 @@ apps/api/.env
 apps/spa-e2e/.env
 
 .nx/cache
+.nx/workspace-data

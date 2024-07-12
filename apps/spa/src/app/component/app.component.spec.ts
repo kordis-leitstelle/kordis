@@ -8,8 +8,8 @@ import { GraphqlService } from '@kordis/spa/core/graphql';
 import { AppComponent } from './app.component';
 
 // https://github.com/getsentry/sentry-javascript/issues/9448
-jest.mock('@sentry/angular-ivy', () => ({
-	TraceClassDecorator: () => () => {},
+jest.mock('@sentry/angular', () => ({
+	TraceClass: () => () => {},
 }));
 
 describe('AppComponent', () => {

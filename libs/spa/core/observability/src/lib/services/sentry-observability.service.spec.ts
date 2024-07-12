@@ -1,13 +1,13 @@
 import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 // https://github.com/getsentry/sentry-javascript/issues/9448
 // @formatter:off
-import * as SentryAngularIvy from '@sentry/angular-ivy';
+import * as SentryAngularIvy from '@sentry/angular';
 
 import { AUTH_SERVICE, DevAuthService } from '@kordis/spa/core/auth';
 
 import { SentryObservabilityService } from './sentry-observability.service';
 
-jest.mock('@sentry/angular-ivy', () => ({ setUser: () => {} }));
+jest.mock('@sentry/angular', () => ({ setUser: () => {} }));
 const sentrySetUser = jest.spyOn(SentryAngularIvy, 'setUser');
 // @formatter:on
 

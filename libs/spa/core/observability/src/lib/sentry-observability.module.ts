@@ -12,7 +12,7 @@ import {
 	createErrorHandler,
 	init as initSentry,
 	replayIntegration,
-} from '@sentry/angular-ivy';
+} from '@sentry/angular';
 
 import {
 	OBSERVABILITY_SERVICE,

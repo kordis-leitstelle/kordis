@@ -1,5 +1,5 @@
-import { TraceMethodDecorator } from '@sentry/angular-ivy';
+import { TraceMethod as SentryTraceMethod } from '@sentry/angular';
 
 export function TraceMethod(): MethodDecorator {
-	return TraceMethodDecorator();
+	return SentryTraceMethod();
 }
