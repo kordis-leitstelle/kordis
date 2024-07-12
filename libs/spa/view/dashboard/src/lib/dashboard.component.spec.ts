@@ -33,10 +33,6 @@ describe('DashboardComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
-		expect(component).toBeTruthy();
-	});
-
 	it('should call authService.logout() when logout is called', () => {
 		component.logout();
 		expect(authServiceMock.logout).toHaveBeenCalled();

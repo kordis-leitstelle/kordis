@@ -14,6 +14,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
+import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
 
 @Component({
 	selector: 'krd-dashboard-view',
@@ -28,6 +29,7 @@ import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 		NzMenuModule,
 		NzModalModule,
 		NzAvatarModule,
+		DeploymentsComponent,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',

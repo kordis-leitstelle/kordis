@@ -32,6 +32,7 @@
 			"@kordis/shared/test-helpers": ["libs/shared/test-helpers/src/index.ts"],
 			"@kordis/spa/core/auth": ["libs/spa/core/auth/src/index.ts"],
 			"@kordis/spa/core/graphql": ["libs/spa/core/graphql/src/index.ts"],
+			"@kordis/spa/core/misc": ["libs/spa/core/misc/src/index.ts"],
 			"@kordis/spa/core/observability": [
 				"libs/spa/core/observability/src/index.ts"
 			],

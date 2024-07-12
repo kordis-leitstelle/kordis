@@ -128,6 +128,7 @@
     "graphql-sse": "^2.5.2",
     "jsonwebtoken": "^9.0.1",
     "jwks-rsa": "^3.0.1",
+    "minisearch": "^6.3.0",
     "mongodb-client-encryption": "^6.0.0",
     "mongoose": "^8.0.0",
     "nestjs-graphql-connection": "^1.0.3",

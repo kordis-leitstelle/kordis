@@ -1,0 +1,33 @@
+.container {
+	display: flex;
+	height: 100%;
+	max-height: 500px;
+	align-items: center;
+
+	nz-divider {
+		height: 90%;
+	}
+
+	.deployment-section {
+		height: 100%;
+	}
+
+	.logged-out-stations-container {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		gap: 5px;
+	}
+
+	.rescue-stations {
+		display: flex;
+		flex-direction: row;
+		gap: 5px;
+
+		#sub-header {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+	}
+}
