@@ -64,9 +64,16 @@ export class UnitRepositoryImpl implements UnitRepository {
 		id: string,
 		status: UnitStatus,
 	): Promise<boolean> {
-		// we only want to update if the new status is newer than the current one
 		const res = await this.unitModel.updateOne(
-			{ _id: id, orgId, 'status.receivedAt': { $lt: status.receivedAt } },
+			{
+				_id: id,
+				orgId,
+				$or: [
+					// we only want to update if the new status is newer than the current one
+					{ 'status.receivedAt': { $lt: status.receivedAt } },
+					{ status: null },
+				],
+			},
 			{ $set: { status } },
 		);
 
