@@ -80,7 +80,7 @@ import { StatusBadgeComponent } from './status-badge.component';
 	`,
 })
 export class DeploymentUnitComponent {
-	unit = input.required<Unit>();
+	readonly unit = input.required<Unit>();
 	protected showPopover = signal(false);
 
 	constructor(iconService: NzIconService) {

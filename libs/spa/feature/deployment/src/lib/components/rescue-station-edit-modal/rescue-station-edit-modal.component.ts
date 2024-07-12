@@ -69,7 +69,9 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 })
 export class RescueStationEditModalComponent {
 	readonly rescueStation: RescueStationDeployment = inject(NZ_MODAL_DATA);
-	readonly loadingState = signal<'UPDATE' | 'SIGN_OFF' | false>(false);
+	readonly loadingState = signal<'UPDATE' | 'SIGN_OFF' | 'SIGN_IN' | false>(
+		false,
+	);
 	readonly #modal = inject(NzModalRef);
 
 	private readonly fb = inject(NonNullableFormBuilder);
@@ -163,7 +165,7 @@ export class RescueStationEditModalComponent {
 			return;
 		}
 
-		this.loadingState.set('UPDATE');
+		this.loadingState.set('SIGN_IN');
 		this.rescueStationService
 			.signIn$(this.getRescueStationPayload(), this.getProtocolPayload())
 			.subscribe({

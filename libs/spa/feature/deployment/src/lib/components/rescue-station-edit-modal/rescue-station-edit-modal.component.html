@@ -104,8 +104,8 @@
 	} @else {
 		<button
 			(click)="signInStation()"
-			[nzLoading]="loadingState() === 'UPDATE'"
-			[disabled]="loadingState() === 'UPDATE'"
+			[nzLoading]="loadingState() === 'SIGN_IN'"
+			[disabled]="loadingState() !== false"
 			nz-button
 			nzSize="large"
 			nzType="primary"
