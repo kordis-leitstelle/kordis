@@ -8,72 +8,109 @@
 
 <nz-card>
 	<h4>Funkspruch</h4>
-	<krd-protocol-data focusInitially [formGroup]='formGroup.controls.protocolData' />
-	@if(formGroup.controls.protocolData.dirty &&
+	<krd-protocol-data
+		focusInitially
+		[formGroup]="formGroup.controls.protocolData"
+	/>
+	@if (
+		formGroup.controls.protocolData.dirty &&
 		formGroup.controls.protocolData.controls.sender.touched &&
 		formGroup.controls.protocolData.controls.channel.touched &&
 		formGroup.controls.protocolData.controls.recipient.touched &&
-		formGroup.controls.protocolData.invalid) {
-		<nz-alert nzType="error" nzMessage="Es muss ein vollständiger Funkspruch eingetragen werden." nzShowIcon />
+		formGroup.controls.protocolData.invalid
+	) {
+		<nz-alert
+			nzType="error"
+			nzMessage="Es muss ein vollständiger Funkspruch eingetragen werden."
+			nzShowIcon
+		/>
 	}
 </nz-card>
 
-<nz-card style='margin-top: 5px'>
+<nz-card style="margin-top: 5px">
 	<h4>RW-Daten</h4>
-	<div class='form'>
-		<div class='form-item'>
+	<div class="form">
+		<div class="form-item">
 			<span>Stärke</span>
-			<krd-strength [formGroup]='formGroup.controls.rescueStationData.controls.strength' />
+			<krd-strength
+				[formGroup]="formGroup.controls.rescueStationData.controls.strength"
+			/>
 		</div>
-		@if(formGroup.controls.rescueStationData.controls.strength.touched
-		&& formGroup.controls.rescueStationData.controls.strength.errors?.totalStrengthInvalid) {
-			<nz-alert nzType="error" nzShowIcon nzMessage='Die Gesamtstärke muss mindestens 1 sein.' />
+		@if (
+			formGroup.controls.rescueStationData.controls.strength.touched &&
+			formGroup.controls.rescueStationData.controls.strength.errors
+				?.totalStrengthInvalid
+		) {
+			<nz-alert
+				nzType="error"
+				nzShowIcon
+				nzMessage="Die Gesamtstärke muss mindestens 1 sein."
+			/>
 		}
-		<div class='form-item'>
+		<div class="form-item">
 			<span>Einheiten</span>
-			<krd-units-select [control]='formGroup.controls.rescueStationData.controls.units' />
+			<krd-units-select
+				[control]="formGroup.controls.rescueStationData.controls.units"
+			/>
 		</div>
-		<div class='form-item'>
+		<div class="form-item">
 			<span>Alarmgruppen</span>
-			<krd-alert-group-selections [formArray]='formGroup.controls.rescueStationData.controls.alertGroups' />
+			<krd-alert-group-selections
+				[formArray]="formGroup.controls.rescueStationData.controls.alertGroups"
+			/>
 		</div>
-		@if(formGroup.controls.rescueStationData.controls.alertGroups.touched && formGroup.controls.rescueStationData.controls.alertGroups.errors?.minUnitsInvalid) {
-			<nz-alert nzType="error" nzShowIcon nzMessage='Für jede Alarmgruppe muss mindestens eine Einheit zugeordnet werden.' />
+		@if (
+			formGroup.controls.rescueStationData.controls.alertGroups.touched &&
+			formGroup.controls.rescueStationData.controls.alertGroups.errors
+				?.minUnitsInvalid
+		) {
+			<nz-alert
+				nzType="error"
+				nzShowIcon
+				nzMessage="Für jede Alarmgruppe muss mindestens eine Einheit zugeordnet werden."
+			/>
 		}
-		<div class='form-item'>
+		<div class="form-item">
 			<span>Anmerkungen</span>
-			<textarea [formControl]='formGroup.controls.rescueStationData.controls.note' nz-input></textarea>
+			<textarea
+				[formControl]="formGroup.controls.rescueStationData.controls.note"
+				nz-input
+			></textarea>
 		</div>
 	</div>
 </nz-card>
 
-<div class='actions'>
+<div class="actions">
 	@if (rescueStation.signedIn) {
 		<button
-			(click)='updateSignedInStation()'
-			[nzLoading]='loadingState() === "UPDATE"'
-			[disabled]='loadingState() !== false'
+			(click)="updateSignedInStation()"
+			[nzLoading]="loadingState() === 'UPDATE'"
+			[disabled]="loadingState() !== false"
 			nz-button
-			nzSize='large'
-			nzType='primary'
+			nzSize="large"
+			nzType="primary"
 		>
 			Nachmelden
 		</button>
-		<button (click)='signOffStation()' [disabled]='loadingState() !== false '
-						[nzLoading]='loadingState() === "SIGN_OFF"' nz-button nzSize='large'>
+		<button
+			(click)="signOffStation()"
+			[disabled]="loadingState() !== false"
+			[nzLoading]="loadingState() === 'SIGN_OFF'"
+			nz-button
+			nzSize="large"
+		>
 			Ausmelden
 		</button>
 	} @else {
 		<button
-			(click)='signInStation()'
-			[nzLoading]='loadingState() === "UPDATE"'
-			[disabled]='loadingState() === "UPDATE"'
+			(click)="signInStation()"
+			[nzLoading]="loadingState() === 'UPDATE'"
+			[disabled]="loadingState() === 'UPDATE'"
 			nz-button
-			nzSize='large'
-			nzType='primary'
+			nzSize="large"
+			nzType="primary"
 		>
 			Anmelden
 		</button>
 	}
 </div>
-

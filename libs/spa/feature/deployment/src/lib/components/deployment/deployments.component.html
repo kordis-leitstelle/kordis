@@ -1,41 +1,41 @@
-<div class='container'>
-	<div class='deployment-section'>
+<div class="container">
+	<div class="deployment-section">
 		<krd-deployment-card
-			[clickable]='false'
-			name='Ohne Zuordnung'
-			[assignments]='(unassigned$ | async) || []'
+			[clickable]="false"
+			name="Ohne Zuordnung"
+			[assignments]="(unassigned$ | async) || []"
 		/>
 	</div>
-	<nz-divider nzType='vertical' />
-	<div class='rescue-stations deployment-section'>
+	<nz-divider nzType="vertical" />
+	<div class="rescue-stations deployment-section">
 		@for (station of signedInRescueStations$ | async; track station.id) {
 			<krd-deployment-card
-				(clicked)='openRescueStationEditModal(station)'
-				[name]='station.name'
-				[assignments]='station.assignments'
+				(clicked)="openRescueStationEditModal(station)"
+				[name]="station.name"
+				[assignments]="station.assignments"
 			>
-				<div id='sub-header'>
-						<span
-						>{{ station.strength.leaders }}/{{
-								station.strength.subLeaders
-							}}/{{ station.strength.helpers }}//{{
-								station.strength.leaders +
+				<div id="sub-header">
+					<span
+						>{{ station.strength.leaders }}/{{ station.strength.subLeaders }}/{{
+							station.strength.helpers
+						}}//{{
+							station.strength.leaders +
 								station.strength.subLeaders +
 								station.strength.helpers
-							}}</span
-						>
+						}}</span
+					>
 					@if (station.note) {
-						<i nz-icon nzType='info-circle' [nz-tooltip]='station.note'> </i>
+						<i nz-icon nzType="info-circle" [nz-tooltip]="station.note"> </i>
 					}
 				</div>
 			</krd-deployment-card>
 		}
 	</div>
-	<nz-divider nzType='vertical' />
-	<div class='logged-out-stations-container deployment-section'>
+	<nz-divider nzType="vertical" />
+	<div class="logged-out-stations-container deployment-section">
 		@for (station of signedOffRescueStations$ | async; track station.id) {
-			<nz-card nzHoverable (click)='openRescueStationEditModal(station)'
-			>{{ station.name }}
+			<nz-card nzHoverable (click)="openRescueStationEditModal(station)"
+				>{{ station.name }}
 			</nz-card>
 		}
 	</div>
