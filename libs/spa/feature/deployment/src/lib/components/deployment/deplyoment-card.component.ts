@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 
-import '@kordis/shared/model';
 import { DeploymentAssignment } from '@kordis/shared/model';
 
 import { DeploymentAlertGroupComponent } from './deployment-alert-group.component';
@@ -97,15 +96,11 @@ export class DeploymentCardComponent {
 			this.assignments(),
 		).map((assignment) => {
 			if (assignment.__typename === 'DeploymentAlertGroup') {
-				const assignedUnits = assignment.assignedUnits.sort(
+				assignment.assignedUnits.sort(
 					(a, b) =>
 						STATUS_SORT_ORDER[a.unit.status?.status ?? -1] -
 						STATUS_SORT_ORDER[b.unit.status?.status ?? -1],
 				);
-				return {
-					...assignment,
-					assignedUnits,
-				};
 			}
 			return assignment;
 		});

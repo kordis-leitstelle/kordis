@@ -18,12 +18,12 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 	selector: 'krd-alert-group-autocomplete',
 	standalone: true,
 	imports: [
-		NzInputDirective,
-		NzAutocompleteModule,
 		AsyncPipe,
-		ReactiveFormsModule,
-		NzSelectModule,
+		NzAutocompleteModule,
+		NzInputDirective,
 		NzNoAnimationDirective,
+		NzSelectModule,
+		ReactiveFormsModule,
 	],
 	template: `
 		<input
@@ -66,7 +66,7 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 	`,
 })
 export class AlertGroupAutocompleteComponent {
-	showErrorState = input<boolean>(false);
+	readonly showErrorState = input<boolean>(false);
 
 	readonly searchInput = new FormControl<string | AlertGroup>('');
 	readonly possibleAlertGroupSelectionService = inject(
@@ -74,7 +74,7 @@ export class AlertGroupAutocompleteComponent {
 	);
 	private readonly alertGroupSelectedSubject$ = new Subject<AlertGroup>();
 	// eslint-disable-next-line rxjs/finnish
-	@Output() alertGroupSelected = this.alertGroupSelectedSubject$
+	@Output() readonly alertGroupSelected = this.alertGroupSelectedSubject$
 		.asObservable()
 		.pipe(share());
 

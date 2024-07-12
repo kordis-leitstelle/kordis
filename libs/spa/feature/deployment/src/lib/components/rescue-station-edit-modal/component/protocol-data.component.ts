@@ -21,9 +21,14 @@ import { Unit } from '@kordis/shared/model';
 	imports: [CommonModule, ReactiveFormsModule, NzInputDirective],
 	template: `
 		<div [formGroup]="formGroup()">
-			<input #senderInput nz-input placeholder="Von" formControlName="sender" />
+			<input
+				data-testid="sender-input"
+				#senderInput
+				nz-input
+				placeholder="Von"
+				formControlName="sender"
+			/>
 			<input nz-input placeholder="An" formControlName="recipient" />
-
 			<input nz-input placeholder="Kanal" formControlName="channel" />
 		</div>
 	`,
@@ -45,7 +50,7 @@ export class ProtocolDataComponent implements OnInit {
 			channel: FormControl<string>;
 		}>
 	>();
-	focusInitially = input(false, {
+	readonly focusInitially = input(false, {
 		transform: (x: unknown) => x !== false,
 	});
 

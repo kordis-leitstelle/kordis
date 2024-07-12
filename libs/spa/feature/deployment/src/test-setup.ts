@@ -7,3 +7,17 @@ globalThis.ngJest = {
 		errorOnUnknownProperties: true,
 	},
 };
+
+// workaround for current css parser issue with @layer https://github.com/thymikee/jest-preset-angular/issues/2194
+let consoleSpy: jest.SpyInstance;
+beforeAll(() => {
+	consoleSpy = jest
+		.spyOn(global.console, 'error')
+		.mockImplementation((message) => {
+			if (!message?.message?.includes('Could not parse CSS stylesheet')) {
+				global.console.warn(message);
+			}
+		});
+});
+
+afterAll(() => consoleSpy.mockRestore());

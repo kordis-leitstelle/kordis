@@ -100,8 +100,8 @@ const DEPLOYMENTS_QUERY = gql`
 		NzIconDirective,
 		NzTooltipDirective,
 	],
-	templateUrl: `./deployments.component.html`,
-	styleUrl: `./deployments.component.css`,
+	templateUrl: './deployments.component.html',
+	styleUrl: './deployments.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentsComponent {

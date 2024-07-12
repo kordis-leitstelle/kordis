@@ -45,14 +45,14 @@ import { UnitsSelectComponent } from '../unit/units-select.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertGroupSelectionComponent {
-	readonly removed = output<void>();
-
-	formGroup = input.required<
+	readonly formGroup = input.required<
 		FormGroup<{
 			alertGroup: FormControl<AlertGroup>;
 			assignedUnits: FormControl<Unit[]>;
 		}>
 	>();
+	readonly removed = output<void>();
+
 	private unitSelectionEle = viewChild(UnitsSelectComponent);
 
 	removeAlertGroup(): void {

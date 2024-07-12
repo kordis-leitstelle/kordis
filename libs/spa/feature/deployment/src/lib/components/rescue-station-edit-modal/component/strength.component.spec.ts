@@ -5,11 +5,6 @@ import { StrengthComponent } from './strength.component';
 
 describe('StrengthComponent', () => {
 	let fixture: ComponentFixture<StrengthComponent>;
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			imports: [StrengthComponent],
-		}).compileComponents();
-	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(StrengthComponent);

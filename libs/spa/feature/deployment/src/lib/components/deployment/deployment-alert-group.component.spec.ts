@@ -5,12 +5,6 @@ import { DeploymentAlertGroupComponent } from './deployment-alert-group.componen
 describe('DeploymentAlertGroupComponent', () => {
 	let fixture: ComponentFixture<DeploymentAlertGroupComponent>;
 
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			imports: [DeploymentAlertGroupComponent],
-		}).compileComponents();
-	});
-
 	beforeEach(() => {
 		fixture = TestBed.createComponent(DeploymentAlertGroupComponent);
 	});

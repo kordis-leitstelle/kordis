@@ -59,8 +59,8 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 		StrengthComponent,
 		UnitsSelectComponent,
 	],
-	templateUrl: `./rescue-station-edit-modal.component.html`,
-	styleUrl: `./rescue-station-edit-modal.component.css`,
+	templateUrl: './rescue-station-edit-modal.component.html',
+	styleUrl: './rescue-station-edit-modal.component.css',
 	providers: [
 		PossibleUnitSelectionsService,
 		PossibleAlertGroupSelectionsService,

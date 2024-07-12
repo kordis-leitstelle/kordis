@@ -5,11 +5,7 @@ import { StatusBadgeComponent } from './status-badge.component';
 describe('StrengthBadgeComponent', () => {
 	let fixture: ComponentFixture<StatusBadgeComponent>;
 
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			imports: [StatusBadgeComponent],
-		}).compileComponents();
-
+	beforeEach(() => {
 		fixture = TestBed.createComponent(StatusBadgeComponent);
 	});
 

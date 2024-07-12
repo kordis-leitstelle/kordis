@@ -8,19 +8,10 @@ import { DeploymentUnitDetailsComponent } from './deployment-unit-details.compon
 describe('DeploymentUnitDetailsComponent', () => {
 	let fixture: ComponentFixture<DeploymentUnitDetailsComponent>;
 
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			providers: [
-				{
-					provide: GraphqlService,
-					useValue: createMock<GraphqlService>(),
-				},
-			],
-			imports: [DeploymentUnitDetailsComponent],
-		}).compileComponents();
-	});
-
 	beforeEach(() => {
+		TestBed.overrideProvider(GraphqlService, {
+			useValue: createMock<GraphqlService>(),
+		});
 		fixture = TestBed.createComponent(DeploymentUnitDetailsComponent);
 		fixture.componentRef.setInput('unit', {
 			id: '1',

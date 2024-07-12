@@ -1,5 +1,3 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { AsyncPipe, NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -12,22 +10,14 @@ import {
 	FormArray,
 	FormControl,
 	FormGroup,
-	FormsModule,
 	NonNullableFormBuilder,
-	ReactiveFormsModule,
 } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzIconDirective } from 'ng-zorro-antd/icon';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzTagComponent } from 'ng-zorro-antd/tag';
 
 import { AlertGroup, Unit } from '@kordis/shared/model';
 
-import { StatusBadgeComponent } from '../../../deployment/status-badge.component';
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
-import { UnitSelectionOptionComponent } from '../unit/unit-selection-option.component';
-import { UnitsSelectComponent } from '../unit/units-select.component';
 import { AlertGroupAutocompleteComponent } from './alert-group-autocomplete.component';
 import { AlertGroupSelectionComponent } from './alert-group-selection.component';
 
@@ -35,39 +25,30 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 	selector: 'krd-alert-group-selections',
 	standalone: true,
 	imports: [
-		AsyncPipe,
-		ReactiveFormsModule,
-		NzSelectModule,
-		StatusBadgeComponent,
-		FormsModule,
-		UnitSelectionOptionComponent,
-		CdkTrapFocus,
-		NzTagComponent,
 		AlertGroupAutocompleteComponent,
-		NzCardComponent,
-		UnitsSelectComponent,
-		NzIconDirective,
 		AlertGroupSelectionComponent,
-		NgIf,
+		NzCardComponent,
 	],
 	template: `
 		<krd-alert-group-autocomplete
 			[showErrorState]="formArray().invalid && formArray().touched"
 			(alertGroupSelected)="addAlertGroup($event)"
 		/>
-		<nz-card *ngIf="formArray().length">
-			<div class="selections">
-				@for (
-					alertGroupAssignment of formArray().controls;
-					track alertGroupAssignment.value.alertGroup!.id
-				) {
-					<krd-alert-group-selection
-						[formGroup]="alertGroupAssignment"
-						(removed)="removeAlertGroup($index)"
-					/>
-				}
-			</div>
-		</nz-card>
+		@if (formArray().length) {
+			<nz-card>
+				<div class="selections">
+					@for (
+						alertGroupAssignment of formArray().controls;
+						track alertGroupAssignment.value.alertGroup!.id
+					) {
+						<krd-alert-group-selection
+							[formGroup]="alertGroupAssignment"
+							(removed)="removeAlertGroup($index)"
+						/>
+					}
+				</div>
+			</nz-card>
+		}
 	`,
 	styles: `
 		:host {
@@ -98,7 +79,7 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertGroupSelectionsComponent {
-	formArray = input.required<
+	readonly formArray = input.required<
 		FormArray<
 			FormGroup<{
 				alertGroup: FormControl<AlertGroup>;
