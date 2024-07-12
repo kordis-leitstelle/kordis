@@ -34,7 +34,7 @@
 	<nz-divider nzType="vertical" />
 	<div class="logged-out-stations-container deployment-section">
 		@for (station of signedOffRescueStations$ | async; track station.id) {
-			<nz-card nzHoverable (click)="openRescueStationEditModal(station)"
+			<nz-card [nzHoverable]='true' (click)="openRescueStationEditModal(station)"
 				>{{ station.name }}
 			</nz-card>
 		}
