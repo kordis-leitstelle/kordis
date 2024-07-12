@@ -14,3 +14,5 @@ libs/spa/observability/src/lib/services/sentry-observability.service.spec.ts
 /.nx/cache
 
 migrations.json
+
+/.nx/workspace-data

@@ -1,5 +1,8 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+	provideHttpClient,
+	withInterceptorsFromDi,
+} from '@angular/common/http';
 import de from '@angular/common/locales/de';
 import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -24,11 +27,11 @@ registerLocaleData(de);
 
 @NgModule({
 	declarations: [AppComponent],
+	bootstrap: [AppComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
 		RouterModule.forRoot(routes),
-		HttpClientModule,
 		environment.oauth
 			? AuthModule.forRoot(
 					environment.oauth.config,
@@ -84,7 +87,7 @@ registerLocaleData(de);
 			multi: true,
 		},
 		{ provide: NZ_I18N, useValue: de_DE },
+		provideHttpClient(withInterceptorsFromDi()),
 	],
-	bootstrap: [AppComponent],
 })
 export class AppModule {}
