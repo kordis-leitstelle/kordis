@@ -54,7 +54,7 @@
     "@nx/workspace": "19.4.2",
     "@playwright/test": "^1.45.1",
     "@schematics/angular": "18.0.7",
-    "@swc-node/register": "1.10.4",
+    "@swc-node/register": "1.10.6",
     "@swc/core": "1.6.13",
     "@total-typescript/ts-reset": "^0.5.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
