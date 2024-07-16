@@ -2,7 +2,6 @@ import type { Mapper } from '@automapper/core';
 import { createMap, forMember, mapFrom } from '@automapper/core';
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
-import { Types } from 'mongoose';
 
 import {
 	RegisteredUnit,
@@ -66,7 +65,7 @@ export class UnitPartialProfile extends AutomapperProfile {
 				forMember(
 					(d) => d.unit,
 					mapFrom((s) => ({
-						id: s.unitId.toString(),
+						id: s.unitId,
 					})),
 				),
 			);
@@ -79,7 +78,7 @@ export class UnitPartialProfile extends AutomapperProfile {
 				RegisteredUnitDocument,
 				forMember(
 					(d) => d.unitId,
-					mapFrom((s) => new Types.ObjectId(s.unit.id)),
+					mapFrom((s) => s.unit.id),
 				),
 			);
 			createMap(mapper, UnknownUnit, UnknownUnitDocument);

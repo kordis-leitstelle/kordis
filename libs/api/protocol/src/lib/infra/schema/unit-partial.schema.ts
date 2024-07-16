@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
 
 export enum UnitType {
 	REGISTERED_UNIT = 'REGISTERED_UNIT',
@@ -18,7 +17,7 @@ export class RegisteredUnitDocument extends UnitDocument {
 
 	@Prop()
 	@AutoMap()
-	unitId: Types.ObjectId;
+	unitId: string;
 }
 
 @Schema({ _id: false })

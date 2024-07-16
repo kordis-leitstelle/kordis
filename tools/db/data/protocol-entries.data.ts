@@ -77,11 +77,11 @@ const collectionData = {
 			producer: getUserAsProducer('testuser'),
 			recipient: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('MRB Greif 5')._id,
+				unitId: getUnitIdAsStringByName('MRB Greif 5'),
 			},
 			sender: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('ATV')._id,
+				unitId: getUnitIdAsStringByName('ATV'),
 			},
 			searchableText: 'Test',
 			time: new Date(),
@@ -101,11 +101,11 @@ const collectionData = {
 			producer: getUserAsProducer('testuser'),
 			recipient: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('MRB Greif 5')._id,
+				unitId: getUnitIdAsStringByName('MRB Greif 5'),
 			},
 			sender: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('RW Wittenbergen')._id,
+				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
 			},
 			searchableText:
 				'Einmeldung - DLRG Einsatzzentrale HH - MRB Greif 5, ATV - Stärke 1/2/3/6',
@@ -127,11 +127,11 @@ const collectionData = {
 			producer: getUserAsProducer('testuser'),
 			recipient: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('MRB Greif 5')._id,
+				unitId: getUnitIdAsStringByName('MRB Greif 5'),
 			},
 			sender: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('RW Wittenbergen')._id,
+				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
 			},
 			searchableText:
 				'Aktualisierte Stärke - DLRG Einsatzzentrale HH - SEG Altona - MRB Greif 5 - Stärke 1/3/6/10',
@@ -148,11 +148,11 @@ const collectionData = {
 			producer: getUserAsProducer('testuser'),
 			recipient: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('MRB Greif 5')._id,
+				unitId: getUnitIdAsStringByName('MRB Greif 5'),
 			},
 			sender: {
 				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitByName('RW Wittenbergen')._id,
+				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
 			},
 			searchableText: 'Ausmeldung - DLRG Einsatzzentrale HH',
 			time: new Date(),

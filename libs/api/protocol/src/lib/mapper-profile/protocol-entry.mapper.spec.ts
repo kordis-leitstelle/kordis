@@ -2,7 +2,6 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
-import { Types } from 'mongoose';
 
 import { BaseModelProfile } from '@kordis/api/shared';
 
@@ -114,7 +113,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
+				unitId: '6662c25962bc301aac2cbcd6',
 			}),
 			channel: 'Walter',
 			producer: plainToInstance(UserProducerDocument, {
@@ -226,7 +225,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
+				unitId: '6662c25962bc301aac2cbcd6',
 			}),
 			channel: 'Walter',
 			time: new Date('1956-03-26'),
@@ -329,7 +328,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
+				unitId: '6662c25962bc301aac2cbcd6',
 			}),
 			channel: 'Walter',
 			orgId: 'orgId-123',
@@ -383,7 +382,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
+				unitId: '6662c25962bc301aac2cbcd6',
 			}),
 			channel: 'Walter',
 			orgId: 'orgId-123',
