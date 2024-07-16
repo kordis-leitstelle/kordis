@@ -33,14 +33,14 @@ export class ProtocolEntryBaseDocument extends BaseDocument {
 	@AutoMap()
 	time: Date;
 
-	@Prop(UnitDocument)
+	@Prop({ type: UnitDocument })
 	sender: UnitDocuments;
 
 	@Prop()
 	@AutoMap()
 	searchableText: string;
 
-	@Prop(ProducerDocument)
+	@Prop({ type: ProducerDocument })
 	producer: ProducerDocuments;
 }
 
@@ -63,7 +63,7 @@ ProtocolEntryBaseSchema.index({ orgId: 1 }, { unique: false });
 
 @Schema()
 export class ProtocolMessageEntryBaseDocument extends ProtocolEntryBaseDocument {
-	@Prop(UnitDocument)
+	@Prop({ type: UnitDocument })
 	@AutoMap()
 	recipient: UnitDocuments;
 
