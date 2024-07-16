@@ -1,15 +1,20 @@
 import { Types } from 'mongoose';
 
 import { OrganizationDocument } from '../../../libs/api/organization/src/lib/infra/schema/organization.schema';
-import { CollectionData } from './collection-data.model';
+import {
+	CollectionData,
+	getEntryByFieldFunction,
+} from './collection-data.model';
 
-const collectionData: CollectionData<OrganizationDocument> = {
+const collectionData = {
 	collectionName: 'organizations',
 	entries: [
 		{
 			_id: new Types.ObjectId('dff7584efe2c174eee8bae45'),
 			name: 'Test Organisation',
 			createdAt: new Date(),
+			updatedAt: new Date(),
+			orgId: 'dff7584efe2c174eee8bae45',
 			// hamburg
 			geoSettings: {
 				bbox: {
@@ -29,6 +34,15 @@ const collectionData: CollectionData<OrganizationDocument> = {
 			},
 		},
 	],
-};
+} as const satisfies CollectionData<OrganizationDocument>;
 
-export default collectionData;
+const {
+	entityFunction: getOrganizationByName,
+	entityIdFunction: getOrganizationIdAsStringByName,
+} = getEntryByFieldFunction(collectionData, 'name');
+
+export {
+	collectionData as default,
+	getOrganizationByName,
+	getOrganizationIdAsStringByName,
+};

@@ -6,28 +6,20 @@ import { BaseDocument } from '@kordis/api/shared';
 
 import {
 	ProducerDocument,
+	ProducerDocuments,
 	ProducerType,
 	SystemProducerSchema,
 	UserProducerDocument,
 	UserProducerSchema,
 } from './producer-partial.schema';
+import { ProtocolEntryType } from './protocol-entry-type';
 import {
 	RegisteredUnitSchema,
 	UnitDocument,
+	UnitDocuments,
 	UnitType,
 	UnknownUnitSchema,
 } from './unit-partial.schema';
-
-export enum ProtocolEntryType {
-	COMMUNICATION_MESSAGE_ENTRY = 'COMMUNICATION_MESSAGE_ENTRY',
-	RESCUE_STATION_SIGN_ON_ENTRY = 'RESCUE_STATION_SIGN_ON_ENTRY',
-	RESCUE_STATION_UPDATE_ENTRY = 'RESCUE_STATION_UPDATE_ENTRY',
-	RESCUE_STATION_SIGN_OFF_ENTRY = 'RESCUE_STATION_SIGN_OFF_ENTRY',
-	OPERATION_STARTED_ENTRY = 'OPERATION_STARTED_ENTRY',
-	OPERATION_ENDED_ENTRY = 'OPERATION_ENDED_ENTRY',
-	OPERATION_ASSIGNMENTS_UPDATED_ENTRY = 'OPERATION_ASSIGNMENTS_UPDATED_ENTRY',
-	UNIT_STATUS_ENTRY = 'UNIT_STATUS_ENTRY',
-}
 
 @Schema({
 	timestamps: true,
@@ -41,15 +33,15 @@ export class ProtocolEntryBaseDocument extends BaseDocument {
 	@AutoMap()
 	time: Date;
 
-	@Prop()
-	sender: UnitDocument;
+	@Prop({ type: UnitDocument })
+	sender: UnitDocuments;
 
 	@Prop()
 	@AutoMap()
 	searchableText: string;
 
-	@Prop()
-	producer: ProducerDocument;
+	@Prop({ type: ProducerDocument })
+	producer: ProducerDocuments;
 }
 
 export const ProtocolEntryBaseSchema = SchemaFactory.createForClass(
@@ -71,9 +63,9 @@ ProtocolEntryBaseSchema.index({ orgId: 1 }, { unique: false });
 
 @Schema()
 export class ProtocolMessageEntryBaseDocument extends ProtocolEntryBaseDocument {
-	@Prop()
+	@Prop({ type: UnitDocument })
 	@AutoMap()
-	recipient: UnitDocument;
+	recipient: UnitDocuments;
 
 	@Prop()
 	@AutoMap()
