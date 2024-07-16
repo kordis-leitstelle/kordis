@@ -162,8 +162,8 @@ export class ProtocolViewComponent {
 
 		this.query.$.pipe(
 			tap((x) => console.log('fetched protocol entries', x)),
-			tap((x) => (this.pageInfo = x.data.protocolEntries.pageInfo)),
-			map((x) => x.data.protocolEntries.edges.map((edge) => edge.node)),
+			tap((x) => (this.pageInfo = x.protocolEntries.pageInfo)),
+			map((x) => x.protocolEntries.edges.map((edge) => edge.node)),
 		)
 			// TODO: unsubscribe on destroy
 			.subscribe((x) => {
