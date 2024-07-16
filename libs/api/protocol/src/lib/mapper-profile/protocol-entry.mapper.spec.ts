@@ -2,6 +2,7 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
+import { Types } from 'mongoose';
 
 import { BaseModelProfile } from '@kordis/api/shared';
 
@@ -113,7 +114,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: '6662c25962bc301aac2cbcd6',
+				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
 			}),
 			channel: 'Walter',
 			producer: plainToInstance(UserProducerDocument, {
@@ -126,8 +127,6 @@ const testCases: {
 				'one medium dry vodka martini mixed like you said, sir, but not stirred.',
 			time: new Date('1956-03-26'),
 			orgId: 'orgId-123',
-			createdAt: undefined,
-			updatedAt: undefined,
 		}),
 	},
 	{
@@ -175,6 +174,7 @@ const testCases: {
 			searchableText:
 				'one medium dry vodka martini mixed like you said, sir, but not stirred.',
 			channel: 'Walter',
+			time: new Date('1956-03-26'),
 			orgId: 'orgId-123',
 			createdAt: undefined,
 			updatedAt: undefined,
@@ -226,12 +226,11 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: '6662c25962bc301aac2cbcd6',
+				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
 			}),
 			channel: 'Walter',
+			time: new Date('1956-03-26'),
 			orgId: 'orgId-123',
-			createdAt: undefined,
-			updatedAt: undefined,
 		}),
 	},
 	{
@@ -330,7 +329,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: '6662c25962bc301aac2cbcd6',
+				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
 			}),
 			channel: 'Walter',
 			orgId: 'orgId-123',
@@ -384,7 +383,7 @@ const testCases: {
 			}),
 			recipient: plainToInstance(RegisteredUnitDocument, {
 				type: 'REGISTERED_UNIT',
-				unitId: '6662c25962bc301aac2cbcd6',
+				unitId: new Types.ObjectId('6662c25962bc301aac2cbcd6'),
 			}),
 			channel: 'Walter',
 			orgId: 'orgId-123',
