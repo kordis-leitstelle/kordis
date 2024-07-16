@@ -37,6 +37,8 @@ export class SystemProducerDocument extends ProducerDocument {
 	name: string;
 }
 
+export type ProducerDocuments = UserProducerDocument | SystemProducerDocument;
+
 export const UserProducerSchema =
 	SchemaFactory.createForClass(UserProducerDocument);
 export const SystemProducerSchema = SchemaFactory.createForClass(
