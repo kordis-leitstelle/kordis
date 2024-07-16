@@ -33,7 +33,7 @@ const collectionData = {
 			updatedAt: new Date(),
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 			name: 'SEG Sonar (Bergedorf)',
-			units: [getUnitByName('GW-Wasserrettung')],
+			units: [getUnitByName('GW-Wasserrettung')._id],
 		},
 	],
 } as const satisfies CollectionData<AlertGroupDocument>;
