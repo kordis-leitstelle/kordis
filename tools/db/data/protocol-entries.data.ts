@@ -108,9 +108,9 @@ const collectionData = {
 				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
 			},
 			searchableText:
-				'Einmeldung - DLRG Einsatzzentrale HH - MRB Greif 5, ATV - Stärke 1/2/3/6',
+				'anmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0 stärke 1/2/3/6 MRB Greif 5, ATV',
 			time: new Date(),
-			type: ProtocolEntryType.COMMUNICATION_MESSAGE_ENTRY,
+			type: ProtocolEntryType.RESCUE_STATION_SIGN_ON_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies RescueStationSignOnMessageDocument,
 		{
@@ -134,9 +134,9 @@ const collectionData = {
 				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
 			},
 			searchableText:
-				'Aktualisierte Stärke - DLRG Einsatzzentrale HH - SEG Altona - MRB Greif 5 - Stärke 1/3/6/10',
+				'nachmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0 stärke 1/3/6/10 SEG Altona MRB Greif 5',
 			time: new Date(),
-			type: ProtocolEntryType.COMMUNICATION_MESSAGE_ENTRY,
+			type: ProtocolEntryType.RESCUE_STATION_UPDATE_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies RescueStationUpdateMessageDocument,
 		{
@@ -154,9 +154,10 @@ const collectionData = {
 				type: UnitType.REGISTERED_UNIT,
 				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
 			},
-			searchableText: 'Ausmeldung - DLRG Einsatzzentrale HH',
+			searchableText:
+				'ausmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0',
 			time: new Date(),
-			type: ProtocolEntryType.COMMUNICATION_MESSAGE_ENTRY,
+			type: ProtocolEntryType.RESCUE_STATION_SIGN_OFF_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies RescueStationSignOffMessageDocument,
 	],
