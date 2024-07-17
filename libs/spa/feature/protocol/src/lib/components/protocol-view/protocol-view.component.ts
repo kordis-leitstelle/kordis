@@ -1,76 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { map, tap } from 'rxjs';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	OnDestroy,
+	OnInit,
+	signal,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import {
 	CommunicationMessage,
-	PageInfo,
-	ProtocolEntryUnion,
-	Query,
+	ProtocolEntryUnion
 } from '@kordis/shared/model';
 import { GraphqlService, cache, gql } from '@kordis/spa/core/graphql';
 
+import { ProtocolClient } from '../../services/protocol.client';
 import { ProtocolComponent } from '../protocol/protocol.component';
-
-const GET_PROTOCOL_ENTRIES_QUERY = gql`
-	query GetProtocolEntries($endCursor: String) {
-		protocolEntries(first: 20, after: $endCursor) {
-			pageInfo {
-				hasNextPage
-				hasPreviousPage
-				startCursor
-				endCursor
-				totalEdges
-			}
-			edges {
-				node {
-					... on CommunicationMessage {
-						id
-						orgId
-						createdAt
-						updatedAt
-						time
-						sender {
-							... on UnknownUnit {
-								name
-							}
-							... on RegisteredUnit {
-								unit {
-									name
-									id
-									callSign
-								}
-							}
-						}
-						searchableText
-						producer {
-							userId
-							firstName
-							lastName
-						}
-						recipient {
-							... on UnknownUnit {
-								name
-							}
-							... on RegisteredUnit {
-								unit {
-									name
-									id
-									callSign
-								}
-							}
-						}
-						channel
-						payload {
-							message
-						}
-					}
-				}
-				cursor
-			}
-		}
-	}
-`;
 
 const CREATE_COMMUNICATION_MESSAGE = gql`
 	mutation createCommunicationMessage(
@@ -136,6 +81,73 @@ cache.policies.addTypePolicies({
 					return new Date(time);
 				},
 			},
+			createdAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			editedAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+		},
+	},
+	RescueStationSignOnMessage: {
+		fields: {
+			time: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			createdAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			editedAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+		},
+	},
+	RescueStationUpdateMessage: {
+		fields: {
+			time: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			createdAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			editedAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+		},
+	},
+	RescueStationSignOffMessage: {
+		fields: {
+			time: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			createdAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
+			editedAt: {
+				read(time: string) {
+					return new Date(time);
+				},
+			},
 		},
 	},
 });
@@ -146,40 +158,36 @@ cache.policies.addTypePolicies({
 	imports: [CommonModule, ProtocolComponent],
 	template: ` <button (click)="loadMore()">Load more</button>
 		<button (click)="addCommunicationMessage()">Add Comm Message</button>
-		<krd-protocol [protocolEntries]="protocolEntries" />`,
+		<krd-protocol [protocolEntries]="protocolEntries()" />`,
 	styles: ``,
-	//changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProtocolViewComponent {
-	private query;
-	pageInfo?: PageInfo;
-	protocolEntries: ProtocolEntryUnion[] = [];
+export class ProtocolViewComponent implements OnInit, OnDestroy {
+	private client: ProtocolClient;
+	private clientSubscription?: Subscription;
+
+	protocolEntries = signal<ProtocolEntryUnion[]>([]);
 
 	constructor(private readonly gqlService: GraphqlService) {
-		this.query = gqlService.query<{
-			protocolEntries: Query['protocolEntries'];
-		}>(GET_PROTOCOL_ENTRIES_QUERY, { endCursor: null });
+		this.client = new ProtocolClient(gqlService);
+	}
+	ngOnDestroy(): void {
+		this.clientSubscription?.unsubscribe();
+	}
 
-		this.query.$.pipe(
-			tap((x) => console.log('fetched protocol entries', x)),
-			tap((x) => (this.pageInfo = x.protocolEntries.pageInfo)),
-			map((x) => x.protocolEntries.edges.map((edge) => edge.node)),
-		)
-			// TODO: unsubscribe on destroy
-			.subscribe((x) => {
-				this.protocolEntries = [...this.protocolEntries, ...x];
-				console.log('data array', this.protocolEntries);
-			});
+	ngOnInit(): void {
+		this.clientSubscription = this.client.protocolEntries$.subscribe((x) => {
+			this.protocolEntries.set(x);
+		});
 	}
 
 	loadMore(): void {
-		if (!this.pageInfo?.hasNextPage) {
+		if (!this.client.hasMore()) {
 			console.log('No next page available');
 			return;
 		}
 
-		console.log('loading more protocol entries');
-		this.query.refresh({ endCursor: this.pageInfo?.endCursor ?? null });
+		this.client.loadMore();
 	}
 
 	addCommunicationMessage(): void {
