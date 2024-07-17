@@ -1,1 +1,1 @@
-export * from './lib/protocol-view/protocol-view.component';
+export * from './lib/components/protocol-view/protocol-view.component';
