@@ -92,6 +92,12 @@ const getRescueStationMessagePayload = (
 	} satisfies RescueStationMessagePayload;
 };
 
+const getRandomDateFromLastSevenDays = () => {
+	const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+	const offset = Math.round(Math.random() * sevenDaysInMs);
+	return new Date(Date.now() - offset);
+};
+
 const collectionData = {
 	collectionName: 'protocol-entries',
 	entries: [
@@ -111,7 +117,7 @@ const collectionData = {
 				unitId: getUnitIdAsStringByName('ATV'),
 			},
 			searchableText: 'Test',
-			time: new Date(),
+			time: getRandomDateFromLastSevenDays(),
 			type: ProtocolEntryType.COMMUNICATION_MESSAGE_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies CommunicationMessageDocument,
@@ -136,7 +142,7 @@ const collectionData = {
 			},
 			searchableText:
 				'anmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0 stärke 1/2/3/6 MRB Greif 5, ATV',
-			time: new Date(),
+			time: getRandomDateFromLastSevenDays(),
 			type: ProtocolEntryType.RESCUE_STATION_SIGN_ON_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies RescueStationSignOnMessageDocument,
@@ -162,7 +168,7 @@ const collectionData = {
 			},
 			searchableText:
 				'nachmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0 stärke 1/3/6/10 SEG Altona MRB Greif 5',
-			time: new Date(),
+			time: getRandomDateFromLastSevenDays(),
 			type: ProtocolEntryType.RESCUE_STATION_UPDATE_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies RescueStationUpdateMessageDocument,
@@ -183,7 +189,7 @@ const collectionData = {
 			},
 			searchableText:
 				'ausmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0',
-			time: new Date(),
+			time: getRandomDateFromLastSevenDays(),
 			type: ProtocolEntryType.RESCUE_STATION_SIGN_OFF_ENTRY,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 		} satisfies RescueStationSignOffMessageDocument,
