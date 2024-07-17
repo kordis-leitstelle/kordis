@@ -1,4 +1,7 @@
-import { RescueStationMessagePayload } from 'libs/api/protocol/src/lib/core/entity/protocol-entries/rescue-station/rescue-station-message-payload.entity';
+import {
+	RescueStationMessageAssignedUnit,
+	RescueStationMessagePayload,
+} from 'libs/api/protocol/src/lib/core/entity/protocol-entries/rescue-station/rescue-station-message-payload.entity';
 import { ProtocolEntryType } from 'libs/api/protocol/src/lib/infra/schema/protocol-entry-type';
 import { RescueStationSignOffMessageDocument } from 'libs/api/protocol/src/lib/infra/schema/rescue-station/rescue-station-sign-off-message.schema';
 import { RescueStationSignOnMessageDocument } from 'libs/api/protocol/src/lib/infra/schema/rescue-station/rescue-station-sign-on-message.schema';
@@ -11,12 +14,20 @@ import {
 	UserProducerDocument,
 } from '../../../libs/api/protocol/src/lib/infra/schema/producer-partial.schema';
 import { UnitType } from '../../../libs/api/protocol/src/lib/infra/schema/unit-partial.schema';
-import { getAlertGroupIdAsStringByName } from './alert-groups.data';
+import {
+	getAlertGroupByName,
+	getAlertGroupIdAsStringByName,
+} from './alert-groups.data';
 import { CollectionData } from './collection-data.model';
 import { getDeploymentByName } from './deployments.data';
 import { getOrganizationIdAsStringByName } from './organizations.data';
 import { getUserByUsername } from './test-users';
-import { getUnitByName, getUnitIdAsStringByName } from './units.data';
+import {
+	getUnitById,
+	getUnitByName,
+	getUnitIdAsStringByName,
+	default as unitCollection,
+} from './units.data';
 
 const getUserAsProducer = (
 	username: Parameters<typeof getUserByUsername>[0],
@@ -42,16 +53,32 @@ const getRescueStationInformation = (
 	};
 };
 
+const getUnitAsRescueStationAssignedUnit = (
+	unit: (typeof unitCollection)['entries'][number],
+): RescueStationMessageAssignedUnit => {
+	const { _id, name, callSign } = unit;
+	return { id: _id.toString(), name, callSign };
+};
+
 const getRescueStationMessagePayload = (
 	rescueStationName: Parameters<typeof getRescueStationInformation>[0],
 	alertGroupNames: Parameters<typeof getAlertGroupIdAsStringByName>[0][],
 	unitNames: Parameters<typeof getUnitByName>[0][],
 	strength?: RescueStationMessagePayload['strength'],
 ) => {
-	const alertGroups = alertGroupNames.map((alertGroupName) =>
-		getAlertGroupIdAsStringByName(alertGroupName),
+	const alertGroups = alertGroupNames.map((alertGroupName) => {
+		const { _id, name, units } = getAlertGroupByName(alertGroupName);
+		return {
+			id: _id.toString(),
+			name,
+			units: units.map((unitId) =>
+				getUnitAsRescueStationAssignedUnit(getUnitById(unitId)),
+			),
+		};
+	});
+	const units = unitNames.map((unitName) =>
+		getUnitAsRescueStationAssignedUnit(getUnitByName(unitName)),
 	);
-	const units = unitNames.map((unitName) => getUnitIdAsStringByName(unitName));
 
 	return {
 		...getRescueStationInformation(rescueStationName),
