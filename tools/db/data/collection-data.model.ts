@@ -30,5 +30,5 @@ export const getEntryByFieldFunction = <
 	) =>
 		collection.entries
 			.find((entry) => entry[idField] === idFieldValue)
-			._id.toString(),
+			._id.toString() as string,
 });
