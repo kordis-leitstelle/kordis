@@ -18,7 +18,6 @@ import {
 	ProtocolViewComponent,
 } from '@kordis/spa/feature/protocol';
 
-
 @Component({
 	selector: 'krd-dashboard-view',
 	imports: [
