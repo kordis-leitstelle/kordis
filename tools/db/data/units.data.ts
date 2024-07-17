@@ -155,4 +155,14 @@ const {
 	entityIdFunction: getUnitIdAsStringByName,
 } = getEntryByFieldFunction(collectionData, 'name');
 
-export { collectionData as default, getUnitByName, getUnitIdAsStringByName };
+const { entityFunction: getUnitById } = getEntryByFieldFunction(
+	collectionData,
+	'_id',
+);
+
+export {
+	collectionData as default,
+	getUnitByName,
+	getUnitIdAsStringByName,
+	getUnitById,
+};
