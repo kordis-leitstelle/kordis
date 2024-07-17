@@ -1,14 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import {
-	NzDropDownDirective,
-	NzDropdownMenuComponent,
-} from 'ng-zorro-antd/dropdown';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import {
 	NzContentComponent,
 	NzHeaderComponent,
-	NzLayoutComponent,
+	NzLayoutModule,
 } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -25,10 +22,9 @@ import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 		DeploymentsComponent,
 		NzAvatarModule,
 		NzContentComponent,
-		NzDropDownDirective,
-		NzDropdownMenuComponent,
 		NzHeaderComponent,
-		NzLayoutComponent,
+		NzLayoutModule,
+		NzDropDownModule,
 		NzMenuModule,
 		NzModalModule,
 		ProtocolViewComponent,
