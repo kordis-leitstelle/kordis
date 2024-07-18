@@ -5,7 +5,7 @@ import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
 const GET_PROTOCOL_ENTRIES_QUERY = gql`
 	query GetProtocolEntries($endCursor: String) {
-		protocolEntries(first: 2, after: $endCursor) {
+		protocolEntries(first: 100, after: $endCursor) {
 			pageInfo {
 				hasNextPage
 				hasPreviousPage

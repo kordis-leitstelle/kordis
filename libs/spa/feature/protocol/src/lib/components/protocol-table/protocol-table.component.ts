@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
-	effect,
-	input,
+	input
 } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
@@ -25,17 +24,10 @@ import { NzTableFullHeightDirective } from './nz-table-full-height.directive';
 		NzTableFullHeightDirective,
 		ProtocolEntryTimePipe,
 	],
-	templateUrl: './protocol.component.html',
-	styleUrl: './protocol.component.css',
+	templateUrl: './protocol-table.component.html',
+	styleUrl: './protocol-table.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-// TODO: rename
-export class ProtocolComponent {
+export class ProtocolTableComponent {
 	protocolEntries = input<ProtocolEntryUnion[]>([]);
-
-	constructor() {
-		effect(() => {
-			console.log('Protocol data set', this.protocolEntries());
-		});
-	}
 }
