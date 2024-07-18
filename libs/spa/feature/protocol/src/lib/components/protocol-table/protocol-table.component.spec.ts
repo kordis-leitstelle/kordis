@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProtocolComponent } from './protocol.component';
+import { ProtocolTableComponent } from './protocol-table.component';
 
 describe('SpaProtocolComponent', () => {
 	// TODO: Implement protocol component tests
-	let component: ProtocolComponent;
-	let fixture: ComponentFixture<ProtocolComponent>;
+	let component: ProtocolTableComponent;
+	let fixture: ComponentFixture<ProtocolTableComponent>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [ProtocolComponent],
+			imports: [ProtocolTableComponent],
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(ProtocolComponent);
+		fixture = TestBed.createComponent(ProtocolTableComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

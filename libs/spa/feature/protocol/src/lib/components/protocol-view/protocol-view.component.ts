@@ -1,21 +1,18 @@
 import { CommonModule } from '@angular/common';
-import {
-	ChangeDetectionStrategy,
-	Component,
-	OnDestroy,
-	OnInit,
-	signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 
 import {
 	CommunicationMessage,
-	ProtocolEntryUnion
+	MutationCreateCommunicationMessageArgs,
+	ProtocolEntryUnion,
 } from '@kordis/shared/model';
 import { GraphqlService, cache, gql } from '@kordis/spa/core/graphql';
 
 import { ProtocolClient } from '../../services/protocol.client';
-import { ProtocolComponent } from '../protocol/protocol.component';
+import { CreateProtocolMessageComponent } from '../create-protocol-message/create-protocol-message.component';
+import { ProtocolTableComponent } from '../protocol-table/protocol-table.component';
 
 const CREATE_COMMUNICATION_MESSAGE = gql`
 	mutation createCommunicationMessage(
@@ -73,6 +70,7 @@ const CREATE_COMMUNICATION_MESSAGE = gql`
 	}
 `;
 
+// TODO: move somewhere else
 cache.policies.addTypePolicies({
 	CommunicationMessage: {
 		fields: {
@@ -155,55 +153,36 @@ cache.policies.addTypePolicies({
 @Component({
 	selector: 'krd-protocol-view',
 	standalone: true,
-	imports: [CommonModule, ProtocolComponent],
-	template: ` <button (click)="loadMore()">Load more</button>
-		<button (click)="addCommunicationMessage()">Add Comm Message</button>
+	imports: [
+		CommonModule,
+		ProtocolTableComponent,
+		CreateProtocolMessageComponent,
+	],
+	template: ` <krd-create-protocol-message
+			(newMessage)="addCommunicationMessage($event)"
+		></krd-create-protocol-message>
 		<krd-protocol [protocolEntries]="protocolEntries()" />`,
 	styles: ``,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProtocolViewComponent implements OnInit, OnDestroy {
+export class ProtocolViewComponent {
 	private client: ProtocolClient;
 	private clientSubscription?: Subscription;
 
-	protocolEntries = signal<ProtocolEntryUnion[]>([]);
+	protocolEntries: Signal<ProtocolEntryUnion[]>;
 
 	constructor(private readonly gqlService: GraphqlService) {
 		this.client = new ProtocolClient(gqlService);
-	}
-	ngOnDestroy(): void {
-		this.clientSubscription?.unsubscribe();
-	}
-
-	ngOnInit(): void {
-		this.clientSubscription = this.client.protocolEntries$.subscribe((x) => {
-			this.protocolEntries.set(x);
+		this.protocolEntries = toSignal(this.client.protocolEntries$, {
+			initialValue: [],
 		});
 	}
 
-	loadMore(): void {
-		if (!this.client.hasMore()) {
-			console.log('No next page available');
-			return;
-		}
-
-		this.client.loadMore();
-	}
-
-	addCommunicationMessage(): void {
+	addCommunicationMessage(
+		messageForm: MutationCreateCommunicationMessageArgs,
+	): void {
 		this.gqlService
-			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, {
-				sender: {
-					type: 'REGISTERED_UNIT',
-					id: '65d7d90709cdb6f3b2082ab3',
-				},
-				recipient: {
-					type: 'UNKNOWN_UNIT',
-					name: 'Alice',
-				},
-				message: 'abcabcabcabc',
-				channel: 'D',
-			})
+			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, messageForm)
 			.subscribe((x) => console.log('Created comm msg', x));
 	}
 }
