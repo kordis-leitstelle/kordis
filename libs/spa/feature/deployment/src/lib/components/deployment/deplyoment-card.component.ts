@@ -41,7 +41,7 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 			<div class="assignments">
 				@for (
 					assignment of sortedAssignments();
-					track trackDeploymentAssignment
+					track trackDeploymentAssignment($index, assignment)
 				) {
 					@if (assignment.__typename === 'DeploymentUnit') {
 						<krd-deployment-unit [unit]="assignment.unit" />

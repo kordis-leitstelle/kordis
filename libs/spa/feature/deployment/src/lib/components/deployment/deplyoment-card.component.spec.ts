@@ -1,12 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {
-	AlertGroup,
-	DeploymentAlertGroup,
-	DeploymentAssignment,
-	DeploymentUnit,
-	Unit,
-} from '@kordis/shared/model';
+import { AlertGroup, DeploymentAssignment, Unit } from '@kordis/shared/model';
 
 import { DeploymentCardComponent } from './deplyoment-card.component';
 
