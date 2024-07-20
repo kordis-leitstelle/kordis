@@ -29,6 +29,8 @@ export class UnknownUnitDocument extends UnitDocument {
 	name: string;
 }
 
+export type UnitDocuments = RegisteredUnitDocument | UnknownUnitDocument;
+
 export const RegisteredUnitSchema = SchemaFactory.createForClass(
 	RegisteredUnitDocument,
 );
