@@ -110,8 +110,18 @@ export class RescueStationEditModalComponent {
 		}),
 	});
 
+	private readonly possibleUnitSelectionsService = inject(
+		PossibleUnitSelectionsService,
+	);
+	private readonly possibleAlertGroupSelectionsService = inject(
+		PossibleAlertGroupSelectionsService,
+	);
 	private readonly rescueStationService = inject(RescueStationEditService);
 	private readonly notificationService = inject(NzNotificationService);
+
+	constructor() {
+		this.markAssignmentsAsSelected();
+	}
 
 	updateSignedInStation(): void {
 		this.formGroup.markAllAsTouched();
@@ -210,6 +220,21 @@ export class RescueStationEditModalComponent {
 					),
 			})
 			.add(() => this.loadingState.set(false));
+	}
+
+	private markAssignmentsAsSelected(): void {
+		for (const assignment of this.rescueStation.assignments) {
+			if (assignment.__typename === 'DeploymentUnit') {
+				this.possibleUnitSelectionsService.markAsSelected(assignment.unit);
+			} else if (assignment.__typename === 'DeploymentAlertGroup') {
+				this.possibleAlertGroupSelectionsService.markAsSelected(
+					assignment.alertGroup,
+				);
+				for (const { unit } of assignment.assignedUnits) {
+					this.possibleUnitSelectionsService.markAsSelected(unit);
+				}
+			}
+		}
 	}
 
 	private getInitialUnitsFromStation(): Unit[] {

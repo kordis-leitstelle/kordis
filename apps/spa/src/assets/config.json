@@ -1,5 +1,5 @@
 {
 	"production": false,
 	"environmentName": "Dev Local",
-	"apiUrl": "http://localhost:3000"
+	"apiUrl": "http://localhost:3069"
 }

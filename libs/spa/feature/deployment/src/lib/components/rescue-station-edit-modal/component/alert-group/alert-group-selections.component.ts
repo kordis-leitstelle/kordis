@@ -103,9 +103,16 @@ export class AlertGroupSelectionsComponent {
 	private readonly cd = inject(ChangeDetectorRef);
 
 	removeAlertGroup(index: number): void {
+		const formValue = this.formArray().at(index).value;
+
+		// unmark assigned units of the alert group and the alert group itself
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		for (const unit of formValue.assignedUnits!) {
+			this.possibleUnitSelectionsService?.unmarkAsSelected(unit);
+		}
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.possibleAlertGroupSelectionsService.unmarkAsSelected(
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			this.formArray().at(index).value.alertGroup!,
+			formValue.alertGroup!,
 		);
 		this.formArray().removeAt(index);
 	}
