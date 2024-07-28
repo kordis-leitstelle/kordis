@@ -193,7 +193,7 @@ export type MutationUpdateOrganizationGeoSettingsArgs = {
 };
 
 export type MutationUpdateSignedInRescueStationArgs = {
-	protocolMessageData: BaseCreateMessageInput;
+	protocolMessageData?: InputMaybe<BaseCreateMessageInput>;
 	rescueStationData: UpdateRescueStationInput;
 };
 

@@ -200,7 +200,10 @@ describe('UnitRepositoryImpl', () => {
 				{
 					_id: 'id',
 					orgId: 'orgId',
-					'status.receivedAt': { $lt: status.receivedAt },
+					$or: [
+						{ 'status.receivedAt': { $lt: status.receivedAt } },
+						{ status: null },
+					],
 				},
 				{ $set: { status } },
 			);

@@ -1,8 +1,9 @@
-import { createMock } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CommandBus, CqrsModule, EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UpdateSignedInRescueStationCommand } from '@kordis/api/deployment';
+import { CreateRescueStationSignOnMessageCommand } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
 import { SignedInRescueStationUpdatedEvent } from '../event/signed-in-rescue-station-updated.event';
@@ -47,6 +48,7 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 	let handler: LaunchUpdateSignedInRescueStationProcessHandler;
 	let commandBus: CommandBus;
 	let eventBus: EventBus;
+	let mockMessageCommandRescueStationDetailsFactory: DeepMocked<MessageCommandRescueStationDetailsFactory>;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -68,9 +70,50 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 		);
 		commandBus = module.get<CommandBus>(CommandBus);
 		eventBus = module.get<EventBus>(EventBus);
+		mockMessageCommandRescueStationDetailsFactory = module.get<
+			DeepMocked<MessageCommandRescueStationDetailsFactory>
+		>(MessageCommandRescueStationDetailsFactory);
 	});
 
-	it('should fire UpdateSignedInRescueStationCommand', async () => {
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('should fire UpdateSignedInRescueStationCommand and CreateRescueStationSignOnMessageCommand', async () => {
+		const rsDetails = {
+			id: 'mockId',
+			name: 'Mock Station Name',
+			callSign: 'MockCallSign',
+			strength: {
+				leaders: 2,
+				subLeaders: 1,
+				helpers: 3,
+			},
+			units: [
+				{
+					id: 'unitId2',
+					name: 'Unit Name 2',
+					callSign: 'UnitCallSign2',
+				},
+			],
+			alertGroups: [
+				{
+					id: 'alertGroupId1',
+					name: 'Alert Group Name 1',
+					units: [
+						{
+							id: 'unitId1',
+							name: 'Unit Name 1',
+							callSign: 'UnitCallSign1',
+						},
+					],
+				},
+			],
+		};
+		mockMessageCommandRescueStationDetailsFactory.createFromCommandRescueStationData.mockResolvedValue(
+			rsDetails,
+		);
+
 		await handler.execute(COMMAND);
 
 		expect(commandBus.execute).toHaveBeenCalledWith(
@@ -91,6 +134,30 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 					},
 				],
 			),
+		);
+
+		expect(commandBus.execute).toHaveBeenCalledWith(
+			new CreateRescueStationSignOnMessageCommand(
+				expect.any(Date),
+				{ name: 'senderName' },
+				{ unit: { id: 'unitId' } },
+				rsDetails,
+				'channel',
+				{ organizationId: 'orgId' } as AuthUser,
+			),
+		);
+	});
+
+	it('should not fire CreateRescueStationSignOnMessageCommand if communicationMessageData is null', async () => {
+		await handler.execute(
+			new LaunchUpdateSignedInRescueStationProcessCommand(
+				{} as any,
+				{} as any,
+				null,
+			),
+		);
+		expect(commandBus.execute).not.toHaveBeenCalledWith(
+			expect.any(CreateRescueStationSignOnMessageCommand),
 		);
 	});
 

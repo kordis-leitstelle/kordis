@@ -54,7 +54,7 @@ export class UpdateUnitStatusHandler
 		);
 
 		if (!updateSucceeded) {
-			this.logger.warn(`Unit ${unitId} status update failed: outdated status`);
+			this.logger.error(`Unit ${unitId} status update failed: outdated status`);
 			throw new UnitStatusOutdatedException();
 		}
 
