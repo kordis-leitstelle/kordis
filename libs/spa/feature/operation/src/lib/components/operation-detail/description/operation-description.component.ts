@@ -21,10 +21,6 @@ import { OperationDescriptionTextareaComponent } from './operation-description-t
 		[formControl]="descriptionControl"
 	/>`,
 	styles: `
-		:host {
-			height: 100%;
-			flex-grow: 1;
-		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
