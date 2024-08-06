@@ -79,6 +79,8 @@ const PATIENT_QUERY_FIELDS = `
 	templateUrl: `./operation-patients.component.html`,
 	styles: `
 		nz-table {
+			height: 100%;
+
 			.empty-result {
 				text-align: center;
 				padding: 10px;

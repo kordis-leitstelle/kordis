@@ -16,7 +16,6 @@ import { FormStateIndicatorComponent } from './form-state-indicator.component';
 import { OperationInvolvementsComponent } from './involvements/operation-involvements.component';
 import { OperationPatientsComponent } from './patients/operation-patients.component';
 
-
 @Component({
 	selector: 'krd-operation-detail',
 	standalone: true,
@@ -102,6 +101,21 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 			display: flex;
 			align-items: center;
 			gap: 5px;
+		}
+
+		nz-tabset {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+
+		::ng-deep .ant-tabs-content-holder {
+			flex-grow: 1;
+
+			.ant-tabs-content,
+			.ant-tabs-tabpane {
+				height: 100%;
+			}
 		}
 	`,
 })

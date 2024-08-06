@@ -21,24 +21,16 @@ import { OperationLocationFormComponent } from './operation-location-form.compon
 import { OperationReporterSelectComponent } from './operation-reporter-select.component';
 
 export type OperationBaseDataForm = {
-	start: FormControl<Date>;
-	end: FormControl<Date | null>;
-	alarmKeyword: FormControl<string>;
-	reporter: FormControl<string>;
-	commander: FormControl<string>;
-	externalReference: FormControl<string>;
+	start: FormControl;
+	end: FormControl;
+	alarmKeyword: FormControl;
+	reporter: FormControl;
+	commander: FormControl;
+	externalReference: FormControl;
 	location: OperationLocationForm;
-	categories: FormArray<
-		FormGroup<{
-			name: FormControl<string>;
-			count: FormControl<number>;
-			patientCount: FormControl<number>;
-			dangerousSituationCount: FormControl<number>;
-			wasDangerous: FormControl<boolean>;
-		}>
-	>;
+	categories: FormArray;
 };
-export type OperationBaseDataFormGroup = FormGroup<OperationBaseDataForm>;
+export type OperationBaseDataFormGroup = FormGroup;
 
 @Component({
 	selector: 'krd-operation-base-data-form',
@@ -60,95 +52,109 @@ export type OperationBaseDataFormGroup = FormGroup<OperationBaseDataForm>;
 		NzTooltipDirective,
 	],
 	template: `
-		<form nz-form [formGroup]="formGroup()" nzLayout="vertical">
-			<div nz-row nzGutter="15">
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Beginn</nz-form-label>
-						<nz-form-control>
-							<nz-date-picker
-								formControlName="start"
-								nzNoAnimation
-								nzShowTime
-								nzFormat="dd.MM.yyyy HH:mm:ss"
-							/>
-						</nz-form-control>
-					</nz-form-item>
+		<div class="container">
+			<form
+				nz-form
+				[formGroup]="formGroup()"
+				nzLayout="vertical"
+				class="base-data-form"
+			>
+				<div nz-row nzGutter="15">
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Beginn</nz-form-label>
+							<nz-form-control>
+								<nz-date-picker
+									formControlName="start"
+									nzNoAnimation
+									nzShowTime
+									nzFormat="dd.MM.yyyy HH:mm:ss"
+								/>
+							</nz-form-control>
+						</nz-form-item>
+					</div>
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Ende</nz-form-label>
+							<nz-form-control>
+								<nz-date-picker
+									formControlName="end"
+									nzNoAnimation
+									nzShowTime
+									nzFormat="dd.MM.yyyy HH:mm:ss"
+									[nzPlaceHolder]="
+										formGroup().controls.end.disabled ? 'Laufend...' : ''
+									"
+									[nz-tooltip]="
+										formGroup().controls.end.disabled
+											? 'Der Einsatz muss zunächst beendet werden, um das Feld zu bearbeiten!'
+											: ''
+									"
+								/>
+							</nz-form-control>
+						</nz-form-item>
+					</div>
 				</div>
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Ende</nz-form-label>
-						<nz-form-control>
-							<nz-date-picker
-								formControlName="end"
-								nzNoAnimation
-								nzShowTime
-								nzFormat="dd.MM.yyyy HH:mm:ss"
-								[nzPlaceHolder]="
-									formGroup().controls.end.disabled ? 'Laufend...' : ''
-								"
-								[nz-tooltip]="
-									formGroup().controls.end.disabled
-										? 'Der Einsatz muss zunächst beendet werden, um das Feld zu bearbeiten!'
-										: ''
-								"
-							/>
-						</nz-form-control>
-					</nz-form-item>
-				</div>
-			</div>
 
-			<krd-operation-location-form
-				[formGroup]="formGroup().controls.location"
-			/>
+				<krd-operation-location-form
+					[formGroup]="formGroup().controls.location"
+				/>
 
-			<div nz-row nzGutter="15">
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Alarmstichwort</nz-form-label>
-						<nz-form-control>
-							<krd-alarm-keyword-select formControlName="alarmKeyword" />
-						</nz-form-control>
-					</nz-form-item>
+				<div nz-row nzGutter="15">
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Alarmstichwort</nz-form-label>
+							<nz-form-control>
+								<krd-alarm-keyword-select formControlName="alarmKeyword" />
+							</nz-form-control>
+						</nz-form-item>
+					</div>
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Alarmierung</nz-form-label>
+							<nz-form-control>
+								<krd-reporter-select formControlName="reporter" />
+							</nz-form-control>
+						</nz-form-item>
+					</div>
 				</div>
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Alarmierung</nz-form-label>
-						<nz-form-control>
-							<krd-reporter-select formControlName="reporter" />
-						</nz-form-control>
-					</nz-form-item>
+				<div nz-row nzGutter="15">
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Leiter</nz-form-label>
+							<nz-form-control>
+								<input nz-input formControlName="commander" />
+							</nz-form-control>
+						</nz-form-item>
+					</div>
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Externe Nummer</nz-form-label>
+							<nz-form-control>
+								<input nz-input formControlName="externalReference" />
+							</nz-form-control>
+						</nz-form-item>
+					</div>
 				</div>
+			</form>
+			<div class="category-container">
+				<krd-operation-category-table
+					[formArray]="formGroup().controls.categories"
+				/>
 			</div>
-			<div nz-row nzGutter="15">
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Leiter</nz-form-label>
-						<nz-form-control>
-							<input nz-input formControlName="commander" />
-						</nz-form-control>
-					</nz-form-item>
-				</div>
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Externe Nummer</nz-form-label>
-						<nz-form-control>
-							<input nz-input formControlName="externalReference" />
-						</nz-form-control>
-					</nz-form-item>
-				</div>
-			</div>
-		</form>
-		<div class="category-container">
-			<krd-operation-category-table
-				[formArray]="formGroup().controls.categories"
-			/>
 		</div>
 	`,
 	styles: `
 		.category-container {
+			flex-grow: 1;
 			padding-top: 5px;
 			overflow: auto;
+		}
+
+		.container {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

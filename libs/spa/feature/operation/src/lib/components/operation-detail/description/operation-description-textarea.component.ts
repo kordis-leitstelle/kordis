@@ -33,7 +33,7 @@ import { ControlValueAccessorBase } from 'spa/core/misc';
 		></textarea>
 	`,
 	styles: `
-		textarea {
+		textarea.ant-input {
 			resize: none;
 			height: 100%;
 		}
@@ -42,8 +42,7 @@ import { ControlValueAccessorBase } from 'spa/core/misc';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationDescriptionTextareaComponent extends ControlValueAccessorBase {
-	protected readonly textArea =
-		viewChild<ElementRef<HTMLTextAreaElement>>('textarea');
+	protected readonly textArea = viewChild<ElementRef>('textarea');
 
 	focus(): void {
 		this.textArea()?.nativeElement.focus();
