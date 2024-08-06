@@ -1,9 +1,9 @@
-import { createMock } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 
 import { Mutable } from '@kordis/api/shared';
 
-import { Organization } from '../entity/organization.entity';
+import { OrganizationEntity } from '../entity/organization.entity';
 import { OrganizationNotFoundException } from '../exceptions/organization-not-found.exception';
 import {
 	ORGANIZATION_REPOSITORY,
@@ -16,7 +16,7 @@ import {
 
 describe('CreateOrganizationHandler', () => {
 	let getOrganizationHandler: GetOrganizationHandler;
-	let organizationRepository: OrganizationRepository;
+	let organizationRepository: DeepMocked<OrganizationRepository>;
 
 	beforeEach(async () => {
 		const organizationRepositoryMock = createMock<OrganizationRepository>();
@@ -34,16 +34,14 @@ describe('CreateOrganizationHandler', () => {
 		getOrganizationHandler = moduleRef.get<GetOrganizationHandler>(
 			GetOrganizationHandler,
 		);
-		organizationRepository = moduleRef.get<OrganizationRepository>(
-			ORGANIZATION_REPOSITORY,
-		);
+		organizationRepository = moduleRef.get(ORGANIZATION_REPOSITORY);
 	});
 
 	it('should return an organization', async () => {
-		const org: Mutable<Organization> = new Organization();
+		const org: Mutable<OrganizationEntity> = new OrganizationEntity();
 		org.id = '123';
 
-		jest.spyOn(organizationRepository, 'findById').mockResolvedValueOnce(org);
+		organizationRepository.findById.mockResolvedValueOnce(org);
 
 		const query = new GetOrganizationQuery('123');
 
@@ -53,7 +51,7 @@ describe('CreateOrganizationHandler', () => {
 	});
 
 	it('should throw OrganizationNotFoundException', async () => {
-		jest.spyOn(organizationRepository, 'findById').mockResolvedValueOnce(null);
+		organizationRepository.findById.mockResolvedValueOnce(null);
 
 		const query = new GetOrganizationQuery('invalidId');
 

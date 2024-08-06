@@ -1,5 +1,6 @@
 {
 	"production": false,
 	"environmentName": "Dev Local",
-	"apiUrl": "http://localhost:3000"
+	"apiUrl": "http://localhost:3069",
+	"maptilerKey": "M4eGvzcxoDhLz3s7J4zC"
 }

@@ -19,6 +19,9 @@
 			"@kordis/api/deployment": ["libs/api/deployment/src/index.ts"],
 			"@kordis/api/observability": ["libs/api/observability/src/index.ts"],
 			"@kordis/api/operation": ["libs/api/operation/src/index.ts"],
+			"@kordis/api/operation-manager": [
+				"libs/api/operation-manager/src/index.ts"
+			],
 			"@kordis/api/organization": ["libs/api/organization/src/index.ts"],
 			"@kordis/api/protocol": ["libs/api/protocol/src/index.ts"],
 			"@kordis/api/rescue-station-manager": [
@@ -32,6 +35,7 @@
 			"@kordis/shared/model": ["libs/shared/model/src/index.ts"],
 			"@kordis/shared/test-helpers": ["libs/shared/test-helpers/src/index.ts"],
 			"@kordis/spa/core/auth": ["libs/spa/core/auth/src/index.ts"],
+			"@kordis/spa/core/geocoding": ["libs/spa/core/geocoding/src/index.ts"],
 			"@kordis/spa/core/graphql": ["libs/spa/core/graphql/src/index.ts"],
 			"@kordis/spa/core/observability": [
 				"libs/spa/core/observability/src/index.ts"
@@ -39,8 +43,12 @@
 			"@kordis/spa/feature/deployment": [
 				"libs/spa/feature/deployment/src/index.ts"
 			],
+			"@kordis/spa/feature/operation": [
+				"libs/spa/feature/operation/src/index.ts"
+			],
 			"@kordis/spa/view/auth": ["libs/spa/view/auth/src/index.ts"],
-			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"]
+			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"],
+			"spa/core/misc": ["libs/spa/core/misc/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

@@ -1,0 +1,24 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	
+	.select {
+		width: 200px;
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+
+		span[nz-icon] {
+			font-size: 20px;
+		}
+	}
+}
+
+.no-operation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}

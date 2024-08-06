@@ -13,12 +13,19 @@ export class MongoEncryptionService {
 	) {}
 
 	encrypt(
-		value: string,
+		value: unknown,
 		encrType: 'Random' | 'Deterministic',
 	): Promise<mongo.Binary> {
 		return this.encryptionClientProvider.getClient().encrypt(value, {
 			keyId: this.encryptionClientProvider.getKeyId(),
 			algorithm: `${ENCR_ALGO}-${encrType}`,
 		});
+	}
+
+	encryptArray(
+		values: unknown[],
+		encrType: 'Random' | 'Deterministic',
+	): Promise<mongo.Binary[]> {
+		return Promise.all(values.map((value) => this.encrypt(value, encrType)));
 	}
 }

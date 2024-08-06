@@ -1,11 +1,11 @@
-import { Organization } from '../entity/organization.entity';
+import { OrganizationEntity } from '../entity/organization.entity';
 
 export const ORGANIZATION_REPOSITORY = Symbol('OrganizationRepository');
 
 export interface OrganizationRepository {
-	findById(id: string): Promise<Organization | null>;
+	findById(id: string): Promise<OrganizationEntity | null>;
 
-	create(org: Organization): Promise<Organization>;
+	create(org: OrganizationEntity): Promise<OrganizationEntity>;
 
-	update(org: Organization): Promise<void>;
+	update(org: OrganizationEntity): Promise<void>;
 }

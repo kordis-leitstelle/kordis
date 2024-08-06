@@ -1,0 +1,108 @@
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
+import {
+	ArchiveOperationHandler,
+	CreateOperationHandler,
+	DeleteOperationHandler,
+	StartPendingUnitInvolvementHandler,
+	UpdateOperationBaseDataHandler,
+	UpdateOperationInvolvementsHandler,
+} from '../core/command';
+import { GetOperationByIdHandler } from '../core/query/get-operation-by-id.query';
+import { GetOperationIdOfPendingUnitHandler } from '../core/query/get-operation-id-of-pending-unit.query';
+import { GetOperationsByOrgIdHandler } from '../core/query/get-operations-by-org-id.query';
+import { OPERATION_INVOLVEMENT_REPOSITORY } from '../core/repository/operation-involvement.repository';
+import { OPERATION_REPOSITORY } from '../core/repository/operation.repository';
+import { OperationPdfGenerationService } from '../core/service/pdf/operation-pdf-generation.service';
+import { PDF_GENERATION_SERVICE } from '../core/service/pdf/pdf-generation.service';
+import { SIGN_GENERATOR } from '../core/service/sign-generator/sign-generator.strategy';
+import { YearMonthCounterSignGenerator } from '../core/service/sign-generator/year-month-counter-sign-generator.strategy';
+import { OperationInvolvementService } from '../core/service/unit-involvement/operation-involvement.service';
+import { OperationPdfController } from './controller/operation-pdf.controller';
+import {
+	OperationAlertGroupInvolvementResolver,
+	OperationUnitInvolvementResolver,
+} from './controller/operation-reference.resolver';
+import { OperationResolver } from './controller/operation.resolver';
+import { OperationDtoProfile } from './mapper/operation-dto.mapper-profile';
+import {
+	OperationProfile,
+	OperationValueObjectsProfile,
+} from './mapper/operation.mapper-profile';
+import { OperationInvolvementsRepositoryImpl } from './repository/operation-involvements.repository';
+import { OperationRepositoryImpl } from './repository/operation.repository';
+import {
+	OperationInvolvementDocument,
+	OperationInvolvementSchema,
+} from './schema/operation-involvement.schema';
+import { OperationDocument, OperationSchema } from './schema/operation.schema';
+import { PdfGenerationServiceImpl } from './service/pdf-generation.service';
+
+const RESOLVERS = [
+	OperationResolver,
+	OperationUnitInvolvementResolver,
+	OperationAlertGroupInvolvementResolver,
+];
+const MAPPER_PROFILES = [
+	OperationProfile,
+	OperationValueObjectsProfile,
+	OperationDtoProfile,
+];
+const PROVIDERS = [
+	{
+		provide: OPERATION_REPOSITORY,
+		useClass: OperationRepositoryImpl,
+	},
+	{
+		provide: OPERATION_INVOLVEMENT_REPOSITORY,
+		useClass: OperationInvolvementsRepositoryImpl,
+	},
+	{
+		provide: SIGN_GENERATOR,
+		useClass: YearMonthCounterSignGenerator,
+	},
+	{
+		provide: PDF_GENERATION_SERVICE,
+		useClass: PdfGenerationServiceImpl,
+	},
+	OperationInvolvementService,
+	OperationPdfGenerationService,
+];
+const COMMAND_HANDLERS = [
+	CreateOperationHandler,
+	DeleteOperationHandler,
+	ArchiveOperationHandler,
+	StartPendingUnitInvolvementHandler,
+	UpdateOperationBaseDataHandler,
+	UpdateOperationInvolvementsHandler,
+];
+const QUERY_HANDLERS = [
+	GetOperationIdOfPendingUnitHandler,
+	GetOperationsByOrgIdHandler,
+	GetOperationByIdHandler,
+];
+
+@Module({
+	imports: [
+		MongooseModule.forFeature([
+			{
+				name: OperationDocument.name,
+				schema: OperationSchema,
+			},
+			{
+				name: OperationInvolvementDocument.name,
+				schema: OperationInvolvementSchema,
+			},
+		]),
+	],
+	providers: [
+		...RESOLVERS,
+		...MAPPER_PROFILES,
+		...PROVIDERS,
+		...COMMAND_HANDLERS,
+		...QUERY_HANDLERS,
+	],
+	controllers: [OperationPdfController],
+})
+export class OperationModule {}
