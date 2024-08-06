@@ -11,6 +11,7 @@ import { AuthModule } from '@kordis/api/auth';
 import { DeploymentModule } from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OperationModule } from '@kordis/api/operation';
+import { OperationManagerModule } from '@kordis/api/operation-manager';
 import { OrganizationModule } from '@kordis/api/organization';
 import { ProtocolModule } from '@kordis/api/protocol';
 import { RescueStationManagerModule } from '@kordis/api/rescue-station-manager';
@@ -38,6 +39,7 @@ const FEATURE_MODULES = [
 	UnitModule,
 	TetraModule,
 	OperationModule,
+	OperationManagerModule,
 	DeploymentModule,
 	RescueStationManagerModule,
 ];

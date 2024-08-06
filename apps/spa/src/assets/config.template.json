@@ -2,5 +2,6 @@
 	"sentryKey": "$SENTRY_KEY",
 	"environmentName": "$ENVIRONMENT_NAME",
 	"apiUrl": "$API_URL",
+	"mapTilerKey": "$MAP_TILER_KEY",
 	"oauth": $OAUTH_CONFIG
 }

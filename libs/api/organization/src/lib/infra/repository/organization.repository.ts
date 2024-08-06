@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { Organization as OrganizationEntity } from '../../core/entity/organization.entity';
+import { OrganizationEntity } from '../../core/entity/organization.entity';
 import { OrganizationRepository } from '../../core/repository/organization.repository';
 import { OrganizationDocument } from '../schema/organization.schema';
 

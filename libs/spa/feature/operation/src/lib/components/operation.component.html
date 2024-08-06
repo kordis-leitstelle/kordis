@@ -1,0 +1,82 @@
+<div class="header">
+	<div class='select'>
+		<krd-operation-select
+			[operations]="operations()"
+			[(selectedOperation)]="selectedOperation"
+			(selectedOperationChange)="safelySelectOperation($event?.id)"
+		/>
+	</div>
+
+	<div class="actions">
+		@if (hasOperationSelection()) {
+			@if (actionsLoadingState() === 'DELETE') {
+				<nz-spin nzSimple />
+			} @else {
+				<button
+					nz-button
+					nzType="link"
+					nz-tooltip="Einsatz löschen"
+					nzTooltipPlacement="bottom"
+					nz-popconfirm
+					nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz permanent löschen möchten?"
+					[disabled]='actionsLoadingState() !== null'
+					(nzOnConfirm)="deleteOperation()"
+				>
+					<span nz-icon nzType="delete" nzTheme="outline"></span>
+				</button>
+			}
+			@if (actionsLoadingState() === 'ARCHIVE') {
+				<nz-spin nzSimple />
+			} @else {
+				<button
+					nz-button
+					nzType="link"
+					nz-tooltip="Einsatz Archivieren"
+					nzTooltipPlacement="bottom"
+					nz-popconfirm
+					nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz archivieren möchten?"
+					[disabled]='actionsLoadingState() !== null'
+					(nzOnConfirm)="archiveOperation()"
+				>
+					<span nz-icon nzType="file-zip" nzTheme="outline"></span>
+				</button>
+			}
+			@if (actionsLoadingState() === 'PDF') {
+				<nz-spin nzSimple />
+			} @else {
+				<button
+					nz-button
+					nzType="link"
+					nz-tooltip="Einsatzprotokoll generieren"
+					nzTooltipPlacement="bottom"
+					[disabled]='actionsLoadingState() !== null'
+					(click)="createAndOpenPdf()"
+				>
+					<span nz-icon nzType="file-pdf" nzTheme="outline"></span>
+				</button>
+			}
+			<nz-divider nzType="vertical" />
+		}
+
+		<button
+			nz-button
+			nzType="link"
+			nz-tooltip="Abgeschlossenen Einsatz erstellen"
+			(click)="openCreateOperationModal()"
+		>
+			<span nz-icon nzType="plus" nzTheme="outline"></span>
+		</button>
+	</div>
+</div>
+<div>
+	@if (hasOperationSelection()) {
+		<krd-operation-detail />
+	} @else {
+		<div class="no-operation">
+			<nz-empty
+				nzNotFoundImage="simple"
+				nzNotFoundContent="Kein Einsatz ausgewählt"
+			/>
+		</div>
+	}
+</div>

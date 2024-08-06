@@ -5,13 +5,15 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true
   },
   "files": [],
-  "include": [],
+  "include": [
+    "src/typings.d.ts"
+  ],
   "references": [
     {
       "path": "./tsconfig.lib.json"

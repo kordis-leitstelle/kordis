@@ -1,10 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import { Field, Float, InputType, ObjectType } from '@nestjs/graphql';
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsLatitude, IsLongitude } from 'class-validator';
 
+
+@Schema({ _id: false })
 @ObjectType()
-@Schema()
 @InputType('CoordinateInput')
 export class Coordinate {
 	@Field(() => Float)
@@ -19,3 +20,5 @@ export class Coordinate {
 	@AutoMap()
 	lon: number;
 }
+
+export const CoordinatesSchema = SchemaFactory.createForClass(Coordinate);

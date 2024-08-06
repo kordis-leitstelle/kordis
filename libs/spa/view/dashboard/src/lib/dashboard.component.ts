@@ -15,6 +15,8 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 import { TraceComponent } from '@kordis/spa/core/observability';
+import { OperationComponent } from '@kordis/spa/feature/operation';
+
 
 @Component({
 	selector: 'krd-dashboard-view',
@@ -29,6 +31,7 @@ import { TraceComponent } from '@kordis/spa/core/observability';
 		NzMenuModule,
 		NzModalModule,
 		NzAvatarModule,
+		OperationComponent,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
