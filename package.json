@@ -121,7 +121,7 @@
     "@sentry/profiling-node": "^8.17.0",
     "angular-oauth2-oidc": "^17.0.2",
     "apollo-angular": "^7.0.2",
-    "axios": "1.7.4",
+    "axios": "1.7.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dompurify": "^3.1.6",
