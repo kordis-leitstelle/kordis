@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
@@ -135,7 +134,6 @@ import { DevAuthService } from '../services/dev-auth.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [
 		ReactiveFormsModule,
-		NzInputDirective,
 		NzButtonComponent,
 		NzSelectModule,
 		NzDividerModule,
