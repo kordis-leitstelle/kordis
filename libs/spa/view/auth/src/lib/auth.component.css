@@ -5,25 +5,25 @@ nz-content {
 
 .login-form {
 	display: flex;
-	padding: 3rem 1rem;
+	padding: calc(6 * var(--base-spacing)) calc(2 * var(--base-spacing));
 	flex-direction: column;
 	flex: 1 1 0;
 	justify-content: center;
 
 	@media (min-width: 640px) {
-		padding-left: 8rem;
-		padding-right: 8rem;
+		padding-left: calc(16 * var(--base-spacing));
+		padding-right: calc(16 * var(--base-spacing));
 	}
 
 	@media (min-width: 1024px) {
-		padding-left: 5rem;
-		padding-right: 5rem;
+		padding-left: calc(10 * var(--base-spacing));
+		padding-right: calc(10 * var(--base-spacing));
 		flex: none;
 		width: 500px;
 	}
 
 	.header {
-		margin-bottom: 5rem;
+		margin-bottom: calc(10 * var(--base-spacing));
 
 		span {
 			font-size: 1rem;
