@@ -124,4 +124,21 @@ describe('RescueStationDeploymentRepositoryImpl', () => {
 			{ $set: data },
 		);
 	});
+
+	it('should update all deployments', async () => {
+		const orgId = 'org1';
+
+		await repository.updateAll(orgId, {
+			note: 'note',
+		});
+
+		expect(rescueStationDeploymentModel.updateMany).toHaveBeenCalledWith(
+			{ orgId },
+			{
+				$set: {
+					note: 'note',
+				},
+			},
+		);
+	});
 });

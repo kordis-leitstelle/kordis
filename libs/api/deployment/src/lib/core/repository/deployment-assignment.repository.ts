@@ -16,17 +16,23 @@ export interface DeploymentAssignmentRepository {
 		entityId: string,
 	): Promise<RescueStationDeploymentEntity | null>;
 
+	removeAssignmentsOfDeployments(
+		orgId: string,
+		deploymentIds: string[],
+		uow?: DbSessionProvider | undefined,
+	): Promise<void>;
+
 	removeAssignmentsOfDeployment(
 		orgId: string,
 		deploymentId: string,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void>;
 
 	assignEntitiesToDeployment(
 		orgId: string,
 		deploymentId: string,
 		entityIds: string[],
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void>;
 
 	getUnassigned(

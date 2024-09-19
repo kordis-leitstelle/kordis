@@ -5,13 +5,60 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AlertGroupViewModel, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
+import {
+	DeploymentAlertGroup,
+	DeploymentUnit,
+} from '../../core/entity/deployment.entity';
 import { GetAlertGroupByUnitIdQuery } from '../../core/query/get-alert-group-by-unit-id.query';
 import { GetCurrentAssignmentOfEntity } from '../../core/query/get-current-assignment-of-entity.query';
+import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-entities.query';
 import {
 	AlertGroupAssignmentResolver,
 	EntityRescueStationAssignment,
+	UnassignedEntitiesResolver,
 	UnitAssignmentResolver,
 } from './deployment-assignment.resolver';
+
+describe('UnassignedEntitiesResolver', () => {
+	let resolver: UnassignedEntitiesResolver;
+	const mockQueryBus = createMock<QueryBus>();
+
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			providers: [
+				UnassignedEntitiesResolver,
+				{ provide: QueryBus, useValue: mockQueryBus },
+			],
+		}).compile();
+
+		resolver = module.get<UnassignedEntitiesResolver>(
+			UnassignedEntitiesResolver,
+		);
+	});
+
+	it('should get unassigned entities by orgId', async () => {
+		const orgId = 'orgId';
+
+		const mockDeploymentUnit = new DeploymentUnit();
+		(mockDeploymentUnit as any).id = 'unitDeploymentId';
+		const mockDeploymentAlertGroup = new DeploymentAlertGroup();
+		(mockDeploymentAlertGroup as any).id = 'alertGroupDeploymentId';
+
+		mockQueryBus.execute.mockResolvedValue([
+			mockDeploymentUnit,
+			mockDeploymentAlertGroup,
+		]);
+
+		const result = await resolver.unassignedEntities({
+			organizationId: orgId,
+		} as AuthUser);
+
+		expect(mockQueryBus.execute).toHaveBeenCalledWith(
+			new GetUnassignedEntitiesQuery(orgId),
+		);
+		expect(result).toEqual([mockDeploymentUnit, mockDeploymentAlertGroup]);
+	});
+});
 
 describe('UnitAssignmentResolver', () => {
 	let resolver: UnitAssignmentResolver;

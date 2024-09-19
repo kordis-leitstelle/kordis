@@ -1,6 +1,9 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
 	Args,
+	Field,
+	ID,
+	InputType,
 	Int,
 	Mutation,
 	Query,
@@ -16,15 +19,23 @@ import {
 } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
+import { ResetUnitNotesCommand } from '../../core/command/reset-unit-notes.command';
 import { UpdateUnitNoteCommand } from '../../core/command/update-unit-note.command';
 import { UpdateUnitStatusCommand } from '../../core/command/update-unit-status.command';
 import { UnitEntity } from '../../core/entity/unit.entity';
 import { UnitStatusUpdatedEvent } from '../../core/event/unit-status-updated.event';
 import { UnitStatusOutdatedException } from '../../core/exception/unit-status-outdated.exception';
 import { GetUnitByIdQuery } from '../../core/query/get-unit-by-id.query';
+import { GetUnitsByIdsQuery } from '../../core/query/get-units-by-ids.query';
 import { GetUnitsByOrgQuery } from '../../core/query/get-units-by-org.query';
 import { PresentableUnitStatusOutdatedException } from '../exceptions/presentable-unit-status-outdated.exception';
 import { UnitViewModel } from '../unit.view-model';
+
+@InputType()
+export class UnitsFilter {
+	@Field(() => [ID], { nullable: true })
+	ids?: string[];
+}
 
 @Resolver()
 export class UnitResolver {
@@ -36,14 +47,23 @@ export class UnitResolver {
 
 	@Query(() => [UnitViewModel])
 	async units(
-		@RequestUser() { organizationId }: AuthUser,
+		@RequestUser()
+		{ organizationId }: AuthUser,
+		@Args('filter', { nullable: true, type: () => UnitsFilter })
+		filter?: UnitsFilter,
 	): Promise<UnitEntity[]> {
+		if (filter?.ids) {
+			return this.queryBus.execute(
+				new GetUnitsByIdsQuery(filter.ids, organizationId),
+			);
+		}
+
 		return this.queryBus.execute(new GetUnitsByOrgQuery(organizationId));
 	}
 
 	@Query(() => UnitViewModel)
 	async unit(
-		@Args('id') id: string,
+		@Args('id', { type: () => ID }) id: string,
 		@RequestUser() { organizationId }: AuthUser,
 	): Promise<UnitEntity[]> {
 		return this.queryBus.execute(new GetUnitByIdQuery(organizationId, id));
@@ -52,7 +72,7 @@ export class UnitResolver {
 	@Mutation(() => UnitViewModel)
 	async updateUnitNote(
 		@RequestUser() { organizationId }: AuthUser,
-		@Args('unitId') id: string,
+		@Args('unitId', { type: () => ID }) id: string,
 		@Args('note') note: string,
 	): Promise<UnitEntity> {
 		await this.commandBus.execute(
@@ -62,10 +82,19 @@ export class UnitResolver {
 		return this.queryBus.execute(new GetUnitByIdQuery(organizationId, id));
 	}
 
+	@Mutation(() => [UnitViewModel])
+	async resetUnitNotes(
+		@RequestUser() { organizationId }: AuthUser,
+	): Promise<UnitEntity> {
+		await this.commandBus.execute(new ResetUnitNotesCommand(organizationId));
+
+		return this.queryBus.execute(new GetUnitsByOrgQuery(organizationId));
+	}
+
 	@Mutation(() => UnitViewModel)
 	async updateUnitStatus(
 		@RequestUser() user: AuthUser,
-		@Args('unitId') id: string,
+		@Args('unitId', { type: () => ID }) id: string,
 		@Args('status', { type: () => Int }) status: number,
 	): Promise<UnitEntity> {
 		try {

@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { ResetRescueStationsHandler } from '../core/command/reset-rescue-stations.command';
 import { SignInRescueStationHandler } from '../core/command/sign-in-rescue-station.command';
 import { SignOffRescueStationHandler } from '../core/command/sign-off-rescue-station.command';
+import { UpdateRescueStationNoteHandler } from '../core/command/update-rescue-station-note.command';
 import { UpdateSignedInRescueStationHandler } from '../core/command/update-signed-in-rescue-station.command';
+import { GetAlertGroupAssignedUnitsHandler } from '../core/query/get-alert-group-assigned-units.query';
 import { GetAlertGroupByUnitIdHandler } from '../core/query/get-alert-group-by-unit-id.query';
 import { GetUnitAssignmentHandlerHandler } from '../core/query/get-current-assignment-of-entity.query';
 import { GetDeploymentsHandler } from '../core/query/get-deployments.query';
@@ -15,14 +18,15 @@ import { UNIT_ASSIGNMENT_REPOSITORY } from '../core/repository/unit-assignment.r
 import { DeploymentAssignmentService } from '../core/service/deployment-assignment.service';
 import {
 	AlertGroupAssignmentResolver,
+	UnassignedEntitiesResolver,
 	UnitAssignmentResolver,
 } from './controller/deployment-assignment.resolver';
 import {
 	DeploymentAlertGroupResolver,
-	DeploymentResolver,
 	DeploymentUnitResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
-} from './controller/deployment.resolver';
+	RescueStationDeploymentResolver,
+} from './controller/rescue-station-deployment.resolver';
 import { DeploymentAggregateProfile } from './mapper/deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentProfile } from './mapper/deployment-assignment.mapper-profile';
 import {
@@ -75,9 +79,13 @@ const CQRS_HANDLERS = [
 	GetUnassignedEntitiesHandler,
 	GetAlertGroupByUnitIdHandler,
 	GetUnitAssignmentHandlerHandler,
+	ResetRescueStationsHandler,
+	GetAlertGroupAssignedUnitsHandler,
+	UpdateRescueStationNoteHandler,
 ];
 const RESOLVERS = [
-	DeploymentResolver,
+	RescueStationDeploymentResolver,
+	UnassignedEntitiesResolver,
 	DeploymentUnitResolver,
 	DeploymentAlertGroupResolver,
 	UnitAssignmentResolver,

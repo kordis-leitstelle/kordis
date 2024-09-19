@@ -35,7 +35,7 @@ describe('RescueStationSubscriptionResolver', () => {
 		});
 	});
 
-	it('should return an iterator when rescueStationSignedIn event is fired', async () => {
+	it('should emit subscription on RescueStationSignedOnEvent', async () => {
 		const iterator = resolver.rescueStationSignedIn({
 			organizationId: 'orgId',
 		} as AuthUser);
@@ -49,7 +49,7 @@ describe('RescueStationSubscriptionResolver', () => {
 		expect(result.done).toBeFalsy();
 	});
 
-	it('should return an iterator when signedInRescueStationUpdated event is fired', async () => {
+	it('should emit subscription on signedInRescueStationUpdated', async () => {
 		const iterator = resolver.signedInRescueStationUpdated({
 			organizationId: 'orgId',
 		} as AuthUser);
@@ -65,7 +65,7 @@ describe('RescueStationSubscriptionResolver', () => {
 		expect(result.done).toBeFalsy();
 	});
 
-	it('should return an iterator when rescueStationSignedOff event is fired', async () => {
+	it('should emit subscription on RescueStationSignedOffEvent', async () => {
 		const iterator = resolver.rescueStationSignedOff({
 			organizationId: 'orgId',
 		} as AuthUser);
