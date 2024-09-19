@@ -1,9 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { TypedDocumentNode } from 'apollo-angular';
-import { of } from 'rxjs';
-
-import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
 import { AbstractEntitySearchService } from './entity-search.service';
 
@@ -13,40 +8,17 @@ interface TestEntity {
 	someMoreData: string;
 }
 
-type QueryAllResponse = {
-	testEntities: TestEntity[];
+const TEST_ENTITY_PROVIDER = {
+	provideByIds: jest.fn(),
+	provideInitial: jest.fn().mockResolvedValue([
+		{ id: '1', name: 'Entity One' },
+		{ id: '2', name: 'Entity Two' },
+	]),
 };
 
-type QueryOneResponse = {
-	testEntity: TestEntity;
-};
-
-const getAllQuery: TypedDocumentNode<QueryAllResponse> = gql`
-	query GetAllTestEntities {
-		testEntities {
-			id
-			name
-		}
-	}
-`;
-
-const getOneQuery: TypedDocumentNode<QueryOneResponse> = gql`
-	query GetTestEntity($id: String!) {
-		testEntity(id: $id) {
-			id
-			name
-			someMoreData
-		}
-	}
-`;
-
-class TestEntitySearchService extends AbstractEntitySearchService<
-	TestEntity,
-	QueryAllResponse,
-	QueryOneResponse
-> {
+class TestEntitySearchService extends AbstractEntitySearchService<TestEntity> {
 	constructor() {
-		super(getAllQuery, getOneQuery, 'testEntities', 'testEntity', ['name']);
+		super(TEST_ENTITY_PROVIDER, ['name']);
 	}
 }
 
@@ -61,24 +33,10 @@ jest.mock('minisearch', () =>
 
 describe('TestEntitySearchService', () => {
 	let service: TestEntitySearchService;
-	let graphqlServiceMock: DeepMocked<GraphqlService>;
 
 	beforeEach(() => {
-		graphqlServiceMock = createMock<GraphqlService>();
-		graphqlServiceMock.queryOnce$.mockReturnValueOnce(
-			of({
-				testEntities: [
-					{ id: '1', name: 'Entity One' },
-					{ id: '2', name: 'Entity Two' },
-				],
-			}),
-		);
-
 		TestBed.configureTestingModule({
-			providers: [
-				{ provide: GraphqlService, useValue: graphqlServiceMock },
-				TestEntitySearchService,
-			],
+			providers: [TestEntitySearchService],
 		});
 
 		service = TestBed.inject(TestEntitySearchService);
@@ -89,7 +47,7 @@ describe('TestEntitySearchService', () => {
 	});
 
 	it('should fetch all entities initially', () => {
-		expect(graphqlServiceMock.queryOnce$).toHaveBeenCalledWith(getAllQuery);
+		expect(TEST_ENTITY_PROVIDER.provideInitial).toHaveBeenCalled();
 		expect(searchEngineAddAllMock).toHaveBeenCalledWith([
 			{ id: '1', name: 'Entity One' },
 			{ id: '2', name: 'Entity Two' },
@@ -100,16 +58,11 @@ describe('TestEntitySearchService', () => {
 		searchEngineSearchMock.mockReturnValueOnce([
 			{ id: '1', name: 'Entity One' },
 		]);
-		graphqlServiceMock.queryOnce$.mockReturnValueOnce(
-			of({
-				testEntity: {
-					id: '1',
-					name: 'Entity One',
-					someMoreData: 'Some more data',
-				},
-			}),
-		);
+		TEST_ENTITY_PROVIDER.provideByIds.mockResolvedValueOnce([
+			{ id: '1', name: 'Entity One', someMoreData: 'Some more data' },
+		]);
 		const entities = await service.searchByTerm('One');
+		expect(TEST_ENTITY_PROVIDER.provideByIds).toHaveBeenCalledWith(['1']);
 		expect(entities).toEqual([
 			{ id: '1', name: 'Entity One', someMoreData: 'Some more data' },
 		]);

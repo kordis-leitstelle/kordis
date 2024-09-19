@@ -1,67 +1,40 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InfoCircleOutline } from '@ant-design/icons-angular/icons';
-import { NzCardComponent } from 'ng-zorro-antd/card';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	Signal,
+	inject,
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import {
+	CloseOutline,
+	EditOutline,
+	InfoCircleOutline,
+	UndoOutline,
+} from '@ant-design/icons-angular/icons';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzDividerComponent } from 'ng-zorro-antd/divider';
 import { NzIconDirective, NzIconService } from 'ng-zorro-antd/icon';
+import { NzInputDirective, NzInputGroupComponent } from 'ng-zorro-antd/input';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
-import { Observable, map, merge, shareReplay } from 'rxjs';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzPopconfirmDirective } from 'ng-zorro-antd/popconfirm';
+import { merge } from 'rxjs';
 
-import {
-	DeploymentAssignment,
-	Query,
-	RescueStationDeployment,
-} from '@kordis/shared/model';
+import { Query } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
-import { RescueStationEditModalComponent } from '../rescue-station-edit-modal/rescue-station-edit-modal.component';
+import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
+import { AlertGroupEditModalComponent } from '../alert-group-edit-modal/alert-group-edit-modal.component';
+import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.component';
 import { DeploymentCardComponent } from './deplyoment-card.component';
+import { RescueStationDeploymentCardHeaderComponent } from './rescue-station/rescue-station-deployment-card-header.component';
+import { RESCUE_STATION_FRAGMENT } from './rescue-station/rescue-station.fragment';
+import { SignedInRescueStationsComponent } from './signed-in-rescue-stations.component';
+import { SignedOffDeploymentsComponent } from './signed-off-deployments.component';
 
 const DEPLOYMENTS_QUERY = gql`
-	fragment UnitData on Unit {
-		id
-		callSign
-		name
-		note
-		status {
-			status
-			receivedAt
-		}
-	}
-	fragment RescueStationData on RescueStationDeployment {
-		id
-		name
-		note
-		signedIn
-		defaultUnits {
-			...UnitData
-		}
-		strength {
-			helpers
-			subLeaders
-			leaders
-		}
-		assignments {
-			... on DeploymentUnit {
-				unit {
-					...UnitData
-				}
-			}
-			... on DeploymentAlertGroup {
-				assignedUnits {
-					unit {
-						...UnitData
-					}
-				}
-				alertGroup {
-					id
-					name
-				}
-			}
-		}
-	}
+	${RESCUE_STATION_FRAGMENT}
 	query {
 		signedInStations: rescueStationDeployments(signedIn: true) {
 			...RescueStationData
@@ -77,6 +50,7 @@ const DEPLOYMENTS_QUERY = gql`
 			}
 			... on DeploymentAlertGroup {
 				alertGroup {
+					id
 					name
 				}
 				assignedUnits {
@@ -93,26 +67,43 @@ const DEPLOYMENTS_QUERY = gql`
 	selector: 'krd-deployments',
 	standalone: true,
 	imports: [
-		AsyncPipe,
-		DeploymentCardComponent,
-		NzCardComponent,
+		FormsModule,
+		NzButtonComponent,
 		NzDividerComponent,
 		NzIconDirective,
-		NzTooltipDirective,
+		NzInputDirective,
+		NzInputGroupComponent,
+		NzPopconfirmDirective,
+		RescueStationDeploymentCardHeaderComponent,
+		SignedInRescueStationsComponent,
+		SignedOffDeploymentsComponent,
+		DeploymentSearchWrapperComponent,
+		DeploymentCardComponent,
 	],
+	providers: [DeploymentsSearchStateService],
 	templateUrl: './deployments.component.html',
 	styleUrl: './deployments.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentsComponent {
-	readonly signedInRescueStations$: Observable<RescueStationDeployment[]>;
-	readonly signedOffRescueStations$: Observable<RescueStationDeployment[]>;
-	readonly unassigned$: Observable<DeploymentAssignment[]>;
+	readonly deployments: Signal<{
+		signedInStations: Query['rescueStationDeployments'];
+		signedOffStations: Query['rescueStationDeployments'];
+		unassignedEntities: Query['unassignedEntities'];
+	}>;
+	readonly searchStateService = inject(DeploymentsSearchStateService);
+
 	private readonly gqlService = inject(GraphqlService);
 	private readonly modalService = inject(NzModalService);
+	private readonly notificationService = inject(NzNotificationService);
 
 	constructor(iconService: NzIconService) {
-		iconService.addIcon(InfoCircleOutline);
+		iconService.addIcon(
+			InfoCircleOutline,
+			UndoOutline,
+			EditOutline,
+			CloseOutline,
+		);
 
 		const deploymentsQuery = this.gqlService.query<{
 			signedInStations: Query['rescueStationDeployments'];
@@ -120,10 +111,13 @@ export class DeploymentsComponent {
 			unassignedEntities: Query['unassignedEntities'];
 		}>(DEPLOYMENTS_QUERY);
 
-		const deployments$ = deploymentsQuery.$.pipe(
-			takeUntilDestroyed(),
-			shareReplay({ bufferSize: 1, refCount: true }),
-		);
+		this.deployments = toSignal(deploymentsQuery.$.pipe(takeUntilDestroyed()), {
+			initialValue: {
+				signedInStations: [],
+				signedOffStations: [],
+				unassignedEntities: [],
+			},
+		});
 
 		// right now we greedily get all deployments, as a change in a deployment or a unit can result in changes in multiple deployment
 		// a better way would be to have more fine events for all actions taken that could replay the action in the frontend
@@ -153,24 +147,54 @@ export class DeploymentsComponent {
 			.pipe(takeUntilDestroyed())
 			.subscribe(() => deploymentsQuery.refresh());
 
-		this.signedInRescueStations$ = deployments$.pipe(
-			map(({ signedInStations }) => signedInStations),
-		);
-		this.signedOffRescueStations$ = deployments$.pipe(
-			map(({ signedOffStations }) => signedOffStations),
-		);
-		this.unassigned$ = deployments$.pipe(
-			map(({ unassignedEntities }) => unassignedEntities),
-		);
+		// subscribe to note updates, will update the cache
+		this.gqlService
+			.subscribe$(gql`
+				subscription {
+					rescueStationNoteUpdated {
+						id
+						note
+					}
+				}
+			`)
+			.pipe(takeUntilDestroyed())
+			.subscribe();
 	}
 
-	openRescueStationEditModal(station: RescueStationDeployment): void {
+	openAlertGroupsEditModal(): void {
 		this.modalService.create({
-			nzContent: RescueStationEditModalComponent,
-			nzData: station,
+			nzContent: AlertGroupEditModalComponent,
 			nzFooter: null,
-			nzClosable: false,
+			nzClosable: true,
 			nzNoAnimation: true,
 		});
+	}
+
+	resetDeployments(): void {
+		this.gqlService
+			.mutate$(gql`
+				mutation {
+					resetRescueStations {
+						id
+						signedIn
+					}
+					resetCurrentAlertGroupUnits {
+						id
+						currentUnits {
+							id
+						}
+					}
+					resetUnitNotes {
+						id
+						note
+					}
+				}
+			`)
+			.subscribe(() =>
+				this.notificationService.success(
+					'Zurückgesetzt',
+					'Zurücksetzen der Einheiten, Alarmgruppen und Rettungswachen erfolgreich',
+				),
+			);
 	}
 }

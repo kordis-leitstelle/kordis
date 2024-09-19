@@ -12,24 +12,23 @@ describe('DeploymentsComponent', () => {
 	let fixture: ComponentFixture<DeploymentsComponent>;
 
 	beforeEach(async () => {
-		TestBed.overrideProvider(GraphqlService, {
+		fixture = TestBed.overrideProvider(GraphqlService, {
 			useValue: createMock<GraphqlService>({
 				query: jest.fn().mockReturnValue({
 					$: of(),
 				}),
 			}),
-		});
-		TestBed.overrideProvider(NzModalService, {
-			useValue: createMock<NzModalService>(),
-		});
-		TestBed.overrideComponent(DeploymentCardComponent, {
-			set: {
-				selector: 'krd-deployment-card',
-				template: '<div></div>',
-			},
-		});
-
-		fixture = TestBed.createComponent(DeploymentsComponent);
+		})
+			.overrideProvider(NzModalService, {
+				useValue: createMock<NzModalService>(),
+			})
+			.overrideComponent(DeploymentCardComponent, {
+				set: {
+					selector: 'krd-deployment-card',
+					template: '<div></div>',
+				},
+			})
+			.createComponent(DeploymentsComponent);
 		fixture.detectChanges();
 	});
 

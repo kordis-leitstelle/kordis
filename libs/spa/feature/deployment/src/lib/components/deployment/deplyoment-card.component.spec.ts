@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createMock } from '@golevelup/ts-jest';
 
 import { AlertGroup, DeploymentAssignment, Unit } from '@kordis/shared/model';
+import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import { DeploymentCardComponent } from './deplyoment-card.component';
 
@@ -10,7 +12,10 @@ describe('DeploymentCardComponent', () => {
 	let fixture: ComponentFixture<DeploymentCardComponent>;
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(DeploymentCardComponent);
+		fixture = TestBed.overrideProvider(
+			GraphqlService,
+			createMock(),
+		).createComponent(DeploymentCardComponent);
 	});
 
 	it('should create', () => {

@@ -1,33 +1,52 @@
-.container {
+:host {
+	--deployment-card-width: 230px;
+
 	display: flex;
+	flex-direction: column;
+	gap: 5px;
 	height: 100%;
-	max-height: 500px;
-	align-items: center;
 
-	nz-divider {
-		height: 90%;
-	}
-
-	.deployment-section {
-		height: 100%;
-	}
-
-	.logged-out-stations-container {
-		display: flex;
-		flex-direction: column;
-		flex-wrap: wrap;
-		gap: 5px;
-	}
-
-	.rescue-stations {
+	.header-bar {
 		display: flex;
 		flex-direction: row;
-		gap: 5px;
+		justify-content: space-between;
 
-		#sub-header {
+		nz-input-group {
+			width: 230px;
+
+			.reset-icon {
+				cursor: pointer;
+			}
+
+			.reset-icon:hover {
+				color: var(--ant-primary-color);
+			}
+		}
+
+		div > :not(:last-child) {
+			margin-right: 5px;
+		}
+	}
+
+	.deployments {
+		display: flex;
+		flex-direction: row;
+		flex-grow: 1;
+		overflow: auto;
+
+		nz-divider {
+			height: 90%;
+			align-self: center;
+		}
+
+		.deployment-section {
 			display: flex;
 			flex-direction: row;
-			justify-content: space-between;
+
+			.deployment-card {
+				width: var(--deployment-card-width);
+				height: 100%;
+			}
 		}
 	}
 }

@@ -6,11 +6,13 @@ import {
 	output,
 } from '@angular/core';
 import { NzCardComponent } from 'ng-zorro-antd/card';
+import { NzEmptyComponent, NzEmptySimpleComponent } from 'ng-zorro-antd/empty';
 
 import { DeploymentAssignment } from '@kordis/shared/model';
 
-import { DeploymentAlertGroupComponent } from './deployment-alert-group.component';
-import { DeploymentUnitComponent } from './deployment-unit.component';
+import { DeploymentAlertGroupComponent } from './alert-group/deployment-alert-group.component';
+import { DeploymentNotePopupComponent } from './deployment-note-popup.component';
+import { DeploymentUnitComponent } from './unit/deployment-unit.component';
 
 // status - rank mapping
 const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
@@ -27,15 +29,18 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 	standalone: true,
 	imports: [
 		DeploymentAlertGroupComponent,
+		DeploymentNotePopupComponent,
 		DeploymentUnitComponent,
 		NzCardComponent,
+		NzEmptyComponent,
+		NzEmptySimpleComponent,
 	],
 	template: `
-		<nz-card [nzHoverable]="clickable()" (click)="clicked.emit()">
+		<nz-card [class.clickable]="clickable()" (click)="clicked.emit()">
 			<h3>{{ name() }}</h3>
 
 			<div class="sub-header">
-				<ng-content select="[id=sub-header]" />
+				<ng-content select="[role=sub-header]" />
 			</div>
 
 			<div class="assignments">
@@ -47,28 +52,36 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 						<krd-deployment-unit [unit]="assignment.unit" />
 					} @else if (assignment.__typename === 'DeploymentAlertGroup') {
 						<krd-deployment-alert-group
+							(click)="$event.stopPropagation()"
 							[alertGroup]="assignment.alertGroup"
 							[unitAssignments]="assignment.assignedUnits"
 						/>
 					}
 				} @empty {
-					<span>Keine Zuordnungen</span>
+					<nz-empty
+						nzNotFoundImage="simple"
+						nzNotFoundContent="Keine Zuordnungen"
+					/>
 				}
 			</div>
 		</nz-card>
 	`,
 	styles: `
 		nz-card {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+
 			h3 {
 				margin-bottom: 0;
 			}
 
-			height: 100%;
-			width: 250px;
-			overflow: auto;
-
 			.ant-card-body {
 				padding: 18px;
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+				height: 100%;
 			}
 
 			.sub-header {
@@ -78,8 +91,21 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 			.assignments {
 				display: flex;
 				flex-direction: column;
-				gap: 3px;
+				gap: 4px;
+				width: 100%;
+				overflow-y: auto;
+				padding-right: 4px;
+				box-sizing: content-box;
 			}
+		}
+
+		.clickable:hover:not(:has(.assignments:hover)) {
+			border-color: var(--ant-primary-color);
+			cursor: pointer;
+		}
+
+		krd-deployment-alert-group {
+			cursor: auto;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

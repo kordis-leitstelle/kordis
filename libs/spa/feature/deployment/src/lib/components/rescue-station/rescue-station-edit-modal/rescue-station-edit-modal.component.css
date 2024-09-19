@@ -1,0 +1,40 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	.form-item {
+		display: flex;
+		flex-direction: column;
+	}
+
+	textarea {
+		height: 55px;
+		resize: none;
+	}
+}
+
+.actions {
+	margin-top: 10px;
+	display: flex;
+}
+
+.actions.signed-in-actions {
+	justify-content: space-between;
+}
+
+.actions.signed-off-actions {
+	justify-content: end;
+}
+
+nz-card {
+	margin-bottom: 5px;
+
+	.ant-card-body {
+		padding: 10px;
+	}
+}
+
+nz-alert {
+	margin-top: 5px;
+}
