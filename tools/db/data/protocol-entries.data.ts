@@ -67,11 +67,11 @@ const getRescueStationMessagePayload = (
 	strength?: RescueStationMessagePayload['strength'],
 ) => {
 	const alertGroups = alertGroupNames.map((alertGroupName) => {
-		const { _id, name, units } = getAlertGroupByName(alertGroupName);
+		const { _id, name, defaultUnits } = getAlertGroupByName(alertGroupName);
 		return {
 			id: _id.toString(),
 			name,
-			units: units.map((unitId) =>
+			units: defaultUnits.map((unitId) =>
 				getUnitAsRescueStationAssignedUnit(getUnitById(unitId)),
 			),
 		};

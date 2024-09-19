@@ -17,7 +17,8 @@ const collectionData = {
 			updatedAt: new Date(),
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 			name: 'SEG Altona',
-			units: [getUnitByName('ATV')._id],
+			defaultUnits: [getUnitByName('ATV')._id],
+			currentUnits: [getUnitByName('ATV')._id],
 		},
 		{
 			_id: new Types.ObjectId('66239459ef2a6ac579f55cce'),
@@ -25,7 +26,8 @@ const collectionData = {
 			updatedAt: new Date(),
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 			name: 'SEG Tauchen',
-			units: [getUnitByName('GW Tauchen')._id],
+			defaultUnits: [getUnitByName('GW Tauchen')._id],
+			currentUnits: [getUnitByName('GW Tauchen')._id],
 		},
 		{
 			_id: new Types.ObjectId('662394314aab59510b80e38a'),
@@ -33,7 +35,8 @@ const collectionData = {
 			updatedAt: new Date(),
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 			name: 'SEG Sonar (Bergedorf)',
-			units: [getUnitByName('GW-Wasserrettung')._id],
+			defaultUnits: [getUnitByName('GW-Wasserrettung')._id],
+			currentUnits: [getUnitByName('GW-Wasserrettung')._id],
 		},
 	],
 } as const satisfies CollectionData<AlertGroupDocument>;
