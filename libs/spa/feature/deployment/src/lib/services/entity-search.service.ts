@@ -39,9 +39,7 @@ export abstract class AbstractEntitySearchService<
 			fields: searchFields as string[],
 		});
 		// first index all entities with the necessary data to search
-		entityProvider
-			.provideInitial()
-			.then((entities) => this.searchEngine.addAll(entities));
+		this.indexInitialEntitiesAsync();
 	}
 
 	searchByTerm(query: string): Promise<TEntity[]> {
@@ -52,5 +50,11 @@ export abstract class AbstractEntitySearchService<
 
 		// populate the entities to get the whole entity
 		return this.entityProvider.provideByIds(res.map((r) => r.id));
+	}
+
+	private indexInitialEntitiesAsync(): void {
+		this.entityProvider
+			.provideInitial()
+			.then((entities) => this.searchEngine.addAll(entities));
 	}
 }
