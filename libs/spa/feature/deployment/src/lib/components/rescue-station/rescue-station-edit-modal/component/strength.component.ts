@@ -70,7 +70,7 @@ import { Subject, map, of, startWith, takeUntil } from 'rxjs';
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			gap: 5px;
+			gap: calc(var(--base-spacing) / 2);
 		}
 
 		.ant-form-item {

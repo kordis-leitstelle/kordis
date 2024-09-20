@@ -69,7 +69,7 @@ import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-ed
 		}
 
 		.actions {
-			margin-top: 10px;
+			margin-top: var(--base-spacing);
 			display: flex;
 			justify-content: flex-end;
 		}

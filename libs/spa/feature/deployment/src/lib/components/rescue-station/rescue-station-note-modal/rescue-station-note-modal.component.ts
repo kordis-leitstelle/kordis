@@ -43,7 +43,7 @@ import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 		.actions {
 			display: flex;
 			justify-content: flex-end;
-			margin-top: 10px;
+			margin-top: var(--base-spacing);
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -75,15 +75,15 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 			overflow: auto;
 			display: flex;
 			flex-direction: column;
-			gap: 5px;
+			gap: calc(var(--base-spacing) / 2);
 		}
 
 		nz-card {
 			.ant-card-body {
-				padding: 5px;
+				padding: calc(var(--base-spacing) / 2);
 			}
 
-			margin-top: 5px;
+			margin-top: calc(var(--base-spacing) / 2);
 		}
 
 		nz-form-item {

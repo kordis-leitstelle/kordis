@@ -50,7 +50,8 @@ import { NzSpinComponent } from 'ng-zorro-antd/spin';
 			position: absolute;
 			top: 0;
 			right: 0;
-			padding: 4px 16px 4px;
+			padding: calc(var(--base-spacing) / 2) calc(var(--base-spacing) * 2)
+				calc(var(--base-spacing) / 2);
 		}
 
 		.ant-input {

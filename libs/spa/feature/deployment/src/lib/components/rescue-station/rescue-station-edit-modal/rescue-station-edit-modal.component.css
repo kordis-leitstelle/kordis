@@ -1,7 +1,7 @@
 .form {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: var(--base-spacing);
 
 	.form-item {
 		display: flex;
@@ -15,7 +15,7 @@
 }
 
 .actions {
-	margin-top: 10px;
+	margin-top: var(--base-spacing);
 	display: flex;
 }
 
@@ -28,13 +28,13 @@
 }
 
 nz-card {
-	margin-bottom: 5px;
+	margin-bottom: calc(var(--base-spacing) / 2);
 
 	.ant-card-body {
-		padding: 10px;
+		padding: var(--base-spacing);
 	}
 }
 
 nz-alert {
-	margin-top: 5px;
+	margin-top: calc(var(--base-spacing) / 2);
 }

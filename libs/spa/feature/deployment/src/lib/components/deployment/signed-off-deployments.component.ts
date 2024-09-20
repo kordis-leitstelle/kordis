@@ -44,7 +44,7 @@ import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 			display: flex;
 			flex-direction: column;
 			flex-wrap: wrap;
-			gap: 5px;
+			gap: calc(var(--base-spacing) / 2);
 			height: 100%;
 
 			.empty-state {

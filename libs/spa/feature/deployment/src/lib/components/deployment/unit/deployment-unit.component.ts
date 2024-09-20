@@ -36,32 +36,30 @@ import { StatusBadgeComponent } from './status-badge.component';
 			(click)="$event.stopPropagation()"
 			nz-popover
 			[nzPopoverBackdrop]="true"
-			[nzBodyStyle]="{ padding: '4px 8px' }"
 			[nzPopoverTitle]="unit().callSign + ' - ' + unit().name"
 			[nzPopoverContent]="notePopoverContent"
 			nzPopoverTrigger="click"
 		>
-			<div class="card-body">
-				<div class="header-row">
-					<span>
-						{{ unit().callSign }}
-						@if (unit().note) {
-							<i nz-icon nzType="info-circle" [nz-tooltip]="unit().note"> </i>
-						}
-					</span>
-					<krd-status-badge [status]="unit().status?.status" />
-				</div>
-				<div class="name">
-					<span>{{ unit().name }}</span>
-				</div>
+			<div class="header-row">
+				<span>
+					{{ unit().callSign }}
+					@if (unit().note) {
+						<i nz-icon nzType="info-circle" [nz-tooltip]="unit().note"> </i>
+					}
+				</span>
+				<krd-status-badge [status]="unit().status?.status" />
+			</div>
+			<div class="name">
+				<span>{{ unit().name }}</span>
 			</div>
 		</nz-card>
 	`,
 	styles: `
 		nz-card {
-			.card-body {
+			.ant-card-body {
 				display: flex;
 				flex-direction: column;
+				padding: calc(var(--base-spacing) / 2) var(--base-spacing);
 			}
 
 			.header-row {

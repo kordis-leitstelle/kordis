@@ -37,7 +37,7 @@ import { Unit } from '@kordis/shared/model';
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			gap: 5px;
+			gap: calc(var(--base-spacing) / 2);
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

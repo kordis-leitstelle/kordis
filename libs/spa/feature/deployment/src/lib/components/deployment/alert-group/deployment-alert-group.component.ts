@@ -29,7 +29,7 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 		.alert-group {
 			display: flex;
 			flex-direction: column;
-			gap: 4px;
+			gap: calc(var(--base-spacing) / 2);
 		}
 
 		.name {
@@ -38,7 +38,7 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 
 		nz-card {
 			.ant-card-body {
-				padding: 4px 8px;
+				padding: calc(var(--base-spacing) / 2) var(--base-spacing);
 				background-color: #fafafa;
 			}
 		}

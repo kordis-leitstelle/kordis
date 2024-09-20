@@ -39,7 +39,7 @@ import { StatusBadgeComponent } from '../../../../deployment/unit/status-badge.c
 
 				.call-sign {
 					font-weight: 500;
-					margin-right: 5px;
+					margin-right: calc(var(--base-spacing) / 2);
 				}
 
 				.name {
@@ -50,7 +50,7 @@ import { StatusBadgeComponent } from '../../../../deployment/unit/status-badge.c
 
 			.assignment-note {
 				font-size: 0.8em;
-				margin: -5px 0;
+				margin: calc(-1 * var(--base-spacing) / 2) 0;
 			}
 		}
 	`,

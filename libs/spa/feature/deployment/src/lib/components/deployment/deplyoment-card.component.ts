@@ -77,7 +77,7 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 			}
 
 			.ant-card-body {
-				padding: 18px;
+				padding: calc(var(--base-spacing) * 2);
 				display: flex;
 				flex-direction: column;
 				flex-grow: 1;
@@ -85,16 +85,16 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 			}
 
 			.sub-header {
-				margin-bottom: 10px;
+				margin-bottom: var(--base-spacing);
 			}
 
 			.assignments {
 				display: flex;
 				flex-direction: column;
-				gap: 4px;
+				gap: calc(var(--base-spacing) / 2);
 				width: 100%;
 				overflow-y: auto;
-				padding-right: 4px;
+				padding-right: calc(var(--base-spacing) / 2);
 				box-sizing: content-box;
 			}
 		}
