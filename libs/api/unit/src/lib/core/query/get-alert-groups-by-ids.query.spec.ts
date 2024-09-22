@@ -40,15 +40,19 @@ describe('GetAlertGroupsByIdsHandler', () => {
 	});
 
 	it('should return alert groups by ids', async () => {
+		const orgId = '123';
 		const entity1 = plainToInstance(AlertGroupEntity, { id: '1' });
 		const entity2 = plainToInstance(AlertGroupEntity, { id: '2' });
 		mockAlertGroupRepository.findByIds.mockResolvedValue([entity2, entity1]);
 
 		const result = await getAlertGroupsByIdsHandler.execute(
-			new GetAlertGroupsByIdsQuery(['1', '2'], { retainOrder: true }),
+			new GetAlertGroupsByIdsQuery(['1', '2'], orgId, { retainOrder: true }),
 		);
 
 		expect(result).toEqual([entity1, entity2]);
-		expect(mockAlertGroupRepository.findByIds).toHaveBeenCalledWith(['1', '2']);
+		expect(mockAlertGroupRepository.findByIds).toHaveBeenCalledWith(
+			['1', '2'],
+			orgId,
+		);
 	});
 });

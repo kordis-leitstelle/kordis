@@ -98,7 +98,7 @@ export abstract class DeploymentRepositoryImpl<
 > implements DeploymentRepository<TEntity, TEntityDTO>
 {
 	protected constructor(
-		private readonly deploymentModel: Model<TDocument>,
+		protected readonly deploymentModel: Model<TDocument>,
 		private readonly mapper: Mapper,
 		private readonly entityTypeValue: ModelIdentifier<TEntity>,
 		private readonly documentTypeValue: ModelIdentifier<TDocument>,
@@ -130,7 +130,11 @@ export abstract class DeploymentRepositoryImpl<
 		);
 	}
 
-	async findByOrgId(orgId: string, filter?: TEntityDTO): Promise<TEntity[]> {
+	async findByOrgId(
+		orgId: string,
+		filter?: TEntityDTO,
+		uow?: DbSessionProvider,
+	): Promise<TEntity[]> {
 		const filterDoc = filter
 			? await this.mapper.mapAsync(
 					filter,
@@ -139,20 +143,19 @@ export abstract class DeploymentRepositoryImpl<
 				)
 			: {};
 
-		const deployments = await this.deploymentModel
-			.aggregate(
-				[
-					{
-						$match: {
-							...filterDoc,
-							orgId,
-						},
+		const query = this.deploymentModel.aggregate(
+			[
+				{
+					$match: {
+						...filterDoc,
+						orgId,
 					},
-					...ASSIGNMENT_JOIN_PIPELINE_STEPS,
-				],
-				{},
-			)
-			.exec();
+				},
+				...ASSIGNMENT_JOIN_PIPELINE_STEPS,
+			],
+			{},
+		);
+		const deployments = await runDbOperation(query, uow);
 
 		return this.mapper.mapArrayAsync(
 			deployments,

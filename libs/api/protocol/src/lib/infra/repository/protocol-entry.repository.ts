@@ -18,11 +18,9 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 
 		const protocolEntryDoc = await this.protocolEntryModel.create(document);
 
-		const entity = this.mapper.map(
+		return this.mapper.map(
 			protocolEntryDoc.toObject() as ProtocolEntryBaseDocument,
 		) as unknown as T;
-
-		return entity;
 	}
 
 	getProtocolEntryCount(organizationId: string): Promise<number> {
@@ -49,7 +47,9 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 			protocolEntries.reverse();
 		}
 
-		return protocolEntries.map((entry) => this.mapper.map(entry));
+		return protocolEntries.map((entry) =>
+			this.mapper.map(entry as ProtocolEntryBaseDocument),
+		);
 	}
 
 	private getQueryForSubset(

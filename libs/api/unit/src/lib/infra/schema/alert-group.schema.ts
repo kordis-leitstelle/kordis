@@ -14,7 +14,11 @@ export class AlertGroupDocument extends BaseDocument {
 
 	@Prop({ type: [Types.ObjectId], ref: 'UnitDocument' })
 	@AutoMap(() => [UnitDocument])
-	units: UnitDocument[] | Types.ObjectId[];
+	defaultUnits: UnitDocument[] | Types.ObjectId[];
+
+	@Prop({ type: [Types.ObjectId], ref: 'UnitDocument' })
+	@AutoMap(() => [UnitDocument])
+	currentUnits: UnitDocument[] | Types.ObjectId[];
 }
 
 export const AlertGroupSchema =

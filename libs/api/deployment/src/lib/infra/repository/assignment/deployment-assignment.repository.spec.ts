@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { BaseModelProfile } from '@kordis/api/shared';
 import { mockModelMethodResults } from '@kordis/api/test-helpers';
@@ -53,6 +53,34 @@ describe('DeploymentAssignmentRepositoryImpl', () => {
 		deploymentAssignmentModel = module.get<
 			Model<DeploymentAssignmentsDocument>
 		>(getModelToken(DeploymentAssignmentsDocument.name));
+	});
+
+	it('should remove assignments of deployments', async () => {
+		const orgId = 'orgId';
+		await repository.removeAssignmentsOfDeployments(orgId, [
+			'66e5f31aa96f93b44258a95a',
+			'66e5f3219c84a443529a021d',
+		]);
+
+		expect(deploymentAssignmentModel.updateMany).toHaveBeenCalledWith(
+			{
+				orgId,
+				deploymentId: {
+					$in: [
+						new Types.ObjectId('66e5f31aa96f93b44258a95a'),
+						new Types.ObjectId('66e5f3219c84a443529a021d'),
+					],
+				},
+			},
+			{
+				$set: {
+					deploymentId: null,
+				},
+			},
+			{
+				session: undefined,
+			},
+		);
 	});
 
 	it('should get assignment', async () => {

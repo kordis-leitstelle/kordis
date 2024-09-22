@@ -55,15 +55,15 @@ export class DeploymentAssignmentService {
 			uow,
 		);
 
-		// remove all alert group assignments of the units, example: alertgroup A is assigned away from an deployment, but leaves behind units, these need to be unassigned from the alert group
-		await this.unitAssignmentRepository.removeAlertGroupAssignmentsByAlertGroups(
+		// remove all alert group assignments of the units, example: alertgroup A is assigned away from a deployment, but leaves behind units, these need to be unassigned from the alert group
+		await this.unitAssignmentRepository.removeAssignmentsFromAlertGroups(
 			orgId,
 			alertGroupIds,
 			uow,
 		);
 
 		// all newly assigned units (those that are part of an alert group or directly assigned) need to be unassigned from all previous alert groups
-		await this.unitAssignmentRepository.removeAlertGroupAssignmentsFromUnits(
+		await this.unitAssignmentRepository.removeAlertGroupFromUnits(
 			orgId,
 			[...flatAlertGroupUnitIds, ...unitIds],
 			uow,

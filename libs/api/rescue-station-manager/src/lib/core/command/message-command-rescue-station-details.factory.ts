@@ -52,12 +52,16 @@ export class MessageCommandRescueStationDetailsFactory {
 		alertGroups: MessageCommandRescueStationDetails['alertGroups'];
 	}> {
 		const units: UnitViewModel[] = await this.queryBus.execute(
-			new GetUnitsByIdsQuery([
-				...rescueStationData.assignedUnitIds,
-				...rescueStationData.assignedAlertGroups.flatMap(
-					(involvement) => involvement.unitIds,
-				),
-			]),
+			new GetUnitsByIdsQuery(
+				[
+					...rescueStationData.assignedUnitIds,
+					...rescueStationData.assignedAlertGroups.flatMap(
+						(involvement) => involvement.unitIds,
+					),
+				],
+				undefined,
+				{ retainOrder: true },
+			),
 		);
 
 		const commandUnits = units

@@ -117,4 +117,32 @@ describe('AlertGroupRepositoryImpl', () => {
 		expect(result[1].id).toBe('662e46a16d91b65f5cfe6cbb');
 		expect(result[1].name).toBe('alertGroup2');
 	});
+
+	it('should update current units', async () => {
+		const orgId = 'orgId';
+		const alertGroupId = 'alertGroupId';
+		const unitIds = ['unitId1', 'unitId2'];
+
+		mockAlertGroupModel.updateOne.mockResolvedValueOnce({
+			modifiedCount: 1,
+		} as any);
+
+		await expect(
+			alertGroupRepository.updateCurrentUnits(orgId, alertGroupId, unitIds),
+		).resolves.toBeTruthy();
+		expect(mockAlertGroupModel.updateOne).toHaveBeenCalledWith(
+			{ _id: alertGroupId, orgId },
+			{ $set: { currentUnits: unitIds } },
+		);
+	});
+
+	it('should reset current units to default units', async () => {
+		const orgId = 'orgId';
+
+		await alertGroupRepository.resetCurrentUnitsToDefaultUnits(orgId);
+
+		expect(mockAlertGroupModel.updateMany).toHaveBeenCalledWith({ orgId }, [
+			{ $set: { currentUnits: '$defaultUnits' } },
+		]);
+	});
 });

@@ -48,7 +48,10 @@ describe('GetUnitsByIdsHandler', () => {
 		);
 
 		expect(result).toEqual([entity1, entity2]);
-		expect(mockUnitRepository.findByIds).toHaveBeenCalledWith(['1', '2']);
+		expect(mockUnitRepository.findByIds).toHaveBeenCalledWith(
+			['1', '2'],
+			undefined,
+		);
 	});
 
 	it('should keep units in order if retainOrder is true', async () => {
@@ -60,14 +63,19 @@ describe('GetUnitsByIdsHandler', () => {
 			id: '2',
 		});
 
+		const orgId = '123';
+
 		mockUnitRepository.findByIds.mockResolvedValue([entity2, entity1]);
 
 		const result = await getUnitsByIdsHandler.execute(
-			new GetUnitsByIdsQuery(['1', '2'], { retainOrder: true }),
+			new GetUnitsByIdsQuery(['1', '2'], orgId, { retainOrder: true }),
 		);
 
 		expect(result).toEqual([entity1, entity2]);
-		expect(mockUnitRepository.findByIds).toHaveBeenCalledWith(['1', '2']);
+		expect(mockUnitRepository.findByIds).toHaveBeenCalledWith(
+			['1', '2'],
+			orgId,
+		);
 	});
 
 	it('should throw an error for non-existing units', async () => {
@@ -81,7 +89,9 @@ describe('GetUnitsByIdsHandler', () => {
 
 		await expect(async () => {
 			await getUnitsByIdsHandler.execute(
-				new GetUnitsByIdsQuery(['1', '2', '3'], { retainOrder: true }),
+				new GetUnitsByIdsQuery(['1', '2', '3'], undefined, {
+					retainOrder: true,
+				}),
 			);
 		}).rejects.toThrow();
 	});

@@ -7,7 +7,7 @@ import {
 
 import { UpdateSignedInRescueStationCommand } from '@kordis/api/deployment';
 import {
-	CreateRescueStationSignOnMessageCommand,
+	CreateRescueStationUpdateMessageCommand,
 	MessageUnit,
 } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
@@ -24,7 +24,7 @@ export class LaunchUpdateSignedInRescueStationProcessCommand {
 			sender: MessageUnit;
 			recipient: MessageUnit;
 			channel: string;
-		},
+		} | null,
 	) {}
 }
 
@@ -60,21 +60,23 @@ export class LaunchUpdateSignedInRescueStationProcessHandler
 			),
 		);
 
-		const rsDetails =
-			await this.messageCommandRescueStationDetailsFactory.createFromCommandRescueStationData(
-				reqUser.organizationId,
-				rescueStationData,
-			);
+		if (communicationMessageData) {
+			const rsDetails =
+				await this.messageCommandRescueStationDetailsFactory.createFromCommandRescueStationData(
+					reqUser.organizationId,
+					rescueStationData,
+				);
 
-		await this.commandBus.execute(
-			new CreateRescueStationSignOnMessageCommand(
-				new Date(),
-				communicationMessageData.sender,
-				communicationMessageData.recipient,
-				rsDetails,
-				communicationMessageData.channel,
-				reqUser,
-			),
-		);
+			await this.commandBus.execute(
+				new CreateRescueStationUpdateMessageCommand(
+					new Date(),
+					communicationMessageData.sender,
+					communicationMessageData.recipient,
+					rsDetails,
+					communicationMessageData.channel,
+					reqUser,
+				),
+			);
+		}
 	}
 }

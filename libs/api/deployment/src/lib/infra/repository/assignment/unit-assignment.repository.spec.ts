@@ -75,19 +75,34 @@ describe('UnitAssignmentRepositoryImpl', () => {
 		const orgId = 'orgId';
 		const alertGroupIds = ['alertGroupId1', 'alertGroupId2'];
 
-		await repository.removeAlertGroupAssignmentsByAlertGroups(
-			orgId,
-			alertGroupIds,
-		);
+		await repository.removeAssignmentsFromAlertGroups(orgId, alertGroupIds);
 
 		expect(unitAssignmentModel.updateMany).toHaveBeenCalled();
+	});
+
+	it('should get units of alert groups', async () => {
+		const orgId = 'orgId';
+		const alertGroupId = 'alertGroupId';
+
+		const mockResult = [{ entityId: 'unitId1' }, { entityId: 'unitId2' }];
+
+		mockModelMethodResults(unitAssignmentModel, mockResult, 'aggregate');
+
+		const result = await repository.getUnitsOfAlertGroup(orgId, alertGroupId);
+
+		const expectedUnit1 = new DeploymentUnit();
+		expectedUnit1.unit = { id: 'unitId1' };
+		const expectedUnit2 = new DeploymentUnit();
+		expectedUnit2.unit = { id: 'unitId2' };
+
+		expect(result).toEqual([expectedUnit1, expectedUnit2]);
 	});
 
 	it('should remove alert group assignments from units', async () => {
 		const orgId = 'orgId';
 		const unitIds = ['unitId1', 'unitId2'];
 
-		await repository.removeAlertGroupAssignmentsFromUnits(orgId, unitIds);
+		await repository.removeAlertGroupFromUnits(orgId, unitIds);
 
 		expect(unitAssignmentModel.updateMany).toHaveBeenCalled();
 	});

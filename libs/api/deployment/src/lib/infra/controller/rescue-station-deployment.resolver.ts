@@ -1,18 +1,24 @@
 import { Mapper } from '@automapper/core';
 import { getMapperToken } from '@automapper/nestjs';
 import { Inject } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
 	Args,
 	Context,
+	ID,
+	Mutation,
 	Parent,
 	Query,
 	ResolveField,
 	Resolver,
+	Subscription,
 } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import { DataLoaderContextProvider } from '@kordis/api/shared';
+import {
+	DataLoaderContextProvider,
+	GraphQLSubscriptionService,
+} from '@kordis/api/shared';
 import {
 	ALERT_GROUPS_DATA_LOADER,
 	AlertGroupViewModel,
@@ -21,33 +27,29 @@ import {
 } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
+import { ResetRescueStationsCommand } from '../../core/command/reset-rescue-stations.command';
+import { UpdateRescueStationNoteCommand } from '../../core/command/update-rescue-station-note.command';
 import {
 	DeploymentAlertGroup,
 	DeploymentUnit,
 } from '../../core/entity/deployment.entity';
 import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-deployment.entity';
+import { RescueStationNoteUpdatedEvent } from '../../core/event/rescue-station-note-updated.event';
+import { RescueStationsResetEvent } from '../../core/event/rescue-stations-reset.event';
 import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
-import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-entities.query';
+import { GetRescueStationDeploymentQuery } from '../../core/query/get-rescue-station-deployment.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
-import {
-	DeploymentAssignment,
-	RescueStationDeploymentViewModel,
-} from '../rescue-station.view-model';
+import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
 import { RescueStationFilterArgs } from './rescue-station-filter.args';
 
 @Resolver(() => RescueStationDeploymentViewModel)
-export class DeploymentResolver {
+export class RescueStationDeploymentResolver {
 	constructor(
 		private readonly queryBus: QueryBus,
+		private readonly commandBus: CommandBus,
+		private readonly gqlSubscriptionService: GraphQLSubscriptionService,
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
-
-	@ResolveField()
-	async assignments(
-		@Parent() entity: RescueStationDeploymentEntity,
-	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
-		return [...entity.assignedUnits, ...entity.assignedAlertGroups];
-	}
 
 	@Query(() => [RescueStationDeploymentViewModel])
 	async rescueStationDeployments(
@@ -68,12 +70,81 @@ export class DeploymentResolver {
 		>(new GetDeploymentsQuery(organizationId, filterDto));
 	}
 
-	@Query(() => [DeploymentAssignment])
-	async unassignedEntities(
+	@Query(() => RescueStationDeploymentViewModel)
+	async rescueStationDeployment(
 		@RequestUser() { organizationId }: AuthUser,
-	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
+		@Args('id', { type: () => ID }) id: string,
+	): Promise<RescueStationDeploymentEntity> {
 		return this.queryBus.execute(
-			new GetUnassignedEntitiesQuery(organizationId),
+			new GetRescueStationDeploymentQuery(organizationId, id),
+		);
+	}
+
+	@ResolveField()
+	async assignments(
+		@Parent() entity: RescueStationDeploymentEntity,
+	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
+		return [...entity.assignedUnits, ...entity.assignedAlertGroups];
+	}
+
+	@Mutation(() => [RescueStationDeploymentEntity])
+	async resetRescueStations(
+		@RequestUser() { organizationId }: AuthUser,
+	): Promise<RescueStationDeploymentEntity[]> {
+		await this.commandBus.execute(
+			new ResetRescueStationsCommand(organizationId),
+		);
+		return this.queryBus.execute<
+			GetDeploymentsQuery,
+			RescueStationDeploymentEntity[]
+		>(new GetDeploymentsQuery(organizationId));
+	}
+
+	@Mutation(() => RescueStationDeploymentViewModel)
+	async updateRescueStationNote(
+		@RequestUser() { organizationId }: AuthUser,
+		@Args('id', { type: () => ID }) rescueStationId: string,
+		@Args('note') note: string,
+	): Promise<RescueStationDeploymentViewModel> {
+		await this.commandBus.execute(
+			new UpdateRescueStationNoteCommand(organizationId, rescueStationId, note),
+		);
+		return this.queryBus.execute(
+			new GetRescueStationDeploymentQuery(organizationId, rescueStationId),
+		);
+	}
+
+	@Subscription(() => Boolean)
+	rescueStationsReset(
+		@RequestUser() { organizationId }: AuthUser,
+	): AsyncIterableIterator<boolean> {
+		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
+			RescueStationsResetEvent,
+			'rescueStationsReset',
+			{
+				filter: (payload) => payload.orgId === organizationId,
+				map: () => true,
+			},
+		);
+	}
+
+	@Subscription(() => RescueStationDeploymentViewModel)
+	rescueStationNoteUpdated(
+		@RequestUser() { organizationId }: AuthUser,
+	): AsyncIterableIterator<RescueStationDeploymentViewModel> {
+		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
+			RescueStationNoteUpdatedEvent,
+			'rescueStationNoteUpdated',
+			{
+				filter: ({ orgId }) => orgId === organizationId,
+				map: ({ rescueStationId }) =>
+					this.queryBus.execute(
+						new GetRescueStationDeploymentQuery(
+							organizationId,
+							rescueStationId,
+						),
+					),
+			},
 		);
 	}
 }

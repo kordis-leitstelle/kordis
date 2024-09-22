@@ -18,7 +18,7 @@ export class SSELink extends ApolloLink {
 	// eslint-disable-next-line rxjs/finnish
 	public override request(operation: Operation): Observable<FetchResult> {
 		return new Observable((sink) => {
-			return this.client.subscribe<FetchResult>(
+			return this.client.subscribe(
 				{ ...operation, query: print(operation.query) },
 				{
 					next: sink.next.bind(sink),

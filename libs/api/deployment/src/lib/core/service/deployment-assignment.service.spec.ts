@@ -57,14 +57,14 @@ describe('DeploymentAssignmentService', () => {
 			mockDeploymentAssignmentRepository.removeAssignmentsOfDeployment,
 		).toHaveBeenCalledWith(orgId, deploymentId, undefined);
 		expect(
-			mockUnitAssignmentRepository.removeAlertGroupAssignmentsByAlertGroups,
+			mockUnitAssignmentRepository.removeAssignmentsFromAlertGroups,
 		).toHaveBeenCalledWith(
 			orgId,
 			['alertGroupId1', 'alertGroupId2'],
 			undefined,
 		);
 		expect(
-			mockUnitAssignmentRepository.removeAlertGroupAssignmentsFromUnits,
+			mockUnitAssignmentRepository.removeAlertGroupFromUnits,
 		).toHaveBeenCalledWith(
 			orgId,
 			['unitId3', 'unitId4', 'unitId5', 'unitId6', 'unitId1', 'unitId2'],

@@ -1,0 +1,62 @@
+<div class="header-bar">
+	<nz-input-group [nzSuffix]="suffixTemplate">
+		<input
+			nz-input
+			placeholder="Suche"
+			[(ngModel)]="searchStateService.searchValue"
+		/>
+	</nz-input-group>
+	<ng-template #suffixTemplate>
+		<i
+			class="reset-icon"
+			nz-icon
+			nzType="close"
+			(click)="searchStateService.searchValue.set('')"
+		></i>
+	</ng-template>
+	<div>
+		<button nz-button (click)="openAlertGroupsEditModal()">
+			<span nz-icon nzType="edit" nzTheme="outline"></span> Alarmgruppen
+		</button>
+		<button
+			nz-button
+			nz-popconfirm
+			[nzPopconfirmOverlayStyle]="{ width: '400px' }"
+			nzPopconfirmTitle="Alle Rettungswachen ausmelden, Einheiten rauslösen und Alarmgruppen zurücksetzen?"
+			(nzOnConfirm)="resetDeployments()"
+		>
+			<span nz-icon nzType="undo" nzTheme="outline"></span> Zurücksetzen
+		</button>
+	</div>
+</div>
+
+<div class="deployments">
+	<div class="deployment-section">
+		<krd-deployment-search-wrapper
+			alwaysShow
+			[assignments]="deployments().unassignedEntities"
+		>
+			<ng-template let-assignments>
+				<div class="deployment-card">
+					<krd-deployment-card
+						[clickable]="false"
+						name="Ohne Zuordnung"
+						[assignments]="assignments"
+					/>
+				</div>
+			</ng-template>
+		</krd-deployment-search-wrapper>
+	</div>
+	<nz-divider nzType="vertical" />
+	<div class="deployment-section">
+		<krd-signed-in-deployments
+			[rescueStations]="deployments().signedInStations"
+		/>
+	</div>
+	<nz-divider nzType="vertical" />
+	<div class="deployment-section">
+		<krd-signed-off-deployments
+			[rescueStations]="deployments().signedOffStations"
+		/>
+	</div>
+</div>

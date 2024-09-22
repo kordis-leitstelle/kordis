@@ -32,7 +32,7 @@ describe('UnitsDataLoader', () => {
 		await loader.loadMany(unitIds);
 
 		expect(queryBusMock.execute).toHaveBeenCalledWith(
-			new GetUnitsByIdsQuery(unitIds, { retainOrder: true }),
+			new GetUnitsByIdsQuery(unitIds, undefined, { retainOrder: true }),
 		);
 	});
 });

@@ -19,7 +19,8 @@ export class AlertGroupRepositoryImpl implements AlertGroupRepository {
 	async findByOrgId(orgId: string): Promise<AlertGroupEntity[]> {
 		const alertGroups = await this.alertGroupModel
 			.find({ orgId })
-			.populate('units')
+			.populate('defaultUnits')
+			.populate('currentUnits')
 			.lean()
 			.exec();
 
@@ -33,7 +34,8 @@ export class AlertGroupRepositoryImpl implements AlertGroupRepository {
 	async findById(orgId: string, id: string): Promise<AlertGroupEntity> {
 		const alertGroup = await this.alertGroupModel
 			.findOne({ _id: id, orgId })
-			.populate('units')
+			.populate('defaultUnits')
+			.populate('currentUnits')
 			.lean()
 			.exec();
 
@@ -44,10 +46,11 @@ export class AlertGroupRepositoryImpl implements AlertGroupRepository {
 		);
 	}
 
-	async findByIds(ids: string[]): Promise<AlertGroupEntity[]> {
+	async findByIds(ids: string[], orgId?: string): Promise<AlertGroupEntity[]> {
 		const alertGroups = await this.alertGroupModel
-			.find({ _id: { $in: ids } })
-			.populate('units')
+			.find({ _id: { $in: ids }, orgId })
+			.populate('defaultUnits')
+			.populate('currentUnits')
 			.lean()
 			.exec();
 
@@ -55,6 +58,34 @@ export class AlertGroupRepositoryImpl implements AlertGroupRepository {
 			alertGroups,
 			AlertGroupDocument,
 			AlertGroupEntity,
+		);
+	}
+
+	async updateCurrentUnits(
+		orgId: string,
+		alertGroupId: string,
+		unitIds: string[],
+	): Promise<boolean> {
+		const res = await this.alertGroupModel.updateOne(
+			{ _id: alertGroupId, orgId },
+			{ $set: { currentUnits: unitIds } },
+		);
+
+		return res.modifiedCount > 0;
+	}
+
+	async resetCurrentUnitsToDefaultUnits(orgId: string): Promise<void> {
+		await this.alertGroupModel.updateMany(
+			{
+				orgId,
+			},
+			[
+				{
+					$set: {
+						currentUnits: '$defaultUnits',
+					},
+				},
+			],
 		);
 	}
 }

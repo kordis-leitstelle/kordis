@@ -14,7 +14,9 @@ export class UnitsDataLoader {
 			UNITS_DATA_LOADER,
 			async (unitIds: readonly string[]) =>
 				bus.execute(
-					new GetUnitsByIdsQuery(unitIds as string[], { retainOrder: true }),
+					new GetUnitsByIdsQuery(unitIds as string[], undefined, {
+						retainOrder: true,
+					}),
 				),
 		);
 	}

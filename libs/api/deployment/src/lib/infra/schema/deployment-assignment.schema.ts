@@ -14,6 +14,13 @@ export class DeploymentAssignmentsDocumentContract extends BaseDocument {
 	type: string;
 }
 
+/*
+ * The Deployments Assignments collection is a collection of all units and alert groups with their current assignment status.
+ * If an entity is assigned to a deployment, the `deploymentId` field will be set to the deployment id.
+ * If the entity is not assigned to a deployment, the `deploymentId` field will be null.
+ * The type field indicates whether the entity is a unit or an alert group, whereas the entityId is the original id.
+ */
+
 @Schema({
 	discriminatorKey: 'type',
 	timestamps: true,

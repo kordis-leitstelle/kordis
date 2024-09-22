@@ -1,0 +1,52 @@
+:host {
+	--deployment-card-width: 230px;
+
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--base-spacing) / 2);
+	height: 100%;
+
+	.header-bar {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+
+		nz-input-group {
+			width: 230px;
+
+			.reset-icon {
+				cursor: pointer;
+			}
+
+			.reset-icon:hover {
+				color: var(--ant-primary-color);
+			}
+		}
+
+		div > :not(:last-child) {
+			margin-right: calc(var(--base-spacing) / 2);
+		}
+	}
+
+	.deployments {
+		display: flex;
+		flex-direction: row;
+		flex-grow: 1;
+		overflow: auto;
+
+		nz-divider {
+			height: 90%;
+			align-self: center;
+		}
+
+		.deployment-section {
+			display: flex;
+			flex-direction: row;
+
+			.deployment-card {
+				width: var(--deployment-card-width);
+				height: 100%;
+			}
+		}
+	}
+}

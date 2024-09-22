@@ -1,0 +1,40 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--base-spacing);
+
+	.form-item {
+		display: flex;
+		flex-direction: column;
+	}
+
+	textarea {
+		height: 55px;
+		resize: none;
+	}
+}
+
+.actions {
+	margin-top: var(--base-spacing);
+	display: flex;
+}
+
+.actions.signed-in-actions {
+	justify-content: space-between;
+}
+
+.actions.signed-off-actions {
+	justify-content: end;
+}
+
+nz-card {
+	margin-bottom: calc(var(--base-spacing) / 2);
+
+	.ant-card-body {
+		padding: var(--base-spacing);
+	}
+}
+
+nz-alert {
+	margin-top: calc(var(--base-spacing) / 2);
+}

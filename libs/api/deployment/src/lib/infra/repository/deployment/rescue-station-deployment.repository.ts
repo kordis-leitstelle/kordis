@@ -5,8 +5,13 @@ import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { DbSessionProvider, runDbOperation } from '@kordis/api/shared';
+
 import { RescueStationDeploymentEntity } from '../../../core/entity/rescue-station-deployment.entity';
-import { RescueStationEntityDTO } from '../../../core/repository/rescue-station-deployment.repository';
+import {
+	RescueStationDeploymentRepository,
+	RescueStationEntityDTO,
+} from '../../../core/repository/rescue-station-deployment.repository';
 import {
 	RescueStationDeploymentDocument,
 	RescueStationLocation,
@@ -30,11 +35,14 @@ export class RescueStationDocumentDTO
 	defaultUnitIds: string[];
 }
 
-export class RescueStationDeploymentRepositoryImpl extends DeploymentRepositoryImpl<
-	RescueStationDeploymentEntity,
-	RescueStationEntityDTO,
-	RescueStationDeploymentDocument
-> {
+export class RescueStationDeploymentRepositoryImpl
+	extends DeploymentRepositoryImpl<
+		RescueStationDeploymentEntity,
+		RescueStationEntityDTO,
+		RescueStationDeploymentDocument
+	>
+	implements RescueStationDeploymentRepository
+{
 	constructor(
 		@InjectModel(RescueStationDeploymentDocument.name)
 		deploymentModel: Model<RescueStationDeploymentDocument>,
@@ -48,5 +56,19 @@ export class RescueStationDeploymentRepositoryImpl extends DeploymentRepositoryI
 			RescueStationDocumentDTO,
 			RescueStationEntityDTO,
 		);
+	}
+
+	async updateAll(
+		orgId: string,
+		data: Partial<RescueStationEntityDTO>,
+		uow?: DbSessionProvider,
+	): Promise<void> {
+		const query = this.deploymentModel.updateMany(
+			{ orgId },
+			{
+				$set: data,
+			},
+		);
+		await runDbOperation(query, uow);
 	}
 }

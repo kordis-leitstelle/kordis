@@ -11,7 +11,17 @@ export class AlertGroupEntity extends BaseEntityModel {
 	@AutoMap()
 	name: string;
 
-	@Field(() => [UnitEntity])
+	@Field(() => [UnitEntity], {
+		description:
+			'The default units of the alert group. These units are assigned to the alert group by default and whenever deployments are reset.',
+	})
 	@AutoMap(() => [UnitEntity])
-	units: UnitEntity[];
+	defaultUnits: UnitEntity[];
+
+	@Field(() => [UnitEntity], {
+		description:
+			'The current units of the alert group. These units will be presented to the user when the alert group is assigned to a deployment.',
+	})
+	@AutoMap(() => [UnitEntity])
+	currentUnits: UnitEntity[];
 }

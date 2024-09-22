@@ -1,11 +1,14 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/ts-jest';
-import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule, EventBus, QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import DataLoader from 'dataloader';
 
-import { DataLoaderContextProvider } from '@kordis/api/shared';
+import {
+	DataLoaderContextProvider,
+	GraphQLSubscriptionService,
+} from '@kordis/api/shared';
 import { UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -14,16 +17,16 @@ import {
 	DeploymentUnit,
 } from '../../core/entity/deployment.entity';
 import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-deployment.entity';
+import { RescueStationsResetEvent } from '../../core/event/rescue-stations-reset.event';
 import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
-import { GetUnassignedEntitiesQuery } from '../../core/query/get-unassigned-entities.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
 import { RescueStationDtoMapperProfile } from '../mapper/rescue-station-dto.mapper-profile';
 import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
 import {
-	DeploymentResolver,
 	DeploymentUnitResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
-} from './deployment.resolver';
+	RescueStationDeploymentResolver,
+} from './rescue-station-deployment.resolver';
 import { RescueStationFilterArgs } from './rescue-station-filter.args';
 
 const getMockDeployment1 = () => {
@@ -55,9 +58,11 @@ const getMockDeployment2 = () => {
 	return deploymentResult;
 };
 
-describe('DeploymentResolver', () => {
-	let resolver: DeploymentResolver;
+describe('RescueStationDeploymentResolver', () => {
+	let resolver: RescueStationDeploymentResolver;
 	const mockQueryBus = createMock<QueryBus>();
+	const mockCommandBus = createMock<CommandBus>();
+	let eventBus: EventBus;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -65,15 +70,24 @@ describe('DeploymentResolver', () => {
 				AutomapperModule.forRoot({
 					strategyInitializer: classes(),
 				}),
+				CqrsModule,
 			],
 			providers: [
-				DeploymentResolver,
+				RescueStationDeploymentResolver,
 				RescueStationDtoMapperProfile,
-				{ provide: QueryBus, useValue: mockQueryBus },
+				GraphQLSubscriptionService,
 			],
-		}).compile();
+		})
+			.overrideProvider(QueryBus)
+			.useValue(mockQueryBus)
+			.overrideProvider(CommandBus)
+			.useValue(mockCommandBus)
+			.compile();
 
-		resolver = module.get<DeploymentResolver>(DeploymentResolver);
+		eventBus = module.get<EventBus>(EventBus);
+		resolver = module.get<RescueStationDeploymentResolver>(
+			RescueStationDeploymentResolver,
+		);
 	});
 
 	afterEach(() => {
@@ -119,27 +133,16 @@ describe('DeploymentResolver', () => {
 		]);
 	});
 
-	it('should find unassigned entities by orgId', async () => {
-		const orgId = 'orgId';
-
-		const mockDeploymentUnit = new DeploymentUnit();
-		(mockDeploymentUnit as any).id = 'unitDeploymentId';
-		const mockDeploymentAlertGroup = new DeploymentAlertGroup();
-		(mockDeploymentAlertGroup as any).id = 'alertGroupDeploymentId';
-
-		mockQueryBus.execute.mockResolvedValue([
-			mockDeploymentUnit,
-			mockDeploymentAlertGroup,
-		]);
-
-		const result = await resolver.unassignedEntities({
-			organizationId: orgId,
+	it('should emit subscription on RescueStationsResetEvent', async () => {
+		const iterator = resolver.rescueStationsReset({
+			organizationId: 'orgId',
 		} as AuthUser);
 
-		expect(mockQueryBus.execute).toHaveBeenCalledWith(
-			new GetUnassignedEntitiesQuery(orgId),
-		);
-		expect(result).toEqual([mockDeploymentUnit, mockDeploymentAlertGroup]);
+		eventBus.publish(new RescueStationsResetEvent('orgId'));
+		const result = await iterator.next();
+
+		expect(result.value.rescueStationsReset).toBeTruthy();
+		expect(result.done).toBeFalsy();
 	});
 });
 

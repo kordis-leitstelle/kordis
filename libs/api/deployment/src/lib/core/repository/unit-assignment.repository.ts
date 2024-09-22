@@ -1,21 +1,29 @@
 import { DbSessionProvider } from '@kordis/api/shared';
 
-import { DeploymentAlertGroup } from '../entity/deployment.entity';
+import {
+	DeploymentAlertGroup,
+	DeploymentUnit,
+} from '../entity/deployment.entity';
 
 export const UNIT_ASSIGNMENT_REPOSITORY = Symbol('UNIT_ASSIGNMENT_REPOSITORY');
 
 export interface UnitAssignmentRepository {
-	removeAlertGroupAssignmentsByAlertGroups(
+	removeAssignmentsFromAlertGroups(
 		orgId: string,
 		alertGroupIds: string[],
 		uow?: DbSessionProvider,
 	): Promise<void>;
 
-	removeAlertGroupAssignmentsFromUnits(
+	removeAlertGroupFromUnits(
 		orgId: string,
 		unitIds: string[],
 		uow?: DbSessionProvider,
 	): Promise<void>;
+
+	getUnitsOfAlertGroup(
+		orgId: string,
+		alertGroupId: string,
+	): Promise<DeploymentUnit[]>;
 
 	setAlertGroupAssignment(
 		orgId: string,
