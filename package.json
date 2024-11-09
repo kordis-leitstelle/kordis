@@ -134,7 +134,7 @@
     "nestjs-graphql-connection": "^1.0.3",
     "ng-zorro-antd": "18.2.0",
     "pino": "^9.2.0",
-    "pino-pretty": "^11.2.1",
+    "pino-pretty": "^12.0.0",
     "reflect-metadata": "^0.1.14",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.3",
