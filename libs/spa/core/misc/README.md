@@ -1,6 +1,7 @@
-# spa-core-misc
+# SPA Misc
 
-This library was generated with [Nx](https://nx.dev).
+This library includes helper classes and functionalities that are usefull across
+the whole SPA and not specific to a library.
 
 ## Running unit tests
 
