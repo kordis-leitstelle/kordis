@@ -1,6 +1,9 @@
-# spa-geocoding
+# Geocoding
 
-This library was generated with [Nx](https://nx.dev).
+This module contains components and services regarding geocoding. Currently, we
+implement [MapTiler](https://www.maptiler.com/cloud/geocoding/), which we also
+use for map tiles. In the future we plan to switch to another provider, which
+focuses more on emergency geo data.
 
 ## Running unit tests
 

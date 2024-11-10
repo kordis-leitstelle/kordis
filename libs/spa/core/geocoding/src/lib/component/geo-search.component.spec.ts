@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createMock } from '@golevelup/ts-jest';
 
+import { GeoSearchService } from '../service/geo-search.service';
 import { GeoSearchComponent } from './geo-search.component';
 
 describe('GeoSearchComponent', () => {
@@ -8,7 +10,12 @@ describe('GeoSearchComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [GeoSearchComponent],
+			providers: [
+				{
+					provide: GeoSearchService,
+					useValue: createMock(),
+				},
+			],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(GeoSearchComponent);
