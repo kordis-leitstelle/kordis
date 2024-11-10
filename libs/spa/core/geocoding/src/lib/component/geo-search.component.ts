@@ -10,7 +10,6 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
-	ControlValueAccessor,
 	FormsModule,
 	NG_VALUE_ACCESSOR,
 	ReactiveFormsModule,
@@ -40,25 +39,19 @@ import {
 } from '../model/geo-search-result.interface';
 import { GeoSearchService } from '../service/geo-search.service';
 
-export const NOOP_VALUE_ACCESSOR: ControlValueAccessor = {
-	writeValue(): void {},
-	registerOnChange(): void {},
-	registerOnTouched(): void {},
-};
-
 @Component({
 	selector: 'krd-geo-search',
 	standalone: true,
 	imports: [
 		CommonModule,
-		NzAutocompleteComponent,
-		NzInputDirective,
-		NzAutocompleteTriggerDirective,
-		ReactiveFormsModule,
-		NzAutocompleteOptionComponent,
 		FormsModule,
+		NzAutocompleteComponent,
+		NzAutocompleteOptionComponent,
+		NzAutocompleteTriggerDirective,
+		NzInputDirective,
 		NzNoAnimationDirective,
 		NzSelectComponent,
+		ReactiveFormsModule,
 	],
 	providers: [
 		{
@@ -90,9 +83,16 @@ export const NOOP_VALUE_ACCESSOR: ControlValueAccessor = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeoSearchComponent extends ControlValueAccessorBase {
+	/*
+	 * The field to display in the autocomplete and set as the value if selected
+	 */
 	readonly field = input.required<keyof GeoAddress>();
 	readonly placeholder = input<string>('');
 	readonly size = input<'small' | 'default'>('default');
+	/*
+	 * The types of search to perform, possible options are:
+	 * 1. `address` - shows a match with all address properties
+	 */
 	readonly searchTypes = input<'address'[] | undefined>(undefined);
 	readonly resultSelected = output<GeoSearchResult>();
 

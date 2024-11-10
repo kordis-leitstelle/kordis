@@ -5,7 +5,7 @@ import { Observable, map, of } from 'rxjs';
 import { GeocodingModule, MAP_TILER_KEY } from '../geocoding.module';
 import { GeoSearchResult } from '../model/geo-search-result.interface';
 
-
+// as maptiler is a temporary solution and the future provider offers a different api, this service is not implemented as a generic geocoding service
 @Injectable({
 	providedIn: GeocodingModule,
 })
@@ -15,7 +15,6 @@ export class GeoSearchService {
 
 	constructor(handler: HttpBackend) {
 		this.httpClient = new HttpClient(handler); // new client to avoid auth interceptors leading to cors errors
-		console.log('ctor geo search service');
 	}
 
 	search(query: string, types?: string[]): Observable<GeoSearchResult[]> {
