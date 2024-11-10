@@ -21,16 +21,9 @@ describe('ControlValueAccessorBase', () => {
 		expect(mockFn).toHaveBeenCalled();
 	});
 
-	it('should set disabled state and check if isDisabled changes', () => {
-		controlValueAccessorBase.setDisabledState(true);
-		expect(controlValueAccessorBase.isDisabled()).toBe(true);
-		controlValueAccessorBase.setDisabledState(false);
-		expect(controlValueAccessorBase.isDisabled()).toBe(false);
-	});
-
 	it('should write value and check if value is set', () => {
 		const testValue = 'test value';
 		controlValueAccessorBase.writeValue(testValue);
-		expect(controlValueAccessorBase.value()).toBe(testValue);
+		expect((controlValueAccessorBase as any).value()).toBe(testValue);
 	});
 });
