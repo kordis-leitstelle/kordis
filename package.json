@@ -135,7 +135,7 @@
     "ng-zorro-antd": "18.2.1",
     "pino": "^9.2.0",
     "pino-pretty": "^11.2.1",
-    "reflect-metadata": "^0.1.14",
+    "reflect-metadata": "^0.2.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.3",
     "zone.js": "0.14.7"
