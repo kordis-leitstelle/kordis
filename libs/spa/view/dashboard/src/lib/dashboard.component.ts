@@ -28,6 +28,7 @@ import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 		NzMenuModule,
 		NzModalModule,
 		ProtocolViewComponent,
+		DeploymentsComponent,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
