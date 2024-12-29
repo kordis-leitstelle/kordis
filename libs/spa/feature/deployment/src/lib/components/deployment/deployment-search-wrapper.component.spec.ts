@@ -1,6 +1,5 @@
 import { Component, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
 
 import { DeploymentAssignment } from '@kordis/shared/model';
 

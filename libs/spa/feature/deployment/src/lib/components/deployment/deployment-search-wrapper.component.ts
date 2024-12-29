@@ -25,7 +25,7 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 			<ng-template
 				*ngTemplateOutlet="
 					templateRef()!;
-					context: { $implicit: filteredAssignments() }
+					context: { $implicit: computedAssignments() }
 				"
 			/>
 		}
@@ -41,44 +41,44 @@ export class DeploymentSearchWrapperComponent {
 	protected readonly templateRef = contentChild(TemplateRef);
 
 	private readonly searchStateService = inject(DeploymentsSearchStateService);
-
-	private readonly searchResults: Signal<DeploymentAssignment[]> = toSignal(
-		this.searchStateService.searchValueChange$.pipe(
-			map((searchTerm) => {
-				searchTerm = searchTerm.toLowerCase();
-				return this.assignments().filter((assignment) => {
-					const hasUnitMatch = (unit: Unit): boolean => {
-						return (
-							unit.name.toLowerCase().includes(searchTerm) ||
-							unit.callSign.toLowerCase().includes(searchTerm) ||
-							unit.callSignAbbreviation.toLowerCase().includes(searchTerm)
-						);
-					};
-
-					switch (assignment.__typename) {
-						case 'DeploymentUnit':
-							return hasUnitMatch(assignment.unit);
-						case 'DeploymentAlertGroup':
-							return (
-								assignment.alertGroup.name.toLowerCase().includes(searchTerm) ||
-								assignment.assignedUnits.some(({ unit }) => hasUnitMatch(unit))
-							);
-						default:
-							return false;
-					}
-				});
-			}),
-		),
-		{
-			initialValue: [],
-		},
-	);
-
 	private readonly hasNameMatch = computed(() =>
 		this.name()
 			.toLowerCase()
 			.includes(this.searchStateService.searchValue().toLowerCase()),
 	);
+	readonly computedAssignments: Signal<DeploymentAssignment[]> = computed(
+		() => {
+			const searchTerm = this.searchStateService.searchValue().toLowerCase();
+			// show if we have no search term or the name matches
+			if (!searchTerm || this.hasNameMatch()) {
+				return this.assignments();
+			}
+			// otherwise we have a search term, return filtered assignments
+
+			return this.assignments().filter((assignment) => {
+				const hasUnitMatch = (unit: Unit): boolean => {
+					return (
+						unit.name.toLowerCase().includes(searchTerm) ||
+						unit.callSign.toLowerCase().includes(searchTerm) ||
+						unit.callSignAbbreviation.toLowerCase().includes(searchTerm)
+					);
+				};
+
+				switch (assignment.__typename) {
+					case 'DeploymentUnit':
+						return hasUnitMatch(assignment.unit);
+					case 'DeploymentAlertGroup':
+						return (
+							assignment.alertGroup.name.toLowerCase().includes(searchTerm) ||
+							assignment.assignedUnits.some(({ unit }) => hasUnitMatch(unit))
+						);
+					default:
+						return false;
+				}
+			});
+		},
+	);
+
 	readonly isVisible = computed(
 		() =>
 			this.alwaysShow() ||
@@ -87,12 +87,6 @@ export class DeploymentSearchWrapperComponent {
 			// the user searches the rescue station
 			this.hasNameMatch() ||
 			// or the user searches the assignments
-			this.searchResults().length,
-	);
-
-	readonly filteredAssignments = computed(() =>
-		this.searchStateService.searchValue() && !this.hasNameMatch()
-			? this.searchResults()
-			: this.assignments(),
+			this.computedAssignments().length,
 	);
 }
