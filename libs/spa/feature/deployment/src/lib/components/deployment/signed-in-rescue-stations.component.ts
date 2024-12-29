@@ -7,7 +7,6 @@ import {
 	viewChildren,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { Subject, debounceTime, delay, switchMap, tap } from 'rxjs';
 
@@ -93,7 +92,6 @@ import { RescueStationDeploymentCardHeaderComponent } from './rescue-station/res
 		DeploymentCardComponent,
 		DeploymentNotePopupComponent,
 		DeploymentSearchWrapperComponent,
-		NzCardComponent,
 		NzPopoverDirective,
 		RescueStationDeploymentCardHeaderComponent,
 	],
@@ -114,8 +112,11 @@ export class SignedInRescueStationsComponent {
 			!this.searchWrappers().some((wrapper) => wrapper.isVisible()) &&
 			this.searchStateService.searchValue(),
 	);
-	private noteUpdatedSubject$ = new Subject<{ id: string; note: string }>();
-	private gqlService = inject(GraphqlService);
+	private readonly noteUpdatedSubject$ = new Subject<{
+		id: string;
+		note: string;
+	}>();
+	private readonly gqlService = inject(GraphqlService);
 
 	constructor() {
 		this.noteUpdatedSubject$

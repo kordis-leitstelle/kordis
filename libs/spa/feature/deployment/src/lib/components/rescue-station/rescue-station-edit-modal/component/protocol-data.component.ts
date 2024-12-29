@@ -54,7 +54,7 @@ export class ProtocolDataComponent implements OnInit {
 		transform: (x: unknown) => x !== false,
 	});
 
-	private senderInputEle =
+	private readonly senderInputEle =
 		viewChild<ElementRef<HTMLInputElement>>('senderInput');
 	private readonly cd = inject(ChangeDetectorRef);
 

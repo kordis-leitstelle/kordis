@@ -16,7 +16,6 @@ import {
 	NzFormItemComponent,
 } from 'ng-zorro-antd/form';
 import { NzSelectComponent, NzSelectModule } from 'ng-zorro-antd/select';
-import { NzSpinComponent } from 'ng-zorro-antd/spin';
 import {
 	Observable,
 	Subject,
@@ -32,7 +31,6 @@ import {
 import { Unit } from '@kordis/shared/model';
 
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
-import { UnitSelectionOptionComponent } from './unit-selection-option.component';
 
 @Component({
 	selector: 'krd-units-select',
@@ -41,9 +39,7 @@ import { UnitSelectionOptionComponent } from './unit-selection-option.component'
 		AsyncPipe,
 		NzSelectModule,
 		ReactiveFormsModule,
-		UnitSelectionOptionComponent,
 		NgTemplateOutlet,
-		NzSpinComponent,
 		NzFormControlComponent,
 		NzFormItemComponent,
 	],
@@ -140,7 +136,7 @@ export class UnitsSelectComponent implements OnDestroy {
 		),
 	);
 
-	private selectEle = viewChild(NzSelectComponent);
+	private readonly selectEle = viewChild(NzSelectComponent);
 	private readonly destroySubject$ = new Subject<void>();
 
 	constructor() {

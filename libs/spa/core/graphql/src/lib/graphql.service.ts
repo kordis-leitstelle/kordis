@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentNode, Unmasked } from '@apollo/client/core';
+import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
 import { Observable, map } from 'rxjs';
 

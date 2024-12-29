@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 
 import { BaseDocument } from '@kordis/api/shared';
 

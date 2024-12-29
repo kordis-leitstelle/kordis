@@ -6,10 +6,8 @@ import {
 	viewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NzCardComponent } from 'ng-zorro-antd/card';
 import {
 	NzFormControlComponent,
-	NzFormDirective,
 	NzFormItemComponent,
 } from 'ng-zorro-antd/form';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
@@ -23,13 +21,11 @@ import { UnitsSelectComponent } from '../unit/units-select.component';
 	selector: 'krd-alert-group-selection',
 	standalone: true,
 	imports: [
-		NzCardComponent,
 		NzFormControlComponent,
 		NzFormItemComponent,
 		NzIconDirective,
 		UnitSelectionOptionComponent,
 		UnitsSelectComponent,
-		NzFormDirective,
 	],
 	template: `
 		<div class="alert-group-header">
@@ -70,7 +66,7 @@ export class AlertGroupSelectionComponent {
 	>();
 	readonly removed = output<void>();
 
-	private unitSelectionEle = viewChild(UnitsSelectComponent);
+	private readonly unitSelectionEle = viewChild(UnitsSelectComponent);
 
 	removeAlertGroup(): void {
 		this.removed.emit();

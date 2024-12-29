@@ -16,10 +16,10 @@ import { StatusBadgeComponent } from './status-badge.component';
 	standalone: true,
 	imports: [
 		DeploymentNotePopupComponent,
+		NoteIndicatorComponent,
 		NzCardComponent,
 		NzPopoverModule,
 		StatusBadgeComponent,
-		NoteIndicatorComponent,
 	],
 	template: `
 		<ng-template #notePopoverContent>
@@ -82,9 +82,9 @@ import { StatusBadgeComponent } from './status-badge.component';
 })
 export class DeploymentUnitComponent {
 	readonly unit = input.required<Unit>();
-	protected isNoteUpdating = signal(false);
-	private noteUpdatedSubject$ = new Subject<string>();
-	private gqlService = inject(GraphqlService);
+	protected readonly isNoteUpdating = signal(false);
+	private readonly noteUpdatedSubject$ = new Subject<string>();
+	private readonly gqlService = inject(GraphqlService);
 
 	constructor() {
 		// a deployment unit is updatable in every context, so we can safely implement it here (not like deployment card, which not always has a note)
