@@ -6,12 +6,10 @@ import {
 	viewChildren,
 } from '@angular/core';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzModalService } from 'ng-zorro-antd/modal';
 
 import { RescueStationDeployment } from '@kordis/shared/model';
 
 import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
-import { RescueStationEditModalComponent } from '../rescue-station/rescue-station-edit-modal/rescue-station-edit-modal.component';
 import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 
 @Component({
@@ -27,9 +25,7 @@ import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 		<!-- this can not be in an else block as search wrapper need to stay initialized! -->
 		@for (station of rescueStations(); track station.id) {
 			<krd-name-search-wrapper [name]="station.name">
-				<nz-card (click)="openRescueStationEditModal(station)"
-					>{{ station.name }}
-				</nz-card>
+				<nz-card>{{ station.name }}</nz-card>
 			</krd-name-search-wrapper>
 		} @empty {
 			@if (!showNoSearchResults()) {
@@ -55,11 +51,6 @@ import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 			nz-card {
 				width: var(--deployment-card-width, 230px);
 			}
-
-			nz-card:hover {
-				border-color: var(--ant-primary-color);
-				cursor: pointer;
-			}
 		}
 	`,
 	imports: [NameSearchWrapperComponent, NzCardComponent],
@@ -74,16 +65,4 @@ export class SignedOffDeploymentsComponent {
 			!this.searchWrappers().some((wrapper) => wrapper.isVisible()) &&
 			this.searchStateService.searchValue(),
 	);
-
-	private readonly modalService = inject(NzModalService);
-
-	openRescueStationEditModal(station: RescueStationDeployment): void {
-		this.modalService.create({
-			nzContent: RescueStationEditModalComponent,
-			nzData: station,
-			nzFooter: null,
-			nzClosable: false,
-			nzNoAnimation: true,
-		});
-	}
 }
