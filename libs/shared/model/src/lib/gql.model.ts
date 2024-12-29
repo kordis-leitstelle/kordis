@@ -33,11 +33,20 @@ export type AlertGroup = {
 	__typename?: 'AlertGroup';
 	assignment?: Maybe<EntityRescueStationAssignment>;
 	createdAt: Scalars['DateTime']['output'];
+	/** The current units of the alert group. These units will be presented to the user when the alert group is assigned to a deployment. */
+	currentUnits: Array<Unit>;
+	/** Units actively assigned to the alert group in its current assignment. If not assigned, the array is empty. */
+	currentUnitsOfAssignment: Array<DeploymentUnit>;
+	/** The default units of the alert group. These units are assigned to the alert group by default and whenever deployments are reset. */
+	defaultUnits: Array<Unit>;
 	id: Scalars['ID']['output'];
 	name: Scalars['String']['output'];
 	orgId: Scalars['String']['output'];
-	units: Array<Unit>;
 	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type AlertGroupsFilter = {
+	ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 export type BBox = {
@@ -131,9 +140,14 @@ export type Mutation = {
 	createUser: UserEntity;
 	deactivateUser: Scalars['Boolean']['output'];
 	reactivateUser: Scalars['Boolean']['output'];
+	resetCurrentAlertGroupUnits: Array<AlertGroup>;
+	resetRescueStations: Array<RescueStationDeploymentEntity>;
+	resetUnitNotes: Array<Unit>;
+	setCurrentAlertGroupUnits: AlertGroup;
 	signInRescueStation: RescueStationDeployment;
 	signOffRescueStation: RescueStationDeployment;
 	updateOrganizationGeoSettings: Organization;
+	updateRescueStationNote: RescueStationDeployment;
 	updateSignedInRescueStation: RescueStationDeployment;
 	updateUnitNote: Unit;
 	updateUnitStatus: Unit;
@@ -177,6 +191,11 @@ export type MutationReactivateUserArgs = {
 	userId: Scalars['String']['input'];
 };
 
+export type MutationSetCurrentAlertGroupUnitsArgs = {
+	alertGroupId: Scalars['ID']['input'];
+	unitIds: Array<Scalars['ID']['input']>;
+};
+
 export type MutationSignInRescueStationArgs = {
 	protocolMessageData: BaseCreateMessageInput;
 	rescueStationData: UpdateRescueStationInput;
@@ -192,19 +211,24 @@ export type MutationUpdateOrganizationGeoSettingsArgs = {
 	id: Scalars['String']['input'];
 };
 
+export type MutationUpdateRescueStationNoteArgs = {
+	id: Scalars['ID']['input'];
+	note: Scalars['String']['input'];
+};
+
 export type MutationUpdateSignedInRescueStationArgs = {
-	protocolMessageData: BaseCreateMessageInput;
+	protocolMessageData?: InputMaybe<BaseCreateMessageInput>;
 	rescueStationData: UpdateRescueStationInput;
 };
 
 export type MutationUpdateUnitNoteArgs = {
 	note: Scalars['String']['input'];
-	unitId: Scalars['String']['input'];
+	unitId: Scalars['ID']['input'];
 };
 
 export type MutationUpdateUnitStatusArgs = {
 	status: Scalars['Int']['input'];
-	unitId: Scalars['String']['input'];
+	unitId: Scalars['ID']['input'];
 };
 
 export type Organization = {
@@ -260,6 +284,7 @@ export type Query = {
 	organization: Organization;
 	/** Returns protocol entries sorted by time desc. */
 	protocolEntries: ProtocolEntryConnection;
+	rescueStationDeployment: RescueStationDeployment;
 	rescueStationDeployments: Array<RescueStationDeployment>;
 	unassignedEntities: Array<DeploymentAssignment>;
 	unit: Unit;
@@ -269,7 +294,11 @@ export type Query = {
 };
 
 export type QueryAlertGroupArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
+};
+
+export type QueryAlertGroupsArgs = {
+	filter?: InputMaybe<AlertGroupsFilter>;
 };
 
 export type QueryOrganizationArgs = {
@@ -283,12 +312,20 @@ export type QueryProtocolEntriesArgs = {
 	last?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type QueryRescueStationDeploymentArgs = {
+	id: Scalars['ID']['input'];
+};
+
 export type QueryRescueStationDeploymentsArgs = {
 	signedIn?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type QueryUnitArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
+};
+
+export type QueryUnitsArgs = {
+	filter?: InputMaybe<UnitsFilter>;
 };
 
 export type QueryUserLoginHistoryArgs = {
@@ -311,6 +348,21 @@ export type RescueStationAddress = {
 export type RescueStationDeployment = {
 	__typename?: 'RescueStationDeployment';
 	assignments: Array<DeploymentAssignment>;
+	callSign: Scalars['String']['output'];
+	createdAt: Scalars['DateTime']['output'];
+	defaultUnits: Array<Unit>;
+	id: Scalars['ID']['output'];
+	location: RescueStationLocation;
+	name: Scalars['String']['output'];
+	note: Scalars['String']['output'];
+	orgId: Scalars['String']['output'];
+	signedIn: Scalars['Boolean']['output'];
+	strength: RescueStationStrength;
+	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type RescueStationDeploymentEntity = {
+	__typename?: 'RescueStationDeploymentEntity';
 	callSign: Scalars['String']['output'];
 	createdAt: Scalars['DateTime']['output'];
 	defaultUnits: Array<Unit>;
@@ -384,8 +436,10 @@ export enum Role {
 export type Subscription = {
 	__typename?: 'Subscription';
 	currentUserDeactivated: UserDeactivated;
+	rescueStationNoteUpdated: RescueStationDeployment;
 	rescueStationSignedIn: RescueStationDeployment;
 	rescueStationSignedOff: RescueStationDeployment;
+	rescueStationsReset: Scalars['Boolean']['output'];
 	signedInRescueStationUpdated: RescueStationDeployment;
 	unitStatusUpdated: Unit;
 };
@@ -422,6 +476,10 @@ export type UnitStatus = {
 };
 
 export type UnitUnion = RegisteredUnit | UnknownUnit;
+
+export type UnitsFilter = {
+	ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+};
 
 export type UnknownUnit = {
 	__typename?: 'UnknownUnit';

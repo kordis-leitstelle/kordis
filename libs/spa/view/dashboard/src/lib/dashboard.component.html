@@ -3,11 +3,11 @@
 		<div class="logo">Kordis</div>
 		<div>
 			<nz-avatar
+				[nzDropdownMenu]="userMenu"
+				nz-dropdown
 				nzText="{{ (user$ | async)?.firstName?.slice(0, 1) }}{{
 					(user$ | async)?.lastName?.slice(0, 1)
 				}}"
-				[nzDropdownMenu]="userMenu"
-				nz-dropdown
 			></nz-avatar>
 			<nz-dropdown-menu #userMenu="nzDropdownMenu">
 				<ul nz-menu>
@@ -31,7 +31,7 @@
 			<div class="placeholder">Operations</div>
 		</div>
 		<div class="deployments">
-			<div class="placeholder">Deployments</div>
+			<krd-deployments />
 		</div>
 	</nz-content>
 </nz-layout>

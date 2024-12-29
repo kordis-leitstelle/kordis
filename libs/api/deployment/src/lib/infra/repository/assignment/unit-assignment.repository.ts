@@ -10,7 +10,10 @@ import {
 	runDbOperation,
 } from '@kordis/api/shared';
 
-import { DeploymentAlertGroup } from '../../../core/entity/deployment.entity';
+import {
+	DeploymentAlertGroup,
+	DeploymentUnit,
+} from '../../../core/entity/deployment.entity';
 import { UnitAssignmentRepository } from '../../../core/repository/unit-assignment.repository';
 import { UnitAssignmentDocument } from '../../schema/deployment-assignment.schema';
 import { DeploymentAlertGroupAggregate } from '../deployment/abstract-deployment.repository';
@@ -85,7 +88,7 @@ export class UnitAssignmentRepositoryImpl implements UnitAssignmentRepository {
 			: null;
 	}
 
-	async removeAlertGroupAssignmentsByAlertGroups(
+	async removeAssignmentsFromAlertGroups(
 		orgId: string,
 		alertGroupIds: string[],
 		uow?: UnitOfWork | undefined,
@@ -104,7 +107,30 @@ export class UnitAssignmentRepositoryImpl implements UnitAssignmentRepository {
 		await runDbOperation(operation, uow);
 	}
 
-	async removeAlertGroupAssignmentsFromUnits(
+	async getUnitsOfAlertGroup(
+		orgId: string,
+		alertGroupId: string,
+	): Promise<DeploymentUnit[]> {
+		const res = await this.unitAssignmentModel
+			.aggregate([
+				{
+					$match: {
+						orgId,
+						alertGroupId,
+					},
+				},
+				{
+					$project: {
+						entityId: 1,
+					},
+				},
+			])
+			.exec();
+
+		return this.mapper.mapArray(res, UnitAssignmentDocument, DeploymentUnit);
+	}
+
+	async removeAlertGroupFromUnits(
 		orgId: string,
 		unitIds: string[],
 		uow?: DbSessionProvider,

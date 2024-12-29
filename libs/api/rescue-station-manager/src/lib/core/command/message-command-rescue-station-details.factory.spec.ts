@@ -2,25 +2,25 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { MessageCommandRescueStationDetails } from '@kordis/api/protocol';
+import { RescueStationMessageDetails } from '@kordis/api/protocol';
 
 import { CommandRescueStationData } from './command-rescue-station-data.model';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
+import { RescueStationMessageDetailsFactory } from './rescue-station-message-details-factory.service';
 
 describe('MessageCommandRescueStationDetailsFactory', () => {
-	let factory: MessageCommandRescueStationDetailsFactory;
+	let factory: RescueStationMessageDetailsFactory;
 	let mockQueryBus: DeepMocked<QueryBus>;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				MessageCommandRescueStationDetailsFactory,
+				RescueStationMessageDetailsFactory,
 				{ provide: QueryBus, useValue: createMock<QueryBus>() },
 			],
 		}).compile();
 
-		factory = module.get<MessageCommandRescueStationDetailsFactory>(
-			MessageCommandRescueStationDetailsFactory,
+		factory = module.get<RescueStationMessageDetailsFactory>(
+			RescueStationMessageDetailsFactory,
 		);
 		mockQueryBus = module.get<DeepMocked<QueryBus>>(QueryBus);
 	});
@@ -91,7 +91,7 @@ describe('MessageCommandRescueStationDetailsFactory', () => {
 			commandRescueStationData,
 		);
 
-		const expected: MessageCommandRescueStationDetails = {
+		const expected: RescueStationMessageDetails = {
 			units: [
 				{
 					id: 'unitId1',

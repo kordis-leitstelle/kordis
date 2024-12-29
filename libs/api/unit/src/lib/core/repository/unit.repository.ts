@@ -3,7 +3,7 @@ import { UnitEntity, UnitStatus } from '../entity/unit.entity';
 export const UNIT_REPOSITORY = Symbol('UNIT_REPOSITORY');
 
 export interface UnitRepository {
-	findByIds(ids: string[]): Promise<UnitEntity[]>;
+	findByIds(ids: string[], orgId?: string): Promise<UnitEntity[]>;
 
 	findById(orgId: string, id: string): Promise<UnitEntity>;
 
@@ -12,6 +12,8 @@ export interface UnitRepository {
 	findByRcsId(orgId: string, rcsId: string): Promise<UnitEntity>;
 
 	updateNote(orgId: string, id: string, note: string): Promise<boolean>;
+
+	resetAllNotes(orgId: string): Promise<boolean>;
 
 	updateStatus(orgId: string, id: string, status: UnitStatus): Promise<boolean>;
 }

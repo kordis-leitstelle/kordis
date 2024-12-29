@@ -8,7 +8,11 @@ export interface DeploymentRepository<
 > {
 	findById(orgId: string, id: string): Promise<T>;
 
-	findByOrgId(orgId: string, filter?: Partial<TDto>): Promise<T[]>;
+	findByOrgId(
+		orgId: string,
+		filter?: Partial<TDto>,
+		uow?: DbSessionProvider,
+	): Promise<T[]>;
 
 	updateOne(
 		orgId: string,
