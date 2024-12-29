@@ -5,7 +5,6 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { DeploymentAssignment } from '@kordis/shared/model';
 
 import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
-import { DeploymentAssignmentsSearchService } from '../../services/deplyoment-assignments-search.service';
 import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.component';
 
 @Component({
@@ -28,33 +27,26 @@ class MockSearchWrapperComponent {
 
 describe('DeploymentSearchWrapperComponent', () => {
 	let fixture: ComponentFixture<MockSearchWrapperComponent>;
-	let mockSearchService: DeepMocked<DeploymentAssignmentsSearchService>;
 
 	beforeEach(() => {
-		mockSearchService = createMock();
 		fixture = TestBed.configureTestingModule({
 			imports: [DeploymentSearchWrapperComponent],
 			declarations: [MockSearchWrapperComponent],
 			providers: [DeploymentsSearchStateService],
-		})
-			.overrideProvider(DeploymentAssignmentsSearchService, {
-				useValue: mockSearchService,
-			})
-
-			.createComponent(MockSearchWrapperComponent);
+		}).createComponent(MockSearchWrapperComponent);
 	});
 
 	describe('isVisible', () => {
 		describe('alwaysShow', () => {
 			beforeEach(() => {
-				// no match
-				TestBed.inject(DeploymentsSearchStateService).searchValue.set('lorem');
 				fixture.componentRef.setInput('name', 'ipsum');
 			});
 
 			it('should be always visible if true and no match', async () => {
 				fixture.componentRef.setInput('alwaysShow', true);
 				fixture.detectChanges();
+				// no match
+				TestBed.inject(DeploymentsSearchStateService).searchValue.set('lorem');
 
 				expect(
 					fixture.nativeElement.querySelector('[data-testid="child-content"]'),
@@ -63,6 +55,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 
 			it('should not be visible if `alwaysShow` is false', () => {
 				fixture.componentRef.setInput('alwaysShow', false);
+				TestBed.inject(DeploymentsSearchStateService).searchValue.set('lorem');
 				fixture.detectChanges();
 
 				expect(
@@ -94,12 +87,6 @@ describe('DeploymentSearchWrapperComponent', () => {
 		it('should show if search results found', async () => {
 			fixture.autoDetectChanges();
 
-			mockSearchService.search.mockResolvedValueOnce([
-				{
-					__typename: 'DeploymentUnit',
-					unit: { name: 'test' },
-				} as DeploymentAssignment,
-			]);
 			TestBed.inject(DeploymentsSearchStateService).searchValue.set('te');
 
 			expect(

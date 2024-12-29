@@ -6,31 +6,20 @@ import {
 	booleanAttribute,
 	computed,
 	contentChild,
-	effect,
 	inject,
 	input,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NzIconDirective } from 'ng-zorro-antd/icon';
-import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
-import { of, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 
-import { DeploymentAssignment } from '@kordis/shared/model';
+import { DeploymentAssignment, Unit } from '@kordis/shared/model';
 
 import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
-import { DeploymentAssignmentsSearchService } from '../../services/deplyoment-assignments-search.service';
-import { DeploymentCardComponent } from './deplyoment-card.component';
 
 @Component({
 	selector: 'krd-deployment-search-wrapper',
 	standalone: true,
-	imports: [
-		DeploymentCardComponent,
-		NzIconDirective,
-		NzTooltipDirective,
-		NgTemplateOutlet,
-	],
-	providers: [DeploymentAssignmentsSearchService],
+	imports: [NgTemplateOutlet],
 	template: `
 		@if (isVisible()) {
 			<ng-template
@@ -52,13 +41,33 @@ export class DeploymentSearchWrapperComponent {
 	protected readonly templateRef = contentChild(TemplateRef);
 
 	private readonly searchStateService = inject(DeploymentsSearchStateService);
-	private readonly searchService = inject(DeploymentAssignmentsSearchService);
 
 	private readonly searchResults: Signal<DeploymentAssignment[]> = toSignal(
 		this.searchStateService.searchValueChange$.pipe(
-			switchMap((searchValue) =>
-				searchValue ? this.searchService.search(searchValue) : of([]),
-			),
+			map((searchTerm) => {
+				searchTerm = searchTerm.toLowerCase();
+				return this.assignments().filter((assignment) => {
+					const hasUnitMatch = (unit: Unit): boolean => {
+						return (
+							unit.name.toLowerCase().includes(searchTerm) ||
+							unit.callSign.toLowerCase().includes(searchTerm) ||
+							unit.callSignAbbreviation.toLowerCase().includes(searchTerm)
+						);
+					};
+
+					switch (assignment.__typename) {
+						case 'DeploymentUnit':
+							return hasUnitMatch(assignment.unit);
+						case 'DeploymentAlertGroup':
+							return (
+								assignment.alertGroup.name.toLowerCase().includes(searchTerm) ||
+								assignment.assignedUnits.some(({ unit }) => hasUnitMatch(unit))
+							);
+						default:
+							return false;
+					}
+				});
+			}),
 		),
 		{
 			initialValue: [],
@@ -86,8 +95,4 @@ export class DeploymentSearchWrapperComponent {
 			? this.searchResults()
 			: this.assignments(),
 	);
-
-	constructor() {
-		effect(() => this.searchService.updateAssignments(this.assignments()));
-	}
 }
