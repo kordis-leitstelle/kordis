@@ -11,7 +11,7 @@ import {
 	LaunchUpdateSignedInRescueStationProcessCommand,
 	LaunchUpdateSignedInRescueStationProcessHandler,
 } from './launch-update-signed-in-rescue-station-process.command';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
+import { RescueStationMessageDetailsFactory } from './rescue-station-message-details-factory.service';
 
 const COMMAND = new LaunchUpdateSignedInRescueStationProcessCommand(
 	{
@@ -48,15 +48,15 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 	let handler: LaunchUpdateSignedInRescueStationProcessHandler;
 	let commandBus: CommandBus;
 	let eventBus: EventBus;
-	let mockMessageCommandRescueStationDetailsFactory: DeepMocked<MessageCommandRescueStationDetailsFactory>;
+	let factory: DeepMocked<RescueStationMessageDetailsFactory>;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [CqrsModule],
 			providers: [
 				{
-					provide: MessageCommandRescueStationDetailsFactory,
-					useValue: createMock<MessageCommandRescueStationDetailsFactory>(),
+					provide: RescueStationMessageDetailsFactory,
+					useValue: createMock<RescueStationMessageDetailsFactory>(),
 				},
 				LaunchUpdateSignedInRescueStationProcessHandler,
 			],
@@ -70,9 +70,9 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 		);
 		commandBus = module.get<CommandBus>(CommandBus);
 		eventBus = module.get<EventBus>(EventBus);
-		mockMessageCommandRescueStationDetailsFactory = module.get<
-			DeepMocked<MessageCommandRescueStationDetailsFactory>
-		>(MessageCommandRescueStationDetailsFactory);
+		factory = module.get<DeepMocked<RescueStationMessageDetailsFactory>>(
+			RescueStationMessageDetailsFactory,
+		);
 	});
 
 	afterEach(() => {
@@ -110,9 +110,7 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 				},
 			],
 		};
-		mockMessageCommandRescueStationDetailsFactory.createFromCommandRescueStationData.mockResolvedValue(
-			rsDetails,
-		);
+		factory.createFromCommandRescueStationData.mockResolvedValue(rsDetails);
 
 		await handler.execute(COMMAND);
 

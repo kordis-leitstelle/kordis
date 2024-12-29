@@ -5,7 +5,7 @@ import {
 	GetRescueStationDeploymentQuery,
 	RescueStationDeploymentViewModel,
 } from '@kordis/api/deployment';
-import { MessageCommandRescueStationDetails } from '@kordis/api/protocol';
+import { RescueStationMessageDetails } from '@kordis/api/protocol';
 import {
 	AlertGroupViewModel,
 	GetAlertGroupsByIdsQuery,
@@ -16,13 +16,13 @@ import {
 import { CommandRescueStationData } from './command-rescue-station-data.model';
 
 @Injectable()
-export class MessageCommandRescueStationDetailsFactory {
+export class RescueStationMessageDetailsFactory {
 	constructor(private readonly queryBus: QueryBus) {}
 
 	async createFromCommandRescueStationData(
 		orgId: string,
 		commandRescueStationData: CommandRescueStationData,
-	): Promise<MessageCommandRescueStationDetails> {
+	): Promise<RescueStationMessageDetails> {
 		const rs: RescueStationDeploymentViewModel = await this.queryBus.execute(
 			new GetRescueStationDeploymentQuery(
 				orgId,
@@ -48,8 +48,8 @@ export class MessageCommandRescueStationDetailsFactory {
 	private async getPopulatedUnitsAndAlertGroups(
 		rescueStationData: CommandRescueStationData,
 	): Promise<{
-		units: MessageCommandRescueStationDetails['units'];
-		alertGroups: MessageCommandRescueStationDetails['alertGroups'];
+		units: RescueStationMessageDetails['units'];
+		alertGroups: RescueStationMessageDetails['alertGroups'];
 	}> {
 		const units: UnitViewModel[] = await this.queryBus.execute(
 			new GetUnitsByIdsQuery(
