@@ -1,16 +1,14 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InfoCircleOutline } from '@ant-design/icons-angular/icons';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzIconDirective, NzIconService } from 'ng-zorro-antd/icon';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
-import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 import { Subject, debounceTime, delay, switchMap, tap } from 'rxjs';
 
 import { Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
 import { DeploymentNotePopupComponent } from '../deployment-note-popup.component';
+import { NoteIndicatorComponent } from '../note-indicator.component';
 import { StatusBadgeComponent } from './status-badge.component';
 
 @Component({
@@ -19,10 +17,9 @@ import { StatusBadgeComponent } from './status-badge.component';
 	imports: [
 		DeploymentNotePopupComponent,
 		NzCardComponent,
-		NzIconDirective,
 		NzPopoverModule,
-		NzTooltipDirective,
 		StatusBadgeComponent,
+		NoteIndicatorComponent,
 	],
 	template: `
 		<ng-template #notePopoverContent>
@@ -44,7 +41,7 @@ import { StatusBadgeComponent } from './status-badge.component';
 				<span>
 					{{ unit().callSign }}
 					@if (unit().note) {
-						<i nz-icon nzType="info-circle" [nz-tooltip]="unit().note"> </i>
+						<krd-note-indicator [note]="unit().note" />
 					}
 				</span>
 				<krd-status-badge [status]="unit().status?.status" />
@@ -89,9 +86,7 @@ export class DeploymentUnitComponent {
 	private noteUpdatedSubject$ = new Subject<string>();
 	private gqlService = inject(GraphqlService);
 
-	constructor(iconService: NzIconService) {
-		iconService.addIcon(InfoCircleOutline);
-
+	constructor() {
 		// a deployment unit is updatable in every context, so we can safely implement it here (not like deployment card, which not always has a note)
 		this.noteUpdatedSubject$
 			.pipe(

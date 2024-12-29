@@ -1,15 +1,13 @@
 import { Component, computed, input } from '@angular/core';
-import { NzIconDirective } from 'ng-zorro-antd/icon';
-import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
 import { RescueStationDeployment } from '@kordis/shared/model';
 
-import { DeploymentCardComponent } from '../deplyoment-card.component';
+import { NoteIndicatorComponent } from '../note-indicator.component';
 
 @Component({
 	selector: 'krd-rescue-station-deployment-card-header',
 	standalone: true,
-	imports: [DeploymentCardComponent, NzTooltipDirective, NzIconDirective],
+	imports: [NoteIndicatorComponent],
 	template: `
 		<span
 			>{{ rescueStation().strength.leaders }}/{{
@@ -17,7 +15,7 @@ import { DeploymentCardComponent } from '../deplyoment-card.component';
 			}}/{{ rescueStation().strength.helpers }}//{{ totalStrength() }}</span
 		>
 		@if (rescueStation().note) {
-			<i nz-icon nzType="info-circle" [nz-tooltip]="rescueStation().note"> </i>
+			<krd-note-indicator [note]="rescueStation().note" />
 		}
 	`,
 	styles: `
