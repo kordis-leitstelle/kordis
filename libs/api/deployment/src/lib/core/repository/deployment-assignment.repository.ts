@@ -19,7 +19,7 @@ export interface DeploymentAssignmentRepository {
 	removeAssignmentsOfDeployments(
 		orgId: string,
 		deploymentIds: string[],
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void>;
 
 	removeAssignmentsOfDeployment(

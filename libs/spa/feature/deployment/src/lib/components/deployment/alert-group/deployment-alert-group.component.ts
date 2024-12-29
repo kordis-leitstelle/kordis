@@ -46,6 +46,6 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentAlertGroupComponent {
-	alertGroup = input.required<AlertGroup>();
-	unitAssignments = input.required<DeploymentUnit[]>();
+	readonly alertGroup = input.required<AlertGroup>();
+	readonly unitAssignments = input.required<DeploymentUnit[]>();
 }

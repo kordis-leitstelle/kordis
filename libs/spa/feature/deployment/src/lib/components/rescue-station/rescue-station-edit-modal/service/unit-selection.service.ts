@@ -75,7 +75,7 @@ class SelectableUnitsProvider implements SearchEntityProvider<Unit> {
 @Injectable({
 	providedIn: 'root',
 })
-class SelectableUnitSearchService extends AbstractEntitySearchService<Unit> {
+class UnitSearchService extends AbstractEntitySearchService<Unit> {
 	constructor(unitSearchEntityProvider: SelectableUnitsProvider) {
 		super(unitSearchEntityProvider, [
 			'callSign',
@@ -114,7 +114,6 @@ export class PossibleUnitSelectionsService extends EntitySelectionSearchService<
 		}
 	`;
 	protected queryName = 'units' as const;
-	protected searchService: EntitySearchService<Unit> = inject(
-		SelectableUnitSearchService,
-	);
+	protected searchService: EntitySearchService<Unit> =
+		inject(UnitSearchService);
 }

@@ -25,7 +25,7 @@ export abstract class EntitySelectionSearchService<
 		startWith(null), // trigger initial query
 		switchMap(() =>
 			this.gqlService
-				.queryOnce$<TQuery>(this.query)
+				.queryOnce$<TQuery>(this.query) // query everytime and embrace the cache of the graphql service
 				.pipe(
 					map((data) =>
 						data[this.queryName].filter(

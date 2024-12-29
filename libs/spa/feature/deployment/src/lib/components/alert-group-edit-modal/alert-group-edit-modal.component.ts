@@ -15,8 +15,6 @@ import { forkJoin } from 'rxjs';
 import { Query, Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
-import { AlertGroupSelectionComponent } from '../rescue-station/rescue-station-edit-modal/component/alert-group/alert-group-selection.component';
-import { AlertGroupSelectionsComponent } from '../rescue-station/rescue-station-edit-modal/component/alert-group/alert-group-selections.component';
 import { UnitsSelectComponent } from '../rescue-station/rescue-station-edit-modal/component/unit/units-select.component';
 import { AlertGroupAssignmentFormGroup } from '../rescue-station/rescue-station-edit-modal/rescue-station-edit-modal.component';
 import { PossibleUnitSelectionsService } from '../rescue-station/rescue-station-edit-modal/service/unit-selection.service';
@@ -26,8 +24,6 @@ import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-ed
 	selector: 'krd-alert-group-edit-modal',
 	standalone: true,
 	imports: [
-		AlertGroupSelectionComponent,
-		AlertGroupSelectionsComponent,
 		NzButtonComponent,
 		NzSpinComponent,
 		NzTooltipDirective,

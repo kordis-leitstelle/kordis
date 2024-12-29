@@ -6,12 +6,11 @@ import {
 	output,
 } from '@angular/core';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzEmptyComponent, NzEmptySimpleComponent } from 'ng-zorro-antd/empty';
+import { NzEmptyComponent } from 'ng-zorro-antd/empty';
 
 import { DeploymentAssignment } from '@kordis/shared/model';
 
 import { DeploymentAlertGroupComponent } from './alert-group/deployment-alert-group.component';
-import { DeploymentNotePopupComponent } from './deployment-note-popup.component';
 import { DeploymentUnitComponent } from './unit/deployment-unit.component';
 
 // status - rank mapping
@@ -29,11 +28,9 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 	standalone: true,
 	imports: [
 		DeploymentAlertGroupComponent,
-		DeploymentNotePopupComponent,
 		DeploymentUnitComponent,
 		NzCardComponent,
 		NzEmptyComponent,
-		NzEmptySimpleComponent,
 	],
 	template: `
 		<nz-card [class.clickable]="clickable()" (click)="clicked.emit()">
