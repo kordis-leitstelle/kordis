@@ -59,7 +59,6 @@ producerPath.discriminator(ProducerType.USER_PRODUCER, UserProducerSchema);
 producerPath.discriminator(ProducerType.SYSTEM_PRODUCER, SystemProducerSchema);
 
 ProtocolEntryBaseSchema.index({ orgId: 1, time: 1 }, { unique: false });
-ProtocolEntryBaseSchema.index({ orgId: 1 }, { unique: false });
 
 @Schema()
 export class ProtocolMessageEntryBaseDocument extends ProtocolEntryBaseDocument {

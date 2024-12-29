@@ -35,21 +35,35 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 		direction: 'preceding' | 'subsequent',
 		startingFrom?: Date,
 	): Promise<ProtocolEntryBase[]> {
-		const query = this.getQueryForSubset(
+		const protocolEntries = await this.getQueryForSubset(
 			organizationId,
 			direction === 'preceding' ? 'asc' : 'desc',
 			startingFrom,
-		).limit(count);
-
-		const protocolEntries = await query.lean().exec();
+		)
+			.limit(count)
+			.lean<ProtocolEntryBaseDocument[]>()
+			.exec();
 
 		if (direction === 'preceding') {
 			protocolEntries.reverse();
 		}
 
-		return protocolEntries.map((entry) =>
-			this.mapper.map(entry as ProtocolEntryBaseDocument),
+		return protocolEntries.map((entry) => this.mapper.map(entry));
+	}
+
+	async hasProtocolEntries(
+		organizationId: string,
+		direction: 'preceding' | 'subsequent',
+		startingFrom?: Date,
+	): Promise<boolean> {
+		const query = this.getQueryForSubset(
+			organizationId,
+			direction === 'preceding' ? 'asc' : 'desc',
+			startingFrom,
 		);
+		const protocolEntry = await query.select('_id').findOne();
+
+		return protocolEntry !== null;
 	}
 
 	private getQueryForSubset(
@@ -67,20 +81,5 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 			query.find({ time: { [comparator]: startingFrom.toISOString() } });
 		}
 		return query;
-	}
-
-	async hasProtocolEntries(
-		organizationId: string,
-		direction: 'preceding' | 'subsequent',
-		startingFrom?: Date,
-	): Promise<boolean> {
-		const query = this.getQueryForSubset(
-			organizationId,
-			direction === 'preceding' ? 'asc' : 'desc',
-			startingFrom,
-		);
-		const protocolEntry = await query.select('_id').findOne();
-
-		return protocolEntry !== null;
 	}
 }

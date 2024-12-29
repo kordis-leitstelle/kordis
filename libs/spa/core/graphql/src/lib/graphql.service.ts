@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentNode } from '@apollo/client/core';
+import { DocumentNode, Unmasked } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
 import { Observable, map } from 'rxjs';
 
@@ -43,15 +43,11 @@ export class GraphqlService {
 	mutate$<TData = unknown>(
 		mutation: DocumentNode,
 		variables?: Record<string, unknown>,
-		optimisticResponse?: TData,
 	): Observable<TData> {
 		return this.apollo
 			.mutate<TData>({
 				mutation,
 				variables,
-				optimisticResponse: optimisticResponse
-					? { __typename: 'Mutation', ...optimisticResponse }
-					: undefined,
 			})
 			.pipe(map(({ data }) => data as TData));
 	}
