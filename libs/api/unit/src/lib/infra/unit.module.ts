@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { ResetAlertGroupUnitsHandler } from '../core/command/reset-alert-group-units.command';
+import { ResetUnitNotesHandler } from '../core/command/reset-unit-notes.command';
+import { UpdateCurrentAlertGroupUnitsHandler } from '../core/command/update-current-alert-group-units.command';
 import { UpdateUnitNoteHandler } from '../core/command/update-unit-note.command';
 import { UpdateUnitStatusHandler } from '../core/command/update-unit-status.command';
 import { GetAlertGroupByIdHandler } from '../core/query/get-alert-group-by-id.query';
@@ -58,6 +61,9 @@ import { UnitDocument, UnitSchema } from './schema/unit.schema';
 		GetAlertGroupsByOrgHandler,
 		UpdateUnitNoteHandler,
 		UpdateUnitStatusHandler,
+		ResetAlertGroupUnitsHandler,
+		ResetUnitNotesHandler,
+		UpdateCurrentAlertGroupUnitsHandler,
 		UnitResolver,
 		AlertGroupResolver,
 		UnitsDataLoader,

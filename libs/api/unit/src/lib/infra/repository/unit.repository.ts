@@ -16,9 +16,16 @@ export class UnitRepositoryImpl implements UnitRepository {
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
-	async findByIds(ids: string[]): Promise<UnitEntity[]> {
+	async resetAllNotes(orgId: string): Promise<boolean> {
+		const res = await this.unitModel
+			.updateMany({ orgId }, { $set: { note: '' } })
+			.exec();
+		return res.modifiedCount > 0;
+	}
+
+	async findByIds(ids: string[], orgId?: string): Promise<UnitEntity[]> {
 		const units = await this.unitModel
-			.find({ _id: { $in: ids } })
+			.find({ _id: { $in: ids }, orgId })
 			.lean()
 			.exec();
 
@@ -64,9 +71,16 @@ export class UnitRepositoryImpl implements UnitRepository {
 		id: string,
 		status: UnitStatus,
 	): Promise<boolean> {
-		// we only want to update if the new status is newer than the current one
 		const res = await this.unitModel.updateOne(
-			{ _id: id, orgId, 'status.receivedAt': { $lt: status.receivedAt } },
+			{
+				_id: id,
+				orgId,
+				$or: [
+					// we only want to update if the new status is newer than the current one
+					{ 'status.receivedAt': { $lt: status.receivedAt } },
+					{ status: null },
+				],
+			},
 			{ $set: { status } },
 		);
 

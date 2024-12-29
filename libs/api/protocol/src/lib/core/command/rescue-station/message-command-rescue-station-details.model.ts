@@ -1,4 +1,4 @@
-export interface MessageCommandRescueStationDetails {
+export interface RescueStationMessageDetails {
 	id: string;
 	name: string;
 	callSign: string;

@@ -14,7 +14,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { RescueStationSignedOnEvent } from '../event/rescue-station-signed-on.event';
 import { CommandRescueStationData } from './command-rescue-station-data.model';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
+import { RescueStationMessageDetailsFactory } from './rescue-station-message-details-factory.service';
 
 export class LaunchSignOnProcessCommand {
 	constructor(
@@ -35,7 +35,7 @@ export class LaunchSignOnProcessHandler
 	constructor(
 		private readonly commandBus: CommandBus,
 		private readonly eventBus: EventBus,
-		private readonly messageCommandRescueStationDetailsFactory: MessageCommandRescueStationDetailsFactory,
+		private readonly rescueStationMessageDetailsFactory: RescueStationMessageDetailsFactory,
 	) {}
 
 	async execute({
@@ -62,7 +62,7 @@ export class LaunchSignOnProcessHandler
 		);
 
 		const rsDetails =
-			await this.messageCommandRescueStationDetailsFactory.createFromCommandRescueStationData(
+			await this.rescueStationMessageDetailsFactory.createFromCommandRescueStationData(
 				reqUser.organizationId,
 				rescueStationData,
 			);

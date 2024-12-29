@@ -46,7 +46,10 @@ import {
 import { ProtocolEntryMapper } from './mapper-profile/protocol-entry.mapper';
 import { RescueStationMessagePayloadDocumentProfile } from './mapper-profile/rescue-station/rescue-station-message-payload-document.mapper-profile';
 import { RescueStationMessagePayloadProfile } from './mapper-profile/rescue-station/rescue-station-message-payload-entity.mapper-profile';
-import { RescueStationSignOffMessageDocumentProfile } from './mapper-profile/rescue-station/rescue-station-sign-off-message-document.mapper-profile';
+import {
+	RescueStationSignOffMessageDocumentProfile,
+	RescueStationSignOffMessagePayloadDocumentProfile,
+} from './mapper-profile/rescue-station/rescue-station-sign-off-message-document.mapper-profile';
 import {
 	RescueStationSignOffMessageEntityProfile,
 	RescueStationSignOffMessagePayloadEntityProfile,
@@ -68,6 +71,7 @@ const MAPPER_PROFILES = [
 	ProtocolEntryMapper,
 	RescueStationMessagePayloadDocumentProfile,
 	RescueStationMessagePayloadProfile,
+	RescueStationSignOffMessagePayloadDocumentProfile,
 	RescueStationSignOffMessageDocumentProfile,
 	RescueStationSignOffMessageEntityProfile,
 	RescueStationSignOffMessagePayloadEntityProfile,

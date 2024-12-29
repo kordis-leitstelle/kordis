@@ -7,5 +7,5 @@ export { CreateOperationEndedMessageCommand } from './lib/core/command/operation
 export { CreateOperationAssignmentsUpdatedMessageCommand } from './lib/core/command/operation/create-operation-assignments-updated-message.command';
 export { BaseCreateMessageArgs } from './lib/infra/controller/base-create-message.args';
 export { MessageUnit } from './lib/core/entity/partials/unit-partial.entity';
-export { MessageCommandRescueStationDetails } from './lib/core/command/rescue-station/message-command-rescue-station-details.model';
+export { RescueStationMessageDetails } from './lib/core/command/rescue-station/message-command-rescue-station-details.model';
 export { UnitInput } from './lib/infra/view-model/unit-input.view-model';

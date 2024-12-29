@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
-import { Observable, map, share } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
@@ -11,7 +11,7 @@ export class GraphqlService {
 
 	queryOnce$<TData = unknown>(
 		query: DocumentNode,
-		variables?: Record<string, unknown>,
+		variables: Record<string, unknown> = {},
 	): Observable<TData> {
 		return this.apollo
 			.query<TData>({
@@ -23,7 +23,7 @@ export class GraphqlService {
 
 	query<TData = unknown>(
 		query: DocumentNode,
-		variables?: Record<string, unknown>,
+		variables: Record<string, unknown> = {},
 	): {
 		$: Observable<TData>;
 		refresh: (variables?: Record<string, unknown>) => Promise<TData>;
@@ -34,10 +34,7 @@ export class GraphqlService {
 		});
 
 		return {
-			$: queryRef.valueChanges.pipe(
-				map(({ data }) => data),
-				share(),
-			),
+			$: queryRef.valueChanges.pipe(map(({ data }) => data)),
 			refresh: (variables?: Record<string, unknown>): Promise<TData> =>
 				queryRef.refetch(variables).then(({ data }) => data),
 		};
@@ -46,15 +43,11 @@ export class GraphqlService {
 	mutate$<TData = unknown>(
 		mutation: DocumentNode,
 		variables?: Record<string, unknown>,
-		optimisticResponse?: TData,
 	): Observable<TData> {
 		return this.apollo
 			.mutate<TData>({
 				mutation,
 				variables,
-				optimisticResponse: optimisticResponse
-					? { __typename: 'Mutation', ...optimisticResponse }
-					: undefined,
 			})
 			.pipe(map(({ data }) => data as TData));
 	}

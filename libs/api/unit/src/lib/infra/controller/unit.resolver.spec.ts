@@ -15,6 +15,8 @@ import { UpdateUnitStatusCommand } from '../../core/command/update-unit-status.c
 import { UnitEntity } from '../../core/entity/unit.entity';
 import { UnitStatusUpdatedEvent } from '../../core/event/unit-status-updated.event';
 import { UnitStatusOutdatedException } from '../../core/exception/unit-status-outdated.exception';
+import { GetUnitsByIdsQuery } from '../../core/query/get-units-by-ids.query';
+import { GetUnitsByOrgQuery } from '../../core/query/get-units-by-org.query';
 import { PresentableUnitStatusOutdatedException } from '../exceptions/presentable-unit-status-outdated.exception';
 import { UnitResolver } from './unit.resolver';
 
@@ -54,10 +56,36 @@ describe('UnitResolver', () => {
 			organizationId: 'orgId',
 		} as AuthUser);
 
+		expect(mockQueryBus.execute).toHaveBeenCalledWith(
+			new GetUnitsByOrgQuery('orgId'),
+		);
 		expect(result).toEqual(mockUnits);
 	});
 
-	it('should return unit by organization id and id', async () => {
+	it('should return units by organization id and unit ids', async () => {
+		const unit1 = new UnitEntity();
+		unit1.name = 'unit1';
+		const unit2 = new UnitEntity();
+		unit2.name = 'unit2';
+		const mockUnits = [unit1, unit2];
+
+		mockQueryBus.execute.mockResolvedValue(mockUnits);
+
+		const result = await unitResolver.units(
+			{
+				organizationId: 'orgId',
+			} as AuthUser,
+			{
+				ids: ['unit1', 'unit2'],
+			},
+		);
+		expect(mockQueryBus.execute).toHaveBeenCalledWith(
+			new GetUnitsByIdsQuery(['unit1', 'unit2'], 'orgId'),
+		);
+		expect(result).toEqual(mockUnits);
+	});
+
+	it('should return unit by organization id and unit id', async () => {
 		const mockUnit = new UnitEntity();
 		mockUnit.name = 'unit';
 

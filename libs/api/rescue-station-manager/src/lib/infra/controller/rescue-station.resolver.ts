@@ -27,14 +27,21 @@ export class RescueStationResolver {
 	async updateSignedInRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
-		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
+		@Args('protocolMessageData', {
+			nullable: true,
+			type: () => BaseCreateMessageArgs,
+		})
+		protocolMessageData: BaseCreateMessageArgs | null,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
+			const protocolPayload = protocolMessageData
+				? await protocolMessageData.asTransformedPayload()
+				: null;
 			await this.commandBus.execute(
 				new LaunchUpdateSignedInRescueStationProcessCommand(
 					reqUser,
 					rescueStationData,
-					await protocolMessageData.asTransformedPayload(),
+					protocolPayload,
 				),
 			);
 			return this.queryBus.execute(

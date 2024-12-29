@@ -10,7 +10,7 @@ import {
 	LaunchSignOnProcessCommand,
 	LaunchSignOnProcessHandler,
 } from './launch-sign-on-process.command';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
+import { RescueStationMessageDetailsFactory } from './rescue-station-message-details-factory.service';
 
 const COMMAND = new LaunchSignOnProcessCommand(
 	{
@@ -53,8 +53,8 @@ describe('LaunchSignOnProcessHandler', () => {
 			imports: [CqrsModule],
 			providers: [
 				{
-					provide: MessageCommandRescueStationDetailsFactory,
-					useValue: createMock<MessageCommandRescueStationDetailsFactory>(),
+					provide: RescueStationMessageDetailsFactory,
+					useValue: createMock<RescueStationMessageDetailsFactory>(),
 				},
 				LaunchSignOnProcessHandler,
 			],

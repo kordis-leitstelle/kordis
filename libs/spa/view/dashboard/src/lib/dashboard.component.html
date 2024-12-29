@@ -1,22 +1,22 @@
 <nz-layout>
 	<nz-header>
-		<div class='logo'>Kordis</div>
+		<div class="logo">Kordis</div>
 		<div>
 			<nz-avatar
-				[nzDropdownMenu]='userMenu'
+				[nzDropdownMenu]="userMenu"
 				nz-dropdown
-				nzText='{{ (user$ | async)?.firstName?.slice(0, 1) }}{{
+				nzText="{{ (user$ | async)?.firstName?.slice(0, 1) }}{{
 					(user$ | async)?.lastName?.slice(0, 1)
-				}}'
-			/>
-			<nz-dropdown-menu #userMenu='nzDropdownMenu'>
+				}}"
+			></nz-avatar>
+			<nz-dropdown-menu #userMenu="nzDropdownMenu">
 				<ul nz-menu>
 					<li nz-menu-item nzDisabled>
 						{{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
 					</li>
-					<li (click)='logout()' nz-menu-item>Abmelden</li>
+					<li (click)="logout()" nz-menu-item>Abmelden</li>
 					<li nz-menu-divider></li>
-					<li (click)='showCreditsAndLicensesModal()' nz-menu-item>
+					<li (click)="showCreditsAndLicensesModal()" nz-menu-item>
 						Credits und Lizenzen
 					</li>
 				</ul>
@@ -24,14 +24,14 @@
 		</div>
 	</nz-header>
 	<nz-content>
-		<div class='protocol'>
-			<div class='placeholder'>Protocol</div>
+		<div class="protocol">
+			<div class="placeholder">Protocol</div>
 		</div>
-		<div class='operations'>
-			<krd-operations />
+		<div class="operations">
+			<div class="placeholder">Operations</div>
 		</div>
-		<div class='deployments'>
-			<div class='placeholder'>Deployments</div>
+		<div class="deployments">
+			<krd-deployments />
 		</div>
 	</nz-content>
 </nz-layout>
