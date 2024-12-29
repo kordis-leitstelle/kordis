@@ -1,9 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	Signal,
-	inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import {
@@ -19,7 +14,7 @@ import { NzInputDirective, NzInputGroupComponent } from 'ng-zorro-antd/input';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPopconfirmDirective } from 'ng-zorro-antd/popconfirm';
-import { merge } from 'rxjs';
+import { merge, switchMap } from 'rxjs';
 
 import { Query } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
@@ -28,7 +23,6 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 import { AlertGroupEditModalComponent } from '../alert-group-edit-modal/alert-group-edit-modal.component';
 import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.component';
 import { DeploymentCardComponent } from './deplyoment-card.component';
-import { RescueStationDeploymentCardHeaderComponent } from './rescue-station/rescue-station-deployment-card-header.component';
 import { RESCUE_STATION_FRAGMENT } from './rescue-station/rescue-station.fragment';
 import { SignedInRescueStationsComponent } from './signed-in-rescue-stations.component';
 import { SignedOffDeploymentsComponent } from './signed-off-deployments.component';
@@ -67,6 +61,8 @@ const DEPLOYMENTS_QUERY = gql`
 	selector: 'krd-deployments',
 	standalone: true,
 	imports: [
+		DeploymentCardComponent,
+		DeploymentSearchWrapperComponent,
 		FormsModule,
 		NzButtonComponent,
 		NzDividerComponent,
@@ -74,11 +70,8 @@ const DEPLOYMENTS_QUERY = gql`
 		NzInputDirective,
 		NzInputGroupComponent,
 		NzPopconfirmDirective,
-		RescueStationDeploymentCardHeaderComponent,
 		SignedInRescueStationsComponent,
 		SignedOffDeploymentsComponent,
-		DeploymentSearchWrapperComponent,
-		DeploymentCardComponent,
 	],
 	providers: [DeploymentsSearchStateService],
 	templateUrl: './deployments.component.html',
@@ -86,14 +79,26 @@ const DEPLOYMENTS_QUERY = gql`
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentsComponent {
-	readonly deployments: Signal<{
-		signedInStations: Query['rescueStationDeployments'];
-		signedOffStations: Query['rescueStationDeployments'];
-		unassignedEntities: Query['unassignedEntities'];
-	}>;
 	readonly searchStateService = inject(DeploymentsSearchStateService);
 
 	private readonly gqlService = inject(GraphqlService);
+	private readonly deploymentsQuery = this.gqlService.query<{
+		signedInStations: Query['rescueStationDeployments'];
+		signedOffStations: Query['rescueStationDeployments'];
+		unassignedEntities: Query['unassignedEntities'];
+	}>(DEPLOYMENTS_QUERY);
+
+	readonly deployments = toSignal(
+		this.deploymentsQuery.$.pipe(takeUntilDestroyed()),
+		{
+			initialValue: {
+				signedInStations: [],
+				signedOffStations: [],
+				unassignedEntities: [],
+			},
+		},
+	);
+
 	private readonly modalService = inject(NzModalService);
 	private readonly notificationService = inject(NzNotificationService);
 
@@ -104,20 +109,6 @@ export class DeploymentsComponent {
 			EditOutline,
 			CloseOutline,
 		);
-
-		const deploymentsQuery = this.gqlService.query<{
-			signedInStations: Query['rescueStationDeployments'];
-			signedOffStations: Query['rescueStationDeployments'];
-			unassignedEntities: Query['unassignedEntities'];
-		}>(DEPLOYMENTS_QUERY);
-
-		this.deployments = toSignal(deploymentsQuery.$.pipe(takeUntilDestroyed()), {
-			initialValue: {
-				signedInStations: [],
-				signedOffStations: [],
-				unassignedEntities: [],
-			},
-		});
 
 		// right now we greedily get all deployments, as a change in a deployment or a unit can result in changes in multiple deployment
 		// a better way would be to have more fine events for all actions taken that could replay the action in the frontend
@@ -145,7 +136,7 @@ export class DeploymentsComponent {
 			`),
 		)
 			.pipe(takeUntilDestroyed())
-			.subscribe(() => deploymentsQuery.refresh());
+			.subscribe(() => this.deploymentsQuery.refresh());
 
 		// subscribe to note updates, will update the cache
 		this.gqlService
@@ -190,6 +181,7 @@ export class DeploymentsComponent {
 					}
 				}
 			`)
+			.pipe(switchMap(() => this.deploymentsQuery.refresh()))
 			.subscribe(() =>
 				this.notificationService.success(
 					'Zurückgesetzt',
