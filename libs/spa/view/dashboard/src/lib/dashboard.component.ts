@@ -13,10 +13,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 import { TraceComponent } from '@kordis/spa/core/observability';
 import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
-import {
-	ProtocolComponent,
-	ProtocolViewComponent,
-} from '@kordis/spa/feature/protocol';
+import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 
 @Component({
 	selector: 'krd-dashboard-view',
@@ -32,7 +29,6 @@ import {
 		NzModalModule,
 		ProtocolViewComponent,
 		DeploymentsComponent,
-		ProtocolComponent,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
