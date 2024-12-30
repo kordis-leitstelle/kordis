@@ -3,6 +3,11 @@ import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
 import { Observable, map } from 'rxjs';
 
+export type QueryReturnType<TData> = {
+	$: Observable<TData>;
+	refresh: (variables?: Record<string, unknown>) => Promise<TData>;
+};
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -24,10 +29,7 @@ export class GraphqlService {
 	query<TData = unknown>(
 		query: DocumentNode,
 		variables: Record<string, unknown> = {},
-	): {
-		$: Observable<TData>;
-		refresh: (variables?: Record<string, unknown>) => Promise<TData>;
-	} {
+	): QueryReturnType<TData> {
 		const queryRef = this.apollo.watchQuery<TData>({
 			query,
 			variables,

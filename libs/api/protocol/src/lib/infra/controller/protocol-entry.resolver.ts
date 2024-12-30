@@ -19,11 +19,14 @@ import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { RegisteredUnit } from '../../core/entity/partials/unit-partial.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryUnion } from '../../core/entity/protocol.entity';
 import { ProtocolEntryCreatedEvent } from '../../core/event/protocol-entry-created.event';
 import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.query';
 import { ProtocolEntryConnectionBuilder } from '../service/protocol-entry-connection.builder';
 import { ProtocolEntryConnection } from '../view-model/protocol-entry.connection';
 import { ProtocolEntryConnectionArgs } from '../view-model/protocol-entry.connection-args';
+import { ProtocolEntryEdge } from '../view-model/protocol-entry.edge';
 
 @Resolver()
 export class ProtocolEntryResolver {
@@ -60,16 +63,20 @@ export class ProtocolEntryResolver {
 		});
 	}
 
-	@Subscription(() => Boolean)
+	@Subscription(() => ProtocolEntryUnion)
 	protocolEntryCreated(
 		@RequestUser() { organizationId }: AuthUser,
-	): AsyncIterableIterator<boolean> {
+	): AsyncIterableIterator<ProtocolEntryBase> {
+		console.log('Subscription');
 		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
 			ProtocolEntryCreatedEvent,
 			'protocolEntryCreated',
 			{
-				filter: (payload) => payload.orgId === organizationId,
-				map: () => true,
+				filter: ({ orgId }) => orgId === organizationId,
+				map: (prop) => {
+					console.log('new subscription return', prop);
+					return prop.protocolEntry;
+				},
 			},
 		);
 	}
