@@ -1,11 +1,4 @@
-import {
-	Controller,
-	OnModuleInit,
-	Post,
-	Req,
-	Res,
-	ServiceUnavailableException,
-} from '@nestjs/common';
+import { All, Controller, OnModuleInit, Req, Res, ServiceUnavailableException } from '@nestjs/common';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import type { Response } from 'express';
 import { createHandler } from 'graphql-sse/lib/use/express';
@@ -28,7 +21,7 @@ export class GraphqlSubscriptionsController implements OnModuleInit {
 		});
 	}
 
-	@Post()
+	@All()
 	subscriptionHandler(
 		@Req() req: KordisRequest,
 		@Res() res: Response,
