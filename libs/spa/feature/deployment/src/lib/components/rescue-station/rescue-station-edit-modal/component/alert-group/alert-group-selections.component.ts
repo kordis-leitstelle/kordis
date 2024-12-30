@@ -28,7 +28,6 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 
 @Component({
 	selector: 'krd-alert-group-selections',
-	standalone: true,
 	imports: [
 		AlertGroupAutocompleteComponent,
 		AlertGroupSelectionComponent,

@@ -12,7 +12,6 @@ import { NzSpinComponent } from 'ng-zorro-antd/spin';
 
 @Component({
 	selector: 'krd-note-popup',
-	standalone: true,
 	imports: [
 		FormsModule,
 		NzInputDirective,

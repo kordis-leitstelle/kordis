@@ -16,7 +16,6 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 
 @Component({
 	selector: 'krd-alert-group-autocomplete',
-	standalone: true,
 	imports: [
 		AsyncPipe,
 		NzAutocompleteModule,

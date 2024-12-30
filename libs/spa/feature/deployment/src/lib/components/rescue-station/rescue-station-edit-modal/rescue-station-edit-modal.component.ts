@@ -46,7 +46,6 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 
 @Component({
 	selector: 'krd-rescue-station-edit-modal',
-	standalone: true,
 	imports: [
 		AlertGroupSelectionsComponent,
 		NzAlertComponent,

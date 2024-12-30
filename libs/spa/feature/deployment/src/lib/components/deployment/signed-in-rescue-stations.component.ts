@@ -20,7 +20,6 @@ import { DeploymentCardComponent } from './deplyoment-card.component';
 import { RescueStationDeploymentCardHeaderComponent } from './rescue-station/rescue-station-deployment-card-header.component';
 
 @Component({
-	standalone: true,
 	selector: 'krd-signed-in-deployments',
 	template: `
 		@if (showNoSearchResults()) {

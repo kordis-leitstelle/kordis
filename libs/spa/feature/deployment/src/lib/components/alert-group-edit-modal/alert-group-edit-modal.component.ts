@@ -22,7 +22,6 @@ import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-ed
 
 @Component({
 	selector: 'krd-alert-group-edit-modal',
-	standalone: true,
 	imports: [
 		NzButtonComponent,
 		NzSpinComponent,

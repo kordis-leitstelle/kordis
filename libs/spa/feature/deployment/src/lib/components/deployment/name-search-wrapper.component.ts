@@ -3,7 +3,6 @@ import { Component, computed, inject, input } from '@angular/core';
 import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 
 @Component({
-	standalone: true,
 	selector: 'krd-name-search-wrapper',
 	template: `
 		@if (isVisible()) {

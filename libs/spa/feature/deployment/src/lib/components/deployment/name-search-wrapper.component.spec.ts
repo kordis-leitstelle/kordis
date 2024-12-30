@@ -6,6 +6,8 @@ import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 
 @Component({
 	selector: 'krd-name-search-wrapper-child',
+	/* eslint-disable @angular-eslint/prefer-standalone  */
+	standalone: false,
 	template: `
 		<krd-name-search-wrapper [name]="name()">
 			<span data-testid="child-content">hello</span>

@@ -16,7 +16,6 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 
 @Component({
 	selector: 'krd-deployment-search-wrapper',
-	standalone: true,
 	imports: [NgTemplateOutlet],
 	template: `
 		@if (isVisible()) {
@@ -52,7 +51,6 @@ export class DeploymentSearchWrapperComponent {
 				return this.assignments();
 			}
 			// otherwise we have a search term, return filtered assignments
-
 			return this.assignments().filter((assignment) => {
 				const hasUnitMatch = (unit: Unit): boolean => {
 					return (

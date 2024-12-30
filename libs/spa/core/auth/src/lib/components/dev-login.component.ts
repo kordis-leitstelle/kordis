@@ -15,7 +15,6 @@ import { DevAuthService } from '../services/dev-auth.service';
 
 @Component({
 	selector: 'krd-auth',
-	standalone: true,
 	styles: [
 		`
 			.container {
