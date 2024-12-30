@@ -65,8 +65,7 @@
 			"inlineTemplate": true
 		},
 		"@nx/nest:library": {
-			"strict": true,
-			"target": "es2021"
+			"strict": true
 		}
 	},
 	"useLegacyCache": true
