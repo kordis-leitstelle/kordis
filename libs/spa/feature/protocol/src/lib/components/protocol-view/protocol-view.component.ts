@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	Signal,
+	computed,
+	effect,
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 
 import {
@@ -157,16 +163,17 @@ cache.policies.addTypePolicies({
 		ProtocolTableComponent,
 		CreateProtocolMessageComponent,
 	],
-	template: ` <krd-create-protocol-message
+	template: `
+		<krd-create-protocol-message
 			(newMessage)="addCommunicationMessage($event)"
 		></krd-create-protocol-message>
-		<krd-protocol [protocolEntries]="protocolEntries()" />`,
+		<krd-protocol [protocolEntries]="protocolEntries()" />
+	`,
 	styles: ``,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProtocolViewComponent {
 	private client: ProtocolClient;
-	private clientSubscription?: Subscription;
 
 	protocolEntries: Signal<ProtocolEntryUnion[]>;
 
@@ -175,6 +182,8 @@ export class ProtocolViewComponent {
 		this.protocolEntries = toSignal(this.client.protocolEntries$, {
 			initialValue: [],
 		});
+
+		effect(() => console.log(this.protocolEntries()));
 	}
 
 	addCommunicationMessage(
@@ -182,6 +191,6 @@ export class ProtocolViewComponent {
 	): void {
 		this.gqlService
 			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, messageForm)
-			.subscribe();
+			.subscribe(console.log);
 	}
 }
