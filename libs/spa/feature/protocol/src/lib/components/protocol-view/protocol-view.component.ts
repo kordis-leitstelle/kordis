@@ -180,9 +180,8 @@ export class ProtocolViewComponent {
 	addCommunicationMessage(
 		messageForm: MutationCreateCommunicationMessageArgs,
 	): void {
-		this.gqlService.mutate$<CommunicationMessage>(
-			CREATE_COMMUNICATION_MESSAGE,
-			messageForm,
-		);
+		this.gqlService
+			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, messageForm)
+			.subscribe();
 	}
 }
