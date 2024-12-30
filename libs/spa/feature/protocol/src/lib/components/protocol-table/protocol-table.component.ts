@@ -1,9 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-	ChangeDetectionStrategy,
-	Component,
-	input
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
@@ -15,7 +11,6 @@ import { NzTableFullHeightDirective } from './nz-table-full-height.directive';
 
 @Component({
 	selector: 'krd-protocol',
-	standalone: true,
 	imports: [
 		CommonModule,
 		NzTableModule,
