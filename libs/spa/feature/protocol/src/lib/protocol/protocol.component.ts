@@ -11,7 +11,6 @@ import { NzTableFullHeightDirective } from './nz-table-full-height.directive';
 
 @Component({
 	selector: 'krd-protocol',
-	standalone: true,
 	imports: [
 		CommonModule,
 		NzTableModule,

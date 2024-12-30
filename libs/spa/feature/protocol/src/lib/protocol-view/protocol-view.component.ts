@@ -142,7 +142,6 @@ cache.policies.addTypePolicies({
 
 @Component({
 	selector: 'krd-protocol-view',
-	standalone: true,
 	imports: [CommonModule, ProtocolComponent],
 	template: ` <button (click)="loadMore()">Load more</button>
 		<button (click)="addCommunicationMessage()">Add Comm Message</button>
@@ -161,30 +160,27 @@ export class ProtocolViewComponent {
 		}>(GET_PROTOCOL_ENTRIES_QUERY, { endCursor: null });
 
 		this.query.$.pipe(
-			tap((x) => console.log('fetched protocol entries', x)),
-			tap((x) => (this.pageInfo = x.data.protocolEntries.pageInfo)),
-			map((x) => x.data.protocolEntries.edges.map((edge) => edge.node)),
+			tap((x) => (this.pageInfo = x.protocolEntries.pageInfo)),
+			map((x) => x.protocolEntries.edges.map((edge) => edge.node)),
 		)
 			// TODO: unsubscribe on destroy
 			.subscribe((x) => {
 				this.protocolEntries = [...this.protocolEntries, ...x];
-				console.log('data array', this.protocolEntries);
 			});
 	}
 
 	loadMore(): void {
 		if (!this.pageInfo?.hasNextPage) {
-			console.log('No next page available');
 			return;
 		}
 
-		console.log('loading more protocol entries');
 		this.query.refresh({ endCursor: this.pageInfo?.endCursor ?? null });
 	}
 
 	addCommunicationMessage(): void {
-		this.gqlService
-			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, {
+		this.gqlService.mutate$<CommunicationMessage>(
+			CREATE_COMMUNICATION_MESSAGE,
+			{
 				sender: {
 					type: 'REGISTERED_UNIT',
 					id: '65d7d90709cdb6f3b2082ab3',
@@ -195,7 +191,7 @@ export class ProtocolViewComponent {
 				},
 				message: 'abcabcabcabc',
 				channel: 'D',
-			})
-			.subscribe((x) => console.log('Created comm msg', x));
+			},
+		);
 	}
 }

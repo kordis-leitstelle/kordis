@@ -7,7 +7,6 @@ import { UnitUnion } from '@kordis/shared/model';
 
 @Component({
 	selector: 'krd-unit-chip',
-	standalone: true,
 	imports: [CommonModule, NzTagModule, NzToolTipModule],
 	template: `
 		<ng-container *ngIf="unit() as unit">

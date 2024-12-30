@@ -152,7 +152,6 @@ cache.policies.addTypePolicies({
 
 @Component({
 	selector: 'krd-protocol-view',
-	standalone: true,
 	imports: [
 		CommonModule,
 		ProtocolTableComponent,
@@ -181,8 +180,9 @@ export class ProtocolViewComponent {
 	addCommunicationMessage(
 		messageForm: MutationCreateCommunicationMessageArgs,
 	): void {
-		this.gqlService
-			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, messageForm)
-			.subscribe((x) => console.log('Created comm msg', x));
+		this.gqlService.mutate$<CommunicationMessage>(
+			CREATE_COMMUNICATION_MESSAGE,
+			messageForm,
+		);
 	}
 }

@@ -9,6 +9,7 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 			<ng-content />
 		}
 	`,
+	standalone: false,
 })
 export class NameSearchWrapperComponent {
 	readonly name = input.required<string>();

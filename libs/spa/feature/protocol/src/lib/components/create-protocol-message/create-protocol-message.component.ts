@@ -16,7 +16,6 @@ import { MutationCreateCommunicationMessageArgs } from '@kordis/shared/model';
 
 @Component({
 	selector: 'krd-create-protocol-message',
-	standalone: true,
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
@@ -96,8 +95,8 @@ export class CreateProtocolMessageComponent {
 		this.newMessage.emit({
 			sender: { type: 'UNKNOWN_UNIT', name: formValue.sender },
 			recipient: { type: 'UNKNOWN_UNIT', name: formValue.recipient },
-			message: formValue.message!,
-			channel: formValue.channel!,
+			message: formValue.message ?? '', // TODO: make sure not empty
+			channel: formValue.channel ?? 'D', // TODO: make sure not empty
 		});
 
 		this.validateForm.reset();
