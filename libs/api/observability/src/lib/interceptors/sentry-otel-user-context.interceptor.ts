@@ -15,6 +15,7 @@ import { AuthUser } from '@kordis/shared/model';
 @Injectable()
 export class SentryOTelUserContextInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+		console.log(context)
 		let user: AuthUser | undefined; // user can be undefined, since we have routes passed through the auth interceptor which don't require a user (/health-check)
 		if (context.getType<GqlContextType>() === 'graphql') {
 			const ctx = GqlExecutionContext.create(context);

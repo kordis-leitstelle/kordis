@@ -2,26 +2,38 @@ import { QueryBus } from '@nestjs/cqrs';
 import {
 	Args,
 	Context,
+	GqlSubscriptionService,
 	Parent,
 	Query,
 	ResolveField,
 	Resolver,
+	Subscription,
 } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import { DataLoaderContextProvider } from '@kordis/api/shared';
+import {
+	DataLoaderContextProvider,
+	GraphQLSubscriptionService,
+} from '@kordis/api/shared';
 import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { RegisteredUnit } from '../../core/entity/partials/unit-partial.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryUnion } from '../../core/entity/protocol.entity';
+import { ProtocolEntryCreatedEvent } from '../../core/event/protocol-entry-created.event';
 import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.query';
 import { ProtocolEntryConnectionBuilder } from '../service/protocol-entry-connection.builder';
 import { ProtocolEntryConnection } from '../view-model/protocol-entry.connection';
 import { ProtocolEntryConnectionArgs } from '../view-model/protocol-entry.connection-args';
+import { ProtocolEntryEdge } from '../view-model/protocol-entry.edge';
 
 @Resolver()
 export class ProtocolEntryResolver {
-	constructor(private readonly queryBus: QueryBus) {}
+	constructor(
+		private readonly queryBus: QueryBus,
+		private gqlSubscriptionService: GraphQLSubscriptionService,
+	) {}
 
 	@Query(() => ProtocolEntryConnection, {
 		description: 'Returns protocol entries sorted by time desc.',
@@ -49,6 +61,24 @@ export class ProtocolEntryResolver {
 			totalEdges: protocolEntryPage.totalEdges,
 			nodes: protocolEntryPage.nodes,
 		});
+	}
+
+	@Subscription(() => ProtocolEntryUnion)
+	protocolEntryCreated(
+		@RequestUser() { organizationId }: AuthUser,
+	): AsyncIterableIterator<ProtocolEntryBase> {
+		console.log('Subscription');
+		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
+			ProtocolEntryCreatedEvent,
+			'protocolEntryCreated',
+			{
+				filter: ({ orgId }) => orgId === organizationId,
+				map: (prop) => {
+					console.log('new subscription return', prop);
+					return prop.protocolEntry;
+				},
+			},
+		);
 	}
 }
 
