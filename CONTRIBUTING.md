@@ -67,11 +67,11 @@ generate a new component, run
 `npx nx g @nrwl/angular:component --project=spa-<lib> --name=<component name>`.
 This will generate a new component in the correct folder. For more information,
 check out the [NX documentation]https://nx.dev/more-concepts/nx-and-angular). By
-default the Component will be standalone and with `OnPush` Change Detection. Please
-try to stick to this as much as possible. You can serve the SPA with `npm run serve:spa`.
-Instead of an OAuth Provider, in development environments you will get redirected
-to a login page where you can choose a persona. This will set a JWT in the local
-storage.
+default the Component will be standalone and with `OnPush` Change Detection.
+Please try to stick to this as much as possible. You can serve the SPA with
+`npm run serve:spa`. Instead of an OAuth Provider, in development environments
+you will get redirected to a login page where you can choose a persona. This
+will set a JWT in the local storage.
 
 We agreed on supporting only Chromium based browsers with their 2 latest major
 versions. This allows us to use features that are available for these browsers
