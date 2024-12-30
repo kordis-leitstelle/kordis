@@ -25,7 +25,6 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 
 @Component({
 	selector: 'krd-deployment-card',
-	standalone: true,
 	imports: [
 		DeploymentAlertGroupComponent,
 		DeploymentUnitComponent,

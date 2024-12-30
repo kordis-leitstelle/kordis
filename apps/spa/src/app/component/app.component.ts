@@ -10,6 +10,7 @@ import { TraceComponent } from '@kordis/spa/core/observability';
 	selector: 'kordis-root',
 	template: ` <router-outlet></router-outlet> `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: false,
 })
 @TraceComponent()
 export class AppComponent {

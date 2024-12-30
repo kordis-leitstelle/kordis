@@ -8,6 +8,8 @@ import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.co
 
 @Component({
 	selector: 'krd-search-wrapper-child',
+	/* eslint-disable @angular-eslint/prefer-standalone  */
+	standalone: false,
 	template: `
 		<krd-deployment-search-wrapper
 			[assignments]="assignments()"

@@ -1,5 +1,4 @@
 #!/usr/bin/env -S npx ts-node
-
 /*
 		This script imports all the data from the `data` folder into a MongoDB database.
 		This is mainly used to bootstrap a database for e2es or to start developing on a clean database with just the minimal required data to run Kordis.

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
-	APP_INITIALIZER,
 	ErrorHandler,
 	ModuleWithProviders,
 	NgModule,
+	inject,
+	provideAppInitializer,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -41,13 +42,13 @@ export class SentryObservabilityModule {
 					provide: TraceService,
 					deps: [Router],
 				},
-				{
-					provide: APP_INITIALIZER,
-					// eslint-disable-next-line @typescript-eslint/no-empty-function
-					useFactory: () => () => {},
-					deps: [TraceService],
-					multi: true,
-				},
+				provideAppInitializer(() => {
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+					const initializerFn = ((_: TraceService) => () => {})(
+						inject(TraceService),
+					);
+					return initializerFn();
+				}),
 				{
 					provide: OBSERVABILITY_SERVICE,
 					useClass: SentryObservabilityService,

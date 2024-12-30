@@ -19,7 +19,6 @@ import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
 
 @Component({
 	selector: 'krd-dashboard-view',
-	standalone: true,
 	imports: [
 		CommonModule,
 		DeploymentsComponent,

@@ -34,7 +34,6 @@ import { PossibleUnitSelectionsService } from '../../service/unit-selection.serv
 
 @Component({
 	selector: 'krd-units-select',
-	standalone: true,
 	imports: [
 		AsyncPipe,
 		NzSelectModule,

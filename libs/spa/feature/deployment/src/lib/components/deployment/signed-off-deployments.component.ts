@@ -13,7 +13,6 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 
 @Component({
-	standalone: true,
 	selector: 'krd-signed-off-deployments',
 	template: `
 		@if (showNoSearchResults()) {

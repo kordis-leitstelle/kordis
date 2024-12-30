@@ -6,7 +6,6 @@ import { NoteIndicatorComponent } from '../note-indicator.component';
 
 @Component({
 	selector: 'krd-rescue-station-deployment-card-header',
-	standalone: true,
 	imports: [NoteIndicatorComponent],
 	template: `
 		<span

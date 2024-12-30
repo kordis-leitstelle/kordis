@@ -5,7 +5,6 @@ import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
 @Component({
 	selector: 'krd-note-indicator',
-	standalone: true,
 	imports: [NzIconDirective, NzTooltipDirective],
 	template: `<i
 		nz-icon

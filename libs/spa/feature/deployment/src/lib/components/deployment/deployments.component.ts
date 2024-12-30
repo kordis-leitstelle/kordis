@@ -59,7 +59,6 @@ const DEPLOYMENTS_QUERY = gql`
 
 @Component({
 	selector: 'krd-deployments',
-	standalone: true,
 	imports: [
 		DeploymentCardComponent,
 		DeploymentSearchWrapperComponent,
