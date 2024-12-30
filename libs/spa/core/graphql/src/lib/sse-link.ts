@@ -1,9 +1,4 @@
-import {
-	ApolloLink,
-	FetchResult,
-	Observable,
-	Operation,
-} from '@apollo/client/core';
+import { ApolloLink, FetchResult, Observable, Operation } from '@apollo/client/core';
 import { print } from 'graphql';
 import { Client, ClientOptions, createClient } from 'graphql-sse';
 
@@ -13,6 +8,7 @@ export class SSELink extends ApolloLink {
 	constructor(options: ClientOptions<true>) {
 		super();
 		this.client = createClient(options);
+		console.log('SSELink created');
 	}
 
 	// eslint-disable-next-line rxjs/finnish
