@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 
 import { GraphqlService } from '@kordis/spa/core/graphql';
 
-import { EntitySearchService } from '../../../../services/entity-search.service';
+import { IEntitySearchEngine } from './entity-search.service';
 import { EntitySelectionSearchService } from './entity-selection-search.service';
 
 class TestEntitySelectionService extends EntitySelectionSearchService<
@@ -16,7 +16,7 @@ class TestEntitySelectionService extends EntitySelectionSearchService<
 	protected query = {} as any; // Mock GraphQL query
 	protected queryName = 'testEntities' as const;
 	protected searchService =
-		createMock<EntitySearchService<{ id: string; name: string }>>(); // Mock search service
+		createMock<IEntitySearchEngine<{ id: string; name: string }>>(); // Mock search service
 }
 
 describe('EntitySelectionSearchService', () => {
@@ -69,7 +69,7 @@ describe('EntitySelectionSearchService', () => {
 
 	it('should filter search', async () => {
 		service.markAsSelected({ id: '1', name: 'Entity 1' });
-		(service as any).searchService.searchByTerm.mockResolvedValue([
+		(service as any).searchService.search.mockReturnValue([
 			{ id: '1', name: 'Entity 1' },
 			{ id: '2', name: 'Entity 2' },
 		]);

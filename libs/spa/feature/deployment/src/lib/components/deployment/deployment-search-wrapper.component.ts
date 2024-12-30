@@ -6,11 +6,16 @@ import {
 	booleanAttribute,
 	computed,
 	contentChild,
+	effect,
 	inject,
 	input,
 } from '@angular/core';
 
-import { DeploymentAssignment, Unit } from '@kordis/shared/model';
+import { DeploymentAssignment } from '@kordis/shared/model';
+import {
+	EntitySearchEngine,
+	unitOrAlertGroupOfAssignmentMatches,
+} from '@kordis/spa/core/ui';
 
 import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 
@@ -22,7 +27,7 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 			<ng-template
 				*ngTemplateOutlet="
 					templateRef()!;
-					context: { $implicit: computedAssignments() }
+					context: { $implicit: filteredAssignments() }
 				"
 			/>
 		}
@@ -43,38 +48,6 @@ export class DeploymentSearchWrapperComponent {
 			.toLowerCase()
 			.includes(this.searchStateService.searchValue().toLowerCase()),
 	);
-	readonly computedAssignments: Signal<DeploymentAssignment[]> = computed(
-		() => {
-			const searchTerm = this.searchStateService.searchValue().toLowerCase();
-			// show if we have no search term or the name matches
-			if (!searchTerm || this.hasNameMatch()) {
-				return this.assignments();
-			}
-			// otherwise we have a search term, return filtered assignments
-			return this.assignments().filter((assignment) => {
-				const hasUnitMatch = (unit: Unit): boolean => {
-					return (
-						unit.name.toLowerCase().includes(searchTerm) ||
-						unit.callSign.toLowerCase().includes(searchTerm) ||
-						unit.callSignAbbreviation.toLowerCase().includes(searchTerm)
-					);
-				};
-
-				switch (assignment.__typename) {
-					case 'DeploymentUnit':
-						return hasUnitMatch(assignment.unit);
-					case 'DeploymentAlertGroup':
-						return (
-							assignment.alertGroup.name.toLowerCase().includes(searchTerm) ||
-							assignment.assignedUnits.some(({ unit }) => hasUnitMatch(unit))
-						);
-					default:
-						return false;
-				}
-			});
-		},
-	);
-
 	readonly isVisible = computed(
 		() =>
 			this.alwaysShow() ||
@@ -83,6 +56,25 @@ export class DeploymentSearchWrapperComponent {
 			// the user searches the rescue station
 			this.hasNameMatch() ||
 			// or the user searches the assignments
-			this.computedAssignments().length,
+			this.filteredAssignments().length,
 	);
+	private readonly assignmentsSearchEngine = new EntitySearchEngine(
+		unitOrAlertGroupOfAssignmentMatches,
+	);
+	readonly filteredAssignments: Signal<DeploymentAssignment[]> = computed(
+		() => {
+			const searchTerm = this.searchStateService.searchValue().toLowerCase();
+			// show if we have no search term or the name matches
+			if (!searchTerm || this.hasNameMatch()) {
+				return this.assignments();
+			}
+			return this.assignmentsSearchEngine.search(searchTerm);
+		},
+	);
+
+	constructor() {
+		effect(() =>
+			this.assignmentsSearchEngine.setSearchableEntities(this.assignments()),
+		);
+	}
 }
