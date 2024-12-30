@@ -15,7 +15,6 @@ import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
 @Component({
 	selector: 'krd-rescue-station-note-modal',
-	standalone: true,
 	imports: [NzButtonComponent, FormsModule, NzInputDirective],
 	template: `
 		<h3>{{ rescueStation.name }}</h3>

@@ -47,6 +47,7 @@ import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
 		</nz-layout>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: false,
 })
 export class AuthComponent {
 	readonly hasAuthError$: Observable<boolean>;

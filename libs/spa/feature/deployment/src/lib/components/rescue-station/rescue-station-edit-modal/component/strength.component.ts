@@ -18,7 +18,6 @@ import { Subject, map, of, startWith, takeUntil } from 'rxjs';
 
 @Component({
 	selector: 'krd-strength',
-	standalone: true,
 	template: `
 		<div [formGroup]="formGroup()" nz-form nzLayout="inline">
 			<nz-form-item>

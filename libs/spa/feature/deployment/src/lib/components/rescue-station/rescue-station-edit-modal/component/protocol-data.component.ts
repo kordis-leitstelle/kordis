@@ -17,7 +17,6 @@ import { Unit } from '@kordis/shared/model';
 // placeholder until we have the protocol frontend ready!
 @Component({
 	selector: 'krd-protocol-data',
-	standalone: true,
 	imports: [CommonModule, ReactiveFormsModule, NzInputDirective],
 	template: `
 		<div [formGroup]="formGroup()">

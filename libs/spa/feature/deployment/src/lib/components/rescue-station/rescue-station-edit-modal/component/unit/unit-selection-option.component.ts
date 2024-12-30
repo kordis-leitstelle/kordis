@@ -6,7 +6,6 @@ import { StatusBadgeComponent } from '../../../../deployment/unit/status-badge.c
 
 @Component({
 	selector: 'krd-unit-selection-option',
-	standalone: true,
 	imports: [StatusBadgeComponent],
 	template: `
 		<div class="result-item">

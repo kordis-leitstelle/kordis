@@ -19,7 +19,6 @@ import { UnitsSelectComponent } from '../unit/units-select.component';
 
 @Component({
 	selector: 'krd-alert-group-selection',
-	standalone: true,
 	imports: [
 		NzFormControlComponent,
 		NzFormItemComponent,

@@ -11,7 +11,6 @@ import { STATUS_EXPLANATIONS } from '../../../status-explanations';
 
 @Component({
 	selector: 'krd-status-badge',
-	standalone: true,
 	imports: [NzTooltipDirective, NgClass],
 	template: `
 		@if (hasStatus()) {

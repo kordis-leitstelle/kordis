@@ -8,7 +8,6 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 
 @Component({
 	selector: 'krd-deployment-alert-group',
-	standalone: true,
 	imports: [CommonModule, DeploymentUnitComponent, NzCardComponent],
 	template: `
 		<nz-card>

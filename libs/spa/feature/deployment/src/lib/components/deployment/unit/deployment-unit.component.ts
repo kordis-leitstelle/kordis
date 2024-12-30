@@ -13,7 +13,6 @@ import { StatusBadgeComponent } from './status-badge.component';
 
 @Component({
 	selector: 'krd-deployment-unit',
-	standalone: true,
 	imports: [
 		DeploymentNotePopupComponent,
 		NoteIndicatorComponent,
