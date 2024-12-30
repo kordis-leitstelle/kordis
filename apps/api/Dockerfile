@@ -9,8 +9,8 @@ ENV NODE_ENV=production
 # Install dependencies separately for caching
 COPY ./dist/apps/api/package.json ./dist/apps/api/package-lock.json ./
 
-# Change to npm ci when https://github.com/nrwl/nx/issues/22386 is fixed
-RUN npm install --omit=dev
+# ci is failing here due to nx bug https://github.com/nrwl/nx/issues/15366 (closed, but still an issue)
+RUN npm i --omit=dev
 
 COPY ./dist/apps/api ./
 

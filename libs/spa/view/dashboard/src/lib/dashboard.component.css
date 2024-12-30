@@ -23,7 +23,7 @@ nz-layout {
 
 	nz-content {
 		display: grid;
-		grid-gap: 8px;
+		grid-gap: var(--base-spacing);
 		grid-template-areas:
 			'protocol operations'
 			'deployments deployments';
@@ -31,7 +31,7 @@ nz-layout {
 		grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
 		min-height: 720px;
 		min-width: 1280px;
-		padding: 8px;
+		padding: var(--base-spacing);
 		width: 100%;
 		height: calc(100vh - var(--header-size));
 
@@ -40,7 +40,7 @@ nz-layout {
 			height: 100%;
 			width: 100%;
 			background-color: snow;
-			padding: 16px;
+			padding: calc(2 * var(--base-spacing));
 			border-radius: 2px;
 		}
 

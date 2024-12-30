@@ -7,14 +7,14 @@ import {
 
 import { UpdateSignedInRescueStationCommand } from '@kordis/api/deployment';
 import {
-	CreateRescueStationSignOnMessageCommand,
+	CreateRescueStationUpdateMessageCommand,
 	MessageUnit,
 } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
 import { SignedInRescueStationUpdatedEvent } from '../event/signed-in-rescue-station-updated.event';
 import { CommandRescueStationData } from './command-rescue-station-data.model';
-import { MessageCommandRescueStationDetailsFactory } from './message-command-rescue-station-details.factory';
+import { RescueStationMessageDetailsFactory } from './rescue-station-message-details-factory.service';
 
 export class LaunchUpdateSignedInRescueStationProcessCommand {
 	constructor(
@@ -24,7 +24,7 @@ export class LaunchUpdateSignedInRescueStationProcessCommand {
 			sender: MessageUnit;
 			recipient: MessageUnit;
 			channel: string;
-		},
+		} | null,
 	) {}
 }
 
@@ -35,7 +35,7 @@ export class LaunchUpdateSignedInRescueStationProcessHandler
 	constructor(
 		private readonly commandBus: CommandBus,
 		private readonly eventBus: EventBus,
-		private readonly messageCommandRescueStationDetailsFactory: MessageCommandRescueStationDetailsFactory,
+		private readonly rescueStationMessageDetailsFactory: RescueStationMessageDetailsFactory,
 	) {}
 
 	async execute({
@@ -60,21 +60,23 @@ export class LaunchUpdateSignedInRescueStationProcessHandler
 			),
 		);
 
-		const rsDetails =
-			await this.messageCommandRescueStationDetailsFactory.createFromCommandRescueStationData(
-				reqUser.organizationId,
-				rescueStationData,
-			);
+		if (communicationMessageData) {
+			const rsDetails =
+				await this.rescueStationMessageDetailsFactory.createFromCommandRescueStationData(
+					reqUser.organizationId,
+					rescueStationData,
+				);
 
-		await this.commandBus.execute(
-			new CreateRescueStationSignOnMessageCommand(
-				new Date(),
-				communicationMessageData.sender,
-				communicationMessageData.recipient,
-				rsDetails,
-				communicationMessageData.channel,
-				reqUser,
-			),
-		);
+			await this.commandBus.execute(
+				new CreateRescueStationUpdateMessageCommand(
+					new Date(),
+					communicationMessageData.sender,
+					communicationMessageData.recipient,
+					rsDetails,
+					communicationMessageData.channel,
+					reqUser,
+				),
+			);
+		}
 	}
 }

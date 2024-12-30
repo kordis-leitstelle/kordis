@@ -12,6 +12,7 @@ import {
 export class GetAlertGroupsByIdsQuery {
 	constructor(
 		readonly ids: string[],
+		readonly orgId?: string,
 		readonly options: RetainOrderOptions = { retainOrder: false },
 	) {}
 }
@@ -28,9 +29,10 @@ export class GetAlertGroupsByIdsHandler
 
 	async execute({
 		ids,
+		orgId,
 		options,
 	}: GetAlertGroupsByIdsQuery): Promise<AlertGroupEntity[]> {
-		let alertGroups = await this.repository.findByIds(ids);
+		let alertGroups = await this.repository.findByIds(ids, orgId);
 
 		alertGroups = this.mutator.retainOrderIfEnabled(options, ids, alertGroups);
 

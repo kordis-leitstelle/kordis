@@ -21,8 +21,8 @@ import { OperationStartedMessageSchema } from './infra/schema/operation/operatio
 import {
 	ProtocolEntryBaseDocument,
 	ProtocolEntryBaseSchema,
-	ProtocolEntryType,
 } from './infra/schema/protocol-entry-base.schema';
+import { ProtocolEntryType } from './infra/schema/protocol-entry-type';
 import { RescueStationSignOffMessageSchema } from './infra/schema/rescue-station/rescue-station-sign-off-message.schema';
 import { RescueStationSignOnMessageSchema } from './infra/schema/rescue-station/rescue-station-sign-on-message.schema';
 import { RescueStationUpdateMessageSchema } from './infra/schema/rescue-station/rescue-station-updated-message.schema';
@@ -46,7 +46,10 @@ import {
 import { ProtocolEntryMapper } from './mapper-profile/protocol-entry.mapper';
 import { RescueStationMessagePayloadDocumentProfile } from './mapper-profile/rescue-station/rescue-station-message-payload-document.mapper-profile';
 import { RescueStationMessagePayloadProfile } from './mapper-profile/rescue-station/rescue-station-message-payload-entity.mapper-profile';
-import { RescueStationSignOffMessageDocumentProfile } from './mapper-profile/rescue-station/rescue-station-sign-off-message-document.mapper-profile';
+import {
+	RescueStationSignOffMessageDocumentProfile,
+	RescueStationSignOffMessagePayloadDocumentProfile,
+} from './mapper-profile/rescue-station/rescue-station-sign-off-message-document.mapper-profile';
 import {
 	RescueStationSignOffMessageEntityProfile,
 	RescueStationSignOffMessagePayloadEntityProfile,
@@ -68,6 +71,7 @@ const MAPPER_PROFILES = [
 	ProtocolEntryMapper,
 	RescueStationMessagePayloadDocumentProfile,
 	RescueStationMessagePayloadProfile,
+	RescueStationSignOffMessagePayloadDocumentProfile,
 	RescueStationSignOffMessageDocumentProfile,
 	RescueStationSignOffMessageEntityProfile,
 	RescueStationSignOffMessagePayloadEntityProfile,

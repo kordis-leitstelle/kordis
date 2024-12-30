@@ -1,6 +1,9 @@
 import { Types } from 'mongoose';
 
-import { CollectionData } from './collection-data.model';
+import {
+	CollectionData,
+	getEntryByFieldFunction,
+} from './collection-data.model';
 
 const collectionData: CollectionData<{
 	propertyA: string;
@@ -22,4 +25,14 @@ const collectionData: CollectionData<{
 	],
 };
 
-export default collectionData;
+// rename and adjust the lookup function
+const {
+	entityFunction: getTemplateByName,
+	entityIdFunction: getTeplateIdAsStringByName,
+} = getEntryByFieldFunction(collectionData, 'propertyA');
+
+export {
+	collectionData as default,
+	getTemplateByName,
+	getTeplateIdAsStringByName,
+};

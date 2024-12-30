@@ -11,6 +11,8 @@ control centres
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=kordis-leitstelle&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=kordis-leitstelle)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkordis-leitstelle%2Fkordis?ref=badge_shield)
 
+<img src="https://github.com/user-attachments/assets/d3b9520f-9fa4-4892-8d72-cf11fd13991f" height="200" />
+
 </div>
 
 ## About The Project

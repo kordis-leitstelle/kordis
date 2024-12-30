@@ -73,7 +73,6 @@ describe('GraphqlService', () => {
 	it('should call apollo.mutate and return the response', async () => {
 		const mutation = {} as DocumentNode;
 		const variables = {};
-		const optimisticResponse = { foo: 'bar' };
 		const response: MutationResult = {
 			loading: false,
 			data: { foo: 'bar' },
@@ -82,16 +81,12 @@ describe('GraphqlService', () => {
 		apolloMock.mutate.mockReturnValue(of(response));
 
 		const result = await firstValueFrom(
-			graphqlService.mutate$(mutation, variables, optimisticResponse),
+			graphqlService.mutate$(mutation, variables),
 		);
 
 		expect(apolloMock.mutate).toHaveBeenCalledWith({
 			mutation,
 			variables,
-			optimisticResponse: {
-				__typename: 'Mutation',
-				...optimisticResponse,
-			},
 		});
 		expect(result).toEqual({
 			foo: 'bar',

@@ -1,10 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import {
-	ProtocolEntryType,
-	ProtocolMessageEntryBaseDocument,
-} from '../protocol-entry-base.schema';
+import { ProtocolMessageEntryBaseDocument } from '../protocol-entry-base.schema';
+import { ProtocolEntryType } from '../protocol-entry-type';
 import { RescueStationMessagePayloadDocument } from './rescue-station-message-payload.schema';
 
 @Schema()

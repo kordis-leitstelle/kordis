@@ -13,7 +13,7 @@ import {
 } from '../../repository/protocol-entry.repository';
 import { BaseCreateMessageCommand } from '../base-create-message.command';
 import { RescueStationMessageFactory } from '../helper/rescue-station-message.factory';
-import { MessageCommandRescueStationDetails } from './message-command-rescue-station-details.model';
+import { RescueStationMessageDetails } from './message-command-rescue-station-details.model';
 
 export class CreateRescueStationSignOnMessageCommand
 	implements BaseCreateMessageCommand
@@ -22,7 +22,7 @@ export class CreateRescueStationSignOnMessageCommand
 		readonly time: Date,
 		readonly sender: MessageUnit,
 		readonly recipient: MessageUnit,
-		readonly rescueStation: MessageCommandRescueStationDetails,
+		readonly rescueStation: RescueStationMessageDetails,
 		readonly channel: string,
 		readonly requestUser: AuthUser,
 	) {}

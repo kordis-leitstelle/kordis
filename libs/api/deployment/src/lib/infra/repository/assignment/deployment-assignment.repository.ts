@@ -30,6 +30,29 @@ export class DeploymentAssignmentRepositoryImpl
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
+	async removeAssignmentsOfDeployments(
+		orgId: string,
+		deploymentIds: string[],
+		uow?: DbSessionProvider | undefined,
+	): Promise<void> {
+		await this.deploymentAssignmentModel.updateMany(
+			{
+				orgId,
+				deploymentId: {
+					$in: deploymentIds.map((id) => new Types.ObjectId(id)),
+				},
+			},
+			{
+				$set: {
+					deploymentId: null,
+				},
+			},
+			{
+				session: uow?.session,
+			},
+		);
+	}
+
 	/*
 	 * Get assignment of a unit or alert group.
 	 * @param orgId The organization id.
@@ -78,12 +101,14 @@ export class DeploymentAssignmentRepositoryImpl
 	): Promise<(DeploymentUnit | DeploymentAlertGroup)[]> {
 		const unassignedEntities = await this.deploymentAssignmentModel
 			.aggregate([
+				// where a unit has no assignment
 				{
 					$match: {
 						orgId,
 						deploymentId: null,
 					},
 				},
+				// get alert groups and units
 				{
 					$facet: {
 						alertGroups: [
@@ -92,6 +117,7 @@ export class DeploymentAssignmentRepositoryImpl
 									type: DeploymentAssignmentType.ALERT_GROUP,
 								},
 							},
+							// get units that are assigned to that alert group
 							{
 								$lookup: {
 									from: 'deployment-assignments',
@@ -161,7 +187,7 @@ export class DeploymentAssignmentRepositoryImpl
 	async removeAssignmentsOfDeployment(
 		orgId: string,
 		deploymentId: string,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		const operation = this.deploymentAssignmentModel.updateMany(
 			{

@@ -158,6 +158,10 @@ describe('UnitRepositoryImpl', () => {
 			const id = 'id';
 			const note = 'note';
 
+			mockUnitModel.updateOne.mockResolvedValueOnce({
+				modifiedCount: 1,
+			} as any);
+
 			await unitRepository.updateNote(orgId, id, note);
 
 			expect(mockUnitModel.updateOne).toHaveBeenCalledWith(
@@ -194,13 +198,22 @@ describe('UnitRepositoryImpl', () => {
 			status.source = 'someSource';
 			status.status = 1;
 
-			await unitRepository.updateStatus('orgId', 'id', status);
+			mockUnitModel.updateOne.mockResolvedValueOnce({
+				modifiedCount: 1,
+			} as any);
+
+			await expect(
+				unitRepository.updateStatus('orgId', 'id', status),
+			).resolves.toBeTruthy();
 
 			expect(mockUnitModel.updateOne).toHaveBeenCalledWith(
 				{
 					_id: 'id',
 					orgId: 'orgId',
-					'status.receivedAt': { $lt: status.receivedAt },
+					$or: [
+						{ 'status.receivedAt': { $lt: status.receivedAt } },
+						{ status: null },
+					],
 				},
 				{ $set: { status } },
 			);

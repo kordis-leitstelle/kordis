@@ -9,6 +9,7 @@ import { UNIT_REPOSITORY, UnitRepository } from '../repository/unit.repository';
 export class GetUnitsByIdsQuery {
 	constructor(
 		readonly ids: string[],
+		readonly orgId?: string,
 		readonly options: RetainOrderOptions = { retainOrder: false },
 	) {}
 }
@@ -21,8 +22,12 @@ export class GetUnitsByIdsHandler implements IQueryHandler<GetUnitsByIdsQuery> {
 		private readonly mutator: RetainOrderService,
 	) {}
 
-	async execute({ ids, options }: GetUnitsByIdsQuery): Promise<UnitEntity[]> {
-		let units = await this.repository.findByIds(ids);
+	async execute({
+		ids,
+		orgId,
+		options,
+	}: GetUnitsByIdsQuery): Promise<UnitEntity[]> {
+		let units = await this.repository.findByIds(ids, orgId);
 
 		units = this.mutator.retainOrderIfEnabled(options, ids, units);
 

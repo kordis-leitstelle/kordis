@@ -60,9 +60,10 @@ jobs:
       - name: Install Chromium for E2Es
         run: npx -y playwright install chromium
       - name: Start and prepare MongoDB for E2Es
+        working-directory: ./tools/db
         run: |
           export MONGO_HOST=172.17.0.1
-          ./tools/db/kordis-db.sh init e2edb
+          ./kordis-db.sh init e2edb
       - name: Start API and SPA containers
         run: |
           docker run -d --name kordis-api-container -p 3000:3333 -e MONGODB_URI=mongodb://172.17.0.1:27017/e2edb?replicaSet=rs0 -e AUTH_PROVIDER=dev kordis-api:${{ github.sha }}

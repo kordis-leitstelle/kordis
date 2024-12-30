@@ -1,5 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 
+import { DbSessionProvider } from '@kordis/api/shared';
+
 import {
 	RescueStationDeploymentEntity,
 	RescueStationStrength,
@@ -24,7 +26,14 @@ export class RescueStationEntityDTO
 	defaultUnitIds: string[];
 }
 
-export type RescueStationDeploymentRepository = DeploymentRepository<
-	RescueStationDeploymentEntity,
-	RescueStationEntityDTO
->;
+export interface RescueStationDeploymentRepository
+	extends DeploymentRepository<
+		RescueStationDeploymentEntity,
+		RescueStationEntityDTO
+	> {
+	updateAll(
+		orgId: string,
+		data: Partial<RescueStationEntityDTO>,
+		uow?: DbSessionProvider,
+	): Promise<void>;
+}

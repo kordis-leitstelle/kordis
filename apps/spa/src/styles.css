@@ -2,6 +2,10 @@
 	--row-bg-color: rgba(250, 250, 250, 0.85); /* #fafafa is the background color for table headers in ant */
 }
 
+:root {
+	--base-spacing: 8px;
+}
+
 [nz-form] {
 	.ant-form-item {
 		margin-bottom: 5px;
@@ -15,4 +19,5 @@
 .ant-picker, .ant-input-number {
 	width: 100%;
 }
+
 

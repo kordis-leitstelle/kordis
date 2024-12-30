@@ -8,10 +8,8 @@ import { RescueStationSignOffMessage } from '../core/entity/protocol-entries/res
 import { RescueStationSignOnMessage } from '../core/entity/protocol-entries/rescue-station/rescue-station-sign-on-message.entity';
 import { RescueStationUpdateMessage } from '../core/entity/protocol-entries/rescue-station/rescue-station-update-message.entity';
 import { CommunicationMessageDocument } from '../infra/schema/communication/communication-message.schema';
-import {
-	ProtocolEntryBaseDocument,
-	ProtocolEntryType,
-} from '../infra/schema/protocol-entry-base.schema';
+import { ProtocolEntryBaseDocument } from '../infra/schema/protocol-entry-base.schema';
+import { ProtocolEntryType } from '../infra/schema/protocol-entry-type';
 import { RescueStationSignOffMessageDocument } from '../infra/schema/rescue-station/rescue-station-sign-off-message.schema';
 import { RescueStationSignOnMessageDocument } from '../infra/schema/rescue-station/rescue-station-sign-on-message.schema';
 import { RescueStationUpdateMessageDocument } from '../infra/schema/rescue-station/rescue-station-updated-message.schema';

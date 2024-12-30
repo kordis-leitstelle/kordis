@@ -126,8 +126,6 @@ const testCases: {
 				'one medium dry vodka martini mixed like you said, sir, but not stirred.',
 			time: new Date('1956-03-26'),
 			orgId: 'orgId-123',
-			createdAt: undefined,
-			updatedAt: undefined,
 		}),
 	},
 	{
@@ -175,6 +173,7 @@ const testCases: {
 			searchableText:
 				'one medium dry vodka martini mixed like you said, sir, but not stirred.',
 			channel: 'Walter',
+			time: new Date('1956-03-26'),
 			orgId: 'orgId-123',
 			createdAt: undefined,
 			updatedAt: undefined,
@@ -229,9 +228,8 @@ const testCases: {
 				unitId: '6662c25962bc301aac2cbcd6',
 			}),
 			channel: 'Walter',
+			time: new Date('1956-03-26'),
 			orgId: 'orgId-123',
-			createdAt: undefined,
-			updatedAt: undefined,
 		}),
 	},
 	{
