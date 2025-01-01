@@ -1,7 +1,7 @@
 import {
+	All,
 	Controller,
 	OnModuleInit,
-	Post,
 	Req,
 	Res,
 	ServiceUnavailableException,
@@ -28,7 +28,7 @@ export class GraphqlSubscriptionsController implements OnModuleInit {
 		});
 	}
 
-	@Post()
+	@All()
 	subscriptionHandler(
 		@Req() req: KordisRequest,
 		@Res() res: Response,

@@ -40,6 +40,7 @@ export class GraphqlModule {
 							},
 							new SSELink({
 								url: sseEndpoint,
+								singleConnection: true,
 								headers: () => ({
 									...authHeaderFactory(),
 								}),
