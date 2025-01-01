@@ -34,6 +34,7 @@
 			"@kordis/spa/core/observability": [
 				"libs/spa/core/observability/src/index.ts"
 			],
+			"@kordis/spa/core/ui": ["libs/spa/core/ui/src/index.ts"],
 			"@kordis/spa/feature/deployment": [
 				"libs/spa/feature/deployment/src/index.ts"
 			],

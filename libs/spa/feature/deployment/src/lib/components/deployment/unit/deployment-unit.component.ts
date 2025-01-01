@@ -6,10 +6,10 @@ import { Subject, debounceTime, delay, switchMap, tap } from 'rxjs';
 
 import { Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { StatusBadgeComponent } from '@kordis/spa/core/ui';
 
 import { DeploymentNotePopupComponent } from '../deployment-note-popup.component';
 import { NoteIndicatorComponent } from '../note-indicator.component';
-import { StatusBadgeComponent } from './status-badge.component';
 
 @Component({
 	selector: 'krd-deployment-unit',

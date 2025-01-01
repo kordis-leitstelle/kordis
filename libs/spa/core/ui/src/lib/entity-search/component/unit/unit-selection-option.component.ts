@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { Unit } from '@kordis/shared/model';
 
-import { StatusBadgeComponent } from '../../../../deployment/unit/status-badge.component';
+import { StatusBadgeComponent } from '../../../status-badge.component';
 
 @Component({
 	selector: 'krd-unit-selection-option',

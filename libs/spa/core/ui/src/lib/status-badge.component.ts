@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
-import { STATUS_EXPLANATIONS } from '../../../status-explanations';
+import { STATUS_EXPLANATIONS } from './status-explanations';
 
 @Component({
 	selector: 'krd-status-badge',

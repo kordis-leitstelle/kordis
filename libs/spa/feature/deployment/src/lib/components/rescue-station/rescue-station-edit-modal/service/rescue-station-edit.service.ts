@@ -9,7 +9,7 @@ import {
 } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
-import { AlertGroupAssignment } from '../component/alert-group/alert-group-assignment.model';
+import { AlertGroupAssignment } from '../component/alert-group-assignment.model';
 
 export interface ProtocolMessageData {
 	sender: Unit | string;
