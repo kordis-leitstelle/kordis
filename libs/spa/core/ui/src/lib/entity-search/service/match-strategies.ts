@@ -4,10 +4,11 @@ export function unitMatchesByNameOrCallSign(
 	unit: Unit,
 	searchTerm: string,
 ): boolean {
+	const transformedSearchTerm = searchTerm.toLowerCase();
 	return (
-		unit.name.toLowerCase().includes(searchTerm) ||
-		unit.callSign.toLowerCase().includes(searchTerm) ||
-		unit.callSignAbbreviation.toLowerCase().includes(searchTerm)
+		unit.name.toLowerCase().includes(transformedSearchTerm) ||
+		unit.callSign.toLowerCase().includes(transformedSearchTerm) ||
+		unit.callSignAbbreviation.toLowerCase().includes(transformedSearchTerm)
 	);
 }
 
@@ -15,21 +16,25 @@ export function alertGroupMatchesByName(
 	alertGroup: AlertGroup,
 	searchTerm: string,
 ): boolean {
-	return alertGroup.name.toLowerCase().includes(searchTerm);
+	return alertGroup.name.toLowerCase().includes(searchTerm.toLowerCase());
 }
 
 export function unitOrAlertGroupOfAssignmentMatches(
 	assignment: DeploymentAssignment,
 	searchTerm: string,
 ): boolean {
+	const transformedSearchTerm = searchTerm.toLowerCase();
 	switch (assignment.__typename) {
 		case 'DeploymentUnit':
-			return unitMatchesByNameOrCallSign(assignment.unit, searchTerm);
+			return unitMatchesByNameOrCallSign(
+				assignment.unit,
+				transformedSearchTerm,
+			);
 		case 'DeploymentAlertGroup':
 			return (
-				alertGroupMatchesByName(assignment.alertGroup, searchTerm) ||
+				alertGroupMatchesByName(assignment.alertGroup, transformedSearchTerm) ||
 				assignment.assignedUnits.some(({ unit }) =>
-					unitMatchesByNameOrCallSign(unit, searchTerm),
+					unitMatchesByNameOrCallSign(unit, transformedSearchTerm),
 				)
 			);
 		default:

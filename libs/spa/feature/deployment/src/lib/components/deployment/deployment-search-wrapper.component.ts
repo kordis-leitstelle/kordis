@@ -48,6 +48,20 @@ export class DeploymentSearchWrapperComponent {
 			.toLowerCase()
 			.includes(this.searchStateService.searchValue().toLowerCase()),
 	);
+	private readonly assignmentsSearchEngine = new EntitySearchEngine(
+		unitOrAlertGroupOfAssignmentMatches,
+	);
+	readonly filteredAssignments: Signal<DeploymentAssignment[]> = computed(
+		() => {
+			// show if we have no search term or the name matches
+			if (!this.searchStateService.searchValue() || this.hasNameMatch()) {
+				return this.assignments();
+			}
+			return this.assignmentsSearchEngine.search(
+				this.searchStateService.searchValue(),
+			);
+		},
+	);
 	readonly isVisible = computed(
 		() =>
 			this.alwaysShow() ||
@@ -57,19 +71,6 @@ export class DeploymentSearchWrapperComponent {
 			this.hasNameMatch() ||
 			// or the user searches the assignments
 			this.filteredAssignments().length,
-	);
-	private readonly assignmentsSearchEngine = new EntitySearchEngine(
-		unitOrAlertGroupOfAssignmentMatches,
-	);
-	readonly filteredAssignments: Signal<DeploymentAssignment[]> = computed(
-		() => {
-			const searchTerm = this.searchStateService.searchValue().toLowerCase();
-			// show if we have no search term or the name matches
-			if (!searchTerm || this.hasNameMatch()) {
-				return this.assignments();
-			}
-			return this.assignmentsSearchEngine.search(searchTerm);
-		},
 	);
 
 	constructor() {
