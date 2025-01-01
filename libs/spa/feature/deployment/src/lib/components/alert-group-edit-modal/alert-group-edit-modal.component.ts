@@ -14,10 +14,10 @@ import { forkJoin } from 'rxjs';
 
 import { Query, Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { PossibleUnitSelectionsService } from '@kordis/spa/core/ui';
+import { UnitsSelectComponent } from '@kordis/spa/core/ui';
 
-import { UnitsSelectComponent } from '../rescue-station/rescue-station-edit-modal/component/unit/units-select.component';
 import { AlertGroupAssignmentFormGroup } from '../rescue-station/rescue-station-edit-modal/rescue-station-edit-modal.component';
-import { PossibleUnitSelectionsService } from '../rescue-station/rescue-station-edit-modal/service/unit-selection.service';
 import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-edit-modal/validator/alert-group-min-units.validator';
 
 @Component({

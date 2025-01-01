@@ -24,18 +24,20 @@ import {
 	RescueStationDeployment,
 	Unit,
 } from '@kordis/shared/model';
+import {
+	AlertGroupSelectionsComponent,
+	PossibleAlertGroupSelectionsService,
+	PossibleUnitSelectionsService,
+	UnitsSelectComponent,
+} from '@kordis/spa/core/ui';
 
-import { AlertGroupSelectionsComponent } from './component/alert-group/alert-group-selections.component';
 import { ProtocolDataComponent } from './component/protocol-data.component';
 import { StrengthComponent } from './component/strength.component';
-import { UnitsSelectComponent } from './component/unit/units-select.component';
-import { PossibleAlertGroupSelectionsService } from './service/alert-group-selection.service';
 import {
 	ProtocolMessageData,
 	RescueStationData,
 	RescueStationEditService,
 } from './service/rescue-station-edit.service';
-import { PossibleUnitSelectionsService } from './service/unit-selection.service';
 import { alertGroupMinUnitsValidator } from './validator/alert-group-min-units.validator';
 import { minStrengthValidator } from './validator/min-strength.validator';
 
