@@ -17,3 +17,4 @@ export * from './lib/models/base.mapper-profile';
 export * from './lib/models/coordinate.model';
 export * from './lib/models/request.model';
 export * from './lib/models/validatable.model';
+export * from './lib/kernel/mongodb/mongo-encryption.service';

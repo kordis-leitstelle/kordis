@@ -2,7 +2,7 @@ import { createMock } from '@golevelup/ts-jest';
 import { EventBus } from '@nestjs/cqrs';
 
 import {
-	Organization,
+	OrganizationEntity,
 	OrganizationGeoSettings,
 } from '../entity/organization.entity';
 import { OrganizationGeoSettingsUpdatedEvent } from '../event/organization-geo-settings-updated.event';
@@ -41,8 +41,9 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 				lat: 53.551086,
 			},
 		};
-		const org: { -readonly [K in keyof Organization]: Organization[K] } =
-			new Organization();
+		const org: {
+			-readonly [K in keyof OrganizationEntity]: OrganizationEntity[K];
+		} = new OrganizationEntity();
 		org.id = orgId;
 		org.name = 'org name';
 		org.geoSettings = {} as OrganizationGeoSettings;

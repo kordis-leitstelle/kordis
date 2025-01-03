@@ -4,7 +4,7 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import type { KordisLogger } from '@kordis/api/observability';
 
 import {
-	Organization,
+	OrganizationEntity,
 	OrganizationGeoSettings,
 } from '../entity/organization.entity';
 import { OrganizationCreatedEvent } from '../event/organization-created.event';
@@ -34,8 +34,10 @@ export class CreateOrganizationHandler
 		private readonly eventBus: EventBus,
 	) {}
 
-	async execute(command: CreateOrganizationCommand): Promise<Organization> {
-		let org = new Organization();
+	async execute(
+		command: CreateOrganizationCommand,
+	): Promise<OrganizationEntity> {
+		let org = new OrganizationEntity();
 		org.geoSettings = command.geoSettings;
 		org.name = command.name;
 

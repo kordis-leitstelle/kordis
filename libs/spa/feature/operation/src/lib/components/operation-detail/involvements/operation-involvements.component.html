@@ -1,0 +1,27 @@
+<h4>Eingebundene Einheiten</h4>
+@if (involvementsFormGroup.controls.unitInvolvements.length > 0) {
+	<krd-operation-unit-involvements-form
+		[formArray]="involvementsFormGroup.controls.unitInvolvements"
+	/>
+} @else {
+	<div class="empty">
+		<nz-empty
+			nzNotFoundImage="simple"
+			nzNotFoundContent="Keine Einheiten eingebunden."
+		/>
+	</div>
+}
+
+<h4 style='margin-top: 10px'>Eingebundene Alarmgruppen</h4>
+@if (involvementsFormGroup.controls.alertGroupInvolvements.length > 0) {
+	<krd-operation-alert-group-involvement-form
+		[formArray]="involvementsFormGroup.controls.alertGroupInvolvements"
+	/>
+} @else {
+	<div class="empty">
+		<nz-empty
+			nzNotFoundImage="simple"
+			nzNotFoundContent="Keine Alarmgruppen eingebunden."
+		/>
+	</div>
+}

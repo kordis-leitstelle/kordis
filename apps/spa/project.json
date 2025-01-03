@@ -7,12 +7,16 @@
 	"targets": {
 		"build": {
 			"executor": "@angular-devkit/build-angular:application",
-			"outputs": ["{options.outputPath}"],
+			"outputs": [
+				"{options.outputPath}"
+			],
 			"options": {
 				"outputPath": "dist/apps/spa",
 				"index": "apps/spa/src/index.html",
 				"browser": "apps/spa/src/main.ts",
-				"polyfills": ["zone.js"],
+				"polyfills": [
+					"zone.js"
+				],
 				"tsConfig": "apps/spa/tsconfig.app.json",
 				"inlineStyleLanguage": "css",
 				"assets": [
@@ -61,7 +65,7 @@
 				"development": {
 					"buildTarget": "spa:build:development",
 					"headers": {
-						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; connect-src 'self' localhost:* *.ingest.sentry.io; img-src 'self'; style-src 'self' 'nonce-csp_nonce'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
+						"Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-csp_nonce'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; connect-src 'self' localhost:* *.ingest.sentry.io *.maptiler.com; img-src 'self'; style-src 'self' 'nonce-csp_nonce'; font-src 'self'; frame-ancestors 'self'; trusted-types angular angular#bundler dompurify default; require-trusted-types-for 'script';"
 					}
 				}
 			},
@@ -75,11 +79,15 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"]
+			"outputs": [
+				"{options.outputFile}"
+			]
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"outputs": [
+				"{workspaceRoot}/coverage/{projectRoot}"
+			],
 			"options": {
 				"jestConfig": "apps/spa/jest.config.ts"
 			}

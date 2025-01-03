@@ -28,6 +28,7 @@ export class PresentableValidationException extends PresentableException {
 	static fromClassValidationErrors(
 		errors: ValidationError[],
 	): PresentableValidationException {
+		console.log(errors);
 		const validationExceptionEntries: ValidationExceptionEntry[] =
 			flattenValidationErrors(errors);
 

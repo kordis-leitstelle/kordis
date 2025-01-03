@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang='de'>
+<head>
+	<meta charset='UTF-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<title>Kordis Einsatzprotokoll {{sign}}</title>
+	<script src='https://cdn.tailwindcss.com'></script>
+
+	<style>
+		@page {
+			size: A4;
+			margin: 10mm;
+
+			@top-left {
+				content: element(header-left);
+				padding-top: 10mm;
+			}
+			@top-center {
+				content: element(header-center);
+				padding-top: 10mm;
+			}
+			@top-right {
+				content: element(header-right);
+				padding-top: 10mm;
+			}
+			@bottom-left {
+				content: element(footer-left);
+				padding-bottom: 10mm;
+			}
+			@bottom-right {
+				content: element(footer-right);
+				padding-bottom: 10mm;
+			}
+		}
+
+		#footer-left {
+			position: running(footer-left);
+		}
+		#footer-right {
+			position: running(footer-right);
+		}
+		#footer-right:after {
+			content: counter(page) ' von ' counter(pages);
+		}
+		#header-left {
+			position: running(header-left);
+		}
+		#header-center {
+			position: running(header-center);
+		}
+		#header-right {
+			position: running(header-right);
+		}
+	</style>
+
+	<style type='text/tailwindcss'>
+		body {
+			@apply text-sm;
+		}
+		header {
+			@apply border-b-[1px] border-gray-200 text-xs mb-6;
+		}
+		footer {
+			@apply border-t-[1px] border-gray-200 text-xs mt-6;
+		}
+
+		section > span {
+			@apply text-lg mb-1 block;
+		}
+
+		section:not(:last-child) {
+			@apply mb-6;
+		}
+
+		table {
+			@apply min-w-full divide-y divide-gray-200;
+
+			th{
+				@apply whitespace-nowrap text-left font-semibold;
+			}
+
+			td {
+				@apply whitespace-nowrap;
+			}
+		}
+
+		.base-data {
+			@apply grid grid-cols-3 gap-y-2;
+
+			div {
+				@apply border-t border-gray-200;
+			}
+
+			dt {
+				@apply text-sm font-medium leading-6;
+			}
+
+			dd {
+				@apply mt-1 text-sm leading-6 text-gray-700;
+		 	}
+		}
+	</style>
+</head>
+<body>
+<header id="header-left">{{sign}}</header>
+<header id="header-center">Einsatzprotokoll</header>
+<header id="header-right">{{orgName}}</header>
+<footer id="footer-right"></footer>
+<footer id="footer-left">
+	Generiert mit Kordis am {{toDateString generatedAt}} von {{generatedBy}}
+</footer>
+
+<section>
+	<span>Grunddaten</span>
+
+	<dl class='base-data'>
+	<div>
+		<dt>Einsatznummer</dt>
+		<dd>{{sign}}</dd>
+	</div>
+	<div>
+		<dt>Einsatzbeginn</dt>
+		<dd>{{toDateString start}}</dd>
+	</div>
+	<div>
+		<dt>Einsatzende</dt>
+		<dd>{{#if end}}{{toDateString end}} {{else}} - {{/if}}</dd>
+	</div>
+	<div>
+		<dt>Alarmstichwort</dt>
+		<dd>{{emptyMark alarmKeyword}}</dd>
+	</div>
+	<div>
+		<dt>Alarmierung</dt>
+		<dd>{{emptyMark reporter}}</dd>
+	</div>
+	<div>
+		<dt>Einsatzleiter/in</dt>
+		<dd>{{emptyMark commander}}</dd>
+	</div>
+	<div>
+		<dt>Einsatzaddresse</dt>
+		<dd>{{toLocationString location.address}}</dd>
+	</div>
+	<div>
+		<dt>Koordinaten</dt>
+		<dd>
+			{{#if location.coordinate.latitude}}
+				<p>Breitengrad: {{location.coordinate.latitude}}</p>
+				<p>Längengrad: {{location.coordinate.longitude}}</p>
+			{{else}}
+				<p>-</p>
+			{{/if}}
+		</dd>
+	</div>
+	<div>
+		<dt>Externe Nummer</dt>
+		<dd>{{emptyMark externalReference}}</dd>
+	</div>
+</dl>
+</section>
+
+<section>
+	<span>Beschreibung</span>
+	<p>
+		{{emptyMark description}}
+	</p>
+</section>
+
+<section>
+	<span>Einsatzarten</span>
+	<table>
+		<thead>
+		<tr>
+			<th>Einsatzart</th>
+			<th>Anzahl</th>
+			<th>Geholfene Personen</th>
+			<th>Bedrohliche Situationen</th>
+			<th>Gefahr für Helfer</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each categories}}
+			<tr>
+				<td>{{this.name}}</td>
+				<td>{{this.count}}</td>
+				<td>{{this.patientCount}}</td>
+				<td>{{this.dangerousSituationCount}}</td>
+				<td>{{#if this.wasDangerous}}Ja{{else}}Nein{{/if}}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<span>Eingebundene Komponenten</span>
+	<table>
+		<thead>
+		<tr>
+			<th>Einheit</th>
+			<th>Zeiten</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#each unitInvolvements}}
+			<tr>
+				<td>{{this.unit.callSign}} - {{this.unit.name}}</td>
+				<td>
+					<ul class='list-disc px-5'>
+						{{#each this.involvementTimes}}
+							<li>{{toDateString this.start}}{{#if this.end}} - {{toDateString this.end}}{{/if}}</li>
+						{{/each}}
+					</ul>
+				</td>
+			</tr>
+		{{/each}}
+		{{#each alertGroupInvolvements}}
+			<tr>
+				<th colspan='2' class='pt-0.5'>{{this.alertGroup.name}}</th>
+			</tr>
+			{{#each this.unitInvolvements}}
+				<tr>
+					<td>{{this.unit.callSign}} - {{this.unit.name}}</td>
+					<td>
+						<ul class='list-disc px-5'>
+							{{#each this.involvementTimes}}
+								<li>{{toDateString this.start}}{{#if this.end}} - {{toDateString this.end}}{{/if}}</li>
+							{{/each}}
+						</ul>
+					</td>
+				</tr>
+			{{/each}}
+		{{/each}}
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<span>Protokoll</span>
+	<table>
+		<thead>
+		<tr>
+			<th>Zeit</th>
+			<th>Von</th>
+			<th>An</th>
+			<th>Nachricht</th>
+			<th>Kanal</th>
+			<th>Disponent</th>
+		</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</section>
+
+<section class='mt-20'>
+	<div class='flex justify-between'>
+		<div class='text-center'>
+			<p>_________________________</p>
+			<p>Einsatzleiter/in</p>
+		</div>
+		<div class='text-center'>
+			<p>_________________________</p>
+			<p>Disponent/in</p>
+		</div>
+		<div class='text-center'>
+			<p>_________________________</p>
+			<p>Leiter/in Einsatz</p>
+		</div>
+	</div>
+</section>
+</body>
+</html>

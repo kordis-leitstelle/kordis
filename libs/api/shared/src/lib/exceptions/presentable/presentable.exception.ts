@@ -2,6 +2,7 @@ import { GraphQLFormattedError } from 'graphql/error';
 
 import GraphqlErrorConvertable from '../graphql-error-convertable';
 
+
 /**
  * Errors are exclusive. Only Errors of type PresentableError will be delivered to external layers.
  */
@@ -10,6 +11,7 @@ export abstract class PresentableException
 	implements GraphqlErrorConvertable
 {
 	abstract code: string;
+	furtherExtensions?: Record<string, unknown>;
 
 	protected constructor(message: string) {
 		super(message);
@@ -20,6 +22,7 @@ export abstract class PresentableException
 			message: this.message,
 			extensions: {
 				code: this.code,
+				...this.furtherExtensions,
 			},
 		};
 	}

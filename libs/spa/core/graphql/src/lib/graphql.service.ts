@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
-import { Observable, map } from 'rxjs';
+import { Observable, map, share } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
@@ -34,7 +34,10 @@ export class GraphqlService {
 		});
 
 		return {
-			$: queryRef.valueChanges.pipe(map(({ data }) => data)),
+			$: queryRef.valueChanges.pipe(
+				map(({ data }) => data),
+				share(),
+			),
 			refresh: (variables?: Record<string, unknown>): Promise<TData> =>
 				queryRef.refetch(variables).then(({ data }) => data),
 		};

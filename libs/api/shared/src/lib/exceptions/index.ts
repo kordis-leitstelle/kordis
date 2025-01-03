@@ -1,4 +1,5 @@
 export * from './core/validation.exception';
+export * from './core/insufficient-permission.exception';
 export * from './presentable/presentable-not-found.exception';
 export * from './presentable/presentable-unknown.exception';
 export * from './presentable/presentable-validation.exception';
