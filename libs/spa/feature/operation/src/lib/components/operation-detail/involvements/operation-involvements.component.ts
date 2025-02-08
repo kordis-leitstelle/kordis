@@ -87,6 +87,13 @@ const INVOLVEMENT_FRAGMENT = gql`
 				}
 			}
 		}
+
+		.container {
+			display: grid;
+			height: 100%;
+			grid-template-rows: 1fr 1fr;
+			gap: 16px;
+		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

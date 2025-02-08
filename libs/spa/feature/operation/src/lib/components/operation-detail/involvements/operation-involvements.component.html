@@ -1,31 +1,34 @@
-<div>
-	<h4>Eingebundene Einheiten</h4>
-	@if (control.controls.unitInvolvements.length <= 0) {
-		<div class='empty'>
-			<nz-empty
-				nzNotFoundImage='simple'
-				nzNotFoundContent='Keine Einheiten eingebunden.'
-			/>
-		</div>
-	}
+<div class="container">
+	<div>
+		<h4>Eingebundene Einheiten</h4>
+		@if (control.controls.unitInvolvements.length <= 0) {
+			<div class="empty">
+				<nz-empty
+					nzNotFoundImage="simple"
+					nzNotFoundContent="Keine Einheiten eingebunden."
+				/>
+			</div>
+		}
 
-	<krd-operation-unit-involvements-form
-		(addUnit)='addUnit($event)'
-		[formArray]='control.controls.unitInvolvements'
-	/>
-
-	<h4 style='margin-top: 10px'>Eingebundene Alarmgruppen</h4>
-	@if (control.controls.alertGroupInvolvements.length <= 0) {
-		<div class='empty'>
-			<nz-empty
-				nzNotFoundImage='simple'
-				nzNotFoundContent='Keine Alarmgruppen eingebunden.'
-			/>
-		</div>
-	}
-	<krd-operation-alert-group-involvement-form
-		(addAlertGroup)='addAlertGroup($event)'
-		(addAlertGroupUnit)='addUnitToAlertGroup($event.alertGroup, $event.unit)'
-		[formArray]='control.controls.alertGroupInvolvements'
-	/>
+		<krd-operation-unit-involvements-form
+			(addUnit)="addUnit($event)"
+			[formArray]="control.controls.unitInvolvements"
+		/>
+	</div>
+	<div>
+		<h4>Eingebundene Alarmgruppen</h4>
+		@if (control.controls.alertGroupInvolvements.length <= 0) {
+			<div class="empty">
+				<nz-empty
+					nzNotFoundImage="simple"
+					nzNotFoundContent="Keine Alarmgruppen eingebunden."
+				/>
+			</div>
+		}
+		<krd-operation-alert-group-involvement-form
+			(addAlertGroup)="addAlertGroup($event)"
+			(addAlertGroupUnit)="addUnitToAlertGroup($event.alertGroup, $event.unit)"
+			[formArray]="control.controls.alertGroupInvolvements"
+		/>
+	</div>
 </div>
