@@ -27,8 +27,8 @@ nz-layout {
 		grid-template-areas:
 			'protocol operations'
 			'deployments deployments';
-		grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-		grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
+		grid-template-columns: minmax(0, 2fr) minmax(0, 2fr);
+		grid-template-rows: minmax(0, 2fr) minmax(0, 2fr);
 		min-height: 720px;
 		min-width: 1280px;
 		padding: var(--base-spacing);
