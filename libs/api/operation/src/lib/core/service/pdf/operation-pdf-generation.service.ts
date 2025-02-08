@@ -26,7 +26,6 @@ import {
 	PdfGenerationService,
 } from './pdf-generation.service';
 
-
 @Injectable()
 export class OperationPdfGenerationService {
 	private readonly operationPdfRenderer: HandlebarsTemplateDelegate;
@@ -37,7 +36,6 @@ export class OperationPdfGenerationService {
 		private readonly queryBus: QueryBus,
 	) {
 		this.registerHandlebarsHelpers();
-
 		this.operationPdfRenderer = Handlebars.compile(operationPdfTemplate);
 	}
 
@@ -63,7 +61,7 @@ export class OperationPdfGenerationService {
 		return this.pdfGenerationService.generatePdf(renderedTemplate);
 	}
 
-	// as units and alert groups are foreign fields, the domain query will only return their ids, we have to populate them by querying them from their respective domains
+	// as units and alert groups are foreign fields, the domain query will only return their ids. We have to populate them by querying them from their respective domains
 	private async getPopulatedOperation(
 		operation: OperationEntity,
 	): Promise<OperationEntity> {
@@ -140,6 +138,11 @@ export class OperationPdfGenerationService {
 					second: '2-digit',
 				})
 				.replace(',', ''),
+		);
+		Handlebars.registerHelper('toBirthDateString', (date: Date | null) =>
+			date
+				? `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`
+				: '-',
 		);
 		Handlebars.registerHelper('emptyMark', (value: unknown) =>
 			value ? value : '-',

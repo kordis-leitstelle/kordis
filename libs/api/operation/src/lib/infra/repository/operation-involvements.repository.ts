@@ -22,19 +22,20 @@ export class OperationInvolvementsRepositoryImpl
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
-	async findInvolvement(
+	async findOperationInvolvement(
 		orgId: string,
 		operationId: string,
 		unitId: string,
 		alertGroupId: string | null,
+		uow?: DbSessionProvider,
 	): Promise<UnitInvolvement | undefined> {
-		const res = await this.operationInvolvementModel.findOne({
+		const query = this.operationInvolvementModel.findOne({
 			orgId,
 			operation: new Types.ObjectId(operationId),
 			unitId,
 			alertGroupId,
 		});
-
+		const res = await runDbOperation(query, uow);
 		return res ? this.mapOperationInvolvementToModel(res) : undefined;
 	}
 
@@ -44,7 +45,7 @@ export class OperationInvolvementsRepositoryImpl
 		unitId: string,
 		alertGroupId: string | null,
 		isPending: boolean,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		const query = this.operationInvolvementModel.updateOne(
 			{
@@ -67,7 +68,7 @@ export class OperationInvolvementsRepositoryImpl
 		orgId: string,
 		operationId: string,
 		involvements: CreateUnitInvolvementDto[],
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		const documents: OperationInvolvementDocument[] = involvements.map(
 			(dto) => ({
@@ -92,7 +93,7 @@ export class OperationInvolvementsRepositoryImpl
 		unitId: string,
 		alertGroupId: string | null,
 		end: Date,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		const query = this.operationInvolvementModel.updateOne(
 			{
@@ -115,7 +116,7 @@ export class OperationInvolvementsRepositoryImpl
 	async removeInvolvements(
 		orgId: string,
 		operationId: string,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		const query = this.operationInvolvementModel.deleteMany({
 			orgId,
@@ -130,7 +131,7 @@ export class OperationInvolvementsRepositoryImpl
 		unitId: string,
 		alertGroupId: string | null,
 		operationId: string,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		const query = this.operationInvolvementModel.deleteOne({
 			orgId,
@@ -142,11 +143,12 @@ export class OperationInvolvementsRepositoryImpl
 		await runDbOperation(query, uow);
 	}
 
-	async findByUnitInvolvement(
+	async findByUnitInvolvementTimeRange(
 		orgId: string,
 		unitId: string,
 		start: Date,
 		end: Date | null,
+		uow?: DbSessionProvider,
 	): Promise<UnitInvolvement | undefined> {
 		let filter: FilterQuery<OperationInvolvementDocument>;
 		if (!end) {
@@ -157,20 +159,20 @@ export class OperationInvolvementsRepositoryImpl
 		} else {
 			// else check if the unit was involved at the given time
 			filter = {
-				'involvementTimes.start': { $lte: start },
+				'involvementTimes.start': { $lte: end },
 				'involvementTimes.end': { $gte: start },
 			};
 		}
 
-		const res = await this.operationInvolvementModel
+		const query = this.operationInvolvementModel
 			.findOne({
 				orgId,
 				unitId,
 				...filter,
+				isDeleted: false,
 			})
-			.lean()
-			.exec();
-
+			.lean();
+		const res = await runDbOperation(query, uow);
 		return res ? this.mapOperationInvolvementToModel(res) : undefined;
 	}
 
@@ -201,17 +203,39 @@ export class OperationInvolvementsRepositoryImpl
 	async findInvolvementOfPendingUnit(
 		orgId: string,
 		unitId: string,
+		uow?: DbSessionProvider,
 	): Promise<UnitInvolvement | undefined> {
-		const res = await this.operationInvolvementModel
+		const query = this.operationInvolvementModel
 			.findOne({
 				orgId,
 				unitId,
 				isPending: true,
+				isDeleted: false,
 			})
-			.lean()
-			.exec();
+			.lean();
 
+		const res = await runDbOperation(query, uow);
 		return res ? this.mapOperationInvolvementToModel(res) : undefined;
+	}
+
+	async setDeletedFlag(
+		orgId: string,
+		operationId: string,
+		deleted: boolean,
+		uow?: DbSessionProvider,
+	): Promise<void> {
+		await this.operationInvolvementModel.updateMany(
+			{
+				orgId,
+				operation: new Types.ObjectId(operationId),
+			},
+			{
+				$set: {
+					isDeleted: deleted,
+				},
+			},
+			{ session: uow?.session },
+		);
 	}
 
 	private mapOperationInvolvementToModel(

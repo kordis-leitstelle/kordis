@@ -16,7 +16,6 @@ import {
 	OperationPatient,
 } from '../../../core/entity/operation.value-objects';
 
-
 // This is the input type of the argument for the partial base data update mutation
 @InputType()
 export class UpdateOperationBaseDataInput {

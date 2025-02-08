@@ -1,14 +1,12 @@
 import {
-	ValidationArguments,
 	ValidatorConstraint,
 	ValidatorConstraintInterface,
 } from 'class-validator';
 
-
 @ValidatorConstraint({ name: 'DateInPast', async: false })
 export class DateInPastValidation implements ValidatorConstraintInterface {
-	validate(args: ValidationArguments): boolean {
-		return (args.value as Date) <= new Date();
+	validate(date: Date): boolean {
+		return date <= new Date();
 	}
 
 	defaultMessage(): string {

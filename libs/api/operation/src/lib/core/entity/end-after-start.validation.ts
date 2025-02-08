@@ -6,7 +6,6 @@ import {
 
 import { StartEndValidatable } from './operation.value-objects';
 
-
 @ValidatorConstraint({ name: 'EndAfterStart', async: false })
 export class EndAfterStartValidation implements ValidatorConstraintInterface {
 	validate(end: Date, args: ValidationArguments): boolean {

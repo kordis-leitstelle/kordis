@@ -47,9 +47,9 @@ export interface OperationInvolvementsRepository {
 	 */
 	removeInvolvement(
 		orgId: string,
-		operationId: string,
 		unitId: string,
 		alertGroupId: string | null,
+		operationId: string,
 		uow?: DbSessionProvider | undefined,
 	): Promise<void>;
 
@@ -75,7 +75,7 @@ export interface OperationInvolvementsRepository {
 	 * @param end The end date of the involvement period. If the involvement should be ongoing, set to `null`.
 	 * @param uow Optional unit of work for transactional consistency.
 	 */
-	findByUnitInvolvement(
+	findByUnitInvolvementTimeRange(
 		orgId: string,
 		unitId: string,
 		start: Date,
@@ -87,10 +87,12 @@ export interface OperationInvolvementsRepository {
 	 * Finds an involvement of a pending unit.
 	 * @param orgId The organization ID.
 	 * @param unitId The unit ID.
+	 * @param uow Optional unit of work for transactional consistency.
 	 */
 	findInvolvementOfPendingUnit(
 		orgId: string,
 		unitId: string,
+		uow?: DbSessionProvider,
 	): Promise<UnitInvolvement | undefined>;
 
 	/**
@@ -99,12 +101,14 @@ export interface OperationInvolvementsRepository {
 	 * @param operationId The operation ID.
 	 * @param unitId The unit ID.
 	 * @param alertGroupId The alert group ID, if the unit is part of an alert group.
+	 * @param uow Optional unit of work for transactional consistency.
 	 */
-	findInvolvement(
+	findOperationInvolvement(
 		orgId: string,
 		operationId: string,
 		unitId: string,
 		alertGroupId: string | null,
+		uow?: DbSessionProvider,
 	): Promise<UnitInvolvement | undefined>;
 
 	/**
@@ -156,6 +160,13 @@ export interface OperationInvolvementsRepository {
 		unitId: string,
 		alertGroupId: string | null,
 		isPending: boolean,
+		uow?: DbSessionProvider,
+	): Promise<void>;
+
+	setDeletedFlag(
+		orgId: string,
+		operationId: string,
+		deleted: boolean,
 		uow?: DbSessionProvider,
 	): Promise<void>;
 }

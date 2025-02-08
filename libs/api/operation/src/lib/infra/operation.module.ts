@@ -11,14 +11,16 @@ import {
 } from '../core/command';
 import { GetOperationByIdHandler } from '../core/query/get-operation-by-id.query';
 import { GetOperationIdOfPendingUnitHandler } from '../core/query/get-operation-id-of-pending-unit.query';
+import { GetOperationByIdsQueryHandler } from '../core/query/get-operations-by-ids.query';
 import { GetOperationsByOrgIdHandler } from '../core/query/get-operations-by-org-id.query';
 import { OPERATION_INVOLVEMENT_REPOSITORY } from '../core/repository/operation-involvement.repository';
 import { OPERATION_REPOSITORY } from '../core/repository/operation.repository';
 import { OperationPdfGenerationService } from '../core/service/pdf/operation-pdf-generation.service';
 import { PDF_GENERATION_SERVICE } from '../core/service/pdf/pdf-generation.service';
 import { SIGN_GENERATOR } from '../core/service/sign-generator/sign-generator.strategy';
-import { YearMonthCounterSignGenerator } from '../core/service/sign-generator/year-month-counter-sign-generator.strategy';
+import { YearMonthCounterSignGenerator } from '../core/service/sign-generator/sign-generator/sign-generator/year-month-counter-sign-generator.strategy';
 import { OperationInvolvementService } from '../core/service/unit-involvement/operation-involvement.service';
+import { OperationsDataLoader } from '../operations.data-loader';
 import { OperationPdfController } from './controller/operation-pdf.controller';
 import {
 	OperationAlertGroupInvolvementResolver,
@@ -40,14 +42,14 @@ import { OperationDocument, OperationSchema } from './schema/operation.schema';
 import { PdfGenerationServiceImpl } from './service/pdf-generation.service';
 
 const RESOLVERS = [
+	OperationAlertGroupInvolvementResolver,
 	OperationResolver,
 	OperationUnitInvolvementResolver,
-	OperationAlertGroupInvolvementResolver,
 ];
 const MAPPER_PROFILES = [
+	OperationDtoProfile,
 	OperationProfile,
 	OperationValueObjectsProfile,
-	OperationDtoProfile,
 ];
 const PROVIDERS = [
 	{
@@ -68,19 +70,21 @@ const PROVIDERS = [
 	},
 	OperationInvolvementService,
 	OperationPdfGenerationService,
+	OperationsDataLoader,
 ];
 const COMMAND_HANDLERS = [
+	ArchiveOperationHandler,
 	CreateOperationHandler,
 	DeleteOperationHandler,
-	ArchiveOperationHandler,
 	StartPendingUnitInvolvementHandler,
 	UpdateOperationBaseDataHandler,
 	UpdateOperationInvolvementsHandler,
 ];
 const QUERY_HANDLERS = [
+	GetOperationByIdHandler,
+	GetOperationByIdsQueryHandler,
 	GetOperationIdOfPendingUnitHandler,
 	GetOperationsByOrgIdHandler,
-	GetOperationByIdHandler,
 ];
 
 @Module({

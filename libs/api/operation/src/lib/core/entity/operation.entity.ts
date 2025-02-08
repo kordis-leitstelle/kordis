@@ -31,7 +31,7 @@ export class OperationEntity
 	extends BaseEntityModel
 	implements StartEndValidatable
 {
-	@AutoMap()
+	@AutoMap(() => String)
 	@IsEnum(OperationProcessState, { always: true })
 	@Field(() => OperationProcessState)
 	processState: OperationProcessState;
@@ -53,7 +53,7 @@ export class OperationEntity
 	})
 	start: Date;
 
-	@AutoMap()
+	@AutoMap(() => Date)
 	@ValidateIf(
 		(op) =>
 			op.end !== null ||
@@ -62,33 +62,32 @@ export class OperationEntity
 				OperationProcessState.COMPLETED,
 			].includes(op.processState),
 	)
-	@IsDate({ always: true })
+	@IsDate({ message: 'Das Einsatzende fehlt', always: true })
 	@Field(() => Date, { nullable: true })
 	@Validate(EndAfterStartValidation)
 	end: Date | null;
 
 	@AutoMap()
-	@ValidateIf((op) => op.processState === OperationProcessState.ARCHIVED)
 	@IsString({ always: true })
-	@IsNotEmpty({ groups: ['archived'] })
+	@IsNotEmpty({ groups: ['archived'], message: 'Der Einsatzleiter fehlt' })
 	@Field()
 	commander: string;
 
 	@AutoMap()
 	@IsString({ always: true })
-	@IsNotEmpty({ groups: ['archived'], message: 'Die Alarmierungsart fehlt.' })
+	@IsNotEmpty({ groups: ['archived'], message: 'Die Alarmierungsart fehlt' })
 	@Field()
 	reporter: string;
 
 	@AutoMap()
 	@IsString({ always: true })
-	@IsNotEmpty({ groups: ['archived'], message: 'Das Alarmstichwort fehlt.' })
+	@IsNotEmpty({ groups: ['archived'], message: 'Das Alarmstichwort fehlt' })
 	@Field()
 	alarmKeyword: string;
 
 	@AutoMap()
 	@IsString({ always: true })
-	@IsNotEmpty({ groups: ['archived'], message: 'Die Beschreibung fehlt.' })
+	@IsNotEmpty({ groups: ['archived'], message: 'Die Beschreibung fehlt' })
 	@Field()
 	description: string;
 
@@ -100,9 +99,9 @@ export class OperationEntity
 	@AutoMap(() => [OperationCategory])
 	@ArrayNotEmpty({
 		groups: ['archived'],
-		message: 'Es muss mindestens eine Einsatzart angegeben werden.',
+		message: 'Es muss mindestens eine Einsatzart angegeben werden',
 	})
-	@ValidateNested({ each: true })
+	@ValidateNested({ each: true, always: true })
 	@Type(() => OperationCategory)
 	@Field(() => [OperationCategory])
 	categories: OperationCategory[];
@@ -114,17 +113,17 @@ export class OperationEntity
 	location: OperationLocation;
 
 	@AutoMap(() => [OperationPatient])
-	@ValidateNested({ each: true })
+	@ValidateNested({ each: true, always: true })
 	@Type(() => OperationPatient)
 	@Field(() => [OperationPatient])
 	patients: OperationPatient[];
 
-	@ValidateNested({ each: true })
+	@ValidateNested({ each: true, always: true })
 	@Type(() => OperationUnitInvolvement)
 	@Field(() => [OperationUnitInvolvement])
 	unitInvolvements: OperationUnitInvolvement[];
 
-	@ValidateNested({ each: true })
+	@ValidateNested({ each: true, always: true })
 	@Type(() => OperationAlertGroupInvolvement)
 	@Field(() => [OperationAlertGroupInvolvement])
 	alertGroupInvolvements: OperationAlertGroupInvolvement[];

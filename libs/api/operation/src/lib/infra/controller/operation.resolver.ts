@@ -2,19 +2,35 @@ import { Mapper } from '@automapper/core';
 import { getMapperToken } from '@automapper/nestjs';
 import { Inject } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-
-
+import {
+	Args,
+	Field,
+	Mutation,
+	ObjectType,
+	Query,
+	Resolver,
+	Subscription,
+} from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import { PresentableValidationException } from '@kordis/api/shared';
+import {
+	GraphQLSubscriptionService,
+	PresentableValidationException,
+	ValidationException,
+} from '@kordis/api/shared';
 import { GetUnitByIdQuery, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
-
-
-import { ArchiveOperationCommand, CreateOperationCommand, DeleteOperationCommand, UpdateOperationBaseDataCommand, UpdateOperationInvolvementsCommand } from '../../core/command';
+import {
+	ArchiveOperationCommand,
+	CreateOperationCommand,
+	DeleteOperationCommand,
+	UpdateOperationBaseDataCommand,
+	UpdateOperationInvolvementsCommand,
+} from '../../core/command';
 import { OperationEntity } from '../../core/entity/operation.entity';
+import { OperationCreatedEvent } from '../../core/event/operation-created.event';
+import { OperationDeletedEvent } from '../../core/event/operation-deleted.event';
 import { UnitAlreadyInvolvedException } from '../../core/exceptions/unit-already-involved.exception';
 import { GetOperationByIdQuery } from '../../core/query/get-operation-by-id.query';
 import { GetOperationsByOrgIdQuery } from '../../core/query/get-operations-by-org-id.query';
@@ -25,15 +41,21 @@ import { OperationFilterInput } from './args/operation-filter.args';
 import { UpdateOperationBaseDataInput } from './args/update-operation-base-data.args';
 import { UpdateOperationInvolvementsInput } from './args/update-operation-involvement.args';
 
-
 // todo: im manager, wenn einsatz beendet, müssen alle ausstehenden zuordnungen gelöscht werden (isPending=false)
 // vielleicht ende nur via einsatzende setzen können?
+
+@ObjectType()
+export class DeletedOperationModel {
+	@Field()
+	operationId: string;
+}
 
 @Resolver()
 export class OperationResolver {
 	constructor(
 		private readonly commandBus: CommandBus,
 		private readonly queryBus: QueryBus,
+		private readonly graphqlSubscriptionService: GraphQLSubscriptionService,
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
@@ -92,9 +114,21 @@ export class OperationResolver {
 		@RequestUser() { organizationId }: AuthUser,
 		@Args('id') id: string,
 	): Promise<true | never> {
-		await this.commandBus.execute(
-			new ArchiveOperationCommand(organizationId, id),
-		);
+		try {
+			await this.commandBus.execute(
+				new ArchiveOperationCommand(organizationId, id),
+			);
+		} catch (error) {
+			if (error instanceof ValidationException) {
+				throw PresentableValidationException.fromCoreValidationException(
+					'Der Einsatz konnte nicht archiviert werden!',
+					error,
+				);
+			} else {
+				throw error;
+			}
+		}
+
 		return true;
 	}
 
@@ -145,7 +179,38 @@ export class OperationResolver {
 		} catch (error) {
 			await this.throwPresentable(error);
 		}
+
 		return this.queryBus.execute(new GetOperationByIdQuery(organizationId, id));
+	}
+
+	@Subscription(() => OperationViewModel)
+	operationCreated(
+		@RequestUser() { organizationId }: AuthUser,
+	): AsyncIterator<OperationViewModel> {
+		return this.graphqlSubscriptionService.getSubscriptionIteratorForEvent(
+			OperationCreatedEvent,
+			'operationCreated',
+			{
+				filter: (event) => event.orgId === organizationId,
+				map: ({ operation }) => operation,
+			},
+		);
+	}
+
+	@Subscription(() => DeletedOperationModel)
+	operationDeleted(
+		@RequestUser() { organizationId }: AuthUser,
+	): AsyncIterator<DeletedOperationModel> {
+		return this.graphqlSubscriptionService.getSubscriptionIteratorForEvent(
+			OperationDeletedEvent,
+			'operationDeleted',
+			{
+				filter: (event) => event.orgId === organizationId,
+				map: (event) => ({
+					operationId: event.operationId,
+				}),
+			},
+		);
 	}
 
 	private async throwPresentable(error: unknown): Promise<never> {

@@ -18,26 +18,21 @@ import { AlertGroupViewModel, UnitViewModel } from '@kordis/api/unit';
 
 import { EndAfterStartValidation } from './end-after-start.validation';
 
-export interface StartEndValidatable {
-	start: Date;
-	end: Date | null;
-}
-
 @ObjectType()
 @InputType('OperationBaseAddressInput')
 export class OperationBaseAddress {
 	@AutoMap()
-	@IsString()
+	@IsString({ always: true })
 	@Field()
 	street: string;
 
 	@AutoMap()
-	@IsString()
+	@IsString({ always: true })
 	@Field()
 	city: string;
 
 	@AutoMap()
-	@IsString()
+	@IsString({ always: true })
 	@Field()
 	postalCode: string;
 }
@@ -46,11 +41,12 @@ export class OperationBaseAddress {
 @InputType('OperationLocationAddressInput')
 export class OperationLocationAddress extends OperationBaseAddress {
 	@AutoMap()
-	@ValidateIf((o) => !o.street && !o.name)
+	@ValidateIf((o) => !o.street && !o.name, { always: true })
 	@IsNotEmpty({
 		message: 'Eine Straße oder Name fehlt.',
+		always: true,
 	})
-	@IsString()
+	@IsString({ always: true })
 	@Field()
 	name: string;
 }
@@ -59,14 +55,14 @@ export class OperationLocationAddress extends OperationBaseAddress {
 @InputType('OperationLocationInput')
 export class OperationLocation {
 	@AutoMap(() => Coordinate)
-	@ValidateNested()
-	@ValidateIf((o) => o.coordinate != null)
+	@ValidateIf((o) => o.coordinate != null, { always: true })
+	@ValidateNested({ always: true })
 	@Type(() => Coordinate)
 	@Field(() => Coordinate, { nullable: true })
 	coordinate: Coordinate | null;
 
 	@AutoMap()
-	@ValidateNested()
+	@ValidateNested({ always: true })
 	@Type(() => OperationLocationAddress)
 	@Field()
 	address: OperationLocationAddress;
@@ -76,31 +72,31 @@ export class OperationLocation {
 @InputType('OperationCategoryInput')
 export class OperationCategory extends Validatable {
 	@AutoMap()
-	@IsString()
-	@IsNotEmpty()
+	@IsString({ always: true })
+	@IsNotEmpty({ always: true })
 	@Field()
 	name: string;
 
 	@AutoMap()
-	@IsInt()
-	@Min(0)
+	@IsInt({ always: true })
+	@Min(0, { always: true })
 	@Field()
 	count: number;
 
 	@AutoMap()
-	@IsInt()
-	@Min(0)
+	@IsInt({ always: true })
+	@Min(0, { always: true })
 	@Field()
 	patientCount: number;
 
 	@AutoMap()
-	@IsInt()
-	@Min(0)
+	@IsInt({ always: true })
+	@Min(0, { always: true })
 	@Field()
 	dangerousSituationCount: number;
 
 	@AutoMap()
-	@IsBoolean()
+	@IsBoolean({ always: true })
 	@Field()
 	wasDangerous: boolean;
 }
@@ -109,52 +105,57 @@ export class OperationCategory extends Validatable {
 @InputType('OperationPatientInput')
 export class OperationPatient {
 	@AutoMap()
-	@IsString()
+	@IsString({ always: true })
 	@Field()
 	firstName: string;
 
 	@AutoMap()
-	@IsString()
-	@IsNotEmpty({ message: 'Ein Nachname fehlt.', always: true })
+	@IsString({ always: true })
+	@IsNotEmpty({ message: 'Ein Nachname fehlt', always: true })
 	@Field()
 	lastName: string;
 
-	@AutoMap()
-	@ValidateIf((pat) => pat.birthDate != null)
-	@IsDate()
+	@AutoMap(() => Date)
+	@ValidateIf((pat) => pat.birthDate != null, { always: true })
+	@IsDate({ always: true })
 	@Field(() => Date, { nullable: true })
 	birthDate: Date | null;
 
 	@AutoMap()
-	@IsString()
+	@IsString({ always: true })
 	@Field()
 	phoneNumber: string;
 
 	@AutoMap()
-	@IsString()
-	@IsNotEmpty({ message: 'Der Verbleib fehlt.', always: true })
+	@IsString({ always: true })
+	@IsNotEmpty({ message: 'Der Verbleib fehlt', always: true })
 	@Field()
 	whereabouts: string;
 
 	@AutoMap()
-	@ValidateNested()
+	@ValidateNested({ always: true })
 	@Type(() => OperationBaseAddress)
 	@Field()
 	address: OperationBaseAddress;
+}
+
+export interface StartEndValidatable {
+	start: Date;
+	end: Date | null;
 }
 
 @ObjectType()
 @InputType('OperationInvolvementTimeInput')
 export class InvolvementTime implements StartEndValidatable {
 	@AutoMap()
-	@IsDate()
+	@IsDate({ always: true })
 	@Field()
 	start: Date;
 
 	@AutoMap()
-	@IsDate()
-	@ValidateIf((inv) => inv.end != null)
-	@Validate(EndAfterStartValidation)
+	@IsDate({ always: true })
+	@ValidateIf((inv) => inv.end != null, { always: true })
+	@Validate(EndAfterStartValidation, { always: true })
 	@Field(() => Date, { nullable: true })
 	end: Date | null;
 }
@@ -166,12 +167,12 @@ export class OperationUnitInvolvement extends Validatable {
 	unit: { id: string };
 
 	@Type(() => InvolvementTime)
-	@ValidateNested({ each: true })
+	@ValidateNested({ each: true, always: true })
 	@Field(() => [InvolvementTime])
 	involvementTimes: InvolvementTime[];
 
 	@AutoMap()
-	@IsBoolean()
+	@IsBoolean({ always: true })
 	@Field()
 	isPending: boolean;
 }
@@ -183,7 +184,7 @@ export class OperationAlertGroupInvolvement {
 	alertGroup: { id: string };
 
 	@AutoMap()
-	@ValidateNested({ each: true })
+	@ValidateNested({ each: true, always: true })
 	@Type(() => OperationUnitInvolvement)
 	@Field(() => [OperationUnitInvolvement])
 	unitInvolvements: OperationUnitInvolvement[];

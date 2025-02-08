@@ -8,7 +8,6 @@ import { UnitStatusUpdatedEvent } from '@kordis/api/unit';
 import { StartPendingUnitInvolvementCommand } from '../core/command/start-pending-unit-involvement.command';
 import { GetOperationIdOfPendingUnitQuery } from '../core/query/get-operation-id-of-pending-unit.query';
 
-
 @Injectable()
 export class MarkUnitAsInvolvedSaga {
 	private readonly logger: KordisLogger = new Logger(
