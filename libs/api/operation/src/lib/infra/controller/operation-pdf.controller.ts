@@ -3,12 +3,11 @@ import { QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
 
 import { RequestUser } from '@kordis/api/auth';
-import { GetOperationByIdQuery } from '../../core/query/get-operation-by-id.query';
 import { AuthUser } from '@kordis/shared/model';
 
 import { OperationEntity } from '../../core/entity/operation.entity';
+import { GetOperationByIdQuery } from '../../core/query/get-operation-by-id.query';
 import { OperationPdfGenerationService } from '../../core/service/pdf/operation-pdf-generation.service';
-
 
 @Controller('operation')
 export class OperationPdfController {

@@ -11,9 +11,7 @@
     "esModuleInterop": true
   },
   "files": [],
-  "include": [
-    "src/typings.d.ts"
-  ],
+  "include": ["src/typings.d.ts"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

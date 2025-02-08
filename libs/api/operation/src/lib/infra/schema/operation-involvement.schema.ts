@@ -30,6 +30,9 @@ export class OperationInvolvementDocument {
 
 	@Prop({ default: false })
 	isPending: boolean;
+
+	@Prop({ default: false })
+	isDeleted?: boolean;
 }
 
 export const OperationInvolvementSchema = SchemaFactory.createForClass(

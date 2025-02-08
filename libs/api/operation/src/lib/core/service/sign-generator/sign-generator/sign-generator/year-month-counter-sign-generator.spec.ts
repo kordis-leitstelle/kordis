@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 
-import { OperationRepository } from '../../repository/operation.repository';
-import { SignGenerator } from './sign-generator.strategy';
+import { OperationRepository } from '../../../../repository/operation.repository';
+import { SignGenerator } from '../../sign-generator.strategy';
 import { YearMonthCounterSignGenerator } from './year-month-counter-sign-generator.strategy';
 
 describe('YearMonthCounterSignGenerator', () => {

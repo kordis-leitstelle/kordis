@@ -20,6 +20,11 @@ export interface OperationRepository {
 		uow?: DbSessionProvider,
 	): Promise<OperationEntity>;
 
+	findByIds(
+		operationIds: string[],
+		uow?: DbSessionProvider,
+	): Promise<OperationEntity[]>;
+
 	findByOrgId(
 		orgId: string,
 		filter?: Partial<OperationFilterDto>,

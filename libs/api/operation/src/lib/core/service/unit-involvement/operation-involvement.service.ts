@@ -13,7 +13,6 @@ import {
 	SetUnitInvolvementDto,
 } from './unit-involvement.dto';
 
-
 @Injectable()
 export class OperationInvolvementService {
 	constructor(
@@ -24,7 +23,7 @@ export class OperationInvolvementService {
 	/*
 		Process of setting unit involvements.
 		First, removes all involvements of an operations, then verifies that a unit is not involved in another operation (as pending or matching with involvement time) and creates new involvements.
-		If involvement times are intercepting with another operation it will throw or a unit without an end time is added and it is currently somewhere pending, an exception is thrown!
+		If involvement times are intercepting with another operation or a unit without an end time is added and it is currently somewhere pending, an exception is thrown!
 	 */
 	async setUnitInvolvements(
 		orgId: string,
@@ -80,13 +79,15 @@ export class OperationInvolvementService {
 		alertGroupId: string | null,
 		uow?: DbSessionProvider,
 	): Promise<void> {
-		const involvement = await this.involvementsRepository.findInvolvement(
-			orgId,
-			operationId,
-			unitId,
-			alertGroupId,
-		);
-
+		const involvement =
+			await this.involvementsRepository.findOperationInvolvement(
+				orgId,
+				operationId,
+				unitId,
+				alertGroupId,
+				uow,
+			);
+		// has involvement in the operation already?
 		if (involvement) {
 			// we just need to set the pending state of this unit as it was already involved in the operation
 			await this.involvementsRepository.setPendingState(
@@ -99,7 +100,12 @@ export class OperationInvolvementService {
 			);
 		} else {
 			// unit was not involved in the operation, so we need to release it from possible ongoing operations and  add it as a pending unit
-			await this.releaseUnitIfInvolved(orgId, unitId, new Date(), uow);
+			await this.releaseUnitFromPossibleForeignOperation(
+				orgId,
+				unitId,
+				new Date(),
+				uow,
+			);
 			await this.involvementsRepository.createInvolvements(
 				orgId,
 				operationId,
@@ -118,20 +124,21 @@ export class OperationInvolvementService {
 		}
 	}
 
-	private async releaseUnitIfInvolved(
+	private async releaseUnitFromPossibleForeignOperation(
 		orgId: string,
 		unitId: string,
 		start: Date,
 		uow?: DbSessionProvider,
 	): Promise<void> {
 		// has the unit an active involvement?
-		let involvement = await this.involvementsRepository.findByUnitInvolvement(
-			orgId,
-			unitId,
-			start,
-			null,
-			uow,
-		);
+		let involvement =
+			await this.involvementsRepository.findByUnitInvolvementTimeRange(
+				orgId,
+				unitId,
+				start,
+				null,
+				uow,
+			);
 		if (involvement) {
 			// release it (set end of the involvement)
 			await this.involvementsRepository.setEnd(
@@ -151,16 +158,17 @@ export class OperationInvolvementService {
 				unitId,
 			);
 		if (involvement) {
-			// remove pending involvement if no involvement times, or set pending state to false
+			// remove pending involvement if no involvement times (there is no need to keep the unit)
 			if (involvement.involvementTimes.length === 0) {
 				await this.involvementsRepository.removeInvolvement(
 					orgId,
-					involvement.operationId,
 					involvement.unitId,
 					involvement.alertGroupId,
+					involvement.operationId,
 					uow,
 				);
 			} else {
+				// or set the pending state to false if it has involvement times
 				await this.involvementsRepository.setPendingState(
 					orgId,
 					involvement.operationId,
@@ -173,6 +181,7 @@ export class OperationInvolvementService {
 		}
 	}
 
+	// check if a unit is involved (pending or open end in an operation) and create the DTOs for the new involvements
 	private async verifyAndCreateDtos(
 		orgId: string,
 		operationId: string,
@@ -184,7 +193,7 @@ export class OperationInvolvementService {
 
 		for (const unitInvolvement of involvements) {
 			if (unitInvolvement.isPending) {
-				await this.assertUnitNotPending(orgId, unitInvolvement.unitId);
+				await this.assertUnitNotPending(orgId, unitInvolvement.unitId, uow);
 			}
 
 			await this.assertUnitNotInvolved(
@@ -222,7 +231,7 @@ export class OperationInvolvementService {
 			}
 
 			const involvement =
-				await this.involvementsRepository.findByUnitInvolvement(
+				await this.involvementsRepository.findByUnitInvolvementTimeRange(
 					orgId,
 					unitId,
 					involvementRange.start,
@@ -242,11 +251,13 @@ export class OperationInvolvementService {
 	private async assertUnitNotPending(
 		orgId: string,
 		unitId: string,
+		uow?: DbSessionProvider,
 	): Promise<void | never> {
 		const involvement =
 			await this.involvementsRepository.findInvolvementOfPendingUnit(
 				orgId,
 				unitId,
+				uow,
 			);
 		if (involvement) {
 			throw new UnitAlreadyInvolvedException(

@@ -90,7 +90,7 @@ export class CreateOperationHandler
 				uow,
 			);
 
-			if (operation?.end) {
+			if (createOperationDto?.end) {
 				// if the operation has an end, we want to assign the units with the start and end date
 				await this.setUnitInvolvements(id, cmd, uow);
 			} else {
@@ -105,7 +105,7 @@ export class CreateOperationHandler
 			);
 		}, 3);
 
-		if (operation === undefined) {
+		if (operation == null) {
 			throw new Error('Operation was not created');
 		}
 

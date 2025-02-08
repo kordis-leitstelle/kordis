@@ -4,7 +4,6 @@ import { IsBoolean, IsString, ValidateNested } from 'class-validator';
 
 import { InvolvementTime } from '../../../core/entity/operation.value-objects';
 
-
 @InputType()
 export class UpdateOperationInvolvementsInput {
 	@Field(() => [UpdateOperationUnitInvolvementInput])

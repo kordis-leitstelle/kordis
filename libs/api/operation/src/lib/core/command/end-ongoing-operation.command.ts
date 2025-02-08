@@ -5,8 +5,7 @@ import {
 	QueryBus,
 } from '@nestjs/cqrs';
 
-import { OperationViewModel } from '@kordis/api/operation';
-
+import { OperationViewModel } from '../../infra/operation.view-model';
 import { OperationProcessState } from '../entity/operation-process-state.enum';
 import { OperationNotOngoingException } from '../exceptions/operation-not-ongoing.exception';
 import { GetOperationByIdQuery } from '../query/get-operation-by-id.query';

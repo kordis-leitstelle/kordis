@@ -38,7 +38,13 @@ describe('GetOperationIdOfPendingUnitHandler', () => {
 		const query = new GetOperationIdOfPendingUnitQuery(orgId, unitId);
 
 		const operationId = 'operation1';
-		mockRepository.findInvolvementOfPendingUnit.mockResolvedValue(operationId);
+		mockRepository.findInvolvementOfPendingUnit.mockResolvedValue({
+			unitId,
+			operationId,
+			involvementTimes: [],
+			alertGroupId: null,
+			isPending: true,
+		});
 
 		const result = await handler.execute(query);
 		expect(result).toBe(operationId);

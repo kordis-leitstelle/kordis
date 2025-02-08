@@ -9,6 +9,6 @@ export default {
 	moduleFileExtensions: ['ts', 'js', 'html'],
 	coverageDirectory: '../../../coverage/libs/api/operation',
 	moduleNameMapper: {
-		'\\.hbs$': '<rootDir>/__mocks__/file-mocks.js',
+		'\\.hbs$': '<rootDir>/operation-hbs.module.test-helper.js',
 	},
 };

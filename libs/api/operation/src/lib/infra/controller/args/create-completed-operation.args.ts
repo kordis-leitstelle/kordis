@@ -16,7 +16,6 @@ import {
 	StartEndValidatable,
 } from '../../../core/entity/operation.value-objects';
 
-
 @InputType()
 export class CreateOperationInvolvedAlertGroupInput {
 	@IsString()
@@ -51,10 +50,6 @@ export class CreateOperationInput implements StartEndValidatable {
 	})
 	@Field()
 	alarmKeyword: string;
-
-	@IsString()
-	@Field()
-	description: string;
 
 	@Field()
 	@ValidateNested()

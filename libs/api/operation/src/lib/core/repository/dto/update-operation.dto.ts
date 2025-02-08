@@ -8,7 +8,7 @@ import {
 } from '../../entity/operation.value-objects';
 
 export class UpdateOperationDto {
-	@AutoMap()
+	@AutoMap(() => String)
 	processState: OperationProcessState;
 
 	@AutoMap()

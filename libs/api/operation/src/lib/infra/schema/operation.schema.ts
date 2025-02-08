@@ -10,7 +10,6 @@ import {
 
 import { OperationProcessState } from '../../core/entity/operation-process-state.enum';
 
-
 @Schema({ _id: false })
 export class OperationAddressDocument {
 	@AutoMap()
@@ -84,8 +83,8 @@ export class OperationPatientDocument {
 	@AutoMap()
 	lastName: string;
 
-	@AutoMap()
-	birthDate: Date;
+	@AutoMap(() => Date)
+	birthDate: Date | null;
 
 	@AutoMap()
 	phoneNumber: string;
@@ -99,7 +98,7 @@ export class OperationPatientDocument {
 
 @Schema({ timestamps: true, collection: 'operations' })
 export class OperationDocument extends BaseDocument {
-	@AutoMap()
+	@AutoMap(() => String)
 	@Prop({ enum: OperationProcessState, type: String })
 	processState: OperationProcessState;
 
@@ -111,7 +110,7 @@ export class OperationDocument extends BaseDocument {
 	@Prop()
 	sign: string;
 
-	@AutoMap(() => Date)
+	@AutoMap()
 	@Prop({ type: Date })
 	start: Date;
 

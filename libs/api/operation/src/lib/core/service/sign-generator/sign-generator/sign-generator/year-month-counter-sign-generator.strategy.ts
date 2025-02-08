@@ -5,9 +5,8 @@ import { DbSessionProvider } from '@kordis/api/shared';
 import {
 	OPERATION_REPOSITORY,
 	OperationRepository,
-} from '../../repository/operation.repository';
-import { SignGenerator } from './sign-generator.strategy';
-
+} from '../../../../repository/operation.repository';
+import { SignGenerator } from '../../sign-generator.strategy';
 
 @Injectable()
 export class YearMonthCounterSignGenerator implements SignGenerator {

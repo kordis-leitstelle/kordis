@@ -21,7 +21,6 @@ import { OperationDocument } from '../schema/operation.schema';
 import { OperationAggregateModel } from './operation-aggregate.model';
 import { UpdateOperationDocumentDto } from './update-operation-document.dto';
 
-
 const INVOLVEMENT_LOOKUPS = Object.freeze([
 	{
 		$lookup: {
@@ -111,6 +110,28 @@ export class OperationRepositoryImpl implements OperationRepository {
 		private readonly encrService: MongoEncryptionService,
 	) {}
 
+	async findByIds(
+		operationIds: string[],
+		uow?: DbSessionProvider,
+	): Promise<OperationEntity[]> {
+		const query = this.operationModel.aggregate([
+			{
+				$match: {
+					_id: { $in: operationIds.map((id) => new Types.ObjectId(id)) },
+				},
+			},
+			...INVOLVEMENT_LOOKUPS,
+		]);
+
+		const res = await runDbOperation(query, uow);
+
+		return this.mapper.mapArrayAsync(
+			res,
+			OperationAggregateModel,
+			OperationEntity,
+		);
+	}
+
 	async findById(
 		orgId: string,
 		id: string,
@@ -131,7 +152,7 @@ export class OperationRepositoryImpl implements OperationRepository {
 		if (!res?.[0]) {
 			throw new OperationNotFoundException();
 		}
-		console.log(res);
+
 		return this.mapper.mapAsync(
 			res[0],
 			OperationAggregateModel,

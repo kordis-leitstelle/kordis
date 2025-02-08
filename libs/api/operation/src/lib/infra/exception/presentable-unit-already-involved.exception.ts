@@ -7,7 +7,7 @@ export class PresentableUnitAlreadyInvolvedException extends PresentableExceptio
 		super(
 			"Die Einheit '" +
 				unitCallSign +
-				"' ist bereits in dem Zeitraum an der Operation '" +
+				"' ist bereits in dem Zeitraum an dem Einsatz '" +
 				operationSign +
 				"' beteiligt.",
 		);

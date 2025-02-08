@@ -2,12 +2,17 @@ import { createMock } from '@golevelup/ts-jest';
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 
-import { OperationDeletedEvent } from '@kordis/api/operation';
 import { InsufficientPermissionException } from '@kordis/api/shared';
+import { uowMockProvider } from '@kordis/api/test-helpers';
 import { AuthUser, Role } from '@kordis/shared/model';
 
 import { OperationProcessState } from '../entity/operation-process-state.enum';
 import { OperationEntity } from '../entity/operation.entity';
+import { OperationDeletedEvent } from '../event/operation-deleted.event';
+import {
+	OPERATION_INVOLVEMENT_REPOSITORY,
+	OperationInvolvementsRepository,
+} from '../repository/operation-involvement.repository';
 import {
 	OPERATION_REPOSITORY,
 	OperationRepository,
@@ -20,15 +25,22 @@ import {
 describe('DeleteOperationHandler', () => {
 	let handler: DeleteOperationHandler;
 	let mockRepository: jest.Mocked<OperationRepository>;
+	let mockInvolvementRepository: jest.Mocked<OperationInvolvementsRepository>;
 	let eventBus: EventBus;
 
 	beforeEach(async () => {
 		mockRepository = createMock<OperationRepository>();
+		mockInvolvementRepository = createMock<OperationInvolvementsRepository>();
 
 		const moduleRef = await Test.createTestingModule({
 			providers: [
 				DeleteOperationHandler,
 				{ provide: OPERATION_REPOSITORY, useValue: mockRepository },
+				{
+					provide: OPERATION_INVOLVEMENT_REPOSITORY,
+					useValue: mockInvolvementRepository,
+				},
+				uowMockProvider(),
 			],
 			imports: [CqrsModule],
 		}).compile();
@@ -53,7 +65,7 @@ describe('DeleteOperationHandler', () => {
 		);
 	});
 
-	it('should delete operation and emit deletion event', async () => {
+	it('should set `deleted` process state of operation and involvements and emit deletion event', async () => {
 		const command = new DeleteOperationCommand(
 			'org1',
 			{ id: 'admin1', role: Role.USER } as AuthUser,
@@ -78,8 +90,19 @@ describe('DeleteOperationHandler', () => {
 			return handler.execute(command);
 		});
 
-		expect(mockRepository.update).toHaveBeenCalledWith('org1', 'op1', {
-			processState: OperationProcessState.DELETED,
-		});
+		expect(mockRepository.update).toHaveBeenCalledWith(
+			'org1',
+			'op1',
+			{
+				processState: OperationProcessState.DELETED,
+			},
+			expect.anything(),
+		);
+		expect(mockInvolvementRepository.setDeletedFlag).toHaveBeenCalledWith(
+			'org1',
+			'op1',
+			true,
+			expect.anything(),
+		);
 	});
 });

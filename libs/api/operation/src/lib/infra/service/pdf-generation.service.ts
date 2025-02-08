@@ -3,7 +3,6 @@ import puppeteer from 'puppeteer';
 
 import { PdfGenerationService } from '../../core/service/pdf/pdf-generation.service';
 
-
 @Injectable()
 export class PdfGenerationServiceImpl implements PdfGenerationService {
 	async generatePdf(content: string, loadPagedJs = true): Promise<Buffer> {

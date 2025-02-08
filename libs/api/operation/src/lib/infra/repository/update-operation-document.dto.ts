@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { mongo } from 'mongoose';
 
+import { OperationProcessState } from '../../core/entity/operation-process-state.enum';
 import {
 	OperationCategoryDocument,
 	OperationLocationDocument,
@@ -8,8 +9,8 @@ import {
 } from '../schema/operation.schema';
 
 export class UpdateOperationDocumentDto {
-	@AutoMap()
-	isArchived?: boolean;
+	@AutoMap(() => String)
+	processState: OperationProcessState;
 
 	@AutoMap()
 	sign: string;

@@ -8,3 +8,4 @@ export { OperationCreatedEvent } from './lib/core/event/operation-created.event'
 export { GetOperationByIdQuery } from './lib/core/query/get-operation-by-id.query';
 export { OperationDeletedEvent } from './lib/core/event/operation-deleted.event';
 export { OperationInvolvementsUpdatedEvent } from './lib/core/event/operation-involvements-updated.event';
+export { OPERATION_DATA_LOADER } from '../src/lib/operations.data-loader';
