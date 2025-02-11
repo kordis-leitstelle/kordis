@@ -9,8 +9,9 @@ import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
 import { DeploymentModule } from '@kordis/api/deployment';
+import { OperationDeploymentSagaModule } from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
-import { OperationModule } from '@kordis/api/operation';
+import { OperationModule, OperationSagaModule } from '@kordis/api/operation';
 import { OperationManagerModule } from '@kordis/api/operation-manager';
 import { OrganizationModule } from '@kordis/api/organization';
 import { ProtocolModule } from '@kordis/api/protocol';
@@ -43,7 +44,11 @@ const FEATURE_MODULES = [
 	DeploymentModule,
 	RescueStationManagerModule,
 ];
-const SAGA_MODULES = [UnitsSagaModule];
+const SAGA_MODULES = [
+	UnitsSagaModule,
+	OperationSagaModule,
+	OperationDeploymentSagaModule,
+];
 const UTILITY_MODULES = [
 	SharedKernel,
 	ObservabilityModule.forRoot(process.env.SENTRY_KEY ? 'sentry' : 'dev'),

@@ -1,20 +1,21 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ValidationException } from '@kordis/api/shared';
 import { uowMockProvider } from '@kordis/api/test-helpers';
 
 import {
 	RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 	RescueStationDeploymentRepository,
-} from '../repository/rescue-station-deployment.repository';
-import { DeploymentAssignmentService } from '../service/deployment-assignment.service';
+} from '../../repository/rescue-station-deployment.repository';
+import { DeploymentAssignmentService } from '../../service/deployment-assignment.service';
 import {
-	UpdateSignedInRescueStationCommand,
-	UpdateSignedInRescueStationHandler,
-} from './update-signed-in-rescue-station.command';
+	SignInRescueStationCommand,
+	SignInRescueStationHandler,
+} from './sign-in-rescue-station.command';
 
-describe('UpdateSignedInRescueStationHandler', () => {
-	let handler: UpdateSignedInRescueStationHandler;
+describe('SignInRescueStationHandler', () => {
+	let handler: SignInRescueStationHandler;
 	const mockRescueStationDeploymentRepository =
 		createMock<RescueStationDeploymentRepository>();
 	const mockDeploymentAssignmentService =
@@ -23,7 +24,7 @@ describe('UpdateSignedInRescueStationHandler', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				UpdateSignedInRescueStationHandler,
+				SignInRescueStationHandler,
 				{
 					provide: RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 					useValue: mockRescueStationDeploymentRepository,
@@ -36,12 +37,12 @@ describe('UpdateSignedInRescueStationHandler', () => {
 			],
 		}).compile();
 
-		handler = module.get<UpdateSignedInRescueStationHandler>(
-			UpdateSignedInRescueStationHandler,
+		handler = module.get<SignInRescueStationHandler>(
+			SignInRescueStationHandler,
 		);
 	});
 
-	it('should call specific methods when command is executed', async () => {
+	it('should call assignment and update', async () => {
 		const orgId = 'orgId';
 		const rescueStationId = 'rescueStationId';
 		const strength = {
@@ -54,7 +55,7 @@ describe('UpdateSignedInRescueStationHandler', () => {
 		const assignedAlertGroups = [
 			{ alertGroupId: 'alertGroupId', unitIds: ['unitId'] },
 		];
-		const command = new UpdateSignedInRescueStationCommand(
+		const command = new SignInRescueStationCommand(
 			orgId,
 			rescueStationId,
 			strength,
@@ -73,17 +74,23 @@ describe('UpdateSignedInRescueStationHandler', () => {
 			assignedAlertGroups,
 			expect.anything(),
 		);
+		expect(mockRescueStationDeploymentRepository.updateOne).toHaveBeenCalled();
+	});
 
-		expect(
-			mockRescueStationDeploymentRepository.updateOne,
-		).toHaveBeenCalledWith(
-			orgId,
-			rescueStationId,
+	it('should throw validation exception when strength is invalid', async () => {
+		const command = new SignInRescueStationCommand(
+			'orgId',
+			'rescueStationId',
 			{
-				note,
-				strength,
+				leaders: -1,
+				subLeaders: 1,
+				helpers: 1,
 			},
-			expect.anything(),
+			'note',
+			['unitId'],
+			[{ alertGroupId: 'alertGroupId', unitIds: ['unitId'] }],
 		);
+
+		await expect(handler.execute(command)).rejects.toThrow(ValidationException);
 	});
 });

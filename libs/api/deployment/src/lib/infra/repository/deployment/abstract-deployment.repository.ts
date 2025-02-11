@@ -1,5 +1,5 @@
 import { Mapper, ModelIdentifier } from '@automapper/core';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 
 import { DbSessionProvider, runDbOperation } from '@kordis/api/shared';
 
@@ -99,11 +99,13 @@ export abstract class DeploymentRepositoryImpl<
 {
 	protected constructor(
 		protected readonly deploymentModel: Model<TDocument>,
-		private readonly mapper: Mapper,
-		private readonly entityTypeValue: ModelIdentifier<TEntity>,
-		private readonly documentTypeValue: ModelIdentifier<TDocument>,
-		private readonly documentDtoTypeValue: ModelIdentifier<Partial<TDocument>>,
-		private readonly entityDtoTypeValue: ModelIdentifier<TEntityDTO>,
+		protected readonly mapper: Mapper,
+		protected readonly entityTypeValue: ModelIdentifier<TEntity>,
+		protected readonly documentTypeValue: ModelIdentifier<TDocument>,
+		protected readonly documentDtoTypeValue: ModelIdentifier<
+			Partial<TDocument>
+		>,
+		protected readonly entityDtoTypeValue: ModelIdentifier<TEntityDTO>,
 	) {}
 
 	async findById(orgId: string, id: string): Promise<TEntity> {
@@ -112,7 +114,7 @@ export abstract class DeploymentRepositoryImpl<
 				{
 					$match: {
 						orgId,
-						referenceId: id,
+						_id: new Types.ObjectId(id),
 					},
 				},
 				...ASSIGNMENT_JOIN_PIPELINE_STEPS,

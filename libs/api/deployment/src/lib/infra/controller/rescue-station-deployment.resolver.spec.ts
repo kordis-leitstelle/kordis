@@ -18,12 +18,12 @@ import {
 } from '../../core/entity/deployment.entity';
 import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-deployment.entity';
 import { RescueStationsResetEvent } from '../../core/event/rescue-stations-reset.event';
-import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
+import { GetRescueStationDeploymentsQuery } from '../../core/query/get-rescue-station-deployments.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
 import { RescueStationDtoMapperProfile } from '../mapper/rescue-station-dto.mapper-profile';
-import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
+import { RescueStationDeploymentViewModel } from '../view-model/rescue-station.view-model';
+import { DeploymentUnitResolver } from './deployment-unit.resolver';
 import {
-	DeploymentUnitResolver,
 	RescueStationDeploymentDefaultUnitsResolver,
 	RescueStationDeploymentResolver,
 } from './rescue-station-deployment.resolver';
@@ -111,7 +111,7 @@ describe('RescueStationDeploymentResolver', () => {
 		const filterDto = new RescueStationEntityDTO();
 		filterDto.signedIn = true;
 		expect(mockQueryBus.execute).toHaveBeenCalledWith(
-			new GetDeploymentsQuery(orgId, filterDto),
+			new GetRescueStationDeploymentsQuery(orgId, filterDto),
 		);
 
 		expect(result.length).toBe(2);

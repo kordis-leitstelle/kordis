@@ -8,16 +8,16 @@ import {
 	RescueStationEntityDTO,
 } from '../repository/rescue-station-deployment.repository';
 
-export class GetDeploymentsQuery {
+export class GetRescueStationDeploymentsQuery {
 	constructor(
 		readonly orgId: string,
 		readonly filter?: RescueStationEntityDTO,
 	) {}
 }
 
-@QueryHandler(GetDeploymentsQuery)
-export class GetDeploymentsHandler
-	implements IQueryHandler<GetDeploymentsQuery>
+@QueryHandler(GetRescueStationDeploymentsQuery)
+export class GetRescueStationsDeploymentsHandler
+	implements IQueryHandler<GetRescueStationDeploymentsQuery>
 {
 	constructor(
 		@Inject(RESCUE_STATION_DEPLOYMENT_REPOSITORY)
@@ -27,7 +27,9 @@ export class GetDeploymentsHandler
 	async execute({
 		orgId,
 		filter,
-	}: GetDeploymentsQuery): Promise<RescueStationDeploymentEntity[]> {
+	}: GetRescueStationDeploymentsQuery): Promise<
+		RescueStationDeploymentEntity[]
+	> {
 		return this.rescueStationDeploymentRepository.findByOrgId(orgId, filter);
 	}
 }

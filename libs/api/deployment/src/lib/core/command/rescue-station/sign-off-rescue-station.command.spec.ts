@@ -6,11 +6,11 @@ import { uowMockProvider } from '@kordis/api/test-helpers';
 import {
 	DEPLOYMENT_ASSIGNMENT_REPOSITORY,
 	DeploymentAssignmentRepository,
-} from '../repository/deployment-assignment.repository';
+} from '../../repository/deployment-assignment.repository';
 import {
 	RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 	RescueStationDeploymentRepository,
-} from '../repository/rescue-station-deployment.repository';
+} from '../../repository/rescue-station-deployment.repository';
 import {
 	SignOffRescueStationCommand,
 	SignOffRescueStationHandler,

@@ -85,6 +85,11 @@ export class RescueStationDeploymentEntity extends BaseDeploymentEntity {
 	@Field()
 	@IsString()
 	@AutoMap()
+	name: string;
+
+	@Field()
+	@IsString()
+	@AutoMap()
 	callSign: string;
 
 	@Field(() => RescueStationStrength)

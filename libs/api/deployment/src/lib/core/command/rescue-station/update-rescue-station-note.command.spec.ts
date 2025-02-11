@@ -2,11 +2,11 @@ import { createMock } from '@golevelup/ts-jest';
 import { EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { RescueStationNoteUpdatedEvent } from '../event/rescue-station-note-updated.event';
+import { RescueStationNoteUpdatedEvent } from '../../event/rescue-station-note-updated.event';
 import {
 	RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 	RescueStationDeploymentRepository,
-} from '../repository/rescue-station-deployment.repository';
+} from '../../repository/rescue-station-deployment.repository';
 import {
 	UpdateRescueStationNoteCommand,
 	UpdateRescueStationNoteHandler,

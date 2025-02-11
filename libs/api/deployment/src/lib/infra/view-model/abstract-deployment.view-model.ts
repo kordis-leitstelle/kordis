@@ -1,10 +1,9 @@
-import { Field, ObjectType, createUnionType } from '@nestjs/graphql';
+import { createUnionType } from '@nestjs/graphql';
 
 import {
 	DeploymentAlertGroup,
 	DeploymentUnit,
-} from '../core/entity/deployment.entity';
-import { RescueStationDeploymentEntity } from '../core/entity/rescue-station-deployment.entity';
+} from '../../core/entity/deployment.entity';
 
 export const DeploymentAssignment = createUnionType({
 	name: 'DeploymentAssignment',
@@ -18,8 +17,6 @@ export const DeploymentAssignment = createUnionType({
 	},
 });
 
-@ObjectType('RescueStationDeployment')
-export class RescueStationDeploymentViewModel extends RescueStationDeploymentEntity {
-	@Field(() => [DeploymentAssignment])
+export interface DeploymentViewModel {
 	assignments: (DeploymentUnit | DeploymentAlertGroup)[];
 }

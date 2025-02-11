@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
+import { OperationDeploymentEntity } from '../entity/operation-deplyoment.entity';
 import { RescueStationDeploymentEntity } from '../entity/rescue-station-deployment.entity';
 import {
 	DEPLOYMENT_ASSIGNMENT_REPOSITORY,
@@ -26,7 +27,9 @@ export class GetUnitAssignmentHandlerHandler
 	async execute({
 		orgId,
 		entityId,
-	}: GetCurrentAssignmentOfEntity): Promise<RescueStationDeploymentEntity | null> {
+	}: GetCurrentAssignmentOfEntity): Promise<
+		RescueStationDeploymentEntity | OperationDeploymentEntity | null
+	> {
 		return this.repository.getAssignment(orgId, entityId);
 	}
 }
