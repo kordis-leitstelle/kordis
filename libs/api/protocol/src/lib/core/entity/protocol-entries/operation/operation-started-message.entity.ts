@@ -14,7 +14,6 @@ import {
 	OperationMessageAssignedUnit,
 } from './operation-message.value-objects';
 
-
 @ObjectType()
 export class OperationStartedMessageLocation {
 	@Field()

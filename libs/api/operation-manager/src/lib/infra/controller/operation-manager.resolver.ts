@@ -1,4 +1,4 @@
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
@@ -16,27 +16,23 @@ import { LaunchUpdateOngoingInvolvementsProcessCommand } from '../../core/comman
 import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
 import { UpdateOngoingAssignmentsInput } from './update-ongoing-involvements.args';
 
-
 @Resolver()
 export class OperationManagerResolver {
-	constructor(
-		private readonly commandBus: CommandBus,
-		private readonly queryBus: QueryBus,
-	) {}
+	constructor(private readonly commandBus: CommandBus) {}
 
 	@Mutation(() => OperationViewModel, {
 		description: 'Starts a new ongoing operation with a protocol entry.',
 	})
 	async createOngoingOperation(
 		@RequestUser() reqUser: AuthUser,
-		@Args('operation') operation: CreateOngoingOperationArgs,
-		@Args('protocol') protocolMessageData: BaseCreateMessageArgs,
+		@Args('operation') operationData: CreateOngoingOperationArgs,
+		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
 	): Promise<OperationViewModel> {
 		try {
 			return await this.commandBus.execute(
 				new LaunchCreateOperationProcessCommand(
 					reqUser,
-					operation,
+					operationData,
 					await protocolMessageData.asTransformedPayload(),
 				),
 			);
@@ -52,12 +48,15 @@ export class OperationManagerResolver {
 		}
 	}
 
-	@Mutation(() => OperationViewModel)
+	@Mutation(() => OperationViewModel, {
+		description:
+			'Updates the assignments of an ongoing operation with a protocol entry.',
+	})
 	async updateOngoingOperationInvolvements(
 		@RequestUser() reqUser: AuthUser,
 		@Args('operationId') operationId: string,
-		@Args('assignmentsData') assignmentsData: UpdateOngoingAssignmentsInput,
-		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
+		@Args('assignments') assignmentsData: UpdateOngoingAssignmentsInput,
+		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
 	): Promise<OperationViewModel> {
 		return this.commandBus.execute(
 			new LaunchUpdateOngoingInvolvementsProcessCommand(
@@ -69,11 +68,13 @@ export class OperationManagerResolver {
 		);
 	}
 
-	@Mutation(() => OperationViewModel)
+	@Mutation(() => OperationViewModel, {
+		description: 'Ends an ongoing operation with a protocol entry.tet',
+	})
 	async endOngoingOperation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('operationId') operationId: string,
-		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
+		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
 	): Promise<OperationViewModel> {
 		return this.commandBus.execute(
 			new LaunchEndOperationProcessCommand(

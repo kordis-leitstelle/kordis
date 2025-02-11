@@ -1,4 +1,4 @@
-import { CommandBus, CommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, QueryBus } from '@nestjs/cqrs';
 
 import {
 	GetOperationByIdQuery,
@@ -11,7 +11,7 @@ import {
 } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
-import { UnitsEnricherService } from '../service/units-enricher.service';
+import { UnitsPopulateService } from '../service/units-populate.service';
 
 export class LaunchUpdateOngoingInvolvementsProcessCommand {
 	constructor(
@@ -36,7 +36,8 @@ export class LaunchUpdateOngoingInvolvementsProcessCommand {
 export class LaunchUpdateOngoingInvolvementsProcessHandler {
 	constructor(
 		private readonly commandBus: CommandBus,
-		private readonly unitsEnricher: UnitsEnricherService,
+		private readonly queryBus: QueryBus,
+		private readonly unitsPopulateService: UnitsPopulateService,
 	) {}
 
 	async execute(
@@ -52,12 +53,12 @@ export class LaunchUpdateOngoingInvolvementsProcessHandler {
 		);
 
 		const { assignedUnits, assignedAlertGroups } =
-			await this.unitsEnricher.getEnrichedUnitsAndAlertGroups(
+			await this.unitsPopulateService.getPopulatedUnitsAndAlertGroups(
 				cmd.assignments.assignedUnitIds,
 				cmd.assignments.assignedAlertGroups,
 			);
 
-		const operation: OperationViewModel = await this.commandBus.execute(
+		const operation: OperationViewModel = await this.queryBus.execute(
 			new GetOperationByIdQuery(cmd.reqUser.organizationId, cmd.operationId),
 		);
 

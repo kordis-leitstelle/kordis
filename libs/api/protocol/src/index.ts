@@ -9,3 +9,4 @@ export { BaseCreateMessageArgs } from './lib/infra/controller/base-create-messag
 export { MessageUnit } from './lib/core/entity/partials/unit-partial.entity';
 export { RescueStationMessageDetails } from './lib/core/command/rescue-station/message-command-rescue-station-details.model';
 export { UnitInput } from './lib/infra/view-model/unit-input.view-model';
+export * from './lib/create-message-args.test-helper';

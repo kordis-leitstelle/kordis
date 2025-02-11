@@ -4,7 +4,6 @@ import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 import { ProtocolMessageEntryBase } from '../protocol-entry-base.entity';
 
-
 @ObjectType()
 export class OperationEndedMessagePayload {
 	@Field()

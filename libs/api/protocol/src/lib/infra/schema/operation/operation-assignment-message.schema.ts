@@ -2,7 +2,6 @@ import { AutoMap } from '@automapper/classes';
 import { ObjectType } from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
 
-
 @Schema({ _id: false })
 export class OperationMessageAssignedUnitDocument {
 	@Prop()

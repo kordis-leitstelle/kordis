@@ -1,12 +1,9 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import {
-	ProtocolEntryType,
-	ProtocolMessageEntryBaseDocument,
-} from '../protocol-entry-base.schema';
+import { ProtocolMessageEntryBaseDocument } from '../protocol-entry-base.schema';
+import { ProtocolEntryType } from '../protocol-entry-type';
 import { OperationStartedMessagePayloadDocument } from './operation-started-message.schema';
-
 
 @Schema({ _id: false })
 export class OperationEndedMessagePayloadDocument {

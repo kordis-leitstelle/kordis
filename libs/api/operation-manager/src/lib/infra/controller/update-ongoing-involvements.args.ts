@@ -2,7 +2,6 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { IsMongoId, ValidateNested } from 'class-validator';
 
-
 @ObjectType()
 @InputType()
 export class AssignedAlertGroup {

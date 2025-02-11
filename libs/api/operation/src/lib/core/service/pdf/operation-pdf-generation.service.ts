@@ -20,6 +20,8 @@ import {
 	OperationLocationAddress,
 	OperationUnitInvolvement,
 } from '../../entity/operation.value-objects';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore due to types missing when operation is imported as feature module
 import operationPdfTemplate from './operation-pdf.hbs';
 import {
 	PDF_GENERATION_SERVICE,
