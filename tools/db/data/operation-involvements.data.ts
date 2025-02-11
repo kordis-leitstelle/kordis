@@ -49,19 +49,6 @@ const collectionData: CollectionData<OperationInvolvementDocument> = {
 			isPending: false,
 			alertGroupId: '66239459ef2a6ac579f55cce',
 		},
-		{
-			orgId: 'dff7584efe2c174eee8bae45',
-			operation: new Types.ObjectId('663b47a3146d7fbe28ad1e66'),
-			unitId: '65d7da8630f360f158caec53',
-			involvementTimes: [
-				{
-					start: new Date('2024-01-01T00:00:00Z'),
-					end: null,
-				},
-			],
-			isPending: false,
-			alertGroupId: '66239459ef2a6ac579f55cce',
-		},
 	],
 };
 

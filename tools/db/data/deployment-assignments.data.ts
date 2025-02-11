@@ -6,7 +6,7 @@ import type {
 } from '../../../libs/api/deployment/src/lib/infra/schema/deployment-assignment.schema';
 import { getAlertGroupIdAsStringByName } from './alert-groups.data';
 import { CollectionData } from './collection-data.model';
-import { getDeploymentByName } from './deployments.data';
+import { getRescueStationDeploymentByName } from './deployments.data';
 import { getOrganizationIdAsStringByName } from './organizations.data';
 import { getUnitIdAsStringByName } from './units.data';
 
@@ -18,7 +18,8 @@ const collectionData = {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			entityId: getUnitIdAsStringByName('MRB Greif 5'),
-			deploymentId: getDeploymentByName('DLRG Einsatzzentrale HH')._id,
+			deploymentId: getRescueStationDeploymentByName('DLRG Einsatzzentrale HH')
+				._id,
 			type: 'UNIT',
 			alertGroupId: null,
 		},
@@ -45,7 +46,7 @@ const collectionData = {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			entityId: getUnitIdAsStringByName('MRB Greif 1'),
-			deploymentId: null,
+			deploymentId: new Types.ObjectId('67a3593fc5ffa177a6efe612'),
 			type: 'UNIT',
 			alertGroupId: null,
 		},
@@ -54,7 +55,7 @@ const collectionData = {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			entityId: getUnitIdAsStringByName('GW-Wasserrettung'),
-			deploymentId: null,
+			deploymentId: new Types.ObjectId('67a3593fc5ffa177a6efe612'),
 			type: 'UNIT',
 			alertGroupId: null,
 		},
