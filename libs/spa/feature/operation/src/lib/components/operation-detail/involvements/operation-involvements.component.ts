@@ -2,31 +2,33 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	inject,
 } from '@angular/core';
-import { FormArray, FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { NzEmptyComponent, NzEmptySimpleComponent } from 'ng-zorro-antd/empty';
-import { map } from 'rxjs';
+import { FormArray } from '@angular/forms';
+import { NzEmptyComponent } from 'ng-zorro-antd/empty';
+import { distinctUntilChanged, filter, map } from 'rxjs';
 
 import {
+	AlertGroup,
 	Operation,
 	OperationAlertGroupInvolvement,
 	OperationUnitInvolvement,
+	Unit,
 	UpdateOperationUnitInvolvementInput,
 } from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
-
-import { dateInPastValidator } from '../../../validator/date-in-past.validator';
-import { BaseOperationTabComponent } from '../base-operation-tab.component';
 import {
-	AlertGroupInvolvementFormGroup,
-	OperationUAlertGroupInvolvementsFormComponent,
-} from './form/alert-group/operation-alert-group-involvements-form.component';
-import { UnitInvolvementFormGroup } from './form/unit/operation-unit-involvement-times.component';
+	PossibleAlertGroupSelectionsService,
+	PossibleUnitSelectionsService,
+} from '@kordis/spa/core/ui';
+
+import { BaseOperationTabComponent } from '../base-operation-tab.component';
+import { OperationUAlertGroupInvolvementsFormComponent } from './form/alert-group/operation-alert-group-involvements-form.component';
 import { OperationInvolvementsFormComponent } from './form/unit/operation-unit-involvements-form.component';
 import {
-	involvementTimeRangeValidator,
-	involvementsTimeRangeValidator,
-} from './involvements.validator';
+	InvolvementFormFactory,
+	InvolvementFormGroup,
+} from './involvement-form.factory';
 
 const INVOLVEMENT_FRAGMENT = gql`
 	fragment OperationUnitInvolvements on Operation {
@@ -65,10 +67,13 @@ const INVOLVEMENT_FRAGMENT = gql`
 	selector: 'krd-operation-involvements',
 	standalone: true,
 	imports: [
+		NzEmptyComponent,
 		OperationInvolvementsFormComponent,
 		OperationUAlertGroupInvolvementsFormComponent,
-		NzEmptySimpleComponent,
-		NzEmptyComponent,
+	],
+	providers: [
+		PossibleUnitSelectionsService,
+		PossibleAlertGroupSelectionsService,
 	],
 	templateUrl: './operation-involvements.component.html',
 	styles: `
@@ -85,20 +90,18 @@ const INVOLVEMENT_FRAGMENT = gql`
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OperationInvolvementsComponent extends BaseOperationTabComponent {
-	readonly involvementsFormGroup: FormGroup<{
-		unitInvolvements: FormArray<UnitInvolvementFormGroup>;
-		alertGroupInvolvements: FormArray<AlertGroupInvolvementFormGroup>;
-	}>;
+export class OperationInvolvementsComponent extends BaseOperationTabComponent<InvolvementFormGroup> {
+	private currentOperationTime?: { start: Date; end: Date | null }; // keep track of operation time for involvement creation
+	private readonly possibleUnitSelectionsService = inject(
+		PossibleUnitSelectionsService,
+	);
+	private readonly possibleAlertGroupSelectionsService = inject(
+		PossibleAlertGroupSelectionsService,
+	);
+	private readonly cd = inject(ChangeDetectorRef);
 
-	constructor(
-		private readonly fb: NonNullableFormBuilder,
-		private readonly cd: ChangeDetectorRef,
-	) {
-		const _control = fb.group({
-			unitInvolvements: fb.array<UnitInvolvementFormGroup>([]),
-			alertGroupInvolvements: fb.array<AlertGroupInvolvementFormGroup>([]),
-		});
+	constructor(private readonly formFactory: InvolvementFormFactory) {
+		const _control = formFactory.createForm();
 
 		super(
 			'involvements',
@@ -140,15 +143,49 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent {
 			})),
 		);
 
-		this.involvementsFormGroup = _control;
+		this.recheckValidityOnChange();
+	}
+
+	addUnit(unit: Unit): void {
+		this.pushUnitToControl(this.control.controls.unitInvolvements, unit);
+		this.possibleUnitSelectionsService.markAsSelected(unit);
+	}
+
+	addUnitToAlertGroup(alertGroup: AlertGroup, unit: Unit): void {
+		const alertGroupControl =
+			this.control.controls.alertGroupInvolvements.controls.find(
+				(v) => v.controls.alertGroup.value.id === alertGroup.id,
+			);
+		if (!alertGroupControl) {
+			throw new Error('Alert group component not found');
+		}
+		this.pushUnitToControl(alertGroupControl.controls.unitInvolvements, unit);
+	}
+
+	addAlertGroup(alertGroup: AlertGroup): void {
+		this.control.controls.alertGroupInvolvements.push(
+			this.formFactory.createAlertGroupInvolvementFormGroup(
+				alertGroup,
+				[],
+				/* eslint-disable @typescript-eslint/no-non-null-assertion */
+				this.currentOperationTime!.start,
+				this.currentOperationTime!.end,
+				/* eslint-enable @typescript-eslint/no-non-null-assertion */
+			),
+		);
+		this.possibleAlertGroupSelectionsService.markAsSelected(alertGroup);
 	}
 
 	protected override setValue(operation: Operation): void {
+		this.markInvolvementsAsSelected(operation);
+
 		const start = new Date(operation.start);
 		const end = operation.end ? new Date(operation.end) : null;
-		this.involvementsFormGroup.setControl(
+		this.currentOperationTime = { start, end };
+
+		this.control.setControl(
 			'unitInvolvements',
-			this.createUnitInvolvementsFormArray(
+			this.formFactory.createUnitInvolvementsFormArray(
 				operation.unitInvolvements,
 				start,
 				end,
@@ -156,24 +193,47 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent {
 			{ emitEvent: false },
 		);
 
-		this.involvementsFormGroup.setControl(
+		this.control.setControl(
 			'alertGroupInvolvements',
-			this.fb.array<AlertGroupInvolvementFormGroup>(
-				operation.alertGroupInvolvements.map((alertGroupInvolvement) =>
-					this.fb.group({
-						alertGroup: this.fb.control(alertGroupInvolvement.alertGroup),
-						unitInvolvements: this.createUnitInvolvementsFormArray(
-							alertGroupInvolvement.unitInvolvements,
-							operation.start,
-							operation.end,
-						),
-					}),
-				),
-			),
+			this.formFactory.createAlertGroupInvolvementsFormArray(operation),
 			{ emitEvent: false },
 		);
 
-		this.cd.detectChanges();
+		this.cd.markForCheck();
+	}
+
+	private pushUnitToControl(fa: FormArray, unit: Unit): void {
+		fa.push(
+			this.formFactory.createUnitInvolvementFormGroup(
+				{
+					unit: unit,
+					isPending: false,
+					involvementTimes: [
+						/* eslint-disable @typescript-eslint/no-non-null-assertion */
+						{
+							start: this.currentOperationTime!.start,
+							end: this.currentOperationTime!.end,
+						},
+					],
+				},
+				this.currentOperationTime!.start,
+				this.currentOperationTime!.end,
+				/* eslint-enable @typescript-eslint/no-non-null-assertion */
+			),
+		);
+	}
+
+	private markInvolvementsAsSelected(operation: Operation): void {
+		this.possibleUnitSelectionsService.resetSelections();
+		this.possibleAlertGroupSelectionsService.resetSelections();
+		operation.unitInvolvements.forEach((unitInvolvement) =>
+			this.possibleUnitSelectionsService.markAsSelected(unitInvolvement.unit),
+		);
+		operation.alertGroupInvolvements.forEach((alertGroupInvolvement) =>
+			this.possibleAlertGroupSelectionsService.markAsSelected(
+				alertGroupInvolvement.alertGroup,
+			),
+		);
 	}
 
 	private mapUnitInvolvementsToInput(
@@ -186,45 +246,14 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent {
 		}));
 	}
 
-	private createUnitInvolvementsFormArray(
-		unitInvolvements: OperationUnitInvolvement[],
-		minStart: Date,
-		maxEnd: Date | null,
-	): FormArray<UnitInvolvementFormGroup> {
-		return this.fb.array<UnitInvolvementFormGroup>(
-			unitInvolvements.map((unitInvolvement) =>
-				this.createUnitInvolvementFormGroup(unitInvolvement, minStart, maxEnd),
-			),
-		);
-	}
-
-	private createUnitInvolvementFormGroup(
-		unitInvolvement: OperationUnitInvolvement,
-		minStart: Date,
-		maxEnd: Date | null,
-	): UnitInvolvementFormGroup {
-		return this.fb.group({
-			unit: this.fb.control(unitInvolvement.unit),
-			isPending: this.fb.control(unitInvolvement.isPending),
-			involvementTimes: this.fb.array(
-				unitInvolvement.involvementTimes.map((time) =>
-					this.fb.group(
-						{
-							start: this.fb.control(new Date(time.start)),
-							end: this.fb.control(
-								time.end ? new Date(time.end) : null,
-								dateInPastValidator,
-							),
-						},
-						{
-							validators: involvementTimeRangeValidator(minStart, maxEnd),
-						},
-					),
-				),
-				{
-					validators: involvementsTimeRangeValidator(minStart, maxEnd),
-				},
-			),
-		});
+	private recheckValidityOnChange(): void {
+		// as a change of a single involvement time can affect the validity of others, we naively trigger the validity of the whole form by marking all controls as touched
+		// this.control.valueChanges.subscribe(() => this.control.markAllAsTouched());
+		this.control.statusChanges
+			.pipe(
+				distinctUntilChanged(),
+				filter((status) => status === 'INVALID'),
+			)
+			.subscribe(() => this.control.markAllAsTouched());
 	}
 }

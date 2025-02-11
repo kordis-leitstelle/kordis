@@ -1,22 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import {
-	FormArray,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-} from '@angular/forms';
-import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
-import { NzDatePickerComponent } from 'ng-zorro-antd/date-picker';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
+import { DateMaskInputComponent } from 'spa/core/misc';
 
 import { OperationLocationForm } from '../../../../helper/operation-address-form.factory';
 import { OperationAlarmKeywordSelectComponent } from './operation-alarm-keyword-select.component';
-import { OperationCategoryTableComponent } from './operation-category-table.component';
 import { OperationLocationFormComponent } from './operation-location-form.component';
 import { OperationReporterSelectComponent } from './operation-reporter-select.component';
 
@@ -28,48 +20,34 @@ export type OperationBaseDataForm = {
 	commander: FormControl;
 	externalReference: FormControl;
 	location: OperationLocationForm;
-	categories: FormArray;
 };
-export type OperationBaseDataFormGroup = FormGroup;
+export type OperationBaseDataFormGroup = FormGroup<OperationBaseDataForm>;
 
 @Component({
 	selector: 'krd-operation-base-data-form',
 	standalone: true,
 	imports: [
 		CommonModule,
-		NzCardComponent,
+		DateMaskInputComponent,
 		NzColDirective,
-		NzDatePickerComponent,
+		NzFormModule,
 		NzInputDirective,
-		NzNoAnimationDirective,
 		NzRowDirective,
+		NzTooltipDirective,
 		OperationAlarmKeywordSelectComponent,
-		OperationCategoryTableComponent,
 		OperationLocationFormComponent,
 		OperationReporterSelectComponent,
 		ReactiveFormsModule,
-		NzFormModule,
-		NzTooltipDirective,
 	],
 	template: `
 		<div class="container">
-			<form
-				nz-form
-				[formGroup]="formGroup()"
-				nzLayout="vertical"
-				class="base-data-form"
-			>
+			<form nz-form [formGroup]="formGroup()" nzLayout="vertical">
 				<div nz-row nzGutter="15">
 					<div nz-col nzSpan="12">
 						<nz-form-item>
 							<nz-form-label>Beginn</nz-form-label>
 							<nz-form-control>
-								<nz-date-picker
-									formControlName="start"
-									nzNoAnimation
-									nzShowTime
-									nzFormat="dd.MM.yyyy HH:mm:ss"
-								/>
+								<krd-date-mask-input formControlName="start" />
 							</nz-form-control>
 						</nz-form-item>
 					</div>
@@ -77,20 +55,16 @@ export type OperationBaseDataFormGroup = FormGroup;
 						<nz-form-item>
 							<nz-form-label>Ende</nz-form-label>
 							<nz-form-control>
-								<nz-date-picker
-									formControlName="end"
-									nzNoAnimation
-									nzShowTime
-									nzFormat="dd.MM.yyyy HH:mm:ss"
-									[nzPlaceHolder]="
-										formGroup().controls.end.disabled ? 'Laufend...' : ''
-									"
-									[nz-tooltip]="
-										formGroup().controls.end.disabled
-											? 'Der Einsatz muss zunächst beendet werden, um das Feld zu bearbeiten!'
-											: ''
-									"
-								/>
+								@if (formGroup().controls.end.disabled) {
+									<input
+										placeholder="Laufend..."
+										nz-input
+										disabled
+										nz-tooltip="Der Einsatz muss zunächst beendet werden, um das Feld zu bearbeiten!"
+									/>
+								} @else {
+									<krd-date-mask-input formControlName="end" />
+								}
 							</nz-form-control>
 						</nz-form-item>
 					</div>
@@ -137,20 +111,9 @@ export type OperationBaseDataFormGroup = FormGroup;
 					</div>
 				</div>
 			</form>
-			<div class="category-container">
-				<krd-operation-category-table
-					[formArray]="formGroup().controls.categories"
-				/>
-			</div>
 		</div>
 	`,
 	styles: `
-		.category-container {
-			flex-grow: 1;
-			padding-top: 5px;
-			overflow: auto;
-		}
-
 		.container {
 			height: 100%;
 			display: flex;

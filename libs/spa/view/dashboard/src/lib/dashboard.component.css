@@ -48,7 +48,7 @@ nz-layout {
 			grid-area: protocol;
 		}
 
-		.operations {
+		.operation {
 			grid-area: operations;
 		}
 

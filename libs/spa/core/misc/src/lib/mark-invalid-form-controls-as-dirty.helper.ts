@@ -17,6 +17,10 @@ function markControlAsDirty(control: AbstractControl): void {
 	}
 }
 
+/*
+ * Marks all **invalid** form controls of a group or array as dirty. Also checks the children of a group and each entry of an array recursively.
+ * If a parent is invalid, the children will not be marked as dirty, only the first invalid control in the tree will be marked as dirty.
+ */
 export function markInvalidFormControlsAsDirty(
 	formGroup: FormGroup | FormArray,
 ): void {

@@ -8,7 +8,7 @@
 				nzText="{{ (user$ | async)?.firstName?.slice(0, 1) }}{{
 					(user$ | async)?.lastName?.slice(0, 1)
 				}}"
-			></nz-avatar>
+			/>
 			<nz-dropdown-menu #userMenu="nzDropdownMenu">
 				<ul nz-menu>
 					<li nz-menu-item nzDisabled>
@@ -28,7 +28,7 @@
 			<div class="placeholder">Protocol</div>
 		</div>
 		<div class="operations">
-			<div class="placeholder">Operations</div>
+			<krd-operations />
 		</div>
 		<div class="deployments">
 			<krd-deployments />

@@ -4,6 +4,7 @@ import { AbstractControl } from '@angular/forms';
 import { ApolloError, TypedDocumentNode } from '@apollo/client/core';
 import {
 	OperatorFunction,
+	debounceTime,
 	delay,
 	filter,
 	first,
@@ -23,8 +24,9 @@ import {
 	TabsFormStateService,
 } from '../../service/tabs-form-state.service';
 
-
-// this base class handels the communication with the backend for the operation detail tabs
+/*
+ *	This base class handles the communication with the backend for the operation detail tabs, as well as the form state handling.
+ */
 export abstract class BaseOperationTabComponent<
 	TControl extends AbstractControl = AbstractControl,
 > {
@@ -47,13 +49,13 @@ export abstract class BaseOperationTabComponent<
 		 * The query to fetch the operation data. Will receive the `operationId` and the form value result of the valueChanges pipeline as `formValue` as variables.
 		 */
 		private readonly mutation: TypedDocumentNode<
-			any,
+			unknown,
 			{
 				operationId: string;
-				formValue: any;
+				formValue: unknown;
 			}
 		>,
-		private readonly control: TControl,
+		protected readonly control: TControl,
 		/*
 		 * Optional Pipeline operators that run on the controls valueChanges right before the mutation is called. The result of the pipeline will be passed as `formValue` to the mutation.
 		 */
@@ -64,10 +66,14 @@ export abstract class BaseOperationTabComponent<
 	) {
 		this.watchQuery();
 		this.subscribeValueChanges();
+		this.subscribeStatusChanges();
 	}
 
 	protected abstract setValue(operation: Operation): void;
 
+	/*
+	 * Watches the query for changes and updates the form accordingly.
+	 */
 	private watchQuery(): void {
 		const queryRef = this.gqlService.query<{ operation: Query['operation'] }>(
 			this.query,
@@ -79,14 +85,14 @@ export abstract class BaseOperationTabComponent<
 		merge(
 			queryRef.$.pipe(
 				first(),
-				tap(() => console.log('incomming query data')),
-			),
+				tap(() => this.formStateService.setLoading(this.tabName)),
+			), // load initial
 			this.selectedOperationService.selectedOperationId$.pipe(
+				// load on operation id change
 				skip(1), // first is handled in the initial loading
 				tap(() => this.formStateService.setLoading(this.tabName)),
-				tap(() => console.log('operation id switch loading')),
 				switchMap((id) => queryRef.refresh({ operationId: id })),
-				tap(() => this.control.reset()),
+				tap(() => this.control.reset(undefined, { emitEvent: false })),
 				takeUntilDestroyed(),
 			),
 		).subscribe({
@@ -94,34 +100,29 @@ export abstract class BaseOperationTabComponent<
 				this.setValue(operation);
 				this.formStateService.setSaved(this.tabName);
 			},
-			error: (e) => {
-				console.log(JSON.stringify(e));
-				this.formStateService.setError(this.tabName, 'Fehler beim Laden');
-			},
+			error: () =>
+				this.formStateService.setError(this.tabName, 'Fehler beim Laden'),
 		});
 	}
 
+	/*
+	 * Subscribes to the valueChanges of the control and sends the mutation to the backend.
+	 */
 	private subscribeValueChanges(): void {
 		let valueChanges$ = this.control.valueChanges.pipe(
-			tap(() =>
-				console.log(
-					'value change form state, ',
-					this.formStateService.getState(this.tabName).state(),
-				),
-			),
 			filter(
 				() =>
 					this.formStateService.getState(this.tabName).state() !==
 						FormState.LOADING && // prevent from writing values while the form is loading, e.g. on operation id switch
 					this.control.valid,
 			),
+			debounceTime(300),
 		);
 		if (this.valueChangeOperator != null) {
 			valueChanges$ = valueChanges$.pipe(this.valueChangeOperator);
 		}
 		valueChanges$
 			.pipe(
-				tap(() => console.log('valid value change')),
 				tap(() => this.formStateService.setLoading(this.tabName)),
 				switchMap((formValue) =>
 					this.gqlService.mutate$(this.mutation, {
@@ -129,34 +130,34 @@ export abstract class BaseOperationTabComponent<
 						formValue,
 					}),
 				),
-				delay(300), // some eye sugar so the saving spinner is visible for a short time
+				delay(300), // delay for eye sugar so the saving spinner is visible for a short time
 				takeUntilDestroyed(),
 			)
 			.subscribe({
 				next: () => this.formStateService.setSaved(this.tabName),
-				error: (e) => {
+				error: (e: unknown) => {
 					if (e instanceof ApolloError) {
-						// todo: show specific error
-						console.log(JSON.stringify(e));
-						this.formStateService.setError(
-							this.tabName,
-							'Fehler beim Speichern',
-						);
+						this.formStateService.setError(this.tabName, e.message);
 					} else {
 						this.formStateService.setError(this.tabName, 'Unbekannter Fehler');
 					}
 				},
 			});
+	}
 
+	private subscribeStatusChanges(): void {
 		this.control.statusChanges
 			.pipe(
-				tap(console.log),
-				filter((status) => status === 'INVALID'),
+				filter(
+					(status) =>
+						status === 'INVALID' &&
+						this.formStateService.getState(this.tabName).state() !==
+							FormState.LOADING,
+				),
 				takeUntilDestroyed(),
 			)
-			.subscribe(() => {
-				console.log('Fehlerhafte Eingabe');
-				this.formStateService.setError(this.tabName, 'Fehlerhafte Eingabe');
-			});
+			.subscribe(() =>
+				this.formStateService.setError(this.tabName, 'Fehlerhafte Eingabe'),
+			);
 	}
 }

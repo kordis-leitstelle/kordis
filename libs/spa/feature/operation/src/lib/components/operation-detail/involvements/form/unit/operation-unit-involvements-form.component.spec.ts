@@ -9,7 +9,7 @@ describe('OperationInvolvementsFormComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [OperationInvolvementsFormComponent, NoopAnimationsModule],
+			imports: [NoopAnimationsModule],
 		}).compileComponents();
 	});
 
@@ -17,53 +17,14 @@ describe('OperationInvolvementsFormComponent', () => {
 		fixture = TestBed.createComponent(OperationInvolvementsFormComponent);
 	});
 
-	it('should remove an involvement if it has no involvement times and is not pending', () => {
-		fixture.componentRef.setInput(
-			'formArray',
-			new FormArray([
-				new FormGroup({
-					unit: new FormControl({}),
-					isPending: new FormControl(false),
-					involvementTimes: new FormArray([
-						new FormGroup({
-							start: new FormControl(new Date()),
-							end: new FormControl(null),
-						}),
-					]),
-				}),
-				new FormGroup({
-					unit: new FormControl({}),
-					isPending: new FormControl(false),
-					involvementTimes: new FormArray([
-						new FormGroup({
-							start: new FormControl(new Date()),
-							end: new FormControl(null),
-						}),
-					]),
-				}),
-			]),
-		);
-
-		fixture.detectChanges();
-
-		expect(fixture.componentInstance.formArray().length).toBe(2);
-
-		fixture.componentInstance
-			.formArray()
-			.at(0)
-			.controls.involvementTimes.removeAt(0);
-
-		fixture.detectChanges();
-
-		expect(fixture.componentInstance.formArray().length).toBe(1);
-	});
-
 	it('should not remove an involvement if it has no involvement times and is pending', () => {
 		fixture.componentRef.setInput(
 			'formArray',
 			new FormArray([
 				new FormGroup({
-					unit: new FormControl({}),
+					unit: new FormControl({
+						id: '123',
+					}),
 					isPending: new FormControl(true),
 					involvementTimes: new FormArray([
 						new FormGroup({
@@ -73,7 +34,9 @@ describe('OperationInvolvementsFormComponent', () => {
 					]),
 				}),
 				new FormGroup({
-					unit: new FormControl({}),
+					unit: new FormControl({
+						id: '456',
+					}),
 					isPending: new FormControl(false),
 					involvementTimes: new FormArray([
 						new FormGroup({

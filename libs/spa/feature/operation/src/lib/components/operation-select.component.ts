@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
-	effect,
 	input,
 	model,
 	output,
@@ -13,26 +12,26 @@ import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
 
 import { Operation } from '@kordis/shared/model';
 
-
 @Component({
 	selector: 'krd-operation-select',
 	standalone: true,
 	imports: [
 		CommonModule,
-		NzSelectComponent,
-		NzOptionComponent,
 		FormsModule,
 		NzNoAnimationDirective,
+		NzOptionComponent,
+		NzSelectComponent,
 	],
 	template: `
 		<nz-select
 			nzPlaceHolder="Einsatz auswählen"
 			[(ngModel)]="selectedOperation"
 			(ngModelChange)="operationSelected.emit($event)"
-			nzNotFoundContent="Keine aktiven Einsätze"
+			nzNotFoundContent="Keine Einsätze vorhanden"
 			nzNoAnimation
 			[nzDropdownMatchSelectWidth]="false"
 			[nzOptionHeightPx]="55"
+			[compareWith]="areOperationIdsEqual"
 		>
 			@for (operation of operations(); track operation.id) {
 				<nz-option
@@ -80,34 +79,8 @@ export class OperationSelectComponent {
 	 */
 	readonly operationSelected = output<Operation>();
 	readonly operations = input.required<Operation[]>();
-	/*
-	 * Select the first operation in the list if true, if the operations change, select the first operation if the selected operation is not in the list. If no operations are available, set null.
-	 */
-	readonly selectFirstOperation = input<boolean>(true);
 
-	constructor() {
-		effect(
-			() => {
-				if (this.selectFirstOperation()) {
-					if (
-						this.operations().length &&
-						// if no operation is selected or the selected operation is not in the list of operations, select the first operation
-						(!this.selectedOperation() ||
-							!this.operations().some(
-								(o) => o.id === this.selectedOperation()?.id,
-							))
-					) {
-						this.selectedOperation.set(this.operations()[0]);
-					} else if (!this.operations().length) {
-						this.selectedOperation.set(null);
-					}
-				}
-			},
-			{ allowSignalWrites: true },
-		);
-	}
-
-	test(event: any) {
-		console.log(event);
+	protected areOperationIdsEqual(o1: Operation, o2: Operation | null): boolean {
+		return o1.id === o2?.id;
 	}
 }

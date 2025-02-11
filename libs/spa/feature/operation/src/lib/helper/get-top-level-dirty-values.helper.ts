@@ -1,6 +1,5 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
 
-
 /*
  * Checks each top-level control in the form group and returns the whole value of the dirty ones.
  */

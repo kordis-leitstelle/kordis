@@ -1,6 +1,6 @@
 import { AbstractControl, FormArray, ValidationErrors } from '@angular/forms';
 
-import { AlertGroupAssignmentFormGroup } from '../rescue-station-edit-modal.component';
+import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/ui';
 
 export const alertGroupMinUnitsValidator = (
 	control: AbstractControl,

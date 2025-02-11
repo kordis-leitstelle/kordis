@@ -12,7 +12,6 @@ import { gql } from '@kordis/spa/core/graphql';
 import { BaseOperationTabComponent } from '../base-operation-tab.component';
 import { OperationDescriptionTextareaComponent } from './operation-description-textarea.component';
 
-
 @Component({
 	selector: 'krd-operation-description',
 	standalone: true,
@@ -20,18 +19,10 @@ import { OperationDescriptionTextareaComponent } from './operation-description-t
 	template: ` <krd-operation-description-textarea
 		[formControl]="descriptionControl"
 	/>`,
-	styles: `
-	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationDescriptionComponent extends BaseOperationTabComponent {
 	readonly descriptionControl: FormControl<string>;
-
-	protected setValue(operation: Operation): void {
-		this.descriptionControl.setValue(operation.description, {
-			emitEvent: false,
-		});
-	}
 
 	constructor(fb: NonNullableFormBuilder) {
 		const _control = fb.control('');
@@ -63,5 +54,11 @@ export class OperationDescriptionComponent extends BaseOperationTabComponent {
 			pipe(distinctUntilChanged(), debounceTime(500)),
 		);
 		this.descriptionControl = _control;
+	}
+
+	protected setValue(operation: Operation): void {
+		this.descriptionControl.setValue(operation.description, {
+			emitEvent: false,
+		});
 	}
 }

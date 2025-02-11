@@ -1,5 +1,14 @@
+import { DatePipe } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { createMock } from '@golevelup/ts-jest';
+import { of } from 'rxjs';
 
+import { GraphqlService } from '@kordis/spa/core/graphql';
+
+import { SelectedOperationIdStateService } from '../../service/selected-operation-id-state.service';
+import { TabsFormStateService } from '../../service/tabs-form-state.service';
 import { OperationBaseDataComponent } from './base-data/operation-base-data.component';
 import { OperationDescriptionComponent } from './description/operation-description.component';
 import { OperationInvolvementsComponent } from './involvements/operation-involvements.component';
@@ -11,26 +20,47 @@ describe('OperationDetailComponent', () => {
 	let fixture: ComponentFixture<OperationDetailComponent>;
 
 	beforeEach(async () => {
-		TestBed.overrideComponent(OperationPatientsComponent, {
-			set: {
-				selector: 'krd-operation-patients',
-			},
+		await TestBed.configureTestingModule({
+			imports: [NoopAnimationsModule],
+			providers: [
+				TabsFormStateService,
+				SelectedOperationIdStateService,
+				{
+					provide: GraphqlService,
+					useValue: createMock({
+						query: () => ({
+							$: of(),
+							refresh: () => Promise.resolve({}),
+						}),
+					}),
+				},
+				DatePipe,
+			],
+			schemas: [NO_ERRORS_SCHEMA],
 		})
-			.overrideComponent(OperationInvolvementsComponent, {
+			.overrideComponent(OperationBaseDataComponent, {
 				set: {
-					selector: 'krd-operation-involvements',
+					template: '<div>Base Data</div>',
 				},
 			})
 			.overrideComponent(OperationDescriptionComponent, {
 				set: {
-					selector: 'krd-operation-description',
+					template: '<div>Description</div>',
 				},
 			})
-			.overrideComponent(OperationBaseDataComponent, {
+			.overrideComponent(OperationInvolvementsComponent, {
 				set: {
-					selector: 'krd-operation-base-data',
+					template: '<div>Involvements</div>',
 				},
-			});
+			})
+			.overrideComponent(OperationPatientsComponent, {
+				set: {
+					template: '<div>Patients</div>',
+				},
+			})
+
+			.compileComponents();
+
 		fixture = TestBed.createComponent(OperationDetailComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

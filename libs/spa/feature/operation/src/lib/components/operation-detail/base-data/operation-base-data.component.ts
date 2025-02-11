@@ -1,23 +1,22 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 } from '@angular/core';
-import {
-	FormControl,
-	FormGroup,
-	FormsModule,
-	NonNullableFormBuilder,
-	Validators,
-} from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { debounce, map, pipe, timer } from 'rxjs';
 
-import { Operation, OperationLocationInput } from '@kordis/shared/model';
+import {
+	Operation,
+	OperationLocationInput,
+	OperationProcessState,
+} from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
 
 import { getTopLevelDirtyValues } from '../../../helper/get-top-level-dirty-values.helper';
 import { makeOperationLocationForm } from '../../../helper/operation-address-form.factory';
+import { dateInPastValidator } from '../../../validator/date-in-past.validator';
+import { nameOrStreetRequiredValidator } from '../../../validator/name-or-street-required.validator';
 import { startBeforeEndValidator } from '../../../validator/start-before-end.validator';
 import { BaseOperationTabComponent } from '../base-operation-tab.component';
 import {
@@ -35,6 +34,7 @@ const OPERATION_BASE_DATA_FRAGMENT = gql`
 		reporter
 		commander
 		externalReference
+		processState
 		location {
 			address {
 				street
@@ -47,13 +47,6 @@ const OPERATION_BASE_DATA_FRAGMENT = gql`
 				lon
 			}
 		}
-		categories {
-			name
-			count
-			patientCount
-			dangerousSituationCount
-			wasDangerous
-		}
 	}
 `;
 
@@ -64,7 +57,7 @@ const KEYS_TO_DEBOUNCE: ReadonlySet<keyof OperationBaseDataForm> = new Set<
 @Component({
 	selector: 'krd-operation-base-data',
 	standalone: true,
-	imports: [CommonModule, FormsModule, OperationBaseDataFormComponent],
+	imports: [OperationBaseDataFormComponent],
 	template: ` <krd-operation-base-data-form [formGroup]="formGroup" /> `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -77,22 +70,18 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 	) {
 		const _formGroup = fb.group(
 			{
-				start: fb.control(new Date(), Validators.required),
-				end: fb.control<Date | null>(null),
+				start: fb.control(new Date(), [
+					Validators.required,
+					dateInPastValidator,
+				]),
+				end: fb.control<Date | null>(null, dateInPastValidator),
 				alarmKeyword: fb.control(''),
 				reporter: fb.control(''),
 				commander: fb.control(''),
 				externalReference: fb.control(''),
-				location: makeOperationLocationForm(fb),
-				categories: fb.array<
-					FormGroup<{
-						name: FormControl<string>;
-						count: FormControl<number>;
-						patientCount: FormControl<number>;
-						dangerousSituationCount: FormControl<number>;
-						wasDangerous: FormControl<boolean>;
-					}>
-				>([]),
+				location: makeOperationLocationForm(fb, {
+					address: [nameOrStreetRequiredValidator],
+				}),
 			},
 			{
 				validators: [startBeforeEndValidator],
@@ -150,14 +139,7 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 	}
 
 	protected override setValue(operation: Operation): void {
-		this.setOperationBaseData(operation);
-		this.setOperationCategories(operation.categories);
-
-		this.cd.detectChanges();
-	}
-
-	private setOperationBaseData(operation: Operation): void {
-		this.formGroup.patchValue(
+		this.formGroup.setValue(
 			{
 				location: {
 					address: {
@@ -183,34 +165,16 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 				start: new Date(operation.start),
 				end: operation.end ? new Date(operation.end) : null,
 			},
-			{ emitEvent: false },
+			{ emitEvent: false, onlySelf: true },
 		);
 
 		// operations that are currently ongoing have to be ended via the end operation procedure
-		if (!operation.end) {
+		if (operation.processState === OperationProcessState.OnGoing) {
 			this.formGroup.controls.end.disable({ emitEvent: false });
+			this.formGroup.controls.end.removeValidators(Validators.required);
 		} else {
 			this.formGroup.controls.end.enable({ emitEvent: false });
+			this.formGroup.controls.end.addValidators(Validators.required);
 		}
-	}
-
-	private setOperationCategories(categories: Operation['categories']): void {
-		this.formGroup.setControl(
-			'categories',
-			this.fb.array(
-				categories.map((category) =>
-					this.fb.group({
-						name: this.fb.control(category.name),
-						count: this.fb.control(category.count),
-						patientCount: this.fb.control(category.patientCount),
-						dangerousSituationCount: this.fb.control(
-							category.dangerousSituationCount,
-						),
-						wasDangerous: this.fb.control(category.wasDangerous),
-					}),
-				),
-			),
-			{ emitEvent: false },
-		);
 	}
 }

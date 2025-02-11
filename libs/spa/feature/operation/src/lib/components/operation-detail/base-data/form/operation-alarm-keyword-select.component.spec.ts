@@ -20,7 +20,7 @@ describe('AlarmKeywordSelectComponent', () => {
 
 		jest.spyOn(fixture.componentInstance.keywordSelected, 'emit');
 
-		component.onModelChange('THWAY');
+		(component as any).onModelChange('THWAY');
 		expect(fixture.componentInstance.keywordSelected.emit).toHaveBeenCalled();
 	});
 });

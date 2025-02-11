@@ -2,9 +2,9 @@
 	<div class="header">
 		<div class="select">
 			<krd-operation-select
-				[operations]="operations()"
+				(selectedOperationChange)="onUserSelectedOperation($event?.id)"
 				[(selectedOperation)]="selectedOperation"
-				(selectedOperationChange)="safelySelectOperation($event?.id)"
+				[operations]="operations()"
 			/>
 		</div>
 
@@ -36,7 +36,7 @@
 						nzTooltipPlacement="bottom"
 						nz-popconfirm
 						nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz archivieren möchten?"
-						[disabled]="actionsLoadingState() !== null"
+						[disabled]="actionsLoadingState() !== null || formStateService.hasError()"
 						(nzOnConfirm)="archiveOperation()"
 					>
 						<span nz-icon nzType="file-zip" nzTheme="outline"></span>
@@ -60,12 +60,12 @@
 			}
 
 			<button
-				nz-button
-				nzType="link"
-				nz-tooltip="Abgeschlossenen Einsatz erstellen"
 				(click)="openCreateOperationModal()"
+				nz-button
+				nz-tooltip="Abgeschlossenen Einsatz erstellen"
+				nzType="link"
 			>
-				<span nz-icon nzType="plus" nzTheme="outline"></span>
+				<span nz-icon nzTheme="outline" nzType="plus"></span>
 			</button>
 		</div>
 	</div>
@@ -82,3 +82,12 @@
 		}
 	</div>
 </div>
+
+<ng-template #archiveError let-errors="data">
+	<b>Der Einsatz konnte nicht archiviert werden.</b> Folgende Fehler sind aufgetreten: <br>
+	<ul>
+		@for (error of errors; track $index) {
+			<li>{{ error }}</li>
+		}
+	</ul>
+</ng-template>

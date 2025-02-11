@@ -12,13 +12,7 @@ import {
 	NG_VALUE_ACCESSOR,
 	ReactiveFormsModule,
 } from '@angular/forms';
-import { NzAutocompleteTriggerDirective } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
-import {
-	NzFormControlComponent,
-	NzFormItemComponent,
-} from 'ng-zorro-antd/form';
-import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
 import { ControlValueAccessorBase } from 'spa/core/misc';
 
@@ -43,10 +37,6 @@ const KEYWORDS = Object.freeze([
 		NzOptionComponent,
 		NzNoAnimationDirective,
 		ReactiveFormsModule,
-		NzFormItemComponent,
-		NzFormControlComponent,
-		NzAutocompleteTriggerDirective,
-		NzInputDirective,
 	],
 	providers: [
 		{

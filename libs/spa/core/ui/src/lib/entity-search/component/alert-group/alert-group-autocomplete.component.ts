@@ -1,18 +1,15 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Output, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import {
-	NzAutocompleteModule,
-	NzAutocompleteOptionComponent,
-} from 'ng-zorro-antd/auto-complete';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { Subject, debounceTime, filter, merge, share, switchMap } from 'rxjs';
 
 import { AlertGroup } from '@kordis/shared/model';
 
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
+import { AutocompleteComponent } from '../search.component';
 
 @Component({
 	selector: 'krd-alert-group-autocomplete',
@@ -32,12 +29,12 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 			[nzAutocomplete]="auto"
 		/>
 		<nz-autocomplete
-			(selectionChange)="onUnitSelected($event)"
+			(selectionChange)="onSelect($event)"
 			[nzBackfill]="false"
 			[nzNoAnimation]="true"
 			#auto
 		>
-			@for (alertGroup of alertGroupResults$ | async; track alertGroup.id) {
+			@for (alertGroup of result$ | async; track alertGroup.id) {
 				<nz-auto-option [nzValue]="alertGroup">
 					<div class="result-item">
 						<span class="name">{{ alertGroup.name }}</span>
@@ -45,7 +42,15 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 							alertGroup.assignment?.__typename ===
 							'EntityRescueStationAssignment'
 						) {
-							<small>Zuordnung: {{ alertGroup.assignment!.name }}</small>
+							<small>Zuordnung: {{ $any(alertGroup.assignment).name }}</small>
+						} @else if (
+							alertGroup.assignment?.__typename === 'EntityOperationAssignment'
+						) {
+							<small
+								>Zuordnung:
+								{{ $any(alertGroup.assignment).operation.alarmKeyword }}
+								{{ $any(alertGroup.assignment).operation.sign }}</small
+							>
 						}
 					</div>
 				</nz-auto-option>
@@ -63,47 +68,10 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 		}
 	`,
 })
-export class AlertGroupAutocompleteComponent {
-	readonly searchInput = new FormControl<string | AlertGroup>('');
-	readonly possibleAlertGroupSelectionService = inject(
-		PossibleAlertGroupSelectionsService,
-	);
-	private readonly alertGroupSelectedSubject$ = new Subject<AlertGroup>();
-	// eslint-disable-next-line rxjs/finnish
-	@Output() readonly alertGroupSelected = this.alertGroupSelectedSubject$
-		.asObservable()
-		.pipe(share());
-
-	private readonly searchInputFocusedSubject$ = new Subject<void>();
-	readonly alertGroupResults$ = merge(
-		merge(
-			this.searchInputFocusedSubject$,
-			this.searchInput.valueChanges.pipe(filter((value) => value === '')),
-		).pipe(
-			switchMap(
-				() =>
-					this.possibleAlertGroupSelectionService.allPossibleEntitiesToSelect$,
-			),
-		),
-		this.searchInput.valueChanges.pipe(
-			filter((value): value is string => typeof value === 'string'),
-			debounceTime(300),
-			switchMap((value) =>
-				value
-					? this.possibleAlertGroupSelectionService.searchAllPossibilities(
-							value,
-						)
-					: [],
-			),
-		),
-	);
-
-	onUnitSelected({ nzValue: unit }: NzAutocompleteOptionComponent): void {
-		this.alertGroupSelectedSubject$.next(unit);
-		this.searchInput.reset();
-	}
-
-	onSearchInputFocus(): void {
-		this.searchInputFocusedSubject$.next();
+export class AlertGroupAutocompleteComponent extends AutocompleteComponent<AlertGroup> {
+	constructor(
+		possibleAlertGroupSelectionsService: PossibleAlertGroupSelectionsService,
+	) {
+		super(possibleAlertGroupSelectionsService);
 	}
 }
