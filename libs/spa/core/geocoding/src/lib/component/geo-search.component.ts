@@ -21,7 +21,6 @@ import {
 } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
-import { NzSelectComponent } from 'ng-zorro-antd/select';
 import {
 	Subject,
 	debounceTime,
@@ -50,7 +49,6 @@ import { GeoSearchService } from '../service/geo-search.service';
 		NzAutocompleteTriggerDirective,
 		NzInputDirective,
 		NzNoAnimationDirective,
-		NzSelectComponent,
 		ReactiveFormsModule,
 	],
 	providers: [

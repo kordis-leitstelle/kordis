@@ -25,6 +25,7 @@ interface TabsFormState {
 	description: WritableTabFormState;
 	patients: WritableTabFormState;
 	involvements: WritableTabFormState;
+	categories: WritableTabFormState;
 }
 
 @Injectable()
@@ -34,6 +35,7 @@ export class TabsFormStateService {
 		description: this.makeInitState(),
 		patients: this.makeInitState(),
 		involvements: this.makeInitState(),
+		categories: this.makeInitState(),
 	};
 
 	getState(tab: Tabs): TabFormState {
@@ -60,7 +62,21 @@ export class TabsFormStateService {
 		this.tabs[tab].error.set(error);
 	}
 
+	/*
+	 * Resets the state of all tabs to null.
+	 */
 	reset(): void {
+		for (const tab in this.tabs) {
+			this.tabs[tab as Tabs].state.set(null);
+			this.tabs[tab as Tabs].latestSave.set(null);
+			this.tabs[tab as Tabs].error.set(null);
+		}
+	}
+
+	/*
+	 * Sets all tab states to Saved without a latest save date.
+	 */
+	setInitial(): void {
 		for (const tab in this.tabs) {
 			this.tabs[tab as Tabs].state.set(FormState.SAVED);
 			this.tabs[tab as Tabs].latestSave.set(null);

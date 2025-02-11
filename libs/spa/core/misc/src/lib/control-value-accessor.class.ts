@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 export class ControlValueAccessorBase implements ControlValueAccessor {
-	protected value = signal<string>('');
+	protected readonly value = signal<string>('');
 	protected readonly isDisabled = signal<boolean>(false);
 
 	/* eslint-disable @typescript-eslint/no-empty-function */

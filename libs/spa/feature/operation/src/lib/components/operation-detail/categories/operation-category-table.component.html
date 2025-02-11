@@ -1,0 +1,78 @@
+<nz-table [nzFooter]="tableFooter" [nzShowPagination]="false" class='krd-small-table' nzTemplateMode>
+	<thead>
+		<tr>
+			<th nzWidth="250px">Einsatzart</th>
+			<th>Anzahl</th>
+			<th>Geholfene Personen</th>
+			<th>Bedrohliche Situation</th>
+			<th>Gefahr für Helfer</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (fg of this.formArray().controls; track $index) {
+			<tr>
+				<td>
+					<krd-operation-category-select [formControl]='fg.controls.name' />
+				</td>
+				<td>
+					<nz-input-number
+						nzSize="small"
+						[formControl]='fg.controls.count'
+						[nzMin]="0"
+						[nzStep]="1"
+					/>
+				</td>
+				<td>
+					<nz-input-number
+						nzSize="small"
+						[formControl]='fg.controls.patientCount'
+						[nzMin]="0"
+						[nzStep]="1"
+					/>
+				</td>
+				<td>
+					<nz-input-number
+						nzSize="small"
+						[formControl]='fg.controls.dangerousSituationCount'
+						[nzMin]="0"
+						[nzStep]="1"
+					/>
+				</td>
+				<td>
+					<label nz-checkbox [formControl]='fg.controls.wasDangerous'></label>
+				</td>
+				<td>
+					<button
+						nz-button
+						nzType="link"
+						(click)="deleteCategory($index)"
+						data-testid="delete-category"
+					>
+						<span nz-icon nzType="delete" nzTheme="outline"></span>
+					</button>
+				</td>
+			</tr>
+		} @empty {
+			<tr>
+				<td colspan="6" class="empty-result">
+					Keine Einsatzarten hinzugefügt.
+				</td>
+			</tr>
+		}
+	</tbody>
+</nz-table>
+
+<ng-template #tableFooter>
+		<button
+			(click)="addCategory()"
+			[disabled]="formArray().disabled"
+			data-testid="add-category"
+			nz-button
+			nzSize="small"
+			nzType="default"
+		>
+			<span nz-icon nzTheme="outline" nzType="plus"></span>
+			Einsatzart hinzufügen
+		</button>
+</ng-template>

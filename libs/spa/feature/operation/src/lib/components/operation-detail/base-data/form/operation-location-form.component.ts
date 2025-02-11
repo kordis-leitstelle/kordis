@@ -26,13 +26,13 @@ import { OperationLocationForm } from '../../../../helper/operation-address-form
 	selector: 'krd-operation-location-form',
 	standalone: true,
 	imports: [
-		NzRowDirective,
-		NzColDirective,
 		GeoSearchComponent,
-		NzInputNumberComponent,
-		ReactiveFormsModule,
+		NzColDirective,
 		NzFormModule,
 		NzInputDirective,
+		NzInputNumberComponent,
+		NzRowDirective,
+		ReactiveFormsModule,
 	],
 	template: `
 		<div nz-form nzLayout="vertical" [formGroup]="formGroup()">
@@ -93,12 +93,7 @@ import { OperationLocationForm } from '../../../../helper/operation-address-form
 					<div nz-col nzSpan="12">
 						<nz-form-item>
 							<nz-form-label>Straße</nz-form-label>
-							<nz-form-control
-								[nzValidateStatus]="
-									formGroup().controls.address.controls.street
-								"
-								nzErrorTip="Objektname oder Straße fehlt!"
-							>
+							<nz-form-control nzErrorTip="Objektname oder Straße fehlt!">
 								<krd-geo-search
 									field="street"
 									formControlName="street"
@@ -154,8 +149,9 @@ export class OperationLocationFormComponent implements OnDestroy {
 					takeUntil(this.destroyRefSubject$),
 				)
 				.subscribe((coord) => {
+					// if the user deletes the input field, set the value to null (input field is empty string)
 					if ((coord.lat as unknown) === '') {
-						this.formGroup().controls.coordinate.controls.lon.setValue(null);
+						this.formGroup().controls.coordinate.controls.lat.setValue(null);
 					}
 					if ((coord.lon as unknown) === '') {
 						this.formGroup().controls.coordinate.controls.lon.setValue(null);

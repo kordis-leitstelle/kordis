@@ -101,7 +101,7 @@ import { PossibleUnitSelectionsService } from '../../service/unit-selection.serv
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UnitsSelectComponent implements OnDestroy {
+export class UnitsSelectionComponent implements OnDestroy {
 	readonly templateRef = contentChild(TemplateRef);
 
 	readonly control = input.required<FormControl<Unit[]>>(); // must be a form control, as nz-select does not support form arrays

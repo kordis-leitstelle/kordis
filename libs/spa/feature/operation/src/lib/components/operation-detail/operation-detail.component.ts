@@ -1,8 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
-import { NzFlexDirective } from 'ng-zorro-antd/flex';
-import { NzIconDirective } from 'ng-zorro-antd/icon';
-import { NzSpinComponent } from 'ng-zorro-antd/spin';
 import {
 	NzTabComponent,
 	NzTabDirective,
@@ -11,6 +7,7 @@ import {
 
 import { TabsFormStateService } from '../../service/tabs-form-state.service';
 import { OperationBaseDataComponent } from './base-data/operation-base-data.component';
+import { OperationCategoriesComponent } from './categories/operation-categories.component';
 import { OperationDescriptionComponent } from './description/operation-description.component';
 import { FormStateIndicatorComponent } from './form-state-indicator.component';
 import { OperationInvolvementsComponent } from './involvements/operation-involvements.component';
@@ -20,18 +17,15 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 	selector: 'krd-operation-detail',
 	standalone: true,
 	imports: [
-		NzTabSetComponent,
+		FormStateIndicatorComponent,
 		NzTabComponent,
 		NzTabDirective,
-		OperationPatientsComponent,
-		OperationInvolvementsComponent,
-		OperationDescriptionComponent,
+		NzTabSetComponent,
 		OperationBaseDataComponent,
-		NzSpinComponent,
-		NzIconDirective,
-		NzFlexDirective,
-		FormStateIndicatorComponent,
-		NzNoAnimationDirective,
+		OperationDescriptionComponent,
+		OperationInvolvementsComponent,
+		OperationPatientsComponent,
+		OperationCategoriesComponent,
 	],
 	template: `
 		<nz-tabset [nzAnimated]="false" nzSize="small">
@@ -76,6 +70,20 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 					<krd-operation-involvements />
 				</ng-template>
 			</nz-tab>
+			<nz-tab [nzTitle]="categoriesTitle">
+				<ng-template #categoriesTitle>
+					<div class="tab-title">
+						<span>Kategorien</span>
+
+						<krd-form-state-indicator
+							[formState]="tabsFormStateService.getState('categories')"
+						/>
+					</div>
+				</ng-template>
+				<ng-template nz-tab>
+					<krd-operation-categories />
+				</ng-template>
+			</nz-tab>
 			<nz-tab [nzTitle]="patientsTitle">
 				<ng-template #patientsTitle>
 					<div class="tab-title">
@@ -100,21 +108,21 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 		.tab-title {
 			display: flex;
 			align-items: center;
-			gap: 5px;
+			gap: calc(var(--base-spacing) / 2);
 		}
 
 		nz-tabset {
 			height: 100%;
 			display: flex;
 			flex-direction: column;
-		}
 
-		::ng-deep .ant-tabs-content-holder {
-			flex-grow: 1;
+			.ant-tabs-content-holder {
+				flex-grow: 1;
 
-			.ant-tabs-content,
-			.ant-tabs-tabpane {
-				height: 100%;
+				.ant-tabs-content,
+				.ant-tabs-tabpane {
+					height: 100%;
+				}
 			}
 		}
 	`,

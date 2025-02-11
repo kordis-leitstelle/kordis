@@ -1,18 +1,6 @@
 import { gql } from '@kordis/spa/core/graphql';
 
-export const UNIT_FRAGMENT = gql`
-	fragment UnitData on Unit {
-		id
-		callSign
-		callSignAbbreviation
-		name
-		note
-		status {
-			status
-			receivedAt
-		}
-	}
-`;
+import { UNIT_FRAGMENT } from '../fragments';
 
 export const RESCUE_STATION_FRAGMENT = gql`
 	${UNIT_FRAGMENT}
@@ -28,24 +16,6 @@ export const RESCUE_STATION_FRAGMENT = gql`
 			helpers
 			subLeaders
 			leaders
-		}
-		assignments {
-			... on DeploymentUnit {
-				unit {
-					...UnitData
-				}
-			}
-			... on DeploymentAlertGroup {
-				assignedUnits {
-					unit {
-						...UnitData
-					}
-				}
-				alertGroup {
-					id
-					name
-				}
-			}
 		}
 	}
 `;

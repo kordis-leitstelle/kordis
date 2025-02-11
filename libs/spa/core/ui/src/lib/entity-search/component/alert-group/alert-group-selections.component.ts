@@ -18,6 +18,7 @@ import {
 	NzFormControlComponent,
 	NzFormItemComponent,
 } from 'ng-zorro-antd/form';
+import { NzColDirective } from 'ng-zorro-antd/grid';
 
 import { AlertGroup, Unit } from '@kordis/shared/model';
 
@@ -25,6 +26,11 @@ import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-s
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
 import { AlertGroupAutocompleteComponent } from './alert-group-autocomplete.component';
 import { AlertGroupSelectionComponent } from './alert-group-selection.component';
+
+export type AlertGroupAssignmentFormGroup = FormGroup<{
+	alertGroup: FormControl<AlertGroup>;
+	assignedUnits: FormControl<Unit[]>;
+}>;
 
 @Component({
 	selector: 'krd-alert-group-selections',
@@ -34,13 +40,13 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 		NzCardComponent,
 		NzFormControlComponent,
 		NzFormItemComponent,
+		NzColDirective,
 	],
 	template: `
 		<nz-form-item>
-			<nz-form-control [nzValidateStatus]="formArray()">
-				<krd-alert-group-autocomplete
-					(alertGroupSelected)="addAlertGroup($event)"
-				/>
+			<nz-form-label>Alarmgruppen</nz-form-label>
+			<nz-form-control nzErrorTip="test" [nzValidateStatus]="formArray()">
+				<krd-alert-group-autocomplete (selected)="addAlertGroup($event)" />
 			</nz-form-control>
 		</nz-form-item>
 		@if (formArray().length) {
@@ -92,14 +98,8 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertGroupSelectionsComponent {
-	readonly formArray = input.required<
-		FormArray<
-			FormGroup<{
-				alertGroup: FormControl<AlertGroup>;
-				assignedUnits: FormControl<Unit[]>;
-			}>
-		>
-	>();
+	readonly formArray =
+		input.required<FormArray<AlertGroupAssignmentFormGroup>>();
 	readonly alertGroupSelectionElements = viewChildren(
 		AlertGroupSelectionComponent,
 	);

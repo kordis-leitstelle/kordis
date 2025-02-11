@@ -11,14 +11,15 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSpinComponent } from 'ng-zorro-antd/spin';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 import { forkJoin } from 'rxjs';
+import { alertGroupMinUnitsValidator } from 'spa/core/misc';
 
 import { Query, Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
-import { PossibleUnitSelectionsService } from '@kordis/spa/core/ui';
-import { UnitsSelectComponent } from '@kordis/spa/core/ui';
-
-import { AlertGroupAssignmentFormGroup } from '../rescue-station/rescue-station-edit-modal/rescue-station-edit-modal.component';
-import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-edit-modal/validator/alert-group-min-units.validator';
+import {
+	AlertGroupAssignmentFormGroup,
+	PossibleUnitSelectionsService,
+	UnitsSelectionComponent,
+} from '@kordis/spa/core/ui';
 
 @Component({
 	selector: 'krd-alert-group-edit-modal',
@@ -26,7 +27,7 @@ import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-ed
 		NzButtonComponent,
 		NzSpinComponent,
 		NzTooltipDirective,
-		UnitsSelectComponent,
+		UnitsSelectionComponent,
 	],
 	template: `
 		@if (loadingState() === 'INITIAL') {
@@ -49,7 +50,7 @@ import { alertGroupMinUnitsValidator } from '../rescue-station/rescue-station-ed
 				[nzLoading]="loadingState() === 'UPDATE'"
 				[disabled]="loadingState() !== null"
 				(click)="updateAlertGroups()"
-				nz-tooltip="Änderungen beeinflussen nicht aktuelle Zuordnungen, sondern lediglich die
+				nz-tooltip="Änderungen beeinflussen nicht die aktuellen Zuordnungen, sondern lediglich die
 			Standardeinheiten einer Alarmgruppe!"
 			>
 				Speichern

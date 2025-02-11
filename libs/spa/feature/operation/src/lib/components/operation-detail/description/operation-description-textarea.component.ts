@@ -3,7 +3,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	ViewEncapsulation,
 	forwardRef,
 	viewChild,
 } from '@angular/core';
@@ -38,7 +37,6 @@ import { ControlValueAccessorBase } from 'spa/core/misc';
 			height: 100%;
 		}
 	`,
-	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationDescriptionTextareaComponent extends ControlValueAccessorBase {

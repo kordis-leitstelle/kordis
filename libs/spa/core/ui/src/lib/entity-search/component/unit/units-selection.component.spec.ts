@@ -6,13 +6,13 @@ import { createMock } from '@golevelup/ts-jest';
 import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
-import { UnitsSelectComponent } from './units-select.component';
+import { UnitsSelectionComponent } from './units-selection.component';
 
 describe('StrengthComponent', () => {
-	let fixture: ComponentFixture<UnitsSelectComponent>;
+	let fixture: ComponentFixture<UnitsSelectionComponent>;
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [UnitsSelectComponent, NoopAnimationsModule],
+			imports: [UnitsSelectionComponent, NoopAnimationsModule],
 			providers: [
 				PossibleUnitSelectionsService,
 				{
@@ -24,7 +24,7 @@ describe('StrengthComponent', () => {
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(UnitsSelectComponent);
+		fixture = TestBed.createComponent(UnitsSelectionComponent);
 	});
 
 	it('should create', async () => {

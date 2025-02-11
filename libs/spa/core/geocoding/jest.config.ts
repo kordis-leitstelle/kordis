@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
 	displayName: 'spa-geocoding',
-	preset: '../../../jest.preset.js',
+	preset: '../../../../jest.preset.js',
 	setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
 	coverageDirectory: '../../../coverage/libs/spa/core/geocoding',
 	transform: {
