@@ -6,8 +6,10 @@ import {
 	OperationCreatedEvent,
 	OperationViewModel,
 } from '@kordis/api/operation';
-import { CreateOperationStartedMessageCommand } from '@kordis/api/protocol';
-import { TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS } from '@kordis/api/test-helpers';
+import {
+	CreateOperationStartedMessageCommand,
+	TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+} from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
 import { UnitsPopulateService } from '../service/units-populate.service';
