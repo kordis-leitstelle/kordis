@@ -7,16 +7,16 @@ import { uowMockProvider } from '@kordis/api/test-helpers';
 import {
 	RescueStationDeploymentEntity,
 	RescueStationStrength,
-} from '../entity/rescue-station-deployment.entity';
-import { RescueStationsResetEvent } from '../event/rescue-stations-reset.event';
+} from '../../entity/rescue-station-deployment.entity';
+import { RescueStationsResetEvent } from '../../event/rescue-stations-reset.event';
 import {
 	DEPLOYMENT_ASSIGNMENT_REPOSITORY,
 	DeploymentAssignmentRepository,
-} from '../repository/deployment-assignment.repository';
+} from '../../repository/deployment-assignment.repository';
 import {
 	RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 	RescueStationDeploymentRepository,
-} from '../repository/rescue-station-deployment.repository';
+} from '../../repository/rescue-station-deployment.repository';
 import {
 	ResetRescueStationsCommand,
 	ResetRescueStationsHandler,

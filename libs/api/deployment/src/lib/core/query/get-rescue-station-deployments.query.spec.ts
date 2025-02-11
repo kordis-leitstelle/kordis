@@ -7,19 +7,19 @@ import {
 	RescueStationDeploymentRepository,
 } from '../repository/rescue-station-deployment.repository';
 import {
-	GetDeploymentsHandler,
-	GetDeploymentsQuery,
-} from './get-deployments.query';
+	GetRescueStationDeploymentsQuery,
+	GetRescueStationsDeploymentsHandler,
+} from './get-rescue-station-deployments.query';
 
 describe('GetDeploymentsHandler', () => {
-	let handler: GetDeploymentsHandler;
+	let handler: GetRescueStationsDeploymentsHandler;
 	const mockRescueStationDeploymentRepository =
 		createMock<RescueStationDeploymentRepository>();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				GetDeploymentsHandler,
+				GetRescueStationsDeploymentsHandler,
 				{
 					provide: RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 					useValue: mockRescueStationDeploymentRepository,
@@ -27,12 +27,14 @@ describe('GetDeploymentsHandler', () => {
 			],
 		}).compile();
 
-		handler = module.get<GetDeploymentsHandler>(GetDeploymentsHandler);
+		handler = module.get<GetRescueStationsDeploymentsHandler>(
+			GetRescueStationsDeploymentsHandler,
+		);
 	});
 
 	it('should find rescue stations by orgId', async () => {
 		const orgId = 'orgId';
-		const command = new GetDeploymentsQuery(orgId);
+		const command = new GetRescueStationDeploymentsQuery(orgId);
 
 		const mockDeployment1 = new RescueStationDeploymentEntity();
 		mockDeployment1.note = 'somenote';

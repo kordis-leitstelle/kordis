@@ -12,14 +12,17 @@ import {
 	DeploymentAlertGroup,
 	DeploymentUnit,
 } from '../../../core/entity/deployment.entity';
+import { OperationDeploymentEntity } from '../../../core/entity/operation-deplyoment.entity';
 import { RescueStationDeploymentEntity } from '../../../core/entity/rescue-station-deployment.entity';
 import { DeploymentAggregateProfile } from '../../mapper/deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentProfile } from '../../mapper/deployment-assignment.mapper-profile';
+import { OperationDeploymentAggregateProfile } from '../../mapper/operation-deployment-aggregate.mapper-profile';
 import {
 	RescueStationDeploymentAggregateProfile,
 	RescueStationDeploymentValueObjectProfile,
 } from '../../mapper/rescue-station-deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentsDocument } from '../../schema/deployment-assignment.schema';
+import { DeploymentType } from '../../schema/deployment-type.enum';
 import { DeploymentAssignmentRepositoryImpl } from './deployment-assignment.repository';
 
 describe('DeploymentAssignmentRepositoryImpl', () => {
@@ -39,6 +42,7 @@ describe('DeploymentAssignmentRepositoryImpl', () => {
 				DeploymentAssignmentProfile,
 				RescueStationDeploymentAggregateProfile,
 				RescueStationDeploymentValueObjectProfile,
+				OperationDeploymentAggregateProfile,
 				DeploymentAssignmentRepositoryImpl,
 				{
 					provide: getModelToken(DeploymentAssignmentsDocument.name),
@@ -83,7 +87,7 @@ describe('DeploymentAssignmentRepositoryImpl', () => {
 		);
 	});
 
-	it('should get assignment', async () => {
+	it('should get rescue station assignment', async () => {
 		const orgId = 'orgId';
 		const entityId = 'entityId';
 		mockModelMethodResults(
@@ -92,6 +96,7 @@ describe('DeploymentAssignmentRepositoryImpl', () => {
 				{
 					deployment: [
 						{
+							type: DeploymentType.RESCUE_STATION,
 							name: 'somename',
 							defaultUnitIds: ['someUnitId1', 'someUnitId2'],
 						},
@@ -104,11 +109,37 @@ describe('DeploymentAssignmentRepositoryImpl', () => {
 		const result = await repository.getAssignment(orgId, entityId);
 		expect(result).not.toBeNull();
 		expect(result).toBeInstanceOf(RescueStationDeploymentEntity);
-		expect(result!.name).toEqual('somename');
-		expect(result!.defaultUnits).toEqual([
+		expect((result as RescueStationDeploymentEntity)!.name).toEqual('somename');
+		expect((result as RescueStationDeploymentEntity)!.defaultUnits).toEqual([
 			{ id: 'someUnitId1' },
 			{ id: 'someUnitId2' },
 		]);
+	});
+
+	it('should get operation assignment', async () => {
+		const orgId = 'orgId';
+		const entityId = 'entityId';
+		mockModelMethodResults(
+			deploymentAssignmentModel,
+			[
+				{
+					deployment: [
+						{
+							type: DeploymentType.OPERATION,
+							operationId: 'someForeignOperationId',
+						},
+					],
+				},
+			],
+			'aggregate',
+		);
+
+		const result = await repository.getAssignment(orgId, entityId);
+		expect(result).not.toBeNull();
+		expect(result).toBeInstanceOf(OperationDeploymentEntity);
+		expect((result as OperationDeploymentEntity)!.operation.id).toEqual(
+			'someForeignOperationId',
+		);
 	});
 
 	it('should get unassigned', async () => {

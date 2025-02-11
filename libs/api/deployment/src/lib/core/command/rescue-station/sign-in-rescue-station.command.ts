@@ -6,11 +6,11 @@ import { UNIT_OF_WORK_SERVICE, UnitOfWorkService } from '@kordis/api/shared';
 import {
 	RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 	RescueStationDeploymentRepository,
-} from '../repository/rescue-station-deployment.repository';
-import { DeploymentAssignmentService } from '../service/deployment-assignment.service';
-import { createStrengthFromCommand } from '../service/strength-from-command.factory';
+} from '../../repository/rescue-station-deployment.repository';
+import { DeploymentAssignmentService } from '../../service/deployment-assignment.service';
+import { createStrengthFromCommand } from '../../service/strength-from-command.factory';
 
-export class UpdateSignedInRescueStationCommand {
+export class SignInRescueStationCommand {
 	constructor(
 		readonly orgId: string,
 		readonly rescueStationId: string,
@@ -28,9 +28,9 @@ export class UpdateSignedInRescueStationCommand {
 	) {}
 }
 
-@CommandHandler(UpdateSignedInRescueStationCommand)
-export class UpdateSignedInRescueStationHandler
-	implements ICommandHandler<UpdateSignedInRescueStationCommand>
+@CommandHandler(SignInRescueStationCommand)
+export class SignInRescueStationHandler
+	implements ICommandHandler<SignInRescueStationCommand>
 {
 	constructor(
 		@Inject(RESCUE_STATION_DEPLOYMENT_REPOSITORY)
@@ -40,7 +40,7 @@ export class UpdateSignedInRescueStationHandler
 		private readonly uow: UnitOfWorkService,
 	) {}
 
-	async execute(command: UpdateSignedInRescueStationCommand): Promise<void> {
+	async execute(command: SignInRescueStationCommand): Promise<void> {
 		await this.uow.asTransaction(async (uow) => {
 			await this.deploymentAssignmentService.setAssignmentsOfDeployment(
 				command.orgId,
@@ -57,11 +57,12 @@ export class UpdateSignedInRescueStationHandler
 				command.orgId,
 				command.rescueStationId,
 				{
+					signedIn: true,
 					note: command.note,
 					strength: strength,
 				},
 				uow,
 			);
-		});
+		}, 3);
 	}
 }

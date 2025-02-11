@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 
-import { RescueStationNoteUpdatedEvent } from '../event/rescue-station-note-updated.event';
+import { RescueStationNoteUpdatedEvent } from '../../event/rescue-station-note-updated.event';
 import {
 	RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 	RescueStationDeploymentRepository,
-} from '../repository/rescue-station-deployment.repository';
+} from '../../repository/rescue-station-deployment.repository';
 
 export class UpdateRescueStationNoteCommand {
 	constructor(

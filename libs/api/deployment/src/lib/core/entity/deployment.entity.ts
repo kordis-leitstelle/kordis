@@ -1,7 +1,6 @@
-import { AutoMap } from '@automapper/classes';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsString, ValidateNested } from 'class-validator';
+import { ValidateNested } from 'class-validator';
 
 import { BaseEntityModel } from '@kordis/api/shared';
 import { AlertGroupViewModel, UnitViewModel } from '@kordis/api/unit';
@@ -23,11 +22,6 @@ export class DeploymentAlertGroup {
 
 @ObjectType({ isAbstract: true })
 export class BaseDeploymentEntity extends BaseEntityModel {
-	@Field()
-	@IsString()
-	@AutoMap()
-	name: string;
-
 	@ValidateNested({ each: true })
 	@Type(() => DeploymentUnit)
 	assignedUnits: DeploymentUnit[];

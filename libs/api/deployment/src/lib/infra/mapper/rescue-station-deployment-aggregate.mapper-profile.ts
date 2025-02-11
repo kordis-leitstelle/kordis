@@ -74,10 +74,6 @@ export class RescueStationDeploymentAggregateProfile extends BaseMapperProfile {
 				RescueStationDeploymentDocument,
 				RescueStationDeploymentEntity,
 				forMember(
-					(d) => d.id,
-					mapFrom((s) => s.referenceId),
-				),
-				forMember(
 					(d) => d.defaultUnits,
 					mapFrom((s) =>
 						s.defaultUnitIds.map((id) => ({

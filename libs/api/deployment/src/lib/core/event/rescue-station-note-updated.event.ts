@@ -1,6 +1,6 @@
 export class RescueStationNoteUpdatedEvent {
 	constructor(
 		readonly orgId: string,
-		readonly rescueStationId: string,
+		readonly deploymentId: string,
 	) {}
 }
