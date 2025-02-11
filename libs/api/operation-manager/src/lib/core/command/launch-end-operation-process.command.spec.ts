@@ -6,8 +6,10 @@ import {
 	GetOperationByIdQuery,
 	OperationViewModel,
 } from '@kordis/api/operation';
-import { CreateOperationEndedMessageCommand } from '@kordis/api/protocol';
-import { TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS } from '@kordis/api/test-helpers';
+import {
+	CreateOperationEndedMessageCommand,
+	TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+} from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
 import {

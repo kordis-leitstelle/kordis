@@ -3,13 +3,13 @@ import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 
 import {
+	MOCK_BASE_CREATE_MESSAGE_ARGS,
+	TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+} from '@kordis/api/protocol';
+import {
 	PresentableValidationException,
 	ValidationException,
 } from '@kordis/api/shared';
-import {
-	MOCK_BASE_CREATE_MESSAGE_ARGS,
-	TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
-} from '@kordis/api/test-helpers';
 import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOperationProcessCommand } from '../../core/command/launch-create-operation-process.command';

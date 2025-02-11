@@ -6,8 +6,10 @@ import {
 	OperationViewModel,
 	UpdateOngoingOperationInvolvementsCommand,
 } from '@kordis/api/operation';
-import { CreateOperationAssignmentsUpdatedMessageCommand } from '@kordis/api/protocol';
-import { TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS } from '@kordis/api/test-helpers';
+import {
+	CreateOperationAssignmentsUpdatedMessageCommand,
+	TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+} from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
 import { UnitsPopulateService } from '../service/units-populate.service';
