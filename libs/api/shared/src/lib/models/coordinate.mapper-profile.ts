@@ -4,7 +4,6 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { Coordinate } from './coordinate.model';
 
-
 @Injectable()
 export class CoordinateProfile extends AutomapperProfile {
 	constructor(@Inject(getMapperToken()) mapper: Mapper) {

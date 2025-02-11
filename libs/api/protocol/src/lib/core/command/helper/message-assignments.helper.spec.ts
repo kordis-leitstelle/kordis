@@ -59,7 +59,7 @@ describe('message-assignments.helper', () => {
 				mockAlertGroups,
 			);
 			const expectedText =
-				'einheiten Unit 1 (U1), Unit 2 (U2) alarm gruppen Alert Group 1, Alert Group 2';
+				'einheiten Unit 1 (U1), Unit 2 (U2), Unit 3 (U3), Unit 4 (U4) alarm gruppen Alert Group 1, Alert Group 2';
 			expect(result).toEqual(expectedText);
 		});
 	});

@@ -16,7 +16,7 @@ import {
 } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
-import { UnitsEnricherService } from '../service/units-enricher.service';
+import { UnitsPopulateService } from '../service/units-populate.service';
 
 export class LaunchCreateOperationProcessCommand {
 	constructor(
@@ -56,7 +56,7 @@ export class LaunchCreateOperationProcessHandler
 {
 	constructor(
 		private readonly commandBus: CommandBus,
-		private readonly unitsEnricher: UnitsEnricherService,
+		private readonly unitsPopulateService: UnitsPopulateService,
 		private readonly eventBus: EventBus,
 	) {}
 
@@ -82,7 +82,7 @@ export class LaunchCreateOperationProcessHandler
 		);
 
 		const { assignedUnits, assignedAlertGroups } =
-			await this.unitsEnricher.getEnrichedUnitsAndAlertGroups(
+			await this.unitsPopulateService.getPopulatedUnitsAndAlertGroups(
 				operationData.assignedUnitIds,
 				operationData.assignedAlertGroups,
 			);
@@ -95,7 +95,7 @@ export class LaunchCreateOperationProcessHandler
 					id: operation.id,
 					sign: operation.sign,
 					alarmKeyword: operation.alarmKeyword,
-					start: operationData.start,
+					start: operation.start,
 					location: operation.location.address,
 					assignedUnits,
 					assignedAlertGroups,
@@ -103,7 +103,7 @@ export class LaunchCreateOperationProcessHandler
 				requestUser,
 			),
 		);
-		console.log(operation);
+
 		return operation;
 	}
 }

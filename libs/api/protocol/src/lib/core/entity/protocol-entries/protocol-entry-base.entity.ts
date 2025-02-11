@@ -44,5 +44,5 @@ export class ProtocolMessageEntryBase extends ProtocolEntryBase {
 
 	@Field(() => UserProducer)
 	@AutoMap()
-	override producer: UserProducer;
+	declare producer: UserProducer;
 }

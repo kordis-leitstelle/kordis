@@ -3,7 +3,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsString, ValidateNested } from 'class-validator';
 
-
 @ObjectType()
 export class OperationMessageAssignedUnit {
 	@Field()

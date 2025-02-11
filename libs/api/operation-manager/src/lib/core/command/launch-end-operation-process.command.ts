@@ -48,7 +48,6 @@ export class LaunchEndOperationProcessHandler
 			new GetOperationByIdQuery(requestUser.organizationId, operationId),
 		);
 
-		// create operation ended message
 		await this.commandBus.execute(
 			new CreateOperationEndedMessageCommand(
 				requestUser,

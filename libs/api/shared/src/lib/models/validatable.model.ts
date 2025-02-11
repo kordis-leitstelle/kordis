@@ -8,10 +8,8 @@ export abstract class Validatable {
 		const errors = await validate(this, { groups });
 
 		if (errors.length > 0) {
-			const validationErrors = flattenValidationErrors(errors);
-
 			throw new ValidationException(
-				validationErrors,
+				flattenValidationErrors(errors),
 				`${this.constructor.name} validation failed.`,
 			);
 		}
