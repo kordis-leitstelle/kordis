@@ -44,7 +44,7 @@ export class OperationPdfGenerationService {
 	async generatePdf(
 		operation: OperationEntity,
 		reqUser: AuthUser,
-	): Promise<Buffer> {
+	): Promise<ArrayBuffer> {
 		const organization: OrganizationViewModel = await this.queryBus.execute(
 			new GetOrganizationQuery(reqUser.organizationId),
 		);

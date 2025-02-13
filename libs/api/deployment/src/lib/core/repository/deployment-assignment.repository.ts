@@ -23,6 +23,12 @@ export interface DeploymentAssignmentRepository {
 		uow?: DbSessionProvider,
 	): Promise<void>;
 
+	removeAssignmentsOfDeployments(
+		orgId: string,
+		deploymentIds: string[],
+		uow?: DbSessionProvider,
+	): Promise<void>;
+
 	removeAssignmentsOfDeployment(
 		orgId: string,
 		deploymentId: string,

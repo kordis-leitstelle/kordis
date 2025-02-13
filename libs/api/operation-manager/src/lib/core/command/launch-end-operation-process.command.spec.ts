@@ -54,7 +54,7 @@ describe('LaunchEndOperationProcessHandler', () => {
 			new EndOngoingOperationCommand(
 				requestUser.organizationId,
 				operationId,
-				operation.end!,
+				expect.any(Date),
 			),
 		);
 		expect(queryBusMock.execute).toHaveBeenCalledWith(

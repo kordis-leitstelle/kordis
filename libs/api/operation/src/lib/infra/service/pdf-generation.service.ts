@@ -5,7 +5,7 @@ import { PdfGenerationService } from '../../core/service/pdf/pdf-generation.serv
 
 @Injectable()
 export class PdfGenerationServiceImpl implements PdfGenerationService {
-	async generatePdf(content: string, loadPagedJs = true): Promise<Buffer> {
+	async generatePdf(content: string, loadPagedJs = true): Promise<ArrayBuffer> {
 		const browser = await puppeteer.launch({
 			headless: true,
 		});
