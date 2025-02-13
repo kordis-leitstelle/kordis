@@ -41,7 +41,6 @@ import { OperationSelectComponent } from './operation-select.component';
 
 @Component({
 	selector: 'krd-operations',
-	standalone: true,
 	imports: [
 		CommonModule,
 		OperationDetailComponent,

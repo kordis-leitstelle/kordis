@@ -7,7 +7,6 @@ import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 import { FormState, TabFormState } from '../../service/tabs-form-state.service';
 
 @Component({
-	standalone: true,
 	selector: 'krd-form-state-indicator',
 	template: `
 		@switch (formState().state()) {

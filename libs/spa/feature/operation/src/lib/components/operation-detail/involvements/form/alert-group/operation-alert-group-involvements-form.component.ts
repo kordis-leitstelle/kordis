@@ -26,7 +26,6 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 
 @Component({
 	selector: 'krd-operation-alert-group-involvement-form',
-	standalone: true,
 	imports: [
 		CommonModule,
 		NzCollapseModule,

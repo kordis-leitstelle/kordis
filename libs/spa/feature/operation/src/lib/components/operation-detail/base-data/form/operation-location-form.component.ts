@@ -24,7 +24,6 @@ import { OperationLocationForm } from '../../../../helper/operation-address-form
 
 @Component({
 	selector: 'krd-operation-location-form',
-	standalone: true,
 	imports: [
 		GeoSearchComponent,
 		NzColDirective,

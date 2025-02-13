@@ -56,7 +56,6 @@ const KEYS_TO_DEBOUNCE: ReadonlySet<keyof OperationBaseDataForm> = new Set<
 
 @Component({
 	selector: 'krd-operation-base-data',
-	standalone: true,
 	imports: [OperationBaseDataFormComponent],
 	template: ` <krd-operation-base-data-form [formGroup]="formGroup" /> `,
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -40,7 +40,6 @@ import { GeoSearchService } from '../service/geo-search.service';
 
 @Component({
 	selector: 'krd-geo-search',
-	standalone: true,
 	imports: [
 		CommonModule,
 		FormsModule,

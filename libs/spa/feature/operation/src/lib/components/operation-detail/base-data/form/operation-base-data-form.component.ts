@@ -25,7 +25,6 @@ export type OperationBaseDataFormGroup = FormGroup<OperationBaseDataForm>;
 
 @Component({
 	selector: 'krd-operation-base-data-form',
-	standalone: true,
 	imports: [
 		CommonModule,
 		DateMaskInputComponent,

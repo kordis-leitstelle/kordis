@@ -49,7 +49,6 @@ const PATIENT_QUERY_FIELDS = `
 
 @Component({
 	selector: 'krd-operation-patients',
-	standalone: true,
 	imports: [NzTableModule, OperationPatientsTableComponent],
 	template: ` <krd-operation-patients-table [formArray]="formArray" />`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

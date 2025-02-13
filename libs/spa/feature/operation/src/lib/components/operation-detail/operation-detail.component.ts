@@ -15,7 +15,6 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 
 @Component({
 	selector: 'krd-operation-detail',
-	standalone: true,
 	imports: [
 		FormStateIndicatorComponent,
 		NzTabComponent,

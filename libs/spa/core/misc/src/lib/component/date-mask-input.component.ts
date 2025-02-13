@@ -16,7 +16,6 @@ import { NzSizeLDSType } from 'ng-zorro-antd/core/types';
 import { NzInputDirective } from 'ng-zorro-antd/input';
 
 @Component({
-	standalone: true,
 	selector: 'krd-date-mask-input',
 	template: `
 		<input

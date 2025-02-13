@@ -20,7 +20,6 @@ import { PatientFormGroup } from './operation-patients.component';
 
 @Component({
 	selector: 'krd-operation-patients-table',
-	standalone: true,
 	imports: [
 		CommonModule,
 		NzButtonComponent,

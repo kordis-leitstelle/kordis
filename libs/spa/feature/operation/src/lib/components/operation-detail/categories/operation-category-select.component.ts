@@ -27,7 +27,6 @@ const TYPES = Object.freeze([
 
 @Component({
 	selector: 'krd-operation-category-select',
-	standalone: true,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

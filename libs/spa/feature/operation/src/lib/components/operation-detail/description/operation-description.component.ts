@@ -14,7 +14,6 @@ import { OperationDescriptionTextareaComponent } from './operation-description-t
 
 @Component({
 	selector: 'krd-operation-description',
-	standalone: true,
 	imports: [ReactiveFormsModule, OperationDescriptionTextareaComponent],
 	template: ` <krd-operation-description-textarea
 		[formControl]="descriptionControl"

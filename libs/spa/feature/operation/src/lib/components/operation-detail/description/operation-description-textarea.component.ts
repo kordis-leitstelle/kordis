@@ -12,7 +12,6 @@ import { ControlValueAccessorBase } from 'spa/core/misc';
 
 @Component({
 	selector: 'krd-operation-description-textarea',
-	standalone: true,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

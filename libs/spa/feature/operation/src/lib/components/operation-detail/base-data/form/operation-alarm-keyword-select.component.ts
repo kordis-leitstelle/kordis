@@ -30,7 +30,6 @@ const KEYWORDS = Object.freeze([
 
 @Component({
 	selector: 'krd-alarm-keyword-select',
-	standalone: true,
 	imports: [
 		FormsModule,
 		NzSelectComponent,

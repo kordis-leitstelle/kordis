@@ -47,7 +47,6 @@ import { OperationDescriptionTextareaComponent } from '../operation-detail/descr
 
 @Component({
 	selector: 'krd-create-operation-modal',
-	standalone: true,
 	imports: [
 		AlertGroupSelectionsComponent,
 		NzButtonComponent,

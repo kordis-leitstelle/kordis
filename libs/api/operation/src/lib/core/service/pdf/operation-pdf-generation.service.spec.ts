@@ -46,7 +46,7 @@ const EXPECTED_OPERATION_PDF_RENDER_RESULT = `<html lang='de'>
                         text-xs mb-6; } footer { @apply border-t-[1px] border-gray-200 text-xs
                         mt-6; } section > span { @apply text-lg mb-1 block; }
                         section:not(:last-child) { @apply mb-6; } table { @apply min-w-full
-                        divide-y divide-gray-200; th{ @apply whitespace-nowrap text-left
+                        divide-y divide-gray-200; th { @apply whitespace-nowrap text-left
                         font-semibold; } } .base-data { @apply
                         grid grid-cols-3 gap-y-2; div { @apply border-t border-gray-200; } dt {
                                                                                                                                                                                                                                 @apply text-sm font-medium leading-6; } dd { @apply mt-1 text-sm leading-6

@@ -65,7 +65,6 @@ const INVOLVEMENT_FRAGMENT = gql`
 
 @Component({
 	selector: 'krd-operation-involvements',
-	standalone: true,
 	imports: [
 		NzEmptyComponent,
 		OperationInvolvementsFormComponent,

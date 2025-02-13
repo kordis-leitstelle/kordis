@@ -20,7 +20,6 @@ const REPORTER_TYPES = Object.freeze([
 
 @Component({
 	selector: 'krd-reporter-select',
-	standalone: true,
 	imports: [
 		CommonModule,
 		FormsModule,

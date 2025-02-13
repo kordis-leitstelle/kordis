@@ -41,7 +41,6 @@ export type UnitInvolvementFormGroup = FormGroup<{
 
 @Component({
 	selector: 'krd-operation-unit-involvements-form',
-	standalone: true,
 	imports: [
 		NzCollapseComponent,
 		NzCollapsePanelComponent,

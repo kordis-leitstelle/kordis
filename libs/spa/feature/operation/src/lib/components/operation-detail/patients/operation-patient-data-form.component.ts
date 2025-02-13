@@ -15,7 +15,6 @@ import { PatientFormGroup } from './operation-patients.component';
 
 @Component({
 	selector: 'krd-operation-patient-data-form',
-	standalone: true,
 	imports: [
 		CommonModule,
 		GeoSearchComponent,

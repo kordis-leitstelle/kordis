@@ -26,7 +26,6 @@ import { OperationCategorySelectComponent } from './operation-category-select.co
 
 @Component({
 	selector: 'krd-operation-category-table',
-	standalone: true,
 	imports: [
 		CommonModule,
 		NzButtonComponent,

@@ -38,7 +38,6 @@ export type UnitInvolvementFormGroup = FormGroup<{
 
 @Component({
 	selector: 'krd-operation-unit-involvement-times',
-	standalone: true,
 	imports: [
 		CommonModule,
 		DateMaskInputComponent,

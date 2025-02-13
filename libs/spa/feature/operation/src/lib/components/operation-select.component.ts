@@ -14,7 +14,6 @@ import { Operation } from '@kordis/shared/model';
 
 @Component({
 	selector: 'krd-operation-select',
-	standalone: true,
 	imports: [
 		CommonModule,
 		FormsModule,

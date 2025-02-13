@@ -32,7 +32,6 @@ type CategoryFormGroup = FormGroup<{
 
 @Component({
 	selector: 'krd-operation-categories',
-	standalone: true,
 	imports: [OperationCategoryTableComponent],
 	template: `<krd-operation-category-table [formArray]="formArray" />`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
