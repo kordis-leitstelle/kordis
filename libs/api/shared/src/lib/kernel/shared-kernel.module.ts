@@ -12,7 +12,6 @@ import {
 	UnitOfWorkServiceImpl,
 } from './service/unit-of-work.service';
 
-
 @Global()
 @Module({
 	imports: [CqrsModule],

@@ -32,7 +32,6 @@ import {
 } from './schema/alert-group.schema';
 import { UnitDocument, UnitSchema } from './schema/unit.schema';
 
-
 @Module({
 	imports: [
 		MongooseModule.forFeature([

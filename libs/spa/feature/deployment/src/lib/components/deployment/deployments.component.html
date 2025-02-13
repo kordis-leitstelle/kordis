@@ -3,7 +3,7 @@
 		<input
 			[(ngModel)]="searchStateService.searchValue"
 			nz-input
-			nz-tooltip='Einheiten, Alarmgruppen, Rettungswachen und Einsätze durchsuchen'
+			nz-tooltip="Einheiten, Alarmgruppen, Rettungswachen und Einsätze durchsuchen"
 			placeholder="Suche"
 		/>
 	</nz-input-group>
@@ -24,7 +24,7 @@
 			[nzPopconfirmOverlayStyle]="{ width: '400px' }"
 			nz-button
 			nz-popconfirm
-			nz-tooltip='Alle Rettungswache ausmelden, Zuordnungen entfernen und Notizen der Einheiten zurücksetzen. Einsätze bleiben mit ihren Zuordnungen bestehen.'
+			nz-tooltip="Alle Rettungswache ausmelden, Zuordnungen entfernen und Notizen der Einheiten zurücksetzen. Einsätze bleiben mit ihren Zuordnungen bestehen."
 			nzPopconfirmTitle="Alle Rettungswachen ausmelden, Einheiten rauslösen und Alarmgruppen zurücksetzen?"
 		>
 			<span nz-icon nzTheme="outline" nzType="undo"></span> Zurücksetzen
@@ -58,7 +58,8 @@
 	<nz-divider nzType="vertical" />
 	<div class="deployment-section">
 		<krd-operation-deployments
-			[operations]='deployments().operationDeployments' />
+			[operations]="deployments().operationDeployments"
+		/>
 	</div>
 	<nz-divider nzType="vertical" />
 	<div class="deployment-section">

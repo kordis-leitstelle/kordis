@@ -12,7 +12,6 @@ import { BaseEntityModel, Coordinate } from '@kordis/api/shared';
 
 import { IsBBox } from './bbox.validator';
 
-
 @ObjectType()
 @InputType('BBoxInput')
 export class BBox {

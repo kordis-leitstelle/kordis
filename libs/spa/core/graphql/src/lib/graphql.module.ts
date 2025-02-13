@@ -11,7 +11,6 @@ import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
 
 import { SSELink } from './sse-link';
 
-
 @NgModule({
 	imports: [ApolloModule, CommonModule],
 })

@@ -36,7 +36,9 @@
 						nzTooltipPlacement="bottom"
 						nz-popconfirm
 						nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz archivieren möchten?"
-						[disabled]="actionsLoadingState() !== null || formStateService.hasError()"
+						[disabled]="
+							actionsLoadingState() !== null || formStateService.hasError()
+						"
 						(nzOnConfirm)="archiveOperation()"
 					>
 						<span nz-icon nzType="file-zip" nzTheme="outline"></span>
@@ -84,7 +86,8 @@
 </div>
 
 <ng-template #archiveError let-errors="data">
-	<b>Der Einsatz konnte nicht archiviert werden.</b> Folgende Fehler sind aufgetreten: <br>
+	<b>Der Einsatz konnte nicht archiviert werden.</b> Folgende Fehler sind
+	aufgetreten: <br />
 	<ul>
 		@for (error of errors; track $index) {
 			<li>{{ error }}</li>

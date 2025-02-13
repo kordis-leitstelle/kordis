@@ -16,7 +16,6 @@ import {
 import { OrganizationNotFoundException } from '../../core/exceptions/organization-not-found.exception';
 import { GetOrganizationQuery } from '../../core/query/get-organization.query';
 
-
 @Resolver(() => OrganizationEntity)
 export class OrganizationResolver {
 	constructor(
