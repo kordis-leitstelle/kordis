@@ -23,7 +23,7 @@ import {
 } from '@kordis/spa/core/ui';
 
 import { BaseOperationTabComponent } from '../base-operation-tab.component';
-import { OperationUAlertGroupInvolvementsFormComponent } from './form/alert-group/operation-alert-group-involvements-form.component';
+import { OperationAlertGroupInvolvementsFormComponent } from './form/alert-group/operation-alert-group-involvements-form.component';
 import { OperationInvolvementsFormComponent } from './form/unit/operation-unit-involvements-form.component';
 import {
 	InvolvementFormFactory,
@@ -68,7 +68,7 @@ const INVOLVEMENT_FRAGMENT = gql`
 	imports: [
 		NzEmptyComponent,
 		OperationInvolvementsFormComponent,
-		OperationUAlertGroupInvolvementsFormComponent,
+		OperationAlertGroupInvolvementsFormComponent,
 	],
 	providers: [
 		PossibleUnitSelectionsService,

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -27,7 +26,6 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 @Component({
 	selector: 'krd-operation-alert-group-involvement-form',
 	imports: [
-		CommonModule,
 		NzCollapseModule,
 		OperationInvolvementsFormComponent,
 		AlertGroupAutocompleteComponent,
@@ -97,7 +95,7 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OperationUAlertGroupInvolvementsFormComponent {
+export class OperationAlertGroupInvolvementsFormComponent {
 	readonly formArray =
 		input.required<FormArray<AlertGroupInvolvementFormGroup>>();
 
