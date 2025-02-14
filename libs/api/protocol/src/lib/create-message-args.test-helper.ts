@@ -1,8 +1,10 @@
 import { RegisteredUnit, UnknownUnit } from '@kordis/shared/model';
 
 import { BaseCreateMessageArgs } from './infra/controller/base-create-message.args';
-import { UnitInput } from './infra/view-model/unit-input.view-model';
-import { UnitInputType } from './infra/view-model/unit-input.view-model';
+import {
+	UnitInput,
+	UnitInputType,
+} from './infra/view-model/unit-input.view-model';
 
 const MOCK_BASE_CREATE_MESSAGE_ARGS = new BaseCreateMessageArgs();
 MOCK_BASE_CREATE_MESSAGE_ARGS.channel = 'channel';

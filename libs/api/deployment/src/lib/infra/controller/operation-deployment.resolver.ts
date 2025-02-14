@@ -25,6 +25,7 @@ import {
 } from '../../core/entity/deployment.entity';
 import { OperationDeploymentEntity } from '../../core/entity/operation-deplyoment.entity';
 import { OperationDeploymentCreatedEvent } from '../../core/event/operation-deployment-created.event';
+import { OperationDeploymentUpdatedEvent } from '../../core/event/operation-deployment-updated.event';
 import { GetOperationDeploymentByIdQuery } from '../../core/query/get-operation-deployment-by-id.query';
 import { GetOperationDeploymentsQuery } from '../../core/query/get-operation-deployments.query';
 import { OperationDeploymentViewModel } from '../view-model/operation-deployment.view-model';
@@ -88,8 +89,8 @@ export class OperationDeploymentResolver {
 		@RequestUser() { organizationId }: AuthUser,
 	): AsyncIterableIterator<RescueStationDeploymentViewModel> {
 		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
-			OperationDeploymentCreatedEvent,
-			'operationDeploymentCreated',
+			OperationDeploymentUpdatedEvent,
+			'operationDeploymentUpdated',
 			{
 				filter: ({ orgId }) => orgId === organizationId,
 				map: ({ deploymentId }) =>

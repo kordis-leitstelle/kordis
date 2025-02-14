@@ -21,7 +21,7 @@ export class GetRescueStationsDeploymentsHandler
 {
 	constructor(
 		@Inject(RESCUE_STATION_DEPLOYMENT_REPOSITORY)
-		private rescueStationDeploymentRepository: RescueStationDeploymentRepository,
+		private readonly rescueStationDeploymentRepository: RescueStationDeploymentRepository,
 	) {}
 
 	async execute({

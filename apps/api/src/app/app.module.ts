@@ -8,8 +8,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
-import { DeploymentModule } from '@kordis/api/deployment';
-import { OperationDeploymentSagaModule } from '@kordis/api/deployment';
+import {
+	DeploymentModule,
+	OperationDeploymentSagaModule,
+} from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
 import { OperationModule, OperationSagaModule } from '@kordis/api/operation';
 import { OperationManagerModule } from '@kordis/api/operation-manager';

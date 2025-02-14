@@ -110,7 +110,7 @@ export class GeoSearchComponent extends ControlValueAccessorBase {
 		),
 	);
 
-	private inputEle = viewChild<ElementRef>('input');
+	private readonly inputEle = viewChild<ElementRef>('input');
 
 	search(query: string): void {
 		this.geoSearchSubject$.next(query);

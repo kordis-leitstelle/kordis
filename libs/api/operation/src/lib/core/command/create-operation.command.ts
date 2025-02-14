@@ -212,7 +212,7 @@ export class CreateOperationHandler
 		const nonUniqueUnitIds = new Set<string>();
 
 		for (const unitId of unitIds) {
-			const count = unitIdCounts.get(unitId) || 0;
+			const count = unitIdCounts.get(unitId) ?? 0;
 			unitIdCounts.set(unitId, count + 1);
 			if (count + 1 > 1) {
 				nonUniqueUnitIds.add(unitId);

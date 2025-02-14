@@ -146,9 +146,7 @@ export class OperationPdfGenerationService {
 				? `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`
 				: '-',
 		);
-		Handlebars.registerHelper('emptyMark', (value: unknown) =>
-			value ? value : '-',
-		);
+		Handlebars.registerHelper('emptyMark', (value: unknown) => value ?? '-');
 		Handlebars.registerHelper(
 			'toLocationString',
 			(value: OperationLocationAddress) =>

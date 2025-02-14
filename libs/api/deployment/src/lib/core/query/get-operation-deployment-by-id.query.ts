@@ -20,7 +20,7 @@ export class GetOperationDeploymentByIdHandler
 {
 	constructor(
 		@Inject(OPERATION_DEPLOYMENT_REPOSITORY)
-		private operationDeploymentRepository: OperationDeploymentRepository,
+		private readonly operationDeploymentRepository: OperationDeploymentRepository,
 	) {}
 
 	async execute({

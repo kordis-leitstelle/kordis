@@ -16,7 +16,7 @@ export function getTopLevelDirtyValues<
 
 	for (const key in group.controls) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const currentControl = group!.get(key)!;
+		const currentControl = group.get(key)!;
 
 		if (currentControl.dirty) {
 			result[key as keyof TForm] = currentControl.value;

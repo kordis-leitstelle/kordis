@@ -17,7 +17,7 @@ export function involvementsTimeIntersectingValidator(
 	const involvementTimes = formArray.getRawValue();
 
 	involvementTimes.sort(
-		(a, b) => (a.start?.getTime() || 0) - (b.start?.getTime() || 0),
+		(a, b) => (a.start?.getTime() ?? 0) - (b.start?.getTime() ?? 0),
 	);
 
 	for (let i = 0; i < involvementTimes.length; i++) {

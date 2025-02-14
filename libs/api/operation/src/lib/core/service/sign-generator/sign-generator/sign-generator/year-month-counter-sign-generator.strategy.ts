@@ -31,7 +31,7 @@ export class YearMonthCounterSignGenerator implements SignGenerator {
 		const now = new Date();
 		const counterPrefix = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
 
-		if (latestSign && latestSign.startsWith(counterPrefix)) {
+		if (latestSign?.startsWith(counterPrefix)) {
 			counter = Number(latestSign.split('/')[2]) + 1;
 		}
 

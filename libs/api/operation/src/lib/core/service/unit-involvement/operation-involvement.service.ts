@@ -224,7 +224,7 @@ export class OperationInvolvementService {
 			end: Date | null;
 		}[],
 		uow?: DbSessionProvider,
-	): Promise<void | never> {
+	): Promise<void> {
 		for (const involvementRange of involvements) {
 			if (!involvementRange.end) {
 				await this.assertUnitNotPending(orgId, unitId);

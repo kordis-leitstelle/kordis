@@ -130,7 +130,8 @@ export class OperationLocationFormComponent implements OnDestroy {
 		transform: (x: unknown) => booleanAttribute(x),
 	});
 	readonly formCompleted = output<void>();
-	private nameGeoSearchEle = viewChild<GeoSearchComponent>('nameGeoSearch');
+	private readonly nameGeoSearchEle =
+		viewChild<GeoSearchComponent>('nameGeoSearch');
 	private readonly destroyRefSubject$ = new Subject<void>();
 
 	constructor() {
