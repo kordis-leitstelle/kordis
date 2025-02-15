@@ -163,14 +163,27 @@ cache.policies.addTypePolicies({
 		ProtocolTableComponent,
 		CreateProtocolMessageComponent,
 	],
-	template: `
-		<button (click)="loadMore()">Load more</button>
-		<krd-create-protocol-message
+	template: `<krd-create-protocol-message
 			(newMessage)="addCommunicationMessage($event)"
+			class="create-form"
 		></krd-create-protocol-message>
-		<krd-protocol [protocolEntries]="protocolEntries()" />
+		<krd-protocol-table
+			[protocolEntries]="protocolEntries()"
+			class="table-view"
+		/>`,
+	styles: `
+		:host {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+
+			.table-view {
+				flex-grow: 1;
+				overflow-y: auto;
+			}
+		}
 	`,
-	styles: ``,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProtocolViewComponent {

@@ -10,7 +10,8 @@ import { UnitChipComponent } from '../unit-chip/unit-chip.component';
 import { NzTableFullHeightDirective } from './nz-table-full-height.directive';
 
 @Component({
-	selector: 'krd-protocol',
+	selector: 'krd-protocol-table',
+	standalone: true,
 	imports: [
 		CommonModule,
 		NzTableModule,
