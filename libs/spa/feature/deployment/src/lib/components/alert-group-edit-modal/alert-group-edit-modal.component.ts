@@ -11,10 +11,10 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSpinComponent } from 'ng-zorro-antd/spin';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 import { forkJoin } from 'rxjs';
-import { alertGroupMinUnitsValidator } from 'spa/core/misc';
 
 import { Query, Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { alertGroupMinUnitsValidator } from '@kordis/spa/core/misc';
 import {
 	AlertGroupAssignmentFormGroup,
 	PossibleUnitSelectionsService,

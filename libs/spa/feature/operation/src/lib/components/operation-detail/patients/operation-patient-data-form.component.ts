@@ -4,12 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzInputDirective } from 'ng-zorro-antd/input';
-import { DateMaskInputComponent } from 'spa/core/misc';
 
 import {
 	GeoSearchComponent,
 	GeoSearchResult,
 } from '@kordis/spa/core/geocoding';
+import { DateMaskInputComponent } from '@kordis/spa/core/misc';
 
 import { PatientFormGroup } from './operation-patients.component';
 

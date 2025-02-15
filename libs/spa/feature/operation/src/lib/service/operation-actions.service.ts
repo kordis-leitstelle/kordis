@@ -4,9 +4,9 @@ import { ApolloError } from '@apollo/client/core';
 import { GraphQLFormattedErrorExtensions } from 'graphql/error';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable, catchError, map, tap } from 'rxjs';
-import { SHARED_TOKENS } from 'spa/core/misc';
 
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { SHARED_TOKENS } from '@kordis/spa/core/misc';
 
 @Injectable({
 	providedIn: 'root',

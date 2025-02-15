@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
-import { ControlValueAccessorBase } from 'spa/core/misc';
+
+import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 
 const TYPES = Object.freeze([
 	'Einsatzabbruch / Fehleinsatz',

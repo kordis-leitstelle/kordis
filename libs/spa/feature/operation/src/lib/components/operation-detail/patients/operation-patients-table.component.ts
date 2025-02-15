@@ -13,7 +13,8 @@ import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
-import { markInvalidFormControlsAsDirty } from 'spa/core/misc';
+
+import { markInvalidFormControlsAsDirty } from '@kordis/spa/core/misc';
 
 import { OperationPatientDataFormComponent } from './operation-patient-data-form.component';
 import { PatientFormGroup } from './operation-patients.component';

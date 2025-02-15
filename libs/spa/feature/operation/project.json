@@ -1,5 +1,5 @@
 {
-	"name": "operation",
+	"name": "spa-operation",
 	"$schema": "../../../../node_modules/nx/schemas/project-schema.json",
 	"sourceRoot": "libs/spa/feature/operation/src",
 	"prefix": "krd",

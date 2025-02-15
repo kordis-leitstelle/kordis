@@ -14,7 +14,8 @@ import {
 } from '@angular/forms';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
-import { ControlValueAccessorBase } from 'spa/core/misc';
+
+import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 
 const KEYWORDS = Object.freeze([
 	'THWAY',

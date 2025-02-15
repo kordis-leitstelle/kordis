@@ -14,12 +14,12 @@ import { AutocompleteComponent } from '../search.component';
 @Component({
 	selector: 'krd-alert-group-autocomplete',
 	imports: [
-		AsyncPipe,
 		NzAutocompleteModule,
-		NzInputDirective,
-		NzNoAnimationDirective,
 		NzSelectModule,
 		ReactiveFormsModule,
+		NzInputDirective,
+		NzNoAnimationDirective,
+		AsyncPipe,
 	],
 	template: `
 		<input

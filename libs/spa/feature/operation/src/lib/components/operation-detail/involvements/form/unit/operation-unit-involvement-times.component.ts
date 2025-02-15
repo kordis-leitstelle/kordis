@@ -19,9 +19,9 @@ import {
 } from 'ng-zorro-antd/form';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { DateMaskInputComponent } from 'spa/core/misc';
 
 import { Unit } from '@kordis/shared/model';
+import { DateMaskInputComponent } from '@kordis/spa/core/misc';
 
 export type UnitInvolvementsFormArray = FormArray<
 	FormGroup<{

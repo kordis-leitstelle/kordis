@@ -21,14 +21,14 @@ import {
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+
+import { CreateOperationInput, Mutation, Unit } from '@kordis/shared/model';
+import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 import {
 	DateMaskInputComponent,
 	alertGroupMinUnitsValidator,
 	markInvalidFormControlsAsDirty,
-} from 'spa/core/misc';
-
-import { CreateOperationInput, Mutation, Unit } from '@kordis/shared/model';
-import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+} from '@kordis/spa/core/misc';
 import {
 	AlertGroupAssignmentFormGroup,
 	AlertGroupSelectionsComponent,

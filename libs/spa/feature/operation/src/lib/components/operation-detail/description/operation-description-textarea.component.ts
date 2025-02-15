@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NzInputDirective } from 'ng-zorro-antd/input';
-import { ControlValueAccessorBase } from 'spa/core/misc';
+
+import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 
 @Component({
 	selector: 'krd-operation-description-textarea',

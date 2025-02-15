@@ -10,11 +10,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
-import { SHARED_TOKENS } from 'spa/core/misc';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/core/auth';
 import { GeocodingModule } from '@kordis/spa/core/geocoding';
 import { GraphqlModule } from '@kordis/spa/core/graphql';
+import { SHARED_TOKENS } from '@kordis/spa/core/misc';
 import {
 	NoopObservabilityModule,
 	SentryObservabilityModule,

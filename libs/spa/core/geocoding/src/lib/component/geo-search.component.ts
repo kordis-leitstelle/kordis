@@ -30,7 +30,8 @@ import {
 	share,
 	switchMap,
 } from 'rxjs';
-import { ControlValueAccessorBase } from 'spa/core/misc';
+
+import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 
 import {
 	GeoAddress,

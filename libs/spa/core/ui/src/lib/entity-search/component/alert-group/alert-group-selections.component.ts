@@ -45,7 +45,7 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 	template: `
 		<nz-form-item>
 			<nz-form-label>Alarmgruppen</nz-form-label>
-			<nz-form-control nzErrorTip="test" [nzValidateStatus]="formArray()">
+			<nz-form-control>
 				<krd-alert-group-autocomplete (selected)="addAlertGroup($event)" />
 			</nz-form-control>
 		</nz-form-item>

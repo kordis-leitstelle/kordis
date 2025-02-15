@@ -5,7 +5,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
-import { DateMaskInputComponent } from 'spa/core/misc';
+
+import { DateMaskInputComponent } from '@kordis/spa/core/misc';
 
 import { OperationLocationForm } from '../../../../helper/operation-address-form.factory';
 import { OperationAlarmKeywordSelectComponent } from './operation-alarm-keyword-select.component';
