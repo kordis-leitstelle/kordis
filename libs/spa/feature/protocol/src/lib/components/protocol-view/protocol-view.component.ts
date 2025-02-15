@@ -164,6 +164,7 @@ cache.policies.addTypePolicies({
 		CreateProtocolMessageComponent,
 	],
 	template: `
+		<button (click)="loadMore()">Load more</button>
 		<krd-create-protocol-message
 			(newMessage)="addCommunicationMessage($event)"
 		></krd-create-protocol-message>
@@ -192,5 +193,10 @@ export class ProtocolViewComponent {
 		this.gqlService
 			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, messageForm)
 			.subscribe(console.log);
+	}
+
+	loadMore(): void {
+		console.log('Loading more');
+		this.client.loadMore();
 	}
 }
