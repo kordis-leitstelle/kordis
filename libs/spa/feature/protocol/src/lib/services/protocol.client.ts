@@ -1,9 +1,13 @@
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { throwServerError } from '@apollo/client/core';
-import { Observable, map, scan, share, tap } from 'rxjs';
+import { relayStylePagination } from '@apollo/client/utilities';
+import { Observable, map } from 'rxjs';
 
-import { PageInfo, ProtocolEntryUnion, Query } from '@kordis/shared/model';
-import { GraphqlService, QueryReturnType, gql } from '@kordis/spa/core/graphql';
+import { ProtocolEntryUnion, Query } from '@kordis/shared/model';
+import {
+	GraphqlService,
+	QueryReturnType,
+	cache,
+	gql,
+} from '@kordis/spa/core/graphql';
 
 const RESCUE_STATION_SIGN_ON_FRAGMENT = gql`
 	fragment RescueStationSignOnMessageFragment on RescueStationSignOnMessage {
@@ -285,8 +289,8 @@ const GET_PROTOCOL_ENTRIES_QUERY = gql`
 	${RESCUE_STATION_SIGN_ON_FRAGMENT}
 	${RESCUE_STATION_UPDATE_FRAGMENT}
 	${RESCUE_STATION_SIGN_OFF_FRAGMENT}
-	query GetProtocolEntries($endCursor: String) {
-		protocolEntries(first: 100, after: $endCursor) {
+	query GetProtocolEntries($after: String, $before: String) {
+		protocolEntries(first: 3, after: $after, before: $before) {
 			pageInfo {
 				hasNextPage
 				hasPreviousPage
@@ -316,53 +320,73 @@ const GET_PROTOCOL_ENTRIES_QUERY = gql`
 	}
 `;
 
+cache.policies.addTypePolicies({
+	Query: {
+		fields: {
+			GetProtocolEntries: relayStylePagination(),
+		},
+	},
+});
+
 export class ProtocolClient {
 	private query: QueryReturnType<{
 		protocolEntries: Query['protocolEntries'];
-	}>;
-	private pageInfo?: PageInfo;
+	}>; // TODO: get return type from gqlService.query
+
 	protocolEntries$: Observable<ProtocolEntryUnion[]>;
+	cursor: string | null = null;
 
 	constructor(readonly gqlService: GraphqlService) {
-		console.log(GET_PROTOCOL_ENTRIES_QUERY);
-
 		this.query = gqlService.query(GET_PROTOCOL_ENTRIES_QUERY, {
-			endCursor: null,
+			after: null,
+			before: null,
 		});
 
-		this.query.$.subscribe(console.log);
-
 		this.protocolEntries$ = this.query.$.pipe(
-			map((page) => page.protocolEntries),
-			tap((page) => (this.pageInfo = page.pageInfo)),
-			map((page) => page.edges.map((edge) => edge.node)),
-			scan((acc, cur) => [...acc, ...cur]),
-			share()
+			map((page) => {
+				console.log('Page', page);
+				this.cursor = page.protocolEntries.pageInfo.endCursor ?? null;
+				return page.protocolEntries.edges.map((edge) => edge.node);
+			}),
 		);
 
 		this.protocolEntries$.subscribe(console.log);
 
-		this.gqlService
-			.subscribe$(gql`
-				subscription {
-					protocolEntryCreated {
-						__typename
-					}
-				}
-			`)
-			.pipe(takeUntilDestroyed())
-			.subscribe(() => this.query.refresh()); 
+		this.loadInitialData();
+
+		// this.gqlService
+		// 	.subscribe$(gql`
+		// 		subscription {
+		// 			protocolEntryCreated {
+		// 				__typename
+		// 			}
+		// 		}
+		// 	`)
+		// 	.pipe(takeUntilDestroyed())
+		// 	.subscribe((entity) => {
+		// 		console.log('New protocol entry created', entity);
+		// 		this.query.refresh();
+		// 	});
 	}
+
+	loadInitialData(): void {}
 
 	loadLatest(): void {
 		// TODO: fetch latest entries and prepend to the list
 	}
 
 	loadMore(): void {
-		this.query.refresh({ endCursor: this.pageInfo?.endCursor });
+		console.log('Load more');
+		this.query.fetchMore({
+			variables: {
+				after: this.cursor,
+			},
+			// query: GET_PROTOCOL_ENTRIES_QUERY,
+			// variables: {},
+		});
 	}
 
-	hasMore(): boolean {
-		return this.pageInfo?.hasNextPage ?? false;
-	}
+	// hasMore(): boolean {
+	// 	// return this.pageInfo?.hasNextPage ?? false;
+	// }
 }

@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
 export type QueryReturnType<TData> = {
 	$: Observable<TData>;
 	refresh: (variables?: Record<string, unknown>) => Promise<TData>;
+	fetchMore: any; // TODO: fix type
 };
 
 @Injectable({
@@ -39,6 +40,7 @@ export class GraphqlService {
 			$: queryRef.valueChanges.pipe(map(({ data }) => data)),
 			refresh: (variables?: Record<string, unknown>): Promise<TData> =>
 				queryRef.refetch(variables).then(({ data }) => data),
+			fetchMore: queryRef.fetchMore.bind(queryRef),
 		};
 	}
 
