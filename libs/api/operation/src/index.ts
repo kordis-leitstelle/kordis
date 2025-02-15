@@ -1,7 +1,6 @@
 export * from './lib/infra/operation.module';
 export { CreateOperationCommand } from './lib/core/command/create-operation.command';
 export { EndOngoingOperationCommand } from './lib/core/command/end-ongoing-operation.command';
-export { UpdateOngoingOperationInvolvementsCommand } from './lib/core/command/update-ongoing-operation-involvements.command';
 export { OperationViewModel } from './lib/infra/operation.view-model';
 export { CreateOperationInput } from './lib/infra/controller/args/create-completed-operation.args';
 export { OperationCreatedEvent } from './lib/core/event/operation-created.event';

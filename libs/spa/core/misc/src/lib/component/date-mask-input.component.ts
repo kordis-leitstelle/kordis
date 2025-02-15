@@ -42,7 +42,6 @@ import { NzInputDirective } from 'ng-zorro-antd/input';
 export class DateMaskInputComponent implements ControlValueAccessor {
 	readonly size = input<NzSizeLDSType>('default');
 	readonly maskType = input<'datetime-local' | 'date'>('datetime-local');
-
 	protected readonly dateMask = computed(() =>
 		this.maskType() === 'date' ? 'yyyy-MM-dd' : 'yyyy-MM-ddTHH:mm:ss',
 	);

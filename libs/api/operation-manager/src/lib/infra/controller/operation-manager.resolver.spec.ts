@@ -14,7 +14,6 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOperationProcessCommand } from '../../core/command/launch-create-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { LaunchUpdateOngoingInvolvementsProcessCommand } from '../../core/command/launch-update-ongoing-involvements-process.command';
 import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
 import { OperationManagerResolver } from './operation-manager.resolver';
 
@@ -97,34 +96,6 @@ describe('OperationManagerResolver', () => {
 				),
 			).rejects.toThrow(PresentableValidationException);
 		});
-	});
-
-	it('should update ongoing operation involvements', async () => {
-		const assignmentsData: any = {};
-
-		mockCommandBus.execute.mockResolvedValue({
-			id: 'someId',
-		});
-
-		const result =
-			await operationManagerResolver.updateOngoingOperationInvolvements(
-				reqUser,
-				'someId',
-				assignmentsData,
-				MOCK_BASE_CREATE_MESSAGE_ARGS,
-			);
-
-		expect(result).toEqual({
-			id: 'someId',
-		});
-		expect(mockCommandBus.execute).toHaveBeenCalledWith(
-			new LaunchUpdateOngoingInvolvementsProcessCommand(
-				reqUser,
-				'someId',
-				assignmentsData,
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
-			),
-		);
 	});
 
 	it('should end ongoing operation', async () => {

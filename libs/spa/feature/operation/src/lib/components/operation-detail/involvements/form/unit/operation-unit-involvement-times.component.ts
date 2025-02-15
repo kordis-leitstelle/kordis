@@ -92,7 +92,7 @@ export type UnitInvolvementFormGroup = FormGroup<{
 								nz-button
 								nzType="link"
 								(click)="removeInvolvementTime($index)"
-								[disabled]="formArray().length <= 1"
+								[disabled]="formArray().length <= 1 || formArray().disabled"
 							>
 								<span nz-icon nzType="delete" nzTheme="outline"></span>
 							</button>
@@ -113,9 +113,10 @@ export type UnitInvolvementFormGroup = FormGroup<{
 				nzType="default"
 				(click)="addInvolvementTime()"
 				[disabled]="
-					this.formArray().length > 0 &&
-					this.formArray().controls[this.formArray().length - 1].controls.end
-						.value === null
+					(this.formArray().length > 0 &&
+						this.formArray().controls[this.formArray().length - 1].controls.end
+							.value === null) ||
+					formArray().disabled
 				"
 				data-testid="add-involvement-time"
 			>

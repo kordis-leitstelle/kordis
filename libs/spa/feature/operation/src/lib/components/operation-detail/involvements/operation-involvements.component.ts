@@ -5,6 +5,7 @@ import {
 	inject,
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
+import { NzAlertComponent } from 'ng-zorro-antd/alert';
 import { NzEmptyComponent } from 'ng-zorro-antd/empty';
 import { distinctUntilChanged, filter, map } from 'rxjs';
 
@@ -69,6 +70,7 @@ const INVOLVEMENT_FRAGMENT = gql`
 		NzEmptyComponent,
 		OperationInvolvementsFormComponent,
 		OperationAlertGroupInvolvementsFormComponent,
+		NzAlertComponent,
 	],
 	providers: [
 		PossibleUnitSelectionsService,
@@ -85,6 +87,10 @@ const INVOLVEMENT_FRAGMENT = gql`
 					height: unset;
 				}
 			}
+		}
+
+		.info-container {
+			margin-bottom: var(--base-spacing);
 		}
 
 		.container {
@@ -204,6 +210,12 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 			this.formFactory.createAlertGroupInvolvementsFormArray(operation),
 			{ emitEvent: false },
 		);
+
+		if (!operation.end) {
+			this.control.disable({ emitEvent: false });
+		} else {
+			this.control.enable({ emitEvent: false });
+		}
 
 		this.cd.markForCheck();
 	}

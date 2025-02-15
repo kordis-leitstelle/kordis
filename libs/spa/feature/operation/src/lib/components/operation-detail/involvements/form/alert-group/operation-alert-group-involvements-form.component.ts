@@ -68,6 +68,7 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 				nzPopoverTrigger="click"
 				nzSize="small"
 				nzType="default"
+				[disabled]="formArray().disabled"
 			>
 				<span nz-icon nzTheme="outline" nzType="plus"></span>
 				Alarmgruppe hinzufügen

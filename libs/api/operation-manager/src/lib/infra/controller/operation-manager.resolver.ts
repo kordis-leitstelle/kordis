@@ -12,9 +12,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOperationProcessCommand } from '../../core/command/launch-create-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { LaunchUpdateOngoingInvolvementsProcessCommand } from '../../core/command/launch-update-ongoing-involvements-process.command';
 import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
-import { UpdateOngoingAssignmentsInput } from './update-ongoing-involvements.args';
 
 @Resolver()
 export class OperationManagerResolver {
@@ -46,26 +44,6 @@ export class OperationManagerResolver {
 
 			throw error;
 		}
-	}
-
-	@Mutation(() => OperationViewModel, {
-		description:
-			'Updates the assignments of an ongoing operation with a protocol entry.',
-	})
-	async updateOngoingOperationInvolvements(
-		@RequestUser() reqUser: AuthUser,
-		@Args('operationId') operationId: string,
-		@Args('assignments') assignmentsData: UpdateOngoingAssignmentsInput,
-		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
-	): Promise<OperationViewModel> {
-		return this.commandBus.execute(
-			new LaunchUpdateOngoingInvolvementsProcessCommand(
-				reqUser,
-				operationId,
-				assignmentsData,
-				await protocolMessageData.asTransformedPayload(),
-			),
-		);
 	}
 
 	@Mutation(() => OperationViewModel, {

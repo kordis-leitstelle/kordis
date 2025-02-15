@@ -7,7 +7,13 @@ import {
 	UpdateOperationAlertGroupInvolvementInput,
 	UpdateOperationUnitInvolvementInput,
 } from '../../infra/controller/args/update-operation-involvement.args';
+import { OperationProcessState } from '../entity/operation-process-state.enum';
 import { OperationInvolvementsUpdatedEvent } from '../event/operation-involvements-updated.event';
+import { OperationNotCompletedException } from '../exceptions/operation-not-completed.exception';
+import {
+	OPERATION_REPOSITORY,
+	OperationRepository,
+} from '../repository/operation.repository';
 import { OperationInvolvementService } from '../service/unit-involvement/operation-involvement.service';
 
 export class UpdateOperationInvolvementsCommand {
@@ -25,6 +31,8 @@ export class UpdateOperationInvolvementsHandler
 {
 	constructor(
 		private readonly unitInvolvementService: OperationInvolvementService,
+		@Inject(OPERATION_REPOSITORY)
+		private readonly operationRepository: OperationRepository,
 		@Inject(UNIT_OF_WORK_SERVICE)
 		private readonly uowService: UnitOfWorkService,
 		private readonly eventBus: EventBus,
@@ -32,6 +40,17 @@ export class UpdateOperationInvolvementsHandler
 
 	async execute(command: UpdateOperationInvolvementsCommand): Promise<void> {
 		await this.uowService.asTransaction(async (uow) => {
+			const { processState } = await this.operationRepository.findById(
+				command.orgId,
+				command.operationId,
+				uow,
+			);
+
+			// Ongoing operations have to be managed via the operation manager due to easier communication with the deployment domain
+			if (processState !== OperationProcessState.COMPLETED) {
+				throw new OperationNotCompletedException();
+			}
+
 			await this.unitInvolvementService.setUnitInvolvements(
 				command.orgId,
 				command.operationId,

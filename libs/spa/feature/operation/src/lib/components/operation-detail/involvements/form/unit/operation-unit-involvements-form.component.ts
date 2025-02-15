@@ -72,6 +72,7 @@ export type UnitInvolvementFormGroup = FormGroup<{
 								nzSize="small"
 								nzType="link"
 								(click)="deleteInvolvement(i)"
+								[disabled]="control.disabled"
 							>
 								<span nz-icon nzTheme="outline" nzType="delete"></span>
 							</button>
@@ -122,6 +123,7 @@ export type UnitInvolvementFormGroup = FormGroup<{
 				nzPopoverTrigger="click"
 				nzSize="small"
 				nzType="default"
+				[disabled]="formArray().disabled"
 			>
 				<span nz-icon nzTheme="outline" nzType="plus"></span>
 				Einheit hinzufügen
