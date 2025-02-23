@@ -1,11 +1,23 @@
 import { inject } from '@angular/core';
 import { TypedDocumentNode } from 'apollo-angular';
-import { Subject, map, shareReplay, startWith, switchMap, tap } from 'rxjs';
+import {
+	Observable,
+	Subject,
+	map,
+	shareReplay,
+	startWith,
+	switchMap,
+	tap,
+} from 'rxjs';
 
 import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import { IEntitySearchEngine } from './entity-search.service';
 
+export interface EntitySearchService<TEntity> {
+	allPossibleEntitiesToSelect$: Observable<TEntity[]>;
+	searchAllPossibilities(query: string): Promise<TEntity[]>;
+}
 /*
  * This service handles the selection of entities in a context where an entity can only be selected once.
  * If a entity is selected, it will not be visible in the search results anymore. It can be deselected to be visible again.
@@ -13,7 +25,8 @@ import { IEntitySearchEngine } from './entity-search.service';
 export abstract class EntitySelectionSearchService<
 	TEntity extends { id: string },
 	TQuery extends Record<string, TEntity[]>,
-> {
+> implements EntitySearchService<TEntity>
+{
 	protected abstract query: TypedDocumentNode<TQuery>;
 	protected abstract queryName: keyof TQuery;
 	protected abstract searchService: IEntitySearchEngine<TEntity>;
@@ -53,6 +66,11 @@ export abstract class EntitySelectionSearchService<
 
 	isSelected(entity: TEntity): boolean {
 		return this.entityIdsSelected.has(entity.id);
+	}
+
+	resetSelections(): void {
+		this.entityIdsSelected.clear();
+		this.selectionChangedSubject$.next();
 	}
 
 	async searchAllPossibilities(query: string): Promise<TEntity[]> {

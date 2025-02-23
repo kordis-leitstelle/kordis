@@ -19,16 +19,11 @@ import {
 	DataLoaderContextProvider,
 	GraphQLSubscriptionService,
 } from '@kordis/api/shared';
-import {
-	ALERT_GROUPS_DATA_LOADER,
-	AlertGroupViewModel,
-	UNITS_DATA_LOADER,
-	UnitViewModel,
-} from '@kordis/api/unit';
+import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
-import { ResetRescueStationsCommand } from '../../core/command/reset-rescue-stations.command';
-import { UpdateRescueStationNoteCommand } from '../../core/command/update-rescue-station-note.command';
+import { ResetRescueStationsCommand } from '../../core/command/rescue-station/reset-rescue-stations.command';
+import { UpdateRescueStationNoteCommand } from '../../core/command/rescue-station/update-rescue-station-note.command';
 import {
 	DeploymentAlertGroup,
 	DeploymentUnit,
@@ -36,10 +31,10 @@ import {
 import { RescueStationDeploymentEntity } from '../../core/entity/rescue-station-deployment.entity';
 import { RescueStationNoteUpdatedEvent } from '../../core/event/rescue-station-note-updated.event';
 import { RescueStationsResetEvent } from '../../core/event/rescue-stations-reset.event';
-import { GetDeploymentsQuery } from '../../core/query/get-deployments.query';
 import { GetRescueStationDeploymentQuery } from '../../core/query/get-rescue-station-deployment.query';
+import { GetRescueStationDeploymentsQuery } from '../../core/query/get-rescue-station-deployments.query';
 import { RescueStationEntityDTO } from '../../core/repository/rescue-station-deployment.repository';
-import { RescueStationDeploymentViewModel } from '../rescue-station.view-model';
+import { RescueStationDeploymentViewModel } from '../view-model/rescue-station.view-model';
 import { RescueStationFilterArgs } from './rescue-station-filter.args';
 
 @Resolver(() => RescueStationDeploymentViewModel)
@@ -65,9 +60,9 @@ export class RescueStationDeploymentResolver {
 			: undefined;
 
 		return this.queryBus.execute<
-			GetDeploymentsQuery,
+			GetRescueStationDeploymentsQuery,
 			RescueStationDeploymentEntity[]
-		>(new GetDeploymentsQuery(organizationId, filterDto));
+		>(new GetRescueStationDeploymentsQuery(organizationId, filterDto));
 	}
 
 	@Query(() => RescueStationDeploymentViewModel)
@@ -95,9 +90,9 @@ export class RescueStationDeploymentResolver {
 			new ResetRescueStationsCommand(organizationId),
 		);
 		return this.queryBus.execute<
-			GetDeploymentsQuery,
+			GetRescueStationDeploymentsQuery,
 			RescueStationDeploymentEntity[]
-		>(new GetDeploymentsQuery(organizationId));
+		>(new GetRescueStationDeploymentsQuery(organizationId));
 	}
 
 	@Mutation(() => RescueStationDeploymentViewModel)
@@ -137,30 +132,12 @@ export class RescueStationDeploymentResolver {
 			'rescueStationNoteUpdated',
 			{
 				filter: ({ orgId }) => orgId === organizationId,
-				map: ({ rescueStationId }) =>
+				map: ({ deploymentId }) =>
 					this.queryBus.execute(
-						new GetRescueStationDeploymentQuery(
-							organizationId,
-							rescueStationId,
-						),
+						new GetRescueStationDeploymentQuery(organizationId, deploymentId),
 					),
 			},
 		);
-	}
-}
-
-@Resolver(() => DeploymentUnit)
-export class DeploymentUnitResolver {
-	@ResolveField()
-	async unit(
-		@Parent() { unit }: DeploymentUnit,
-		@Context()
-		{ loadersProvider }: { loadersProvider: DataLoaderContextProvider },
-	): Promise<UnitViewModel> {
-		const loader = loadersProvider.getLoader<string, UnitViewModel>(
-			UNITS_DATA_LOADER,
-		);
-		return loader.load(unit.id);
 	}
 }
 
@@ -184,20 +161,5 @@ export class RescueStationDeploymentDefaultUnitsResolver {
 			throw error;
 		}
 		return res as UnitViewModel[];
-	}
-}
-
-@Resolver(() => DeploymentAlertGroup)
-export class DeploymentAlertGroupResolver {
-	@ResolveField()
-	async alertGroup(
-		@Parent() { alertGroup }: DeploymentAlertGroup,
-		@Context()
-		{ loadersProvider }: { loadersProvider: DataLoaderContextProvider },
-	): Promise<AlertGroupViewModel> {
-		const loader = loadersProvider.getLoader<string, AlertGroupViewModel>(
-			ALERT_GROUPS_DATA_LOADER,
-		);
-		return loader.load(alertGroup.id);
 	}
 }

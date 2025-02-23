@@ -24,7 +24,7 @@ export class DeploymentAssignmentService {
 	 * Sets the assignments of a deployment by completely removing all previous assignments and assigning the new units and alert groups.
 	 * Keeps units of alert groups that are not assigned to the deployment in their old deployment but without the alert group assignment.
 	 * @param orgId The organization id.
-	 * @param deploymentId The deployment id to assign the units and alert groups to.
+	 * @param deploymentId The foreign id to assign the units and alert groups to.
 	 * @param unitIds The unit ids to assign to the deployment.
 	 * @param alertGroups The alert groups with their respective unit ids to assign to the deployment.
 	 * @param uow An optional unit of work.

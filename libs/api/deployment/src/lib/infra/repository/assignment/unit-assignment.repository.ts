@@ -35,6 +35,7 @@ export class UnitAssignmentRepositoryImpl implements UnitAssignmentRepository {
 					$match: {
 						orgId,
 						entityId: unitId,
+						alertGroupId: { $ne: null },
 					},
 				},
 				{

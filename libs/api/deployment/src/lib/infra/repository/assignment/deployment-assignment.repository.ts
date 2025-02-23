@@ -10,6 +10,7 @@ import {
 	DeploymentAlertGroup,
 	DeploymentUnit,
 } from '../../../core/entity/deployment.entity';
+import { OperationDeploymentEntity } from '../../../core/entity/operation-deplyoment.entity';
 import { RescueStationDeploymentEntity } from '../../../core/entity/rescue-station-deployment.entity';
 import { DeploymentAssignmentRepository } from '../../../core/repository/deployment-assignment.repository';
 import {
@@ -17,6 +18,8 @@ import {
 	DeploymentAssignmentsDocument,
 	UnitAssignmentDocument,
 } from '../../schema/deployment-assignment.schema';
+import { DeploymentType } from '../../schema/deployment-type.enum';
+import { OperationDeploymentDocument } from '../../schema/operation-deployment.schema';
 import { RescueStationDeploymentDocument } from '../../schema/rescue-station-deployment.schema';
 import { DeploymentAlertGroupAggregate } from '../deployment/abstract-deployment.repository';
 
@@ -61,8 +64,8 @@ export class DeploymentAssignmentRepositoryImpl
 	async getAssignment(
 		orgId: string,
 		entityId: string,
-	): Promise<RescueStationDeploymentEntity | null> {
-		const assignment = await this.deploymentAssignmentModel
+	): Promise<RescueStationDeploymentEntity | OperationDeploymentEntity | null> {
+		const assignments = await this.deploymentAssignmentModel
 			.aggregate([
 				{
 					$match: {
@@ -81,12 +84,24 @@ export class DeploymentAssignmentRepositoryImpl
 			])
 			.exec();
 
-		if (assignment.length > 0 && assignment[0].deployment.length > 0) {
-			return this.mapper.map(
-				assignment[0].deployment[0],
-				RescueStationDeploymentDocument,
-				RescueStationDeploymentEntity,
-			);
+		if (assignments.length > 0 && assignments[0].deployment.length > 0) {
+			const assignment = assignments[0].deployment[0];
+			switch (assignment.type) {
+				case DeploymentType.RESCUE_STATION:
+					return this.mapper.map(
+						assignment,
+						RescueStationDeploymentDocument,
+						RescueStationDeploymentEntity,
+					);
+				case DeploymentType.OPERATION:
+					return this.mapper.map(
+						assignment,
+						OperationDeploymentDocument,
+						OperationDeploymentEntity,
+					);
+				default:
+					return null;
+			}
 		}
 
 		return null;

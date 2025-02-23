@@ -19,7 +19,7 @@ import {
 	getAlertGroupIdAsStringByName,
 } from './alert-groups.data';
 import { CollectionData } from './collection-data.model';
-import { getDeploymentByName } from './deployments.data';
+import { getRescueStationDeploymentByName } from './deployments.data';
 import { getOrganizationIdAsStringByName } from './organizations.data';
 import { getUserByUsername } from './test-users';
 import {
@@ -43,9 +43,9 @@ const getUserAsProducer = (
 };
 
 const getRescueStationInformation = (
-	rescueStationName: Parameters<typeof getDeploymentByName>[0],
+	rescueStationName: Parameters<typeof getRescueStationDeploymentByName>[0],
 ) => {
-	const rescueStation = getDeploymentByName(rescueStationName);
+	const rescueStation = getRescueStationDeploymentByName(rescueStationName);
 	return {
 		rescueStationCallSign: rescueStation.callSign,
 		rescueStationId: rescueStation._id.toString(),

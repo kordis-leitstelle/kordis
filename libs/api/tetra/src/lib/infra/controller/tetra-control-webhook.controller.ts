@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
-import { KordisLogger } from '@kordis/api/observability';
+import type { KordisLogger } from '@kordis/api/observability';
 
 import { HandleTetraControlWebhookCommand } from '../../core/command/handle-tetra-control-webhook.command';
 import { UnhandledTetraControlWebhookTypeException } from '../../core/exception/unhandled-tetra-control-webhook-type.exception';

@@ -49,7 +49,7 @@ export class OrganizationGeoSettings {
 }
 
 @ObjectType()
-export class Organization extends BaseEntityModel {
+export class OrganizationEntity extends BaseEntityModel {
 	@IsString()
 	@IsNotEmpty({ message: 'Der Organisationsname darf nicht leer sein.' })
 	@Field()

@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 
 import { DeploymentType } from '../../../libs/api/deployment/src/lib/infra/schema/deployment-type.enum';
+import { OperationDeploymentDocument } from '../../../libs/api/deployment/src/lib/infra/schema/operation-deployment.schema';
 import { RescueStationDeploymentDocument } from '../../../libs/api/deployment/src/lib/infra/schema/rescue-station-deployment.schema';
 import {
 	CollectionData,
@@ -15,7 +16,6 @@ const collectionData = {
 			_id: new Types.ObjectId('65d7e01b4ecd7d5b2d380ca4'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			referenceId: '65d7e01b4ecd7d5b2d380ca4',
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
 			name: 'DLRG Einsatzzentrale HH',
 			type: DeploymentType.RESCUE_STATION,
@@ -44,7 +44,6 @@ const collectionData = {
 			_id: new Types.ObjectId('6615542b3063c832feb732ab'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			referenceId: '6615542b3063c832feb732ab',
 			name: 'DLRG RW Hohendeich',
 			type: DeploymentType.RESCUE_STATION,
 			orgId: getOrganizationIdAsStringByName('Test Organisation'),
@@ -73,7 +72,6 @@ const collectionData = {
 			_id: new Types.ObjectId('661d516bb912a6f426c13dea'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			referenceId: '661d516bb912a6f426c13dea',
 			name: 'DLRG RW Süderelbe',
 			type: DeploymentType.RESCUE_STATION,
 			callSign: 'HH 16/0',
@@ -98,16 +96,25 @@ const collectionData = {
 				subLeaders: 0,
 			},
 		},
+		{
+			_id: new Types.ObjectId('67a3593fc5ffa177a6efe612'),
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			type: DeploymentType.OPERATION,
+			orgId: getOrganizationIdAsStringByName('Test Organisation'),
+			operationId: '663b47a3146d7fbe28ad1e66',
+		},
 	],
-} as const satisfies CollectionData<RescueStationDeploymentDocument>;
+} as const satisfies CollectionData<
+	RescueStationDeploymentDocument | OperationDeploymentDocument
+>;
 
-const {
-	entityFunction: getDeploymentByName,
-	entityIdFunction: getDeploymentIdAsStringByName,
-} = getEntryByFieldFunction(collectionData, 'name');
+const { entityFunction: getRescueStationDeploymentByName } =
+	getEntryByFieldFunction(
+		collectionData as CollectionData<RescueStationDeploymentDocument>,
+		'name',
+	);
 
-export {
-	collectionData as default,
-	getDeploymentByName,
-	getDeploymentIdAsStringByName,
-};
+export { getRescueStationDeploymentByName };
+
+export default collectionData;

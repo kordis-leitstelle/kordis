@@ -37,7 +37,7 @@ use it as follows:
 ```typescript
 
 @Resolver(() => YourType)
-export class DeploymentAlertGroupResolver {
+export class SomeTypeResolver {
 	@ResolveField()
 	async someField(
 		@Parent() { someProperty }: YourType,
