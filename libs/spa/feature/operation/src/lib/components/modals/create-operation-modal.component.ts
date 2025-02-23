@@ -118,6 +118,9 @@ export class CreateOperationModalComponent {
 						alertGroups.setErrors({ noUnitsOrAlertGroups: true });
 						return { noUnitsOrAlertGroups: true };
 					}
+					units.setErrors(null);
+					alertGroups.setErrors(null);
+
 					return null;
 				},
 			],
