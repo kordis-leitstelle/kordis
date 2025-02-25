@@ -54,6 +54,32 @@ export interface OperationInvolvementsRepository {
 	): Promise<void>;
 
 	/**
+	 * Sets the end date for all active involvements (no end date) in an operation.
+	 * @param orgId
+	 * @param operationId
+	 * @param end
+	 * @param uow
+	 */
+	setEndOfAllActive(
+		orgId: string,
+		operationId: string,
+		end: Date,
+		uow?: DbSessionProvider,
+	): Promise<void>;
+
+	/**
+	 * Removes all pending involvements in an operation.
+	 * @param orgId The organization ID.
+	 * @param operationId The operation ID.
+	 * @param uow Optional unit of work for transactional consistency.
+	 */
+	removeAllPending(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<void>;
+
+	/**
 	 * Creates multiple unit involvements within an operation.
 	 * @param orgId The organization ID.
 	 * @param operationId The operation ID.

@@ -87,6 +87,42 @@ export class OperationInvolvementsRepositoryImpl
 		);
 	}
 
+	async removeAllPending(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<void> {
+		const query = this.operationInvolvementModel.deleteMany({
+			orgId,
+			operation: new Types.ObjectId(operationId),
+			isPending: true,
+		});
+
+		await runDbOperation(query, uow);
+	}
+
+	async setEndOfAllActive(
+		orgId: string,
+		operationId: string,
+		end: Date,
+		uow?: DbSessionProvider,
+	): Promise<void> {
+		const query = this.operationInvolvementModel.updateMany(
+			{
+				orgId,
+				operation: new Types.ObjectId(operationId),
+				'involvementTimes.end': null,
+			},
+			{
+				$set: {
+					'involvementTimes.$.end': end,
+				},
+			},
+		);
+
+		await runDbOperation(query, uow);
+	}
+
 	async setEnd(
 		orgId: string,
 		operationId: string,

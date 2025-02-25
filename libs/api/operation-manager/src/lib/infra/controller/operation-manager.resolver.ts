@@ -10,7 +10,7 @@ import {
 } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { LaunchCreateOperationProcessCommand } from '../../core/command/launch-create-operation-process.command';
+import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
 import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
 
@@ -28,7 +28,7 @@ export class OperationManagerResolver {
 	): Promise<OperationViewModel> {
 		try {
 			return await this.commandBus.execute(
-				new LaunchCreateOperationProcessCommand(
+				new LaunchCreateOngoingOperationProcessCommand(
 					reqUser,
 					operationData,
 					await protocolMessageData.asTransformedPayload(),

@@ -1,15 +1,16 @@
-import {
-	CommandBus,
-	CommandHandler,
-	ICommandHandler,
-	QueryBus,
-} from '@nestjs/cqrs';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 
-import { OperationViewModel } from '../../infra/operation.view-model';
+import { UNIT_OF_WORK_SERVICE, UnitOfWorkService } from '@kordis/api/shared';
+
 import { OperationProcessState } from '../entity/operation-process-state.enum';
+import { OperationEndedEvent } from '../event/operation-ended.event';
 import { OperationNotOngoingException } from '../exceptions/operation-not-ongoing.exception';
-import { GetOperationByIdQuery } from '../query/get-operation-by-id.query';
-import { UpdateOperationBaseDataCommand } from './update-operation-base-data.command';
+import {
+	OPERATION_REPOSITORY,
+	OperationRepository,
+} from '../repository/operation.repository';
+import { OperationInvolvementService } from '../service/unit-involvement/operation-involvement.service';
 
 export class EndOngoingOperationCommand {
 	constructor(
@@ -24,8 +25,12 @@ export class EndOngoingOperationHandler
 	implements ICommandHandler<EndOngoingOperationCommand>
 {
 	constructor(
-		private readonly commandBus: CommandBus,
-		private readonly queryBus: QueryBus,
+		@Inject(OPERATION_REPOSITORY)
+		private readonly operationRepository: OperationRepository,
+		@Inject(UNIT_OF_WORK_SERVICE)
+		private readonly uowService: UnitOfWorkService,
+		private readonly involvementService: OperationInvolvementService,
+		private readonly eventBus: EventBus,
 	) {}
 
 	async execute({
@@ -33,19 +38,35 @@ export class EndOngoingOperationHandler
 		operationId,
 		end,
 	}: EndOngoingOperationCommand): Promise<void> {
-		const operation: OperationViewModel = await this.queryBus.execute(
-			new GetOperationByIdQuery(orgId, operationId),
-		);
+		await this.uowService.asTransaction(async (uow) => {
+			const operation = await this.operationRepository.findById(
+				orgId,
+				operationId,
+				uow,
+			);
 
-		if (operation.processState !== OperationProcessState.ON_GOING) {
-			throw new OperationNotOngoingException();
-		}
+			if (operation.processState !== OperationProcessState.ON_GOING) {
+				throw new OperationNotOngoingException();
+			}
 
-		await this.commandBus.execute(
-			new UpdateOperationBaseDataCommand(orgId, operationId, {
+			await this.operationRepository.update(
+				orgId,
+				operationId,
+				{
+					end,
+					processState: OperationProcessState.COMPLETED,
+				},
+				uow,
+			);
+
+			await this.involvementService.endInvolvements(
+				orgId,
+				operationId,
 				end,
-				processState: OperationProcessState.COMPLETED,
-			}),
-		);
+				uow,
+			);
+
+			this.eventBus.publish(new OperationEndedEvent(orgId, operationId));
+		});
 	}
 }

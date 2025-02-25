@@ -14,12 +14,12 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { UnitsPopulateService } from '../service/units-populate.service';
 import {
-	LaunchCreateOperationProcessCommand,
-	LaunchCreateOperationProcessHandler,
-} from './launch-create-operation-process.command';
+	LaunchCreateOngoingOperationProcessCommand,
+	LaunchCreateOngoingOperationProcessHandler,
+} from './launch-create-ongoing-operation-process.command';
 
-describe('LaunchCreateOperationProcessHandler', () => {
-	let handler: LaunchCreateOperationProcessHandler;
+describe('LaunchCreateOngoingOperationProcessHandler', () => {
+	let handler: LaunchCreateOngoingOperationProcessHandler;
 	let commandBusMock: jest.Mocked<CommandBus>;
 	let eventBusMock: jest.Mocked<EventBus>;
 	let unitsPopulateServiceMock: jest.Mocked<UnitsPopulateService>;
@@ -29,7 +29,7 @@ describe('LaunchCreateOperationProcessHandler', () => {
 		eventBusMock = createMock<EventBus>();
 		unitsPopulateServiceMock = createMock<UnitsPopulateService>();
 
-		handler = new LaunchCreateOperationProcessHandler(
+		handler = new LaunchCreateOngoingOperationProcessHandler(
 			commandBusMock,
 			unitsPopulateServiceMock,
 			eventBusMock,
@@ -59,7 +59,7 @@ describe('LaunchCreateOperationProcessHandler', () => {
 			],
 		};
 
-		const command = new LaunchCreateOperationProcessCommand(
+		const command = new LaunchCreateOngoingOperationProcessCommand(
 			requestUser,
 			operationArgs,
 			TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,

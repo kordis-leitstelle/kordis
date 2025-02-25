@@ -5,9 +5,9 @@ import { Observable, filter, map, switchMap, tap } from 'rxjs';
 import { KordisLogger } from '@kordis/api/observability';
 import {
 	GetOperationByIdQuery,
-	OperationCreatedEvent,
 	OperationInvolvementsUpdatedEvent,
 } from '@kordis/api/operation';
+import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
 import { Operation, OperationProcessState } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
@@ -27,7 +27,7 @@ export class OperationDeploymentSaga {
 		events$: Observable<IEvent>,
 	): Observable<ICommand> =>
 		events$.pipe(
-			ofType(OperationCreatedEvent),
+			ofType(OngoingOperationCreatedEvent),
 			filter((event) => event.operation.end == null), // todo: this should not be done, use explicit opngoing operation created
 			map(
 				(event) =>

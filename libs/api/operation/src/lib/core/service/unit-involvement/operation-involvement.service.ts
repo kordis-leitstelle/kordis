@@ -124,6 +124,27 @@ export class OperationInvolvementService {
 		}
 	}
 
+	/*
+		Process of setting the end of an involvement when an operation is ended.
+		If the unit is involved in the operation, it will set the end of the involvement.
+		If the unit is pending, it will remove the pending state.
+	 */
+	async endInvolvements(
+		orgId: string,
+		operationId: string,
+		end: Date,
+		uow: DbSessionProvider,
+	): Promise<void> {
+		await this.involvementsRepository.setEndOfAllActive(
+			orgId,
+			operationId,
+			end,
+			uow,
+		);
+
+		await this.involvementsRepository.removeAllPending(orgId, operationId, uow);
+	}
+
 	private async releaseUnitFromPossibleForeignOperation(
 		orgId: string,
 		unitId: string,

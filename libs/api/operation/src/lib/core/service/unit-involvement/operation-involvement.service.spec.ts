@@ -77,6 +77,28 @@ describe('OperationInvolvementService', () => {
 		expect(mockInvolvementsRepository.createInvolvements).toHaveBeenCalled();
 	});
 
+	it('should end active and pending involvements', async () => {
+		const endDate = new Date();
+		await service.endInvolvements(
+			'org1',
+			'op1',
+			endDate,
+			{} as DbSessionProvider,
+		);
+
+		expect(mockInvolvementsRepository.setEndOfAllActive).toHaveBeenCalledWith(
+			'org1',
+			'op1',
+			endDate,
+			expect.anything(),
+		);
+		expect(mockInvolvementsRepository.removeAllPending).toHaveBeenCalledWith(
+			'org1',
+			'op1',
+			expect.anything(),
+		);
+	});
+
 	it('should throw UnitAlreadyInvolvedException if unit is already involved as pending', async () => {
 		const orgId = 'org1';
 		const operationId = 'op1';

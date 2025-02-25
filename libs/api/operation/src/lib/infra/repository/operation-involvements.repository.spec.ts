@@ -70,6 +70,40 @@ describe('OperationInvolvementsRepositoryImpl', () => {
 		});
 	});
 
+	it('should remove all pending involvements', async () => {
+		const orgId = 'org1';
+		const operationId = '67af349ae5b393f66fc51851';
+
+		await repository.removeAllPending(orgId, operationId);
+
+		expect(mockModel.deleteMany).toHaveBeenCalledWith({
+			orgId,
+			operation: new Types.ObjectId(operationId),
+			isPending: true,
+		});
+	});
+
+	it('should end all active involvements', async () => {
+		const orgId = 'org1';
+		const operationId = '67af349ae5b393f66fc51851';
+		const end = new Date();
+
+		await repository.setEndOfAllActive(orgId, operationId, end);
+
+		expect(mockModel.updateMany).toHaveBeenCalledWith(
+			{
+				orgId,
+				operation: new Types.ObjectId(operationId),
+				'involvementTimes.end': null,
+			},
+			{
+				$set: {
+					'involvementTimes.$.end': end,
+				},
+			},
+		);
+	});
+
 	it('should set pending state', async () => {
 		const orgId = 'org1';
 		const operationId = '67af349ae5b393f66fc51851';

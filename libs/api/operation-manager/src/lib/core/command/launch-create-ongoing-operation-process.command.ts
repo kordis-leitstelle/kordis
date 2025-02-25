@@ -7,7 +7,6 @@ import {
 
 import {
 	CreateOperationCommand,
-	OperationCreatedEvent,
 	OperationViewModel,
 } from '@kordis/api/operation';
 import {
@@ -16,9 +15,10 @@ import {
 } from '@kordis/api/protocol';
 import { AuthUser } from '@kordis/shared/model';
 
+import { OngoingOperationCreatedEvent } from '../event/ongoing-operation-created.event';
 import { UnitsPopulateService } from '../service/units-populate.service';
 
-export class LaunchCreateOperationProcessCommand {
+export class LaunchCreateOngoingOperationProcessCommand {
 	constructor(
 		readonly requestUser: AuthUser,
 		readonly operationData: {
@@ -50,9 +50,9 @@ export class LaunchCreateOperationProcessCommand {
 	) {}
 }
 
-@CommandHandler(LaunchCreateOperationProcessCommand)
-export class LaunchCreateOperationProcessHandler
-	implements ICommandHandler<LaunchCreateOperationProcessCommand>
+@CommandHandler(LaunchCreateOngoingOperationProcessCommand)
+export class LaunchCreateOngoingOperationProcessHandler
+	implements ICommandHandler<LaunchCreateOngoingOperationProcessCommand>
 {
 	constructor(
 		private readonly commandBus: CommandBus,
@@ -64,7 +64,7 @@ export class LaunchCreateOperationProcessHandler
 		operationData,
 		protocolData,
 		requestUser,
-	}: LaunchCreateOperationProcessCommand): Promise<OperationViewModel> {
+	}: LaunchCreateOngoingOperationProcessCommand): Promise<OperationViewModel> {
 		const operation: OperationViewModel = await this.commandBus.execute(
 			new CreateOperationCommand(
 				requestUser,
@@ -78,7 +78,7 @@ export class LaunchCreateOperationProcessHandler
 		);
 
 		this.eventBus.publish(
-			new OperationCreatedEvent(requestUser.organizationId, operation),
+			new OngoingOperationCreatedEvent(requestUser.organizationId, operation),
 		);
 
 		const { assignedUnits, assignedAlertGroups } =

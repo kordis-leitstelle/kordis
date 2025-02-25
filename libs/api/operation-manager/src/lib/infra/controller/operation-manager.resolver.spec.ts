@@ -12,7 +12,7 @@ import {
 } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
-import { LaunchCreateOperationProcessCommand } from '../../core/command/launch-create-operation-process.command';
+import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
 import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
 import { OperationManagerResolver } from './operation-manager.resolver';
@@ -77,7 +77,7 @@ describe('OperationManagerResolver', () => {
 				id: 'someId',
 			});
 			expect(mockCommandBus.execute).toHaveBeenCalledWith(
-				new LaunchCreateOperationProcessCommand(
+				new LaunchCreateOngoingOperationProcessCommand(
 					reqUser,
 					operationArgs,
 					TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
