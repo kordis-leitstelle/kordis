@@ -3,12 +3,13 @@ import { Component, computed, inject, input } from '@angular/core';
 import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 
 @Component({
-	selector: 'krd-name-search-wrapper',
-	template: `
+    selector: 'krd-name-search-wrapper',
+    template: `
 		@if (isVisible()) {
 			<ng-content />
 		}
 	`,
+    standalone: false
 })
 export class NameSearchWrapperComponent {
 	readonly name = input.required<string>();
