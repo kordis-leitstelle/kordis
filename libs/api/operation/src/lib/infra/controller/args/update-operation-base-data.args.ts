@@ -34,27 +34,27 @@ export class UpdateOperationBaseDataInput {
 	@Validate(EndAfterStartValidation)
 	end?: Date | null;
 
-	@ValidateIf((op) => op.commander != null)
+	@ValidateIf((op) => op.commander !== undefined)
 	@IsString()
 	@Field(() => String, { nullable: true })
 	commander?: string;
 
-	@ValidateIf((op) => op.description != null)
+	@ValidateIf((op) => op.description != undefined)
 	@IsString()
 	@Field(() => String, { nullable: true })
 	description?: string;
 
-	@ValidateIf((op) => op.reporter != null)
+	@ValidateIf((op) => op.reporter !== undefined)
 	@IsString()
 	@Field(() => String, { nullable: true })
 	reporter?: string;
 
-	@ValidateIf((op) => op.alarmKeyword != null)
+	@ValidateIf((op) => op.alarmKeyword != undefined)
 	@IsString()
 	@Field(() => String, { nullable: true })
 	alarmKeyword?: string;
 
-	@ValidateIf((op) => op.externalReference != null)
+	@ValidateIf((op) => op.externalReference != undefined)
 	@IsString()
 	@Field(() => String, { nullable: true })
 	externalReference?: string;
@@ -65,13 +65,13 @@ export class UpdateOperationBaseDataInput {
 	@Field(() => OperationLocation, { nullable: true })
 	location?: OperationLocation;
 
-	@ValidateIf((op) => op.categories != null)
+	@ValidateIf((op) => op.categories != undefined)
 	@ValidateNested({ each: true })
 	@Type(() => OperationCategory)
 	@Field(() => [OperationCategory], { nullable: true })
 	categories?: OperationCategory[];
 
-	@ValidateIf((op) => op.patients != null)
+	@ValidateIf((op) => op.patients != undefined)
 	@ValidateNested({ each: true })
 	@Type(() => OperationPatient)
 	@Field(() => [OperationPatient], { nullable: true })
