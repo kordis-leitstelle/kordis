@@ -1,20 +1,8 @@
 import { QueryBus } from '@nestjs/cqrs';
-import {
-	Args,
-	Context,
-	GqlSubscriptionService,
-	Parent,
-	Query,
-	ResolveField,
-	Resolver,
-	Subscription,
-} from '@nestjs/graphql';
+import { Args, Context, Parent, Query, ResolveField, Resolver, Subscription } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import {
-	DataLoaderContextProvider,
-	GraphQLSubscriptionService,
-} from '@kordis/api/shared';
+import { DataLoaderContextProvider, GraphQLSubscriptionService } from '@kordis/api/shared';
 import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -26,7 +14,6 @@ import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.q
 import { ProtocolEntryConnectionBuilder } from '../service/protocol-entry-connection.builder';
 import { ProtocolEntryConnection } from '../view-model/protocol-entry.connection';
 import { ProtocolEntryConnectionArgs } from '../view-model/protocol-entry.connection-args';
-import { ProtocolEntryEdge } from '../view-model/protocol-entry.edge';
 
 @Resolver()
 export class ProtocolEntryResolver {
@@ -42,6 +29,7 @@ export class ProtocolEntryResolver {
 		@RequestUser() reqUser: AuthUser,
 		@Args() connectionArgs: ProtocolEntryConnectionArgs,
 	): Promise<ProtocolEntryConnection> {
+		console.log("args", connectionArgs)
 		const connbuilder = new ProtocolEntryConnectionBuilder(connectionArgs);
 
 		const startingFrom = connbuilder.getStartDate();

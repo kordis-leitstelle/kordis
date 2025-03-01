@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { from, InMemoryCache, split } from '@apollo/client/core';
+import { from, split } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -10,11 +10,7 @@ import { HttpLink } from 'apollo-angular/http';
 import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
 
 import { SSELink } from './sse-link';
-
-// TODO: move to dedicated file
-// TODO: capsule cache in helper function and make cache private
-// https://www.apollographql.com/docs/react/caching/cache-configuration/#customizing-type-policies
-export const cache = new InMemoryCache();
+import { cache } from './cache';
 
 @NgModule({
 	imports: [ApolloModule, CommonModule],
