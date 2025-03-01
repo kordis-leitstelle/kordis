@@ -1,11 +1,13 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import { AutomapperProfile, getMapperToken } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 
 import { BaseMapperProfile } from '@kordis/api/shared';
 
 import { OperationEntity } from '../../core/entity/operation.entity';
 import {
+	InvolvementTime,
 	OperationBaseAddress,
 	OperationCategory,
 	OperationLocation,
@@ -80,7 +82,9 @@ export class OperationProfile extends BaseMapperProfile {
 		return involvements.map((u) => {
 			const involvement = new OperationUnitInvolvement();
 			involvement.unit = { id: u.unitId };
-			involvement.involvementTimes = u.involvementTimes;
+			involvement.involvementTimes = u.involvementTimes.map((time) =>
+				plainToInstance(InvolvementTime, time),
+			);
 			involvement.isPending = u.isPending;
 
 			return involvement;
