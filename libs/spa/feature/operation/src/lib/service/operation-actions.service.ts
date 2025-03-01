@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, TemplateRef, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ApolloError } from '@apollo/client/core';
 import { GraphQLFormattedErrorExtensions } from 'graphql/error';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -16,13 +16,6 @@ export class OperationActionsService {
 	private readonly http = inject(HttpClient);
 	private readonly apiUrl = inject(SHARED_TOKENS.API_URL);
 	private readonly notificationService = inject(NzNotificationService);
-	private notificationTemplates?: {
-		archiveError: TemplateRef<object>;
-	};
-
-	setNotificationTemplates(templates: typeof this.notificationTemplates): void {
-		this.notificationTemplates = templates;
-	}
 
 	// eslint-disable-next-line rxjs/finnish
 	deleteOperation(operationId: string): Observable<boolean> {
@@ -80,17 +73,19 @@ export class OperationActionsService {
 					if (
 						error instanceof ApolloError &&
 						(error.cause?.extensions as GraphQLFormattedErrorExtensions)
-							.code === 'VALIDATION_EXCEPTION' &&
-						this.notificationTemplates?.archiveError
+							.code === 'VALIDATION_EXCEPTION'
 					) {
-						// until https://github.com/NG-ZORRO/ng-zorro-antd/issues/8997 is fixed, we are not able to use 'error' directly, thus, leaving us with a custom template...
-						this.notificationService.template(
-							this.notificationTemplates.archiveError,
+						this.notificationService.error(
+							'Archivierung fehlgeschlagen',
+							`
+								<ul>
+								${((error.cause?.extensions as GraphQLFormattedErrorExtensions).errors as [])
+									.flatMap(({ errors }) => errors)
+									.map((error) => `<li>${error}</li>`)
+									.join('')}
+								</ul>
+							`,
 							{
-								nzData: (
-									(error.cause?.extensions as GraphQLFormattedErrorExtensions)
-										.errors as []
-								).flatMap(({ errors }) => errors),
 								nzDuration: 15 * 1000,
 							},
 						);

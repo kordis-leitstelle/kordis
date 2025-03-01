@@ -1,11 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import {
-	AfterViewInit,
 	ChangeDetectionStrategy,
 	Component,
 	Signal,
-	TemplateRef,
-	ViewChild,
 	computed,
 	inject,
 	signal,
@@ -58,9 +55,7 @@ import { OperationSelectComponent } from './operation-select.component';
 	styleUrl: './operations.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OperationsComponent implements AfterViewInit {
-	@ViewChild('archiveError', { static: false })
-	archiveErrorRef?: TemplateRef<object>;
+export class OperationsComponent {
 	// these signals are for the selection component, the actual selected component which is shown in the tab components is managed in the id state service
 	selectedOperation = signal<Operation | null>(null);
 	readonly selectedOperationId = computed(() => this.selectedOperation()?.id);
@@ -132,13 +127,6 @@ export class OperationsComponent implements AfterViewInit {
 			this.selectedOperationIdStateService.selectedOperationId.set(
 				operations?.[0]?.id,
 			);
-		});
-	}
-
-	ngAfterViewInit(): void {
-		this.operationActionsService.setNotificationTemplates({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			archiveError: this.archiveErrorRef!,
 		});
 	}
 

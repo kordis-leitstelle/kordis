@@ -15,6 +15,7 @@ import { GetOperationByIdsQueryHandler } from '../core/query/get-operations-by-i
 import { GetOperationsByOrgIdHandler } from '../core/query/get-operations-by-org-id.query';
 import { OPERATION_INVOLVEMENT_REPOSITORY } from '../core/repository/operation-involvement.repository';
 import { OPERATION_REPOSITORY } from '../core/repository/operation.repository';
+import { OPERATION_TEMPLATE_RENDERER } from '../core/service/operation-template.renderer';
 import { OperationPdfGenerationService } from '../core/service/pdf/operation-pdf-generation.service';
 import { PDF_GENERATION_SERVICE } from '../core/service/pdf/pdf-generation.service';
 import { SIGN_GENERATOR } from '../core/service/sign-generator/sign-generator.strategy';
@@ -39,6 +40,7 @@ import {
 	OperationInvolvementSchema,
 } from './schema/operation-involvement.schema';
 import { OperationDocument, OperationSchema } from './schema/operation.schema';
+import { OperationTemplateRendererImpl } from './service/operation-pdf.renderer';
 import { PdfGenerationServiceImpl } from './service/pdf-generation.service';
 
 const RESOLVERS = [
@@ -67,6 +69,10 @@ const PROVIDERS = [
 	{
 		provide: PDF_GENERATION_SERVICE,
 		useClass: PdfGenerationServiceImpl,
+	},
+	{
+		provide: OPERATION_TEMPLATE_RENDERER,
+		useClass: OperationTemplateRendererImpl,
 	},
 	OperationInvolvementService,
 	OperationPdfGenerationService,

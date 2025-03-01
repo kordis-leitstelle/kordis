@@ -32,7 +32,7 @@
 					<button
 						nz-button
 						nzType="link"
-						nz-tooltip="Einsatz Archivieren"
+						nz-tooltip="Einsatz archivieren"
 						nzTooltipPlacement="bottom"
 						nz-popconfirm
 						nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz archivieren möchten?"
@@ -84,13 +84,3 @@
 		}
 	</div>
 </div>
-
-<ng-template #archiveError let-errors="data">
-	<b>Der Einsatz konnte nicht archiviert werden.</b> Folgende Fehler sind
-	aufgetreten: <br />
-	<ul>
-		@for (error of errors; track $index) {
-			<li>{{ error }}</li>
-		}
-	</ul>
-</ng-template>

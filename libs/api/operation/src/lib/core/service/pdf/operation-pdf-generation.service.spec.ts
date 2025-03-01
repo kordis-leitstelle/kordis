@@ -19,16 +19,12 @@ import {
 	OperationTemplateRenderer,
 } from '../operation-template.renderer';
 import { OperationPdfGenerationService } from './operation-pdf-generation.service';
-import {
-	PDF_GENERATION_SERVICE,
-	PdfGenerationService,
-} from './pdf-generation.service';
+import { PDF_GENERATION_SERVICE } from './pdf-generation.service';
 
 const CURRENT_DATE = new Date('2025-01-31T17:16:39Z');
 
 describe('OperationPdfGenerationService', () => {
 	let service: OperationPdfGenerationService;
-	let pdfGenerationService: DeepMocked<PdfGenerationService>;
 	let queryBus: DeepMocked<QueryBus>;
 	let operationRenderer: DeepMocked<OperationTemplateRenderer>;
 
@@ -56,7 +52,6 @@ describe('OperationPdfGenerationService', () => {
 		service = module.get<OperationPdfGenerationService>(
 			OperationPdfGenerationService,
 		);
-		pdfGenerationService = module.get(PDF_GENERATION_SERVICE);
 		queryBus = module.get(QueryBus);
 		operationRenderer = module.get(OPERATION_TEMPLATE_RENDERER);
 	});
