@@ -12,7 +12,7 @@ import { FormArray, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { markInvalidFormControlsAsDirty } from '@kordis/spa/core/misc';
 
@@ -57,12 +57,7 @@ export class OperationPatientsTableComponent implements OnDestroy {
 			this.cleanupSubject$.next();
 
 			this.formArray()
-				.valueChanges.pipe(
-					// only trigger change detection if the length of the patients changes (external add)
-					map((v) => v.length),
-					distinctUntilChanged(),
-					takeUntil(this.cleanupSubject$),
-				)
+				.valueChanges.pipe(takeUntil(this.cleanupSubject$))
 				.subscribe(() => cd.detectChanges());
 		});
 	}
