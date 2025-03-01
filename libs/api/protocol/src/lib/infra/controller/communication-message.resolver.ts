@@ -2,10 +2,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import {
-	PresentableValidationException,
-	ValidationException,
-} from '@kordis/api/shared';
+import { PresentableValidationException, ValidationException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
 import { CreateCommunicationMessageCommand } from '../../core/command/create-communication-message.command';
@@ -23,7 +20,6 @@ export class CommunicationMessageResolver {
 		@Args('message') message: string,
 	): Promise<CommunicationMessage> {
 		try {
-			console.log('Here');
 			return await this.commandBus.execute(
 				new CreateCommunicationMessageCommand(
 					new Date(),
@@ -35,7 +31,6 @@ export class CommunicationMessageResolver {
 				),
 			);
 		} catch (error) {
-			console.error(error);
 			if (error instanceof ValidationException) {
 				throw PresentableValidationException.fromCoreValidationException(
 					'Das Funkgespräch enthält ungültige Parameter.',

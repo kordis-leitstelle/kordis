@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export type QueryReturnType<TData> = {
 	$: Observable<TData>;

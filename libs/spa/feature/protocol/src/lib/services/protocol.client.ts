@@ -1,392 +1,73 @@
-import { relayStylePagination } from '@apollo/client/utilities';
-import { Observable, map } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
-import { ProtocolEntryUnion, Query } from '@kordis/shared/model';
 import {
-	GraphqlService,
-	QueryReturnType,
-	cache,
-	gql,
-} from '@kordis/spa/core/graphql';
+	CommunicationMessage,
+	MutationCreateCommunicationMessageArgs,
+	ProtocolEntryUnion,
+	Query,
+} from '@kordis/shared/model';
+import { gql, GraphqlService, QueryReturnType } from '@kordis/spa/core/graphql';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CREATE_COMMUNICATION_MESSAGE, GET_PROTOCOL_ENTRIES_QUERY } from './protocol.query';
 
-const RESCUE_STATION_SIGN_ON_FRAGMENT = gql`
-	fragment RescueStationSignOnMessageFragment on RescueStationSignOnMessage {
-		id
-		orgId
-		createdAt
-		updatedAt
-		time
-		sender {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		searchableText
-		producer {
-			__typename
-			userId
-			firstName
-			lastName
-		}
-		recipient {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		channel
-		payload {
-			__typename
-			rescueStationId
-			rescueStationName
-			rescueStationCallSign
-			strength {
-				__typename
-				leaders
-				subLeaders
-				helpers
-			}
-			units {
-				__typename
-				id
-				name
-				callSign
-			}
-			alertGroups {
-				__typename
-				id
-				name
-				units {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-		}
-	}
-`;
+import './cache-policies';
+import { Injectable } from '@angular/core';
 
-const RESCUE_STATION_UPDATE_FRAGMENT = gql`
-	fragment RescueStationUpdateMessageFragment on RescueStationUpdateMessage {
-		id
-		orgId
-		createdAt
-		updatedAt
-		time
-		sender {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		searchableText
-		producer {
-			__typename
-			userId
-			firstName
-			lastName
-		}
-		recipient {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		channel
-		payload {
-			__typename
-			rescueStationId
-			rescueStationName
-			rescueStationCallSign
-			strength {
-				__typename
-				leaders
-				subLeaders
-				helpers
-			}
-			units {
-				__typename
-				id
-				name
-				callSign
-			}
-			alertGroups {
-				__typename
-				id
-				name
-				units {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-		}
-	}
-`;
-
-const RESCUE_STATION_SIGN_OFF_FRAGMENT = gql`
-	fragment RescueStationSignOffMessageFragment on RescueStationSignOffMessage {
-		__typename
-		id
-		orgId
-		createdAt
-		updatedAt
-		time
-		sender {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		searchableText
-		producer {
-			__typename
-			userId
-			firstName
-			lastName
-		}
-		recipient {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		channel
-		payload {
-			__typename
-			rescueStationId
-			rescueStationName
-			rescueStationCallSign
-		}
-	}
-`;
-
-const COMMUNICATION_FRAGMENT = gql`
-	fragment CommunicationMessageFragment on CommunicationMessage {
-		id
-		orgId
-		createdAt
-		updatedAt
-		time
-		sender {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		searchableText
-		producer {
-			__typename
-			userId
-			firstName
-			lastName
-		}
-		recipient {
-			__typename
-			... on RegisteredUnit {
-				unit {
-					__typename
-					id
-					name
-					callSign
-				}
-			}
-			... on UnknownUnit {
-				name
-			}
-		}
-		channel
-		payload {
-			__typename
-			message
-		}
-	}
-`;
-
-const PROTOCOL_ENTRY_FRAGMENT = gql`
-	${COMMUNICATION_FRAGMENT}
-	${RESCUE_STATION_SIGN_ON_FRAGMENT}
-	${RESCUE_STATION_UPDATE_FRAGMENT}
-	${RESCUE_STATION_SIGN_OFF_FRAGMENT}
-	fragment ProtocolEntryFragment on ProtocolEntryUnion {
-		__typename
-		... on CommunicationMessage {
-			...CommunicationMessageFragment
-		}
-		... on RescueStationSignOnMessage {
-			...RescueStationSignOnMessageFragment
-		}
-		... on RescueStationUpdateMessage {
-			...RescueStationUpdateMessageFragment
-		}
-		... on RescueStationSignOffMessage {
-			...RescueStationSignOffMessageFragment
-		}
-	}
-`;
-
-const GET_PROTOCOL_ENTRIES_QUERY = gql`
-	${COMMUNICATION_FRAGMENT}
-	${RESCUE_STATION_SIGN_ON_FRAGMENT}
-	${RESCUE_STATION_UPDATE_FRAGMENT}
-	${RESCUE_STATION_SIGN_OFF_FRAGMENT}
-	query GetProtocolEntries($after: String, $before: String) {
-		protocolEntries(first: 3, after: $after, before: $before) {
-			pageInfo {
-				hasNextPage
-				hasPreviousPage
-				startCursor
-				endCursor
-				totalEdges
-			}
-			edges {
-				node {
-					__typename
-					... on CommunicationMessage {
-						...CommunicationMessageFragment
-					}
-					... on RescueStationSignOnMessage {
-						...RescueStationSignOnMessageFragment
-					}
-					... on RescueStationUpdateMessage {
-						...RescueStationUpdateMessageFragment
-					}
-					... on RescueStationSignOffMessage {
-						...RescueStationSignOffMessageFragment
-					}
-				}
-				cursor
-			}
-		}
-	}
-`;
-
-cache.policies.addTypePolicies({
-	Query: {
-		fields: {
-			GetProtocolEntries: relayStylePagination(),
-		},
-	},
-});
-
+@Injectable()
 export class ProtocolClient {
-	private query: QueryReturnType<{
+	readonly protocolEntries$: Observable<ProtocolEntryUnion[]>;
+	private startCursor: string | null = null;
+	private endCursor: string | null = null;
+
+	private readonly query: QueryReturnType<{
 		protocolEntries: Query['protocolEntries'];
-	}>; // TODO: get return type from gqlService.query
+	}>;
 
-	protocolEntries$: Observable<ProtocolEntryUnion[]>;
-	cursor: string | null = null;
-
-	constructor(readonly gqlService: GraphqlService) {
+	constructor(private readonly gqlService: GraphqlService) {
 		this.query = gqlService.query(GET_PROTOCOL_ENTRIES_QUERY, {
 			after: null,
 			before: null,
 		});
 
+
 		this.protocolEntries$ = this.query.$.pipe(
-			map((page) => {
-				console.log('Page', page);
-				this.cursor = page.protocolEntries.pageInfo.endCursor ?? null;
-				return page.protocolEntries.edges.map((edge) => edge.node);
+			tap((page) => {
+				this.endCursor = page.protocolEntries.pageInfo.endCursor ?? null;
+				this.startCursor = page.protocolEntries.pageInfo.startCursor ?? null;
 			}),
+			map((page) => page.protocolEntries.edges.map((edge) => edge.node)),
 		);
 
-		this.protocolEntries$.subscribe(console.log);
-
-		this.loadInitialData();
-
-		// this.gqlService
-		// 	.subscribe$(gql`
-		// 		subscription {
-		// 			protocolEntryCreated {
-		// 				__typename
-		// 			}
-		// 		}
-		// 	`)
-		// 	.pipe(takeUntilDestroyed())
-		// 	.subscribe((entity) => {
-		// 		console.log('New protocol entry created', entity);
-		// 		this.query.refresh();
-		// 	});
+		this.gqlService.subscribe$(gql`
+			subscription {
+				protocolEntryCreated {
+					__typename
+				}
+			}
+		`)
+		.pipe(takeUntilDestroyed())
+		.subscribe(() => 	this.loadNew());
 	}
 
-	loadInitialData(): void {}
-
-	loadLatest(): void {
-		// TODO: fetch latest entries and prepend to the list
-	}
-
-	loadMore(): void {
-		console.log('Load more');
+	loadNew(): void {
 		this.query.fetchMore({
 			variables: {
-				after: this.cursor,
+				before: this.startCursor,
 			},
-			// query: GET_PROTOCOL_ENTRIES_QUERY,
-			// variables: {},
 		});
 	}
 
-	// hasMore(): boolean {
-	// 	// return this.pageInfo?.hasNextPage ?? false;
-	// }
+	loadNextPage(): void {
+		this.query.fetchMore({
+			variables: {
+				after: this.endCursor,
+			},
+		});
+	}
+
+	addMessageAsync(args: MutationCreateCommunicationMessageArgs): void{
+		this.gqlService
+			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, args)
+			.subscribe();
+	}
 }

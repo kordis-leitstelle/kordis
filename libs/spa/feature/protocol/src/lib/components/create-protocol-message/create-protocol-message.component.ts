@@ -1,113 +1,139 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
-import {
-	FormControl,
-	FormGroup,
-	NonNullableFormBuilder,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-
-import { MutationCreateCommunicationMessageArgs } from '@kordis/shared/model';
+import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
+import { NzPopoverDirective } from 'ng-zorro-antd/popover';
+import { ProtocolClient } from '../../services/protocol.client';
 
 @Component({
 	selector: 'krd-create-protocol-message',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
+		NzButtonModule,
 		NzFormModule,
 		NzInputModule,
+		NzPopoverDirective,
 		NzSelectModule,
-		NzButtonModule,
+		NzTooltipDirective,
+		ReactiveFormsModule,
 	],
 	template: `
-		<div style="background-color: green">
-			<form
+		<div style='background-color: green'>
+			<div
 				nz-form
-				[nzLayout]="'inline'"
-				[formGroup]="validateForm"
-				(ngSubmit)="submitForm()"
-				class="create-form"
+				nzLayout='inline'
+				[formGroup]='validateForm'
+				class='create-form'
 			>
-				<nz-form-item>
-					<nz-form-control nzErrorTip="Absender benötigt!">
+				<nz-form-item class='unit-input'>
+					<nz-form-control nzErrorTip='Absender benötigt!'>
 						<input
-							formControlName="sender"
+							formControlName='sender'
 							nz-input
 							required
-							placeholder="Von"
+							placeholder='Von'
 						/>
 					</nz-form-control>
 				</nz-form-item>
-				<nz-form-item>
-					<nz-form-control nzErrorTip="Empfänger benötigt!">
+				<nz-form-item class='unit-input'>
+					<nz-form-control nzErrorTip='Empfänger benötigt!'>
 						<input
-							formControlName="recipient"
+							formControlName='recipient'
 							nz-input
 							required
-							placeholder="An"
+							placeholder='An'
+							(keydown)='onRecipientKeyDown($event)'
 						/>
 					</nz-form-control>
 				</nz-form-item>
-				<nz-form-item class="message">
-					<nz-form-control nzErrorTip="Nachricht benötigt!">
-						<input
-							formControlName="message"
-							nz-input
-							required
-							placeholder="Nachricht"
-						/>
-					</nz-form-control>
-				</nz-form-item>
-				<nz-form-item class="channel">
-					<nz-form-control ngErrorTip="Kanal benötigt">
-						<nz-select formControlName="channel">
+				<nz-form-item class='channel-input'>
+					<nz-form-control nzErrorTip='Kanal benötigt'>
+						<nz-select formControlName='channel'>
 							@for (channel of channels; track channel.value) {
 								<nz-option
-									[nzValue]="channel.value"
-									[nzLabel]="channel.label"
-								></nz-option>
+									[nzValue]='channel.value'
+									[nzLabel]='channel.label'
+								/>
 							}
 						</nz-select>
 					</nz-form-control>
 				</nz-form-item>
-				<nz-form-item>
-					<nz-form-control>
-						<button nz-button nzType="primary" [disabled]="!validateForm.valid">
-							Eintragen
-						</button>
-					</nz-form-control>
-				</nz-form-item>
-			</form>
+				<button class='message-btn' nz-button nzType='primary' nz-popover nzPopoverTitle='Nachricht hinzufügen'
+								[(nzPopoverVisible)]='messagePopoverVisible' nzPopoverTrigger='click'
+								[nzPopoverContent]='messagePopover' [disabled]='validateForm.invalid'>
+					Nachricht
+				</button>
+			</div>
+
+			<div class='actions'>
+				<div class='group'>
+					<button nz-button nzType='primary' nzDanger>
+						Neuer Einsatz
+					</button>
+					<button nz-button nzType='primary'>
+						Einsatz beenden
+					</button>
+				</div>
+				<div class='group'>
+					<button nz-tooltip='Einheit zu einem laufenden Einsatz zuordnen' nz-button nzType='primary'>
+						Einheit zuordnen
+					</button>
+					<button nz-tooltip='Einheit aus einem laufenden Einsatz rauslösen' nz-button nzType='primary'>
+						Einheit rauslösen
+					</button>
+				</div>
+				<div class='group'>
+					<button nz-button nzType='primary'>
+						RW ein-/nachmelden
+					</button>
+					<button nz-tooltip='RW an-/ab-/ummelden' nz-button nzType='primary'>
+						RW ummelden
+					</button>
+				</div>
+			</div>
 		</div>
-	`,
+
+		<ng-template #messagePopover>
+			<input nz-input #messageInput (keydown)='onMessageKeyDown($event)' class='message-input' />
+		</ng-template>
+  `,
 	styles: `
 		.create-form {
-			width: 100%;
 			display: flex;
+			padding: 0 var(--base-spacing);
 
-			.message {
-				flex-grow: 1;
+			.unit-input {
+				flex: 3;
 			}
 
-			.channel {
-				min-width: 10em;
+			.channel-input {
+				flex: 2;
 			}
 
-			:last-child {
-				margin-right: 0;
+			.message-btn {
+				flex: 3;
 			}
 		}
-	`,
+
+		.actions {
+			display: flex;
+			gap: var(--base-spacing);
+
+			.group {
+				margin: 0 var(--base-spacing);
+			}
+		}
+
+		.message-input {
+			width: 300px;
+		}
+  `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateProtocolMessageComponent {
-	// TODO: move to backend
-	channels = [
+	readonly channels = Object.freeze([
 		{
 			value: 'D',
 			label: 'Digital',
@@ -133,36 +159,48 @@ export class CreateProtocolMessageComponent {
 			label: 'DLRG-Kanal 3',
 			default: false,
 		},
-	];
-	newMessage = output<MutationCreateCommunicationMessageArgs>();
-
-	validateForm: FormGroup<{
-		sender: FormControl<string>;
-		recipient: FormControl<string>;
-		message: FormControl<string>;
-		channel: FormControl<string>;
-	}> = this.fb.group({
-		sender: ['', [Validators.required]],
-		recipient: ['', [Validators.required]],
-		message: ['', [Validators.required]],
+	]);
+	readonly messagePopoverVisible = signal(false);
+	validateForm = inject(NonNullableFormBuilder).group({
+		sender: ['', Validators.required],
+		recipient: ['', Validators.required],
 		channel: [
 			this.channels.find((channel) => channel.default)?.value ?? '',
-			[Validators.required],
+			Validators.required,
 		],
 	});
+	private readonly messageInput = viewChild<ElementRef>('messageInput');
+	private readonly client = inject(ProtocolClient);
 
-	constructor(private fb: NonNullableFormBuilder) {}
+	onRecipientKeyDown($event: KeyboardEvent): void {
+		if ($event.key === 'Tab' && this.validateForm.valid) {
+			$event.preventDefault();
+			this.messagePopoverVisible.set(true);
+			setTimeout(() => this.messageInput()?.nativeElement.focus());
+		}
+	}
 
-	submitForm(): void {
-		const formValue = this.validateForm.value;
+	onMessageKeyDown($event: KeyboardEvent): void {
+		if($event.key === 'Enter') {
+			this.addProtocolMessage();
+		}
+	}
 
-		this.newMessage.emit({
-			sender: { type: 'UNKNOWN_UNIT', name: formValue.sender },
-			recipient: { type: 'UNKNOWN_UNIT', name: formValue.recipient },
-			message: formValue.message ?? '', // TODO: make sure not empty
-			channel: formValue.channel ?? 'D', // TODO: make sure not empty
+	private addProtocolMessage(): void {
+		const formValue = this.validateForm.getRawValue();
+		this.client.addMessageAsync({
+			sender: {
+				type: 'UNKNOWN_UNIT',
+				name: formValue.sender,
+			},
+			recipient: {
+				type: 'UNKNOWN_UNIT',
+				name: formValue.recipient,
+			},
+			channel: formValue.channel,
+			message: this.messageInput()?.nativeElement.value,
 		});
-
 		this.validateForm.reset();
+		this.messagePopoverVisible.set(false);
 	}
 }
