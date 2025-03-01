@@ -5,6 +5,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import { TetraConfig } from '../../core/entity/tetra-config.entitiy';

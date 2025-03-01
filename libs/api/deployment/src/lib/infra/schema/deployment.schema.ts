@@ -1,4 +1,3 @@
-import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { BaseDocument } from '@kordis/api/shared';
@@ -10,10 +9,7 @@ export abstract class DeploymentDocumentContract
 	extends BaseDocument
 	implements BaseDeploymentDocument
 {
-	@AutoMap()
-	name: string;
 	type: string;
-	referenceId: string;
 }
 
 @Schema({
@@ -22,18 +18,10 @@ export abstract class DeploymentDocumentContract
 	collection: 'deployments',
 })
 export class BaseDeploymentDocument extends BaseDocument {
-	@Prop()
-	name: string;
-
 	@Prop({ type: String, enum: Object.values(DeploymentType) })
 	type: string;
-
-	@Prop({ index: true })
-	referenceId: string;
 }
 
 export const DeploymentSchema = SchemaFactory.createForClass(
 	BaseDeploymentDocument,
 );
-
-DeploymentSchema.index({ orgId: 1, referenceId: 1 }, { unique: true });

@@ -1,0 +1,86 @@
+<div class="operation-container">
+	<div class="header">
+		<div class="select">
+			<krd-operation-select
+				(selectedOperationChange)="onUserSelectedOperation($event?.id)"
+				[(selectedOperation)]="selectedOperation"
+				[operations]="operations()"
+			/>
+		</div>
+
+		<div class="actions">
+			@if (hasOperationSelection()) {
+				@if (actionsLoadingState() === 'DELETE') {
+					<nz-spin nzSimple />
+				} @else {
+					<button
+						nz-button
+						nzType="link"
+						nz-tooltip="Einsatz löschen"
+						nzTooltipPlacement="bottom"
+						nz-popconfirm
+						nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz permanent löschen möchten?"
+						[disabled]="actionsLoadingState() !== null"
+						(nzOnConfirm)="deleteOperation()"
+					>
+						<span nz-icon nzType="delete" nzTheme="outline"></span>
+					</button>
+				}
+				@if (actionsLoadingState() === 'ARCHIVE') {
+					<nz-spin nzSimple />
+				} @else {
+					<button
+						nz-button
+						nzType="link"
+						nz-tooltip="Einsatz archivieren"
+						nzTooltipPlacement="bottom"
+						nz-popconfirm
+						nzPopconfirmTitle="Sind Sie sicher, dass Sie den Einsatz archivieren möchten?"
+						[disabled]="
+							actionsLoadingState() !== null || formStateService.hasError()
+						"
+						(nzOnConfirm)="archiveOperation()"
+					>
+						<span nz-icon nzType="file-zip" nzTheme="outline"></span>
+					</button>
+				}
+				@if (actionsLoadingState() === 'PDF') {
+					<nz-spin nzSimple />
+				} @else {
+					<button
+						nz-button
+						nzType="link"
+						nz-tooltip="Einsatzprotokoll generieren"
+						nzTooltipPlacement="bottom"
+						[disabled]="actionsLoadingState() !== null"
+						(click)="createAndOpenPdf()"
+					>
+						<span nz-icon nzType="file-pdf" nzTheme="outline"></span>
+					</button>
+				}
+				<nz-divider nzType="vertical" />
+			}
+
+			<button
+				(click)="openCreateOperationModal()"
+				nz-button
+				nz-tooltip="Abgeschlossenen Einsatz erstellen"
+				nzType="link"
+			>
+				<span nz-icon nzTheme="outline" nzType="plus"></span>
+			</button>
+		</div>
+	</div>
+	<div class="content">
+		@if (hasOperationSelection()) {
+			<krd-operation-detail />
+		} @else {
+			<div class="no-operation">
+				<nz-empty
+					nzNotFoundImage="simple"
+					nzNotFoundContent="Kein Einsatz ausgewählt"
+				/>
+			</div>
+		}
+	</div>
+</div>

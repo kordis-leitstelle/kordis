@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
 import { BaseModelProfile } from '../models/base-model.mapper-profile';
+import { CoordinateProfile } from '../models/coordinate.mapper-profile';
 import { DataLoaderContainer, GraphQLSubscriptionService } from './graphql';
 import { MongoEncryptionClientProvider } from './mongodb';
 import { MongoEncryptionService } from './mongodb/mongo-encryption.service';
@@ -16,6 +17,7 @@ import {
 	imports: [CqrsModule],
 	providers: [
 		BaseModelProfile,
+		CoordinateProfile,
 		DataLoaderContainer,
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,
@@ -26,6 +28,7 @@ import {
 	exports: [
 		BaseModelProfile,
 		CqrsModule,
+		CoordinateProfile,
 		DataLoaderContainer,
 		GraphQLSubscriptionService,
 		MongoEncryptionClientProvider,

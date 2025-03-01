@@ -41,7 +41,7 @@ describe('ValidatableModel', () => {
 			]);
 		}
 
-		expect(validate).toHaveBeenCalledWith(model);
+		expect(validate).toHaveBeenCalledWith(model, { groups: undefined });
 	});
 
 	it('should not throw any exception when there are no validation errors', async () => {
@@ -49,6 +49,6 @@ describe('ValidatableModel', () => {
 		(validate as jest.Mock).mockResolvedValue([]);
 
 		await expect(model.validOrThrow()).resolves.toBeUndefined();
-		expect(validate).toHaveBeenCalledWith(model);
+		expect(validate).toHaveBeenCalledWith(model, { groups: undefined });
 	});
 });

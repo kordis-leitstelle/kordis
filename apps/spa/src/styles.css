@@ -1,5 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+:host {
+	--row-bg-color: rgba(
+		250,
+		250,
+		250,
+		0.85
+	); /* #fafafa is the background color for table headers in ant */
+}
 
 :root {
 	--base-spacing: 8px;
+}
+
+/* Some global form styles, making the form a bit more compact */
+[nz-form] {
+	.ant-form-item-control-input {
+		min-height: 0; /* making sure that small sized controls do not fill space of a normal size control */
+	}
+
+	.ant-form-item {
+		margin-bottom: var(--base-spacing);
+	}
+
+	.ant-form-item-label {
+		padding: 0;
+	}
+}
+
+.ant-picker,
+.ant-input-number {
+	width: 100%;
+}
+
+/* A smaller table */
+nz-table.krd-small-table {
+	th,
+	td {
+		padding: calc(var(--base-spacing) / 4) calc(var(--base-spacing) / 2) !important;
+	}
+
+	tr:hover > td {
+		background: unset !important;
+	}
+
+	.ant-table-footer {
+		padding: calc(var(--base-spacing) / 2) !important;
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.empty-result {
+		text-align: center;
+	}
 }

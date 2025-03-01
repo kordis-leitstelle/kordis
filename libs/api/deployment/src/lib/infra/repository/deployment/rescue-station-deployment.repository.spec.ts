@@ -56,11 +56,10 @@ describe('RescueStationDeploymentRepositoryImpl', () => {
 
 	it('should find station by id', async () => {
 		const orgId = 'org1';
-		const id = 'id1';
+		const id = '67a895e3298674a23d194ed5';
 		const mockRescueStation = {
 			_id: id,
 			orgId,
-			referenceId: id,
 			defaultUnitIds: ['unitId'],
 		};
 
@@ -82,13 +81,11 @@ describe('RescueStationDeploymentRepositoryImpl', () => {
 			{
 				_id: 'id1',
 				orgId: 'orgId',
-				referenceId: 'id1',
 				defaultUnitIds: ['unitId1'],
 			},
 			{
 				_id: 'id2',
 				orgId: 'orgId',
-				referenceId: 'id2',
 				defaultUnitIds: ['unitId2'],
 			},
 		];

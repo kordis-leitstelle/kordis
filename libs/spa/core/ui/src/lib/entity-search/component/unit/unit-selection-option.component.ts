@@ -20,7 +20,12 @@ import { StatusBadgeComponent } from '../../../status-badge.component';
 				@if (
 					unit().assignment?.__typename === 'EntityRescueStationAssignment'
 				) {
-					Zuordnung: {{ unit().assignment!.name }}
+					Zuordnung: {{ $any(unit().assignment).name }}
+				} @else if (
+					unit().assignment?.__typename === 'EntityOperationAssignment'
+				) {
+					Zuordnung: {{ $any(unit().assignment).operation.alarmKeyword }}
+					{{ $any(unit().assignment).operation.sign }}
 				} @else {
 					Keine Zuordnung
 				}

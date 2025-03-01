@@ -12,7 +12,7 @@ import {
 import { CreateOrganizationCommand } from '../../core/command/create-organization.command';
 import { UpdateOrganizationGeoSettingsCommand } from '../../core/command/update-organization-geo-settings.command';
 import {
-	Organization,
+	OrganizationEntity,
 	OrganizationGeoSettings,
 } from '../../core/entity/organization.entity';
 import { OrganizationNotFoundException } from '../../core/exceptions/organization-not-found.exception';
@@ -46,7 +46,7 @@ describe('OrganizationResolver', () => {
 
 	describe('organization', () => {
 		it('should resolve organization', async () => {
-			const org: Mutable<Organization> = new Organization();
+			const org: Mutable<OrganizationEntity> = new OrganizationEntity();
 			org.id = 'testorg';
 			org.name = 'testorg';
 			org.geoSettings = {
