@@ -28,7 +28,6 @@ export class OperationDeploymentSaga {
 	): Observable<ICommand> =>
 		events$.pipe(
 			ofType(OngoingOperationCreatedEvent),
-			filter((event) => event.operation.end == null), // todo: this should not be done, use explicit opngoing operation created
 			map(
 				(event) =>
 					new CreateOperationDeploymentCommand(

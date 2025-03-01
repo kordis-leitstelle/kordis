@@ -4,10 +4,10 @@ import { Test } from '@nestjs/testing';
 import { lastValueFrom, of, toArray } from 'rxjs';
 
 import {
-	OperationCreatedEvent,
 	OperationInvolvementsUpdatedEvent,
 	OperationViewModel,
 } from '@kordis/api/operation';
+import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
 import { OperationProcessState } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
@@ -33,7 +33,7 @@ describe('OperationDeploymentSaga', () => {
 
 	it('should create a deployment for an ongoing operation', async () => {
 		const events$ = of(
-			new OperationCreatedEvent('org1', {
+			new OngoingOperationCreatedEvent('org1', {
 				id: 'operation1',
 				end: null,
 				unitInvolvements: [{ unit: { id: 'unit1' } }],
