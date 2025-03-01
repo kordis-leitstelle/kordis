@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import Handlebars from 'handlebars';
 
 import {
 	GetOrganizationQuery,
@@ -17,12 +16,12 @@ import { AuthUser } from '@kordis/shared/model';
 import { OperationEntity } from '../../entity/operation.entity';
 import {
 	OperationAlertGroupInvolvement,
-	OperationLocationAddress,
 	OperationUnitInvolvement,
 } from '../../entity/operation.value-objects';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore due to types missing when operation is imported as feature module
-import operationPdfTemplate from './operation-pdf.hbs';
+import {
+	OPERATION_TEMPLATE_RENDERER,
+	OperationTemplateRenderer,
+} from '../operation-template.renderer';
 import {
 	PDF_GENERATION_SERVICE,
 	PdfGenerationService,
@@ -30,16 +29,13 @@ import {
 
 @Injectable()
 export class OperationPdfGenerationService {
-	private readonly operationPdfRenderer: HandlebarsTemplateDelegate;
-
 	constructor(
 		@Inject(PDF_GENERATION_SERVICE)
 		private readonly pdfGenerationService: PdfGenerationService,
 		private readonly queryBus: QueryBus,
-	) {
-		this.registerHandlebarsHelpers();
-		this.operationPdfRenderer = Handlebars.compile(operationPdfTemplate);
-	}
+		@Inject(OPERATION_TEMPLATE_RENDERER)
+		private readonly operationTemplateRenderer: OperationTemplateRenderer,
+	) {}
 
 	async generatePdf(
 		operation: OperationEntity,
@@ -53,7 +49,7 @@ export class OperationPdfGenerationService {
 
 		const generatedBy = `${reqUser.firstName[0]}. ${reqUser.lastName}`;
 
-		const renderedTemplate = this.operationPdfRenderer({
+		const renderedTemplate = this.operationTemplateRenderer.renderTemplate({
 			...operation,
 			generatedAt,
 			generatedBy,
@@ -62,7 +58,6 @@ export class OperationPdfGenerationService {
 
 		return this.pdfGenerationService.generatePdf(renderedTemplate);
 	}
-
 	// as units and alert groups are foreign fields, the domain query will only return their ids. We have to populate them by querying them from their respective domains
 	private async getPopulatedOperation(
 		operation: OperationEntity,
@@ -126,39 +121,5 @@ export class OperationPdfGenerationService {
 				});
 			return alertGroupInvolvement;
 		});
-	}
-
-	private registerHandlebarsHelpers(): void {
-		Handlebars.registerHelper('toDateString', (date: Date) =>
-			date
-				?.toLocaleString('de-DE', {
-					year: 'numeric',
-					month: '2-digit',
-					day: '2-digit',
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit',
-				})
-				.replace(',', ''),
-		);
-		Handlebars.registerHelper('toBirthDateString', (date: Date | null) =>
-			date
-				? `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`
-				: '-',
-		);
-		Handlebars.registerHelper('emptyMark', (value: unknown) => value ?? '-');
-		Handlebars.registerHelper(
-			'toLocationString',
-			(value: OperationLocationAddress) =>
-				[
-					value.name,
-					value.street,
-					value.postalCode && value.city
-						? `${value.postalCode} ${value.city}`
-						: value.postalCode || value.city,
-				]
-					.filter(Boolean)
-					.join(', '),
-		);
 	}
 }

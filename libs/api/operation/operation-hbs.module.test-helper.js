@@ -3,7 +3,7 @@ const path = require('path');
 
 const hbsFilePath = path.resolve(
 	__dirname,
-	'./src/lib/core/service/pdf/operation-pdf.hbs',
+	'./src/lib/infra/service/operation-pdf.hbs',
 );
 
 // as jest can not work with hbs module imports, we create a custom module for testing here which reference to the content of the original hbs
