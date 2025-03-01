@@ -21,7 +21,7 @@ const collectionData: CollectionData<OperationDocument> = {
 			alarmKeyword: 'THWAY',
 			description: 'Ich so, dann so... Unfall',
 			externalReference: 'HELS1234',
-			reporter: 'F',
+			reporter: 'Anforderung',
 			categories: [
 				{
 					name: 'Erste-Hilfe-Leistung',
@@ -59,7 +59,7 @@ const collectionData: CollectionData<OperationDocument> = {
 			alarmKeyword: 'THWAY',
 			description: 'Gar nix gut',
 			externalReference: 'HELS1234',
-			reporter: 'F',
+			reporter: 'Selbstkommer',
 			categories: [
 				{
 					name: 'Erste-Hilfe-Leistung',
