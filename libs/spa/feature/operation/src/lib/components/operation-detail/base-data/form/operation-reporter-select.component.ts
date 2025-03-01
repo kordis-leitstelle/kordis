@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	forwardRef,
+	signal,
+} from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
@@ -41,9 +46,9 @@ const REPORTER_TYPES = Object.freeze([
 			nzAllowClear
 			nzNoAnimation
 			[nzDisabled]="isDisabled()"
-			[(ngModel)]="value"
+			[(ngModel)]="proxyValue"
 			(nzBlur)="onTouch()"
-			(ngModelChange)="onChange($event)"
+			(ngModelChange)="proxiedOnChange($event)"
 		>
 			@for (type of types; track $index) {
 				<nz-option [nzLabel]="type" [nzValue]="type" />
@@ -54,4 +59,13 @@ const REPORTER_TYPES = Object.freeze([
 })
 export class OperationReporterSelectComponent extends ControlValueAccessorBase {
 	readonly types = REPORTER_TYPES;
+	protected readonly proxyValue = signal<string | null>(null); // nz select sets null on clear, we want to keep the empty string
+
+	proxiedOnChange(value: string | null): void {
+		if (value === null) {
+			this.onChange('');
+		} else {
+			this.onChange(value);
+		}
+	}
 }
