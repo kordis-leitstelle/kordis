@@ -49,11 +49,6 @@ export type AlertGroupsFilter = {
 	ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
-export type AssignedAlertGroup = {
-	alertGroupId: Scalars['String']['input'];
-	assignedUnitIds: Array<Scalars['String']['input']>;
-};
-
 export type BBox = {
 	__typename?: 'BBox';
 	bottomRight: Coordinate;
@@ -211,8 +206,6 @@ export type Mutation = {
 	setCurrentAlertGroupUnits: AlertGroup;
 	signInRescueStation: RescueStationDeployment;
 	signOffRescueStation: RescueStationDeployment;
-	/** Updates the assignments of an ongoing operation with a protocol entry. */
-	updateOngoingOperationInvolvements: Operation;
 	updateOperationBaseData: Operation;
 	updateOperationInvolvements: Operation;
 	updateOrganizationGeoSettings: OrganizationEntity;
@@ -295,12 +288,6 @@ export type MutationSignInRescueStationArgs = {
 export type MutationSignOffRescueStationArgs = {
 	protocolMessageData: BaseCreateMessageInput;
 	rescueStationId: Scalars['String']['input'];
-};
-
-export type MutationUpdateOngoingOperationInvolvementsArgs = {
-	assignments: UpdateOngoingAssignmentsInput;
-	operationId: Scalars['String']['input'];
-	protocolMessage: BaseCreateMessageInput;
 };
 
 export type MutationUpdateOperationBaseDataArgs = {
@@ -790,11 +777,6 @@ export type UnitsFilter = {
 export type UnknownUnit = {
 	__typename?: 'UnknownUnit';
 	name: Scalars['String']['output'];
-};
-
-export type UpdateOngoingAssignmentsInput = {
-	assignedAlertGroups: Array<AssignedAlertGroup>;
-	assignedUnitIds: Array<Scalars['String']['input']>;
 };
 
 export type UpdateOperationAlertGroupInvolvementInput = {
