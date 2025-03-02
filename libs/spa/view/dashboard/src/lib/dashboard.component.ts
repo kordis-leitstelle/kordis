@@ -1,14 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import {
-	NzDropDownDirective,
-	NzDropdownMenuComponent,
-} from 'ng-zorro-antd/dropdown';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import {
 	NzContentComponent,
 	NzHeaderComponent,
-	NzLayoutComponent,
+	NzLayoutModule,
 } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -16,6 +13,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 import { TraceComponent } from '@kordis/spa/core/observability';
 import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
+import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 
 @Component({
 	selector: 'krd-dashboard-view',
@@ -24,12 +22,13 @@ import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
 		DeploymentsComponent,
 		NzAvatarModule,
 		NzContentComponent,
-		NzDropDownDirective,
-		NzDropdownMenuComponent,
 		NzHeaderComponent,
-		NzLayoutComponent,
+		NzLayoutModule,
+		NzDropDownModule,
 		NzMenuModule,
 		NzModalModule,
+		ProtocolViewComponent,
+		DeploymentsComponent,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
