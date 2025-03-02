@@ -1,7 +1,4 @@
-import { gql } from '@kordis/spa/core/graphql';
-
-export const ASSIGNMENTS_FRAGMENT = gql`
-	fragment Assignment on EntityAssignment {
+export const ASSIGNMENTS_FIELDS = `
 		__typename
 		... on EntityOperationAssignment {
 			operation {
@@ -13,5 +10,4 @@ export const ASSIGNMENTS_FRAGMENT = gql`
 			id
 			name
 		}
-	}
 `;

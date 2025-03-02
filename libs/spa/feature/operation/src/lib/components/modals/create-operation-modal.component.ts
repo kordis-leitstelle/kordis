@@ -34,6 +34,7 @@ import {
 	AlertGroupSelectionsComponent,
 	PossibleAlertGroupSelectionsService,
 	PossibleUnitSelectionsService,
+	UnitSelectionOptionComponent,
 	UnitsSelectionComponent,
 } from '@kordis/spa/core/ui';
 
@@ -62,6 +63,7 @@ import { OperationDescriptionTextareaComponent } from '../operation-detail/descr
 		UnitsSelectionComponent,
 		DateMaskInputComponent,
 		NzAlertComponent,
+		UnitSelectionOptionComponent,
 	],
 	providers: [
 		PossibleUnitSelectionsService,

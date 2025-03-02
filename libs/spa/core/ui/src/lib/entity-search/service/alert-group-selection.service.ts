@@ -4,7 +4,7 @@ import { TypedDocumentNode } from 'apollo-angular';
 import { AlertGroup, Query } from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
 
-import { ASSIGNMENTS_FRAGMENT } from './assignments.fragment';
+import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
 import { EntitySearchEngine } from './entity-search.service';
 import { EntitySelectionSearchService } from './entity-selection-search.service';
 import { alertGroupMatchesByName } from './match-strategies';
@@ -20,7 +20,6 @@ export class PossibleAlertGroupSelectionsService extends EntitySelectionSearchSe
 	protected override query: TypedDocumentNode<{
 		alertGroups: Query['alertGroups'];
 	}> = gql`
-		${ASSIGNMENTS_FRAGMENT}
 		query {
 			alertGroups {
 				id
@@ -33,11 +32,11 @@ export class PossibleAlertGroupSelectionsService extends EntitySelectionSearchSe
 						status
 					}
 					assignment {
-						...Assignment
+						${ASSIGNMENTS_FIELDS}
 					}
 				}
 				assignment {
-					...Assignment
+					${ASSIGNMENTS_FIELDS}
 				}
 			}
 		}

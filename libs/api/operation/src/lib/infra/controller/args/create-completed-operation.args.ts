@@ -39,10 +39,9 @@ export class CreateOperationInput implements StartEndValidatable {
 	start: Date;
 
 	@IsDate()
-	@ValidateIf((op) => !!op.end)
 	@Validate(EndAfterStartValidation)
-	@Field(() => Date, { nullable: true })
-	end: Date | null;
+	@Field(() => Date)
+	end: Date;
 
 	@IsString()
 	@IsNotEmpty({
@@ -57,14 +56,20 @@ export class CreateOperationInput implements StartEndValidatable {
 	location: OperationLocation;
 
 	@IsString({ each: true })
-	@ValidateIf((op) => !op.involvedAlertGroups?.length)
+	@ValidateIf((op) => !op.assignedAlertGroups?.length)
 	@ArrayNotEmpty({
-		message: 'Die beteiligten Einheiten dürfen nicht leer sein.',
+		message:
+			'Es muss mindestens eine Alarmgruppe oder Einheit zugewiesen werden.',
 	})
 	@Field(() => [String])
 	assignedUnitIds: string[];
 
 	@ValidateNested({ each: true })
+	@ValidateIf((op) => !op.assignedUnitIds?.length)
+	@ArrayNotEmpty({
+		message:
+			'Es muss mindestens eine Alarmgruppe oder Einheit zugewiesen werden.',
+	})
 	@Type(() => CreateOperationInvolvedAlertGroupInput)
 	@Field(() => [CreateOperationInvolvedAlertGroupInput])
 	assignedAlertGroups: CreateOperationInvolvedAlertGroupInput[];

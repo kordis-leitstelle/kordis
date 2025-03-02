@@ -47,7 +47,6 @@ describe('FormStateIndicatorComponent', () => {
 		const warningIcon = fixture.nativeElement.querySelector(
 			'span[nzType="warning"]',
 		);
-		console.log(fixture.nativeElement.innerHTML);
 		expect(warningIcon).toBeTruthy();
 		expect(warningIcon.getAttribute('ng-reflect-directive-title')).toContain(
 			'Error message',

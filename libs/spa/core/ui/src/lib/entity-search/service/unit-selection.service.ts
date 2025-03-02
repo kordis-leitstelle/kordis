@@ -4,7 +4,7 @@ import { TypedDocumentNode } from 'apollo-angular';
 import { Query, Unit } from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
 
-import { ASSIGNMENTS_FRAGMENT } from './assignments.fragment';
+import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
 import { EntitySearchEngine } from './entity-search.service';
 import { EntitySelectionSearchService } from './entity-selection-search.service';
 import { unitMatchesByNameOrCallSign } from './match-strategies';
@@ -18,7 +18,6 @@ export class PossibleUnitSelectionsService extends EntitySelectionSearchService<
 	{ units: Query['units'] }
 > {
 	protected query: TypedDocumentNode<{ units: Query['units'] }> = gql`
-		${ASSIGNMENTS_FRAGMENT}
 		query {
 			units {
 				id
@@ -31,7 +30,7 @@ export class PossibleUnitSelectionsService extends EntitySelectionSearchService<
 					source
 				}
 				assignment {
-					...Assignment
+					${ASSIGNMENTS_FIELDS}
 				}
 			}
 		}

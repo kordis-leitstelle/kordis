@@ -64,7 +64,11 @@
 				<nz-form-control
 					nzErrorTip="Mindestens eine Alarmgruppe oder Einheit muss hinzugefügt werden!"
 				>
-					<krd-units-select [control]="formGroup.controls.units" />
+					<krd-units-select [control]="formGroup.controls.units" >
+						<ng-template let-unit>
+							<krd-unit-selection-option [unit]="unit" />
+						</ng-template>
+					</krd-units-select>
 				</nz-form-control>
 			</nz-form-item>
 		</div>

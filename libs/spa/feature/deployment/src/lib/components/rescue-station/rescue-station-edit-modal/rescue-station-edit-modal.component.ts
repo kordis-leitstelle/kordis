@@ -24,6 +24,7 @@ import {
 	AlertGroupSelectionsComponent,
 	PossibleAlertGroupSelectionsService,
 	PossibleUnitSelectionsService,
+	UnitSelectionOptionComponent,
 	UnitsSelectionComponent,
 } from '@kordis/spa/core/ui';
 
@@ -49,6 +50,7 @@ import { minStrengthValidator } from './validator/min-strength.validator';
 		ReactiveFormsModule,
 		StrengthComponent,
 		UnitsSelectionComponent,
+		UnitSelectionOptionComponent,
 	],
 	templateUrl: './rescue-station-edit-modal.component.html',
 	styleUrl: './rescue-station-edit-modal.component.css',

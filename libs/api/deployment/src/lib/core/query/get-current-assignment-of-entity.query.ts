@@ -24,7 +24,7 @@ export class GetUnitAssignmentHandlerHandler
 		private readonly repository: DeploymentAssignmentRepository,
 	) {}
 
-	async execute({
+	execute({
 		orgId,
 		entityId,
 	}: GetCurrentAssignmentOfEntity): Promise<
