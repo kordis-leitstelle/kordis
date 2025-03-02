@@ -1,11 +1,23 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	signal,
+	viewChild,
+} from '@angular/core';
+import {
+	NonNullableFormBuilder,
+	ReactiveFormsModule,
+	Validators,
+} from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
-import { NzPopoverDirective } from 'ng-zorro-antd/popover';
+
 import { ProtocolClient } from '../../services/protocol.client';
 
 @Component({
@@ -20,54 +32,62 @@ import { ProtocolClient } from '../../services/protocol.client';
 		ReactiveFormsModule,
 	],
 	template: `
-		<div style='background-color: green'>
+		<div>
 			<div
 				nz-form
-				nzLayout='inline'
-				[formGroup]='validateForm'
-				class='create-form'
+				nzLayout="inline"
+				[formGroup]="validateForm"
+				class="create-form"
 			>
-				<nz-form-item class='unit-input'>
-					<nz-form-control nzErrorTip='Absender benötigt!'>
+				<nz-form-item class="unit-input">
+					<nz-form-control nzErrorTip="Absender benötigt!">
 						<input
-							formControlName='sender'
+							formControlName="sender"
 							nz-input
 							required
-							placeholder='Von'
+							placeholder="Von"
 						/>
 					</nz-form-control>
 				</nz-form-item>
-				<nz-form-item class='unit-input'>
-					<nz-form-control nzErrorTip='Empfänger benötigt!'>
+				<nz-form-item class="unit-input">
+					<nz-form-control nzErrorTip="Empfänger benötigt!">
 						<input
-							formControlName='recipient'
+							formControlName="recipient"
 							nz-input
 							required
-							placeholder='An'
-							(keydown)='onRecipientKeyDown($event)'
+							placeholder="An"
+							(keydown)="onRecipientKeyDown($event)"
 						/>
 					</nz-form-control>
 				</nz-form-item>
-				<nz-form-item class='channel-input'>
-					<nz-form-control nzErrorTip='Kanal benötigt'>
-						<nz-select formControlName='channel'>
+				<nz-form-item class="channel-input">
+					<nz-form-control nzErrorTip="Kanal benötigt">
+						<nz-select formControlName="channel">
 							@for (channel of channels; track channel.value) {
 								<nz-option
-									[nzValue]='channel.value'
-									[nzLabel]='channel.label'
+									[nzValue]="channel.value"
+									[nzLabel]="channel.label"
 								/>
 							}
 						</nz-select>
 					</nz-form-control>
 				</nz-form-item>
-				<button class='message-btn' nz-button nzType='primary' nz-popover nzPopoverTitle='Nachricht hinzufügen'
-								[(nzPopoverVisible)]='messagePopoverVisible' nzPopoverTrigger='click'
-								[nzPopoverContent]='messagePopover' [disabled]='validateForm.invalid'>
+				<button
+					class="message-btn"
+					nz-button
+					nzType="primary"
+					nz-popover
+					nzPopoverTitle="Nachricht hinzufügen"
+					[(nzPopoverVisible)]="messagePopoverVisible"
+					nzPopoverTrigger="click"
+					[nzPopoverContent]="messagePopover"
+					[disabled]="validateForm.invalid"
+				>
 					Nachricht
 				</button>
 			</div>
 
-			<div class='actions'>
+			<!-- <div class='actions'>
 				<div class='group'>
 					<button nz-button nzType='primary' nzDanger>
 						Neuer Einsatz
@@ -92,13 +112,27 @@ import { ProtocolClient } from '../../services/protocol.client';
 						RW ummelden
 					</button>
 				</div>
-			</div>
+			</div> -->
 		</div>
 
 		<ng-template #messagePopover>
-			<input nz-input #messageInput (keydown)='onMessageKeyDown($event)' class='message-input' />
+			<div nz-form nzLayout="inline">
+				<nz-form-item>
+					<input
+						nz-input
+						#messageInput
+						(keydown)="onMessageKeyDown($event)"
+						class="message-input"
+					/>
+				</nz-form-item>
+				<nz-form-item>
+					<button nz-button nzType="primary" (click)="addProtocolMessage()">
+						Absenden
+					</button>
+				</nz-form-item>
+			</div>
 		</ng-template>
-  `,
+	`,
 	styles: `
 		.create-form {
 			display: flex;
@@ -129,7 +163,7 @@ import { ProtocolClient } from '../../services/protocol.client';
 		.message-input {
 			width: 300px;
 		}
-  `,
+	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateProtocolMessageComponent {
@@ -181,12 +215,12 @@ export class CreateProtocolMessageComponent {
 	}
 
 	onMessageKeyDown($event: KeyboardEvent): void {
-		if($event.key === 'Enter') {
+		if ($event.key === 'Enter') {
 			this.addProtocolMessage();
 		}
 	}
 
-	private addProtocolMessage(): void {
+	addProtocolMessage(): void {
 		const formValue = this.validateForm.getRawValue();
 		this.client.addMessageAsync({
 			sender: {
