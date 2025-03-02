@@ -9,8 +9,8 @@ import { HttpLink } from 'apollo-angular/http';
 
 import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
 
-import { SSELink } from './sse-link';
 import { cache } from './cache';
+import { SSELink } from './sse-link';
 
 @NgModule({
 	imports: [ApolloModule, CommonModule],
