@@ -19,7 +19,6 @@ import { RescueStationMessageComponent } from './rescue-station-message.componen
 
 @Component({
 	selector: 'krd-protocol-table',
-	standalone: true,
 	imports: [
 		NzTableFullHeightDirective,
 		NzTableModule,
