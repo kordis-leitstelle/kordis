@@ -9,13 +9,19 @@ import { IsLatitude, IsLongitude } from 'class-validator';
 export class Coordinate {
 	@Field(() => Float)
 	@Prop()
-	@IsLatitude({ message: 'Der Wert muss ein gültiger Längengrad sein' })
+	@IsLatitude({
+		message: 'Der Wert muss ein gültiger Längengrad sein',
+		always: true,
+	})
 	@AutoMap()
 	lat: number;
 
 	@Field(() => Float)
 	@Prop()
-	@IsLongitude({ message: 'Der Wert muss ein gültiger Breitengrad sein' })
+	@IsLongitude({
+		message: 'Der Wert muss ein gültiger Breitengrad sein',
+		always: true,
+	})
 	@AutoMap()
 	lon: number;
 }
