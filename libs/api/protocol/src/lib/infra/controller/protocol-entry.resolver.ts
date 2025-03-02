@@ -1,8 +1,19 @@
 import { QueryBus } from '@nestjs/cqrs';
-import { Args, Context, Parent, Query, ResolveField, Resolver, Subscription } from '@nestjs/graphql';
+import {
+	Args,
+	Context,
+	Parent,
+	Query,
+	ResolveField,
+	Resolver,
+	Subscription,
+} from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import { DataLoaderContextProvider, GraphQLSubscriptionService } from '@kordis/api/shared';
+import {
+	DataLoaderContextProvider,
+	GraphQLSubscriptionService,
+} from '@kordis/api/shared';
 import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -29,7 +40,6 @@ export class ProtocolEntryResolver {
 		@RequestUser() reqUser: AuthUser,
 		@Args() connectionArgs: ProtocolEntryConnectionArgs,
 	): Promise<ProtocolEntryConnection> {
-		console.log("args", connectionArgs)
 		const connbuilder = new ProtocolEntryConnectionBuilder(connectionArgs);
 
 		const startingFrom = connbuilder.getStartDate();
@@ -55,16 +65,12 @@ export class ProtocolEntryResolver {
 	protocolEntryCreated(
 		@RequestUser() { organizationId }: AuthUser,
 	): AsyncIterableIterator<ProtocolEntryBase> {
-		console.log('Subscription');
 		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
 			ProtocolEntryCreatedEvent,
 			'protocolEntryCreated',
 			{
 				filter: ({ orgId }) => orgId === organizationId,
-				map: (prop) => {
-					console.log('new subscription return', prop);
-					return prop.protocolEntry;
-				},
+				map: (prop) => prop.protocolEntry,
 			},
 		);
 	}
