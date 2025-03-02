@@ -71,7 +71,7 @@ export class ProtocolMessageEntryBaseDocument extends ProtocolEntryBaseDocument 
 	channel: string;
 
 	@Prop()
-	override producer: UserProducerDocument;
+	declare producer: UserProducerDocument;
 }
 
 export const ProtocolMessageEntryBaseSchema = SchemaFactory.createForClass(

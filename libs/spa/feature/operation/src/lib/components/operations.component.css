@@ -1,0 +1,35 @@
+.operation-container {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+
+	.select {
+		width: 200px;
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+
+		span[nz-icon] {
+			font-size: 20px;
+		}
+	}
+}
+
+.content {
+	flex-grow: 1;
+	overflow-y: auto;
+}
+
+.no-operation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}

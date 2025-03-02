@@ -7,7 +7,7 @@ import { BaseMapperProfile, Coordinate } from '@kordis/api/shared';
 
 import {
 	BBox as BBoxEntity,
-	Organization as OrganizationEntity,
+	OrganizationEntity,
 	OrganizationGeoSettings as OrganizationGeoSettingsEntity,
 } from '../core/entity/organization.entity';
 import {

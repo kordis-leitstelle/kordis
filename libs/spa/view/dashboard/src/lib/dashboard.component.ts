@@ -1,34 +1,40 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import {
+	NzDropDownDirective,
+	NzDropdownMenuComponent,
+} from 'ng-zorro-antd/dropdown';
 import {
 	NzContentComponent,
 	NzHeaderComponent,
-	NzLayoutModule,
+	NzLayoutComponent,
 } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { async } from 'rxjs';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 import { TraceComponent } from '@kordis/spa/core/observability';
 import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
+import { OperationsComponent } from '@kordis/spa/feature/operation';
 import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 
 @Component({
 	selector: 'krd-dashboard-view',
 	imports: [
-		CommonModule,
 		DeploymentsComponent,
 		NzAvatarModule,
 		NzContentComponent,
+		NzDropDownDirective,
+		NzDropdownMenuComponent,
 		NzHeaderComponent,
-		NzLayoutModule,
-		NzDropDownModule,
+		NzLayoutComponent,
 		NzMenuModule,
 		NzModalModule,
+		OperationsComponent,
 		ProtocolViewComponent,
-		DeploymentsComponent,
+		AsyncPipe,
 	],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
@@ -36,6 +42,7 @@ import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 })
 @TraceComponent()
 export class DashboardComponent {
+	protected readonly async = async;
 	private readonly authService = inject(AUTH_SERVICE);
 	readonly user$ = this.authService.user$;
 	private readonly modal = inject(NzModalService);

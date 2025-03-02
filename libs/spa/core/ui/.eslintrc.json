@@ -19,7 +19,8 @@
 				"@angular-eslint/component-selector": [
 					"error",
 					{ "type": "element", "prefix": "krd", "style": "kebab-case" }
-				]
+				],
+				"@angular-eslint/prefer-standalone": "off"
 			}
 		},
 		{

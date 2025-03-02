@@ -10,6 +10,7 @@ export abstract class PresentableException
 	implements GraphqlErrorConvertable
 {
 	abstract code: string;
+	furtherExtensions?: Record<string, unknown>;
 
 	protected constructor(message: string) {
 		super(message);
@@ -20,6 +21,7 @@ export abstract class PresentableException
 			message: this.message,
 			extensions: {
 				code: this.code,
+				...this.furtherExtensions,
 			},
 		};
 	}

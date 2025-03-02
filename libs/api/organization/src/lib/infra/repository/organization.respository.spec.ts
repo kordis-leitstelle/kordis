@@ -15,7 +15,7 @@ import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
 import {
 	BBox,
-	Organization as OrganizationEntity,
+	OrganizationEntity,
 	OrganizationGeoSettings,
 } from '../../core/entity/organization.entity';
 import {

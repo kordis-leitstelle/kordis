@@ -15,6 +15,9 @@ import {
 } from './infra/controller/protocol-entry.resolver';
 import { ImplProtocolEntryRepository } from './infra/repository/protocol-entry.repository';
 import { CommunicationMessageSchema } from './infra/schema/communication/communication-message.schema';
+import { OperationAssignmentsUpdatedMessageSchema } from './infra/schema/operation/operation-assignments-updated-message.schema';
+import { OperationEndedMessageSchema } from './infra/schema/operation/operation-ended-message.schema';
+import { OperationStartedMessageSchema } from './infra/schema/operation/operation-started-message.schema';
 import {
 	ProtocolEntryBaseDocument,
 	ProtocolEntryBaseSchema,
@@ -23,6 +26,14 @@ import { ProtocolEntryType } from './infra/schema/protocol-entry-type';
 import { RescueStationSignOffMessageSchema } from './infra/schema/rescue-station/rescue-station-sign-off-message.schema';
 import { RescueStationSignOnMessageSchema } from './infra/schema/rescue-station/rescue-station-sign-on-message.schema';
 import { RescueStationUpdateMessageSchema } from './infra/schema/rescue-station/rescue-station-updated-message.schema';
+import { OperationMessageAssignmentsDocumentProfile } from './mapper-profile/operation/operation-assignments-message-document.mapper-profile';
+import { OperationMessageAssignmentsEntityProfile } from './mapper-profile/operation/operation-assignments-message-entity.mapper-profile';
+import { OperationMessageAssignmentsUpdatedDocumentProfile } from './mapper-profile/operation/operation-assignments-updated-message-document.mapper-profile';
+import { OperationMessageAssignmentsUpdatedEntityProfile } from './mapper-profile/operation/operation-assignments-updated-message-entity.mapper-profile';
+import { OperationEndedMessageDocumentProfile } from './mapper-profile/operation/operation-ended-message-document.mapper-profile';
+import { OperationEndedMessagePayloadDocumentProfile } from './mapper-profile/operation/operation-ended-message-entity.mapper-profile';
+import { OperationStartedMessagePayloadDocumentProfile } from './mapper-profile/operation/operation-started-message-document.mapper-profile';
+import { OperationStartedMessagePayloadEntityProfile } from './mapper-profile/operation/operation-started-message-entity.mapper-profile';
 import { ProducerPartialProfile } from './mapper-profile/producer-partial.mapper-profile';
 import {
 	CommunicationMessageDocumentProfile,
@@ -50,6 +61,8 @@ import { RescueStationUpdateMessageEntityProfile } from './mapper-profile/rescue
 import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile';
 
 const MAPPER_PROFILES = [
+	OperationStartedMessagePayloadEntityProfile,
+	OperationStartedMessagePayloadDocumentProfile,
 	CommunicationMessageDocumentProfile,
 	CommunicationMessagePayloadDocumentProfile,
 	CommunicationMessagePayloadProfile,
@@ -67,6 +80,14 @@ const MAPPER_PROFILES = [
 	RescueStationUpdateMessageDocumentProfile,
 	RescueStationUpdateMessageEntityProfile,
 	UnitPartialProfile,
+	OperationMessageAssignmentsDocumentProfile,
+	OperationMessageAssignmentsEntityProfile,
+	OperationMessageAssignmentsUpdatedDocumentProfile,
+	OperationMessageAssignmentsUpdatedEntityProfile,
+	OperationEndedMessageDocumentProfile,
+	OperationEndedMessagePayloadDocumentProfile,
+	OperationStartedMessagePayloadDocumentProfile,
+	OperationStartedMessagePayloadEntityProfile,
 ];
 const COMMAND_HANDLERS = [
 	CreateCommunicationMessageHandler,
@@ -103,6 +124,18 @@ const RESOLVERS = [
 					{
 						name: ProtocolEntryType.RESCUE_STATION_UPDATE_ENTRY,
 						schema: RescueStationUpdateMessageSchema,
+					},
+					{
+						name: ProtocolEntryType.OPERATION_STARTED_ENTRY,
+						schema: OperationStartedMessageSchema,
+					},
+					{
+						name: ProtocolEntryType.OPERATION_ASSIGNMENTS_UPDATED_ENTRY,
+						schema: OperationAssignmentsUpdatedMessageSchema,
+					},
+					{
+						name: ProtocolEntryType.OPERATION_ENDED_ENTRY,
+						schema: OperationEndedMessageSchema,
 					},
 				],
 			},

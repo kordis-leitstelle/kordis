@@ -15,7 +15,7 @@ import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { AlertGroup, Unit } from '@kordis/shared/model';
 
 import { UnitSelectionOptionComponent } from '../unit/unit-selection-option.component';
-import { UnitsSelectComponent } from '../unit/units-select.component';
+import { UnitsSelectionComponent } from '../unit/units-selection.component';
 
 @Component({
 	selector: 'krd-alert-group-selection',
@@ -24,7 +24,7 @@ import { UnitsSelectComponent } from '../unit/units-select.component';
 		NzFormItemComponent,
 		NzIconDirective,
 		UnitSelectionOptionComponent,
-		UnitsSelectComponent,
+		UnitsSelectionComponent,
 	],
 	template: `
 		<div class="alert-group-header">
@@ -65,7 +65,7 @@ export class AlertGroupSelectionComponent {
 	>();
 	readonly removed = output<void>();
 
-	private readonly unitSelectionEle = viewChild(UnitsSelectComponent);
+	private readonly unitSelectionEle = viewChild(UnitsSelectionComponent);
 
 	removeAlertGroup(): void {
 		this.removed.emit();

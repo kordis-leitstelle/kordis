@@ -16,7 +16,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
 import { ProtocolClient } from '../../services/protocol.client';
 
@@ -28,7 +27,6 @@ import { ProtocolClient } from '../../services/protocol.client';
 		NzInputModule,
 		NzPopoverDirective,
 		NzSelectModule,
-		NzTooltipDirective,
 		ReactiveFormsModule,
 	],
 	template: `

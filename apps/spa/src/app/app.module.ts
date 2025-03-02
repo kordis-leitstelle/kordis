@@ -12,7 +12,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/core/auth';
+import { GeocodingModule } from '@kordis/spa/core/geocoding';
 import { GraphqlModule } from '@kordis/spa/core/graphql';
+import { SHARED_TOKENS } from '@kordis/spa/core/misc';
 import {
 	NoopObservabilityModule,
 	SentryObservabilityModule,
@@ -48,6 +50,9 @@ registerLocaleData(de);
 					environment.releaseVersion,
 				)
 			: NoopObservabilityModule.forRoot(),
+		environment.maptilerKey
+			? GeocodingModule.forRoot(environment.maptilerKey)
+			: [],
 		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: !isDevMode(),
 			// Register the ServiceWorker as soon as the application is stable
@@ -57,6 +62,7 @@ registerLocaleData(de);
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: de_DE },
+		{ provide: SHARED_TOKENS.API_URL, useValue: environment.apiUrl },
 		provideHttpClient(withInterceptorsFromDi()),
 	],
 })

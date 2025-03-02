@@ -1,21 +1,29 @@
 import { AutoMap } from '@automapper/classes';
 import { Field, Float, InputType, ObjectType } from '@nestjs/graphql';
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsLatitude, IsLongitude } from 'class-validator';
 
+@Schema({ _id: false })
 @ObjectType()
-@Schema()
 @InputType('CoordinateInput')
 export class Coordinate {
 	@Field(() => Float)
 	@Prop()
-	@IsLatitude({ message: 'Der Wert muss ein gültiger Längengrad sein.' })
+	@IsLatitude({
+		message: 'Der Wert muss ein gültiger Längengrad sein',
+		always: true,
+	})
 	@AutoMap()
 	lat: number;
 
 	@Field(() => Float)
 	@Prop()
-	@IsLongitude({ message: 'Der Wert muss ein gültiger Breitengrad sein.' })
+	@IsLongitude({
+		message: 'Der Wert muss ein gültiger Breitengrad sein',
+		always: true,
+	})
 	@AutoMap()
 	lon: number;
 }
+
+export const CoordinatesSchema = SchemaFactory.createForClass(Coordinate);

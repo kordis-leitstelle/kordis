@@ -4,7 +4,7 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { KordisLogger } from '@kordis/api/observability';
 
 import {
-	Organization,
+	OrganizationEntity,
 	OrganizationGeoSettings,
 } from '../entity/organization.entity';
 import { OrganizationGeoSettingsUpdatedEvent } from '../event/organization-geo-settings-updated.event';
@@ -37,7 +37,7 @@ export class UpdateOrganizationGeoSettingsHandler
 
 	async execute(
 		command: UpdateOrganizationGeoSettingsCommand,
-	): Promise<Organization> {
+	): Promise<OrganizationEntity> {
 		const org = await this.repository.findById(command.orgId);
 
 		if (!org) {

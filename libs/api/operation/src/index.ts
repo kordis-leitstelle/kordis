@@ -1,0 +1,12 @@
+export * from './lib/infra/operation.module';
+export { CreateOperationCommand } from './lib/core/command/create-operation.command';
+export { EndOngoingOperationCommand } from './lib/core/command/end-ongoing-operation.command';
+export { OperationViewModel } from './lib/infra/operation.view-model';
+export { CreateOperationInput } from './lib/infra/controller/args/create-completed-operation.args';
+export { OperationCreatedEvent } from './lib/core/event/operation-created.event';
+export { GetOperationByIdQuery } from './lib/core/query/get-operation-by-id.query';
+export { OperationDeletedEvent } from './lib/core/event/operation-deleted.event';
+export { OngoingOperationEndedEvent } from './lib/core/event/ongoing-operation-ended.event';
+export { OngoingOperationInvolvementsUpdatedEvent } from './lib/core/event/ongoing-operation-involvements-updated.event';
+export { OPERATION_DATA_LOADER } from './lib/operations.data-loader';
+export * from './lib/saga/operation-saga.module';

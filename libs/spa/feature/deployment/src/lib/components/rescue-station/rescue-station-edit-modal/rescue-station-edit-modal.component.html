@@ -10,8 +10,8 @@
 <nz-card>
 	<h4>Funkspruch</h4>
 	<krd-protocol-data
-		focusInitially
 		[formGroup]="formGroup.controls.protocolData"
+		focusInitially
 	/>
 	@if (
 		formGroup.controls.protocolData.dirty &&
@@ -52,7 +52,11 @@
 			<span>Einheiten</span>
 			<krd-units-select
 				[control]="formGroup.controls.rescueStationData.controls.units"
-			/>
+			>
+				<ng-template let-unit>
+					<krd-unit-selection-option [unit]="unit" />
+				</ng-template>
+			</krd-units-select>
 		</div>
 		<div class="form-item">
 			<span>Alarmgruppen</span>

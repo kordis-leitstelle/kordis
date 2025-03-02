@@ -12,7 +12,7 @@
 		justify-content: space-between;
 
 		nz-input-group {
-			width: 230px;
+			width: 400px;
 
 			.reset-icon {
 				cursor: pointer;

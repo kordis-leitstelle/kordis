@@ -1,18 +1,23 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { ResetRescueStationsHandler } from '../core/command/reset-rescue-stations.command';
-import { SignInRescueStationHandler } from '../core/command/sign-in-rescue-station.command';
-import { SignOffRescueStationHandler } from '../core/command/sign-off-rescue-station.command';
-import { UpdateRescueStationNoteHandler } from '../core/command/update-rescue-station-note.command';
-import { UpdateSignedInRescueStationHandler } from '../core/command/update-signed-in-rescue-station.command';
+import { CreateOperationDeploymentHandler } from '../core/command/operation/create-operation-deployment.command';
+import { SetOperationDeploymentAssignmentsHandler } from '../core/command/operation/set-operation-deployment-assignments.command';
+import { ResetRescueStationsHandler } from '../core/command/rescue-station/reset-rescue-stations.command';
+import { SignInRescueStationHandler } from '../core/command/rescue-station/sign-in-rescue-station.command';
+import { SignOffRescueStationHandler } from '../core/command/rescue-station/sign-off-rescue-station.command';
+import { UpdateRescueStationNoteHandler } from '../core/command/rescue-station/update-rescue-station-note.command';
+import { UpdateSignedInRescueStationHandler } from '../core/command/rescue-station/update-signed-in-rescue-station.command';
 import { GetAlertGroupAssignedUnitsHandler } from '../core/query/get-alert-group-assigned-units.query';
 import { GetAlertGroupByUnitIdHandler } from '../core/query/get-alert-group-by-unit-id.query';
 import { GetUnitAssignmentHandlerHandler } from '../core/query/get-current-assignment-of-entity.query';
-import { GetDeploymentsHandler } from '../core/query/get-deployments.query';
+import { GetOperationDeploymentByIdHandler } from '../core/query/get-operation-deployment-by-id.query';
+import { GetOperationDeploymentsHandler } from '../core/query/get-operation-deployments.query';
 import { GetRescueStationDeploymentHandler } from '../core/query/get-rescue-station-deployment.query';
+import { GetRescueStationsDeploymentsHandler } from '../core/query/get-rescue-station-deployments.query';
 import { GetUnassignedEntitiesHandler } from '../core/query/get-unassigned-entities.query';
 import { DEPLOYMENT_ASSIGNMENT_REPOSITORY } from '../core/repository/deployment-assignment.repository';
+import { OPERATION_DEPLOYMENT_REPOSITORY } from '../core/repository/operation-deployment.repository';
 import { RESCUE_STATION_DEPLOYMENT_REPOSITORY } from '../core/repository/rescue-station-deployment.repository';
 import { UNIT_ASSIGNMENT_REPOSITORY } from '../core/repository/unit-assignment.repository';
 import { DeploymentAssignmentService } from '../core/service/deployment-assignment.service';
@@ -24,11 +29,18 @@ import {
 import {
 	DeploymentAlertGroupResolver,
 	DeploymentUnitResolver,
+} from './controller/deployment-unit.resolver';
+import {
+	EntityOperationAssignmentResolver,
+	OperationDeploymentResolver,
+} from './controller/operation-deployment.resolver';
+import {
 	RescueStationDeploymentDefaultUnitsResolver,
 	RescueStationDeploymentResolver,
 } from './controller/rescue-station-deployment.resolver';
 import { DeploymentAggregateProfile } from './mapper/deployment-aggregate.mapper-profile';
 import { DeploymentAssignmentProfile } from './mapper/deployment-assignment.mapper-profile';
+import { OperationDeploymentAggregateProfile } from './mapper/operation-deployment-aggregate.mapper-profile';
 import {
 	RescueStationDeploymentAggregateProfile,
 	RescueStationDeploymentValueObjectProfile,
@@ -36,6 +48,7 @@ import {
 import { RescueStationDtoMapperProfile } from './mapper/rescue-station-dto.mapper-profile';
 import { DeploymentAssignmentRepositoryImpl } from './repository/assignment/deployment-assignment.repository';
 import { UnitAssignmentRepositoryImpl } from './repository/assignment/unit-assignment.repository';
+import { OperationDeploymentRepositoryImpl } from './repository/deployment/operation-deployment.repository';
 import { RescueStationDeploymentRepositoryImpl } from './repository/deployment/rescue-station-deployment.repository';
 import {
 	AlertGroupAssignmentDocument,
@@ -52,6 +65,10 @@ import {
 	DeploymentSchema,
 } from './schema/deployment.schema';
 import {
+	OperationDeploymentDocument,
+	OperationDeploymentSchema,
+} from './schema/operation-deployment.schema';
+import {
 	RescueStationDeploymentDocument,
 	RescueStationDeploymentSchema,
 } from './schema/rescue-station-deployment.schema';
@@ -60,6 +77,10 @@ const REPOSITORIES = [
 	{
 		provide: RESCUE_STATION_DEPLOYMENT_REPOSITORY,
 		useClass: RescueStationDeploymentRepositoryImpl,
+	},
+	{
+		provide: OPERATION_DEPLOYMENT_REPOSITORY,
+		useClass: OperationDeploymentRepositoryImpl,
 	},
 	{
 		provide: DEPLOYMENT_ASSIGNMENT_REPOSITORY,
@@ -71,30 +92,37 @@ const REPOSITORIES = [
 	},
 ];
 const CQRS_HANDLERS = [
-	GetDeploymentsHandler,
-	GetRescueStationDeploymentHandler,
-	SignInRescueStationHandler,
-	SignOffRescueStationHandler,
-	UpdateSignedInRescueStationHandler,
-	GetUnassignedEntitiesHandler,
+	CreateOperationDeploymentHandler,
+	GetAlertGroupAssignedUnitsHandler,
 	GetAlertGroupByUnitIdHandler,
+	GetOperationDeploymentByIdHandler,
+	GetOperationDeploymentsHandler,
+	GetRescueStationDeploymentHandler,
+	GetRescueStationsDeploymentsHandler,
+	GetUnassignedEntitiesHandler,
 	GetUnitAssignmentHandlerHandler,
 	ResetRescueStationsHandler,
-	GetAlertGroupAssignedUnitsHandler,
+	SignInRescueStationHandler,
+	SignOffRescueStationHandler,
+	SetOperationDeploymentAssignmentsHandler,
 	UpdateRescueStationNoteHandler,
+	UpdateSignedInRescueStationHandler,
 ];
 const RESOLVERS = [
+	AlertGroupAssignmentResolver,
+	DeploymentAlertGroupResolver,
+	DeploymentUnitResolver,
+	EntityOperationAssignmentResolver,
+	OperationDeploymentResolver,
+	RescueStationDeploymentDefaultUnitsResolver,
 	RescueStationDeploymentResolver,
 	UnassignedEntitiesResolver,
-	DeploymentUnitResolver,
-	DeploymentAlertGroupResolver,
 	UnitAssignmentResolver,
-	AlertGroupAssignmentResolver,
-	RescueStationDeploymentDefaultUnitsResolver,
 ];
 const MAPPER_PROFILES = [
 	DeploymentAggregateProfile,
 	DeploymentAssignmentProfile,
+	OperationDeploymentAggregateProfile,
 	RescueStationDeploymentAggregateProfile,
 	RescueStationDeploymentValueObjectProfile,
 	RescueStationDtoMapperProfile,
@@ -112,6 +140,11 @@ const DOMAIN_SERVICES = [DeploymentAssignmentService];
 						value: DeploymentType.RESCUE_STATION,
 						name: RescueStationDeploymentDocument.name,
 						schema: RescueStationDeploymentSchema,
+					},
+					{
+						value: DeploymentType.OPERATION,
+						name: OperationDeploymentDocument.name,
+						schema: OperationDeploymentSchema,
 					},
 				],
 			},

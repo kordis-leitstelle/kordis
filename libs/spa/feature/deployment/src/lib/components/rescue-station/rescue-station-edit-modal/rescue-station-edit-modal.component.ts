@@ -5,8 +5,6 @@ import {
 	signal,
 } from '@angular/core';
 import {
-	FormControl,
-	FormGroup,
 	NonNullableFormBuilder,
 	ReactiveFormsModule,
 	Validators,
@@ -19,16 +17,15 @@ import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
+import { RescueStationDeployment, Unit } from '@kordis/shared/model';
+import { alertGroupMinUnitsValidator } from '@kordis/spa/core/misc';
 import {
-	AlertGroup,
-	RescueStationDeployment,
-	Unit,
-} from '@kordis/shared/model';
-import {
+	AlertGroupAssignmentFormGroup,
 	AlertGroupSelectionsComponent,
 	PossibleAlertGroupSelectionsService,
 	PossibleUnitSelectionsService,
-	UnitsSelectComponent,
+	UnitSelectionOptionComponent,
+	UnitsSelectionComponent,
 } from '@kordis/spa/core/ui';
 
 import { ProtocolDataComponent } from './component/protocol-data.component';
@@ -38,13 +35,7 @@ import {
 	RescueStationData,
 	RescueStationEditService,
 } from './service/rescue-station-edit.service';
-import { alertGroupMinUnitsValidator } from './validator/alert-group-min-units.validator';
 import { minStrengthValidator } from './validator/min-strength.validator';
-
-export type AlertGroupAssignmentFormGroup = FormGroup<{
-	alertGroup: FormControl<AlertGroup>;
-	assignedUnits: FormControl<Unit[]>;
-}>;
 
 @Component({
 	selector: 'krd-rescue-station-edit-modal',
@@ -58,7 +49,8 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 		ProtocolDataComponent,
 		ReactiveFormsModule,
 		StrengthComponent,
-		UnitsSelectComponent,
+		UnitsSelectionComponent,
+		UnitSelectionOptionComponent,
 	],
 	templateUrl: './rescue-station-edit-modal.component.html',
 	styleUrl: './rescue-station-edit-modal.component.css',
