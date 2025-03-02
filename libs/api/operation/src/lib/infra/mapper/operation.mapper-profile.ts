@@ -8,6 +8,7 @@ import { BaseMapperProfile } from '@kordis/api/shared';
 import { OperationEntity } from '../../core/entity/operation.entity';
 import {
 	InvolvementTime,
+	OperationAlertGroupInvolvement,
 	OperationBaseAddress,
 	OperationCategory,
 	OperationLocation,
@@ -66,10 +67,12 @@ export class OperationProfile extends BaseMapperProfile {
 				forMember(
 					(d) => d.alertGroupInvolvements,
 					mapFrom((s) =>
-						s.alertGroupInvolvements.map((ag) => ({
-							alertGroup: { id: ag.alertGroupId },
-							unitInvolvements: this.mapUnitInvolvements(ag.unitInvolvements),
-						})),
+						s.alertGroupInvolvements.map((ag) =>
+							plainToInstance(OperationAlertGroupInvolvement, {
+								alertGroup: { id: ag.alertGroupId },
+								unitInvolvements: this.mapUnitInvolvements(ag.unitInvolvements),
+							}),
+						),
 					),
 				),
 			);
