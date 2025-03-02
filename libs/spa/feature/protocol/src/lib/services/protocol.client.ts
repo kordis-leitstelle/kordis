@@ -1,4 +1,6 @@
-import { map, Observable, tap } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, map, tap } from 'rxjs';
 
 import {
 	CommunicationMessage,
@@ -6,12 +8,13 @@ import {
 	ProtocolEntryUnion,
 	Query,
 } from '@kordis/shared/model';
-import { gql, GraphqlService, QueryReturnType } from '@kordis/spa/core/graphql';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CREATE_COMMUNICATION_MESSAGE, GET_PROTOCOL_ENTRIES_QUERY } from './protocol.query';
+import { GraphqlService, QueryReturnType, gql } from '@kordis/spa/core/graphql';
 
 import './cache-policies';
-import { Injectable } from '@angular/core';
+import {
+	CREATE_COMMUNICATION_MESSAGE,
+	GET_PROTOCOL_ENTRIES_QUERY,
+} from './protocol.query';
 
 @Injectable()
 export class ProtocolClient {
@@ -29,7 +32,6 @@ export class ProtocolClient {
 			before: null,
 		});
 
-
 		this.protocolEntries$ = this.query.$.pipe(
 			tap((page) => {
 				this.endCursor = page.protocolEntries.pageInfo.endCursor ?? null;
@@ -38,15 +40,16 @@ export class ProtocolClient {
 			map((page) => page.protocolEntries.edges.map((edge) => edge.node)),
 		);
 
-		this.gqlService.subscribe$(gql`
-			subscription {
-				protocolEntryCreated {
-					__typename
+		this.gqlService
+			.subscribe$(gql`
+				subscription {
+					protocolEntryCreated {
+						__typename
+					}
 				}
-			}
-		`)
-		.pipe(takeUntilDestroyed())
-		.subscribe(() => 	this.loadNew());
+			`)
+			.pipe(takeUntilDestroyed())
+			.subscribe(() => this.loadNew());
 	}
 
 	loadNew(): void {
@@ -65,7 +68,7 @@ export class ProtocolClient {
 		});
 	}
 
-	addMessageAsync(args: MutationCreateCommunicationMessageArgs): void{
+	addMessageAsync(args: MutationCreateCommunicationMessageArgs): void {
 		this.gqlService
 			.mutate$<CommunicationMessage>(CREATE_COMMUNICATION_MESSAGE, args)
 			.subscribe();

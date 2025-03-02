@@ -1,5 +1,6 @@
-import { cache } from '@kordis/spa/core/graphql';
 import { relayStylePagination } from '@apollo/client/utilities';
+
+import { cache } from '@kordis/spa/core/graphql';
 
 cache.policies.addTypePolicies({
 	Query: {

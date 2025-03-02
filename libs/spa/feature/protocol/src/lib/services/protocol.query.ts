@@ -259,7 +259,7 @@ export const GET_PROTOCOL_ENTRIES_QUERY = gql`
 	${RESCUE_STATION_UPDATE_FRAGMENT}
 	${RESCUE_STATION_SIGN_OFF_FRAGMENT}
 	query GetProtocolEntries($after: String, $before: String) {
-		protocolEntries(first: 10, after: $after, before: $before ) {
+		protocolEntries(first: 10, after: $after, before: $before) {
 			pageInfo {
 				hasNextPage
 				hasPreviousPage
@@ -288,7 +288,6 @@ export const GET_PROTOCOL_ENTRIES_QUERY = gql`
 		}
 	}
 `;
-
 
 export const CREATE_COMMUNICATION_MESSAGE = gql`
 	mutation createCommunicationMessage(

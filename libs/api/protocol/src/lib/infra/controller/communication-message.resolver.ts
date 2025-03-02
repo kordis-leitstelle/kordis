@@ -2,7 +2,10 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
-import { PresentableValidationException, ValidationException } from '@kordis/api/shared';
+import {
+	PresentableValidationException,
+	ValidationException,
+} from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
 import { CreateCommunicationMessageCommand } from '../../core/command/create-communication-message.command';

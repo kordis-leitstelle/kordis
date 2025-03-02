@@ -9,7 +9,7 @@ import { UnitUnion } from '@kordis/shared/model';
 	selector: 'krd-unit-chip',
 	imports: [CommonModule, NzTagModule, NzToolTipModule],
 	template: `
-		<ng-container *ngIf='unit() as unit'>
+		<ng-container *ngIf="unit() as unit">
 			<nz-tag>
 				<span nz-icon></span>
 				@switch (unit.__typename) {
@@ -17,14 +17,14 @@ import { UnitUnion } from '@kordis/shared/model';
 						<span>{{ unit.name }}</span>
 					}
 					@case ('RegisteredUnit') {
-						<span nz-tooltip [nzTooltipTitle]='unit.unit.name'>{{
-								unit.unit.callSign
-							}}</span>
+						<span nz-tooltip [nzTooltipTitle]="unit.unit.name">{{
+							unit.unit.callSign
+						}}</span>
 					}
 				}
 			</nz-tag>
 		</ng-container>
-  `,
+	`,
 	styles: ``,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

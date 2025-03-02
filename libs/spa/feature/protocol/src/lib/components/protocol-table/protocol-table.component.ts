@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, output, viewChild } from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	input,
+	output,
+	viewChild,
+} from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
@@ -24,18 +32,18 @@ import { RescueStationMessageComponent } from './rescue-station-message.componen
 	styleUrl: './protocol-table.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProtocolTableComponent implements AfterViewInit{
+export class ProtocolTableComponent implements AfterViewInit {
 	readonly protocolEntries = input.required<ProtocolEntryUnion[]>();
 	readonly reachedBottom = output();
 
-	private readonly sentinelEle = viewChild<ElementRef>("sentinel");
+	private readonly sentinelEle = viewChild<ElementRef>('sentinel');
 
 	ngAfterViewInit(): void {
 		// the observer emits initially, thus, we skip the first one
 		let initialSkip = false;
 		const observer = new IntersectionObserver((entries) => {
 			if (entries[0].isIntersecting && initialSkip) {
-				this.reachedBottom.emit()
+				this.reachedBottom.emit();
 			} else {
 				initialSkip = true;
 			}
