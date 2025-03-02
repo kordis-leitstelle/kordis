@@ -1,0 +1,27 @@
+.time {
+	text-align: center;
+	width: 7em;
+}
+.sender {
+	text-align: right;
+	width: 7em;
+}
+
+.recipient {
+	text-align: left;
+	width: 7em;
+
+	> :first-child::before {
+		content: '→';
+		position: absolute;
+		margin-left: -1.5em;
+	}
+}
+
+.message {
+	/* auto allocate remaining space */
+}
+.channel {
+	text-align: center;
+	width: 3em;
+}

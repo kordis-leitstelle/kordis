@@ -109,7 +109,7 @@ export type CreateOperationInput = {
 	alarmKeyword: Scalars['String']['input'];
 	assignedAlertGroups: Array<CreateOperationInvolvedAlertGroupInput>;
 	assignedUnitIds: Array<Scalars['String']['input']>;
-	end?: InputMaybe<Scalars['DateTime']['input']>;
+	end: Scalars['DateTime']['input'];
 	location: OperationLocationInput;
 	start: Scalars['DateTime']['input'];
 };
@@ -552,7 +552,11 @@ export type ProtocolEntryEdge = {
 	node: ProtocolEntryUnion;
 };
 
-export type ProtocolEntryUnion = CommunicationMessage;
+export type ProtocolEntryUnion =
+	| CommunicationMessage
+	| RescueStationSignOffMessage
+	| RescueStationSignOnMessage
+	| RescueStationUpdateMessage;
 
 export type Query = {
 	__typename?: 'Query';
@@ -702,6 +706,21 @@ export type RescueStationMessageStrength = {
 	subLeaders: Scalars['Float']['output'];
 };
 
+export type RescueStationSignOffMessage = {
+	__typename?: 'RescueStationSignOffMessage';
+	channel: Scalars['String']['output'];
+	createdAt: Scalars['DateTime']['output'];
+	id: Scalars['ID']['output'];
+	orgId: Scalars['String']['output'];
+	payload: RescueStationSignOffMessagePayload;
+	producer: UserProducer;
+	recipient: UnitUnion;
+	searchableText: Scalars['String']['output'];
+	sender: UnitUnion;
+	time: Scalars['DateTime']['output'];
+	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
 export type RescueStationSignOffMessagePayload = {
 	__typename?: 'RescueStationSignOffMessagePayload';
 	rescueStationCallSign: Scalars['String']['output'];
@@ -709,11 +728,41 @@ export type RescueStationSignOffMessagePayload = {
 	rescueStationName: Scalars['String']['output'];
 };
 
+export type RescueStationSignOnMessage = {
+	__typename?: 'RescueStationSignOnMessage';
+	channel: Scalars['String']['output'];
+	createdAt: Scalars['DateTime']['output'];
+	id: Scalars['ID']['output'];
+	orgId: Scalars['String']['output'];
+	payload: RescueStationMessagePayload;
+	producer: UserProducer;
+	recipient: UnitUnion;
+	searchableText: Scalars['String']['output'];
+	sender: UnitUnion;
+	time: Scalars['DateTime']['output'];
+	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
 export type RescueStationStrength = {
 	__typename?: 'RescueStationStrength';
 	helpers: Scalars['Float']['output'];
 	leaders: Scalars['Float']['output'];
 	subLeaders: Scalars['Float']['output'];
+};
+
+export type RescueStationUpdateMessage = {
+	__typename?: 'RescueStationUpdateMessage';
+	channel: Scalars['String']['output'];
+	createdAt: Scalars['DateTime']['output'];
+	id: Scalars['ID']['output'];
+	orgId: Scalars['String']['output'];
+	payload: RescueStationMessagePayload;
+	producer: UserProducer;
+	recipient: UnitUnion;
+	searchableText: Scalars['String']['output'];
+	sender: UnitUnion;
+	time: Scalars['DateTime']['output'];
+	updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export enum Role {
@@ -729,6 +778,7 @@ export type Subscription = {
 	operationDeleted: DeletedOperationModel;
 	operationDeploymentCreated: OperationDeployment;
 	operationDeploymentUpdated: OperationDeployment;
+	protocolEntryCreated: ProtocolEntryUnion;
 	rescueStationNoteUpdated: RescueStationDeployment;
 	rescueStationSignedIn: RescueStationDeployment;
 	rescueStationSignedOff: RescueStationDeployment;

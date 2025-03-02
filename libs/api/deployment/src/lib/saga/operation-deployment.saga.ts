@@ -7,9 +7,9 @@ import {
 	GetOperationByIdQuery,
 	OngoingOperationEndedEvent,
 	OngoingOperationInvolvementsUpdatedEvent,
+	OperationViewModel,
 } from '@kordis/api/operation';
 import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
-import { Operation } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
 import { RemoveOperationDeploymentCommand } from '../core/command/operation/remove-operation-deployment.command';
@@ -62,7 +62,7 @@ export class OperationDeploymentSaga {
 		events$.pipe(
 			ofType(OngoingOperationInvolvementsUpdatedEvent),
 			switchMap((event) =>
-				this.queryBus.execute<GetOperationByIdQuery, Operation>(
+				this.queryBus.execute<GetOperationByIdQuery, OperationViewModel>(
 					new GetOperationByIdQuery(event.orgId, event.operationId),
 				),
 			),
@@ -99,7 +99,7 @@ export class OperationDeploymentSaga {
 		events$.pipe(
 			ofType(OngoingOperationEndedEvent),
 			switchMap((event) =>
-				this.queryBus.execute<GetOperationByIdQuery, Operation>(
+				this.queryBus.execute<GetOperationByIdQuery, OperationViewModel>(
 					new GetOperationByIdQuery(event.orgId, event.operationId),
 				),
 			),

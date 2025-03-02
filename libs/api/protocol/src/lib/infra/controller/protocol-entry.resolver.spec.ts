@@ -4,7 +4,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import DataLoader from 'dataloader';
 
-import { DataLoaderContextProvider } from '@kordis/api/shared';
+import {
+	DataLoaderContextProvider,
+	GraphQLSubscriptionService,
+} from '@kordis/api/shared';
 import { UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -20,12 +23,17 @@ import {
 describe('ProtocolEntryResolver', () => {
 	let resolver: ProtocolEntryResolver;
 	const mockQueryBus = createMock<QueryBus>();
+	const mockGqlSubscriptionService = createMock<GraphQLSubscriptionService>();
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				ProtocolEntryResolver,
 				{ provide: QueryBus, useValue: mockQueryBus },
+				{
+					provide: GraphQLSubscriptionService,
+					useValue: mockGqlSubscriptionService,
+				},
 			],
 		}).compile();
 
