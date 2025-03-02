@@ -1,48 +1,54 @@
 <nz-table
 	#basicTable
-	[nzData]='protocolEntries()'
-	[nzFrontPagination]='false'
-	[nzShowPagination]='false'
-	[nzTotal]='protocolEntries().length'
-	class='table'
+	[nzData]="protocolEntries()"
+	[nzFrontPagination]="false"
+	[nzShowPagination]="false"
+	[nzTotal]="protocolEntries().length"
+	class="table"
 	krdNzTableFullHeight
-	nzSize='small'
+	nzSize="small"
 >
 	<thead>
-	<tr>
-		<th class='time'>Zeit</th>
-		<th class='sender'>Von</th>
-		<th class='recipient'>An</th>
-		<th class='message'>Nachricht</th>
-		<th class='channel'>K</th>
-	</tr>
+		<tr>
+			<th class="time">Zeit</th>
+			<th class="sender">Von</th>
+			<th class="recipient">An</th>
+			<th class="message">Nachricht</th>
+			<th class="channel">K</th>
+		</tr>
 	</thead>
 	<tbody>
 		@for (entry of basicTable.data; track entry.id) {
 			<tr>
 				<td
-					class='time'
+					class="time"
 					nz-tooltip
-					[nzTooltipTitle]='entry.time.toLocaleString()'
+					[nzTooltipTitle]="entry.time.toLocaleString()"
 				>
 					{{ entry.time | krdProtocolEntryTime }}
 				</td>
-				<td class='sender'>
-					<krd-unit-chip [unit]='entry.sender' />
+				<td class="sender">
+					<krd-unit-chip [unit]="entry.sender" />
 				</td>
-				<td class='recipient'>
+				<td class="recipient">
 					@if (entry.recipient) {
-						<krd-unit-chip [unit]='entry.recipient' />
+						<krd-unit-chip [unit]="entry.recipient" />
 					}
 				</td>
-				<td class='message'>
+				<td class="message">
 					@switch (entry.payload.__typename) {
 						@case ('CommunicationMessagePayload') {
 							{{ entry.payload.message }}
 						}
 						@case ('RescueStationMessagePayload') {
-							<krd-rescue-station-message [message]='entry.payload'
-																					[type]='entry.__typename === "RescueStationSignOnMessage" ? "SIGN_ON" : "UPDATE"' />
+							<krd-rescue-station-message
+								[message]="entry.payload"
+								[type]="
+									entry.__typename === 'RescueStationSignOnMessage'
+										? 'SIGN_ON'
+										: 'UPDATE'
+								"
+							/>
 						}
 						@case ('RescueStationSignOffMessagePayload') {
 							Rettungswache Ausmeldung: {{ entry.payload.rescueStationName }}
@@ -52,9 +58,9 @@
 						}
 					}
 				</td>
-				<td class='channel'>{{ entry.channel }}</td>
+				<td class="channel">{{ entry.channel }}</td>
 			</tr>
 		}
-	<tr #sentinel></tr>
+		<tr #sentinel></tr>
 	</tbody>
 </nz-table>
