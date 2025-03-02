@@ -30,6 +30,7 @@ import {
 	InvolvementFormFactory,
 	InvolvementFormGroup,
 } from './involvement-form.factory';
+import { InvolvementOperationTimeState } from './involvement-operation-time.state';
 
 const INVOLVEMENT_FRAGMENT = gql`
 	fragment OperationUnitInvolvements on Operation {
@@ -75,6 +76,8 @@ const INVOLVEMENT_FRAGMENT = gql`
 	providers: [
 		PossibleUnitSelectionsService,
 		PossibleAlertGroupSelectionsService,
+		InvolvementOperationTimeState,
+		InvolvementFormFactory,
 	],
 	templateUrl: './operation-involvements.component.html',
 	styles: `
@@ -103,7 +106,6 @@ const INVOLVEMENT_FRAGMENT = gql`
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationInvolvementsComponent extends BaseOperationTabComponent<InvolvementFormGroup> {
-	private currentOperationTime?: { start: Date; end: Date | null }; // keep track of operation time for involvement creation
 	private readonly possibleUnitSelectionsService = inject(
 		PossibleUnitSelectionsService,
 	);
@@ -111,6 +113,7 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 		PossibleAlertGroupSelectionsService,
 	);
 	private readonly cd = inject(ChangeDetectorRef);
+	private readonly operationTimeState = inject(InvolvementOperationTimeState);
 
 	constructor(private readonly formFactory: InvolvementFormFactory) {
 		const _control = formFactory.createForm();
@@ -163,6 +166,11 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 		this.possibleUnitSelectionsService.markAsSelected(unit);
 	}
 
+	deleteUnit(unit: Unit, index: number): void {
+		this.control.controls.unitInvolvements.removeAt(index);
+		this.possibleUnitSelectionsService.unmarkAsSelected(unit);
+	}
+
 	addUnitToAlertGroup(alertGroup: AlertGroup, unit: Unit): void {
 		const alertGroupControl =
 			this.control.controls.alertGroupInvolvements.controls.find(
@@ -176,14 +184,7 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 
 	addAlertGroup(alertGroup: AlertGroup): void {
 		this.control.controls.alertGroupInvolvements.push(
-			this.formFactory.createAlertGroupInvolvementFormGroup(
-				alertGroup,
-				[],
-				/* eslint-disable @typescript-eslint/no-non-null-assertion */
-				this.currentOperationTime!.start,
-				this.currentOperationTime!.end,
-				/* eslint-enable @typescript-eslint/no-non-null-assertion */
-			),
+			this.formFactory.createAlertGroupInvolvementFormGroup(alertGroup, []),
 		);
 		this.possibleAlertGroupSelectionsService.markAsSelected(alertGroup);
 	}
@@ -193,14 +194,12 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 
 		const start = new Date(operation.start);
 		const end = operation.end ? new Date(operation.end) : null;
-		this.currentOperationTime = { start, end };
+		this.operationTimeState.setOperationTime(start, end);
 
 		this.control.setControl(
 			'unitInvolvements',
 			this.formFactory.createUnitInvolvementsFormArray(
 				operation.unitInvolvements,
-				start,
-				end,
 			),
 			{ emitEvent: false },
 		);
@@ -217,27 +216,21 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 			this.control.enable({ emitEvent: false });
 		}
 
-		this.cd.markForCheck();
+		this.cd.detectChanges();
 	}
 
 	private pushUnitToControl(fa: FormArray, unit: Unit): void {
 		fa.push(
-			this.formFactory.createUnitInvolvementFormGroup(
-				{
-					unit: unit,
-					isPending: false,
-					involvementTimes: [
-						/* eslint-disable @typescript-eslint/no-non-null-assertion */
-						{
-							start: this.currentOperationTime!.start,
-							end: this.currentOperationTime!.end,
-						},
-					],
-				},
-				this.currentOperationTime!.start,
-				this.currentOperationTime!.end,
-				/* eslint-enable @typescript-eslint/no-non-null-assertion */
-			),
+			this.formFactory.createUnitInvolvementFormGroup({
+				unit: unit,
+				isPending: false,
+				involvementTimes: [
+					{
+						start: this.operationTimeState.operationStart,
+						end: this.operationTimeState.operationEnd,
+					},
+				],
+			}),
 		);
 	}
 
@@ -266,7 +259,6 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 
 	private recheckValidityOnChange(): void {
 		// as a change of a single involvement time can affect the validity of others, we naively trigger the validity of the whole form by marking all controls as touched
-		// this.control.valueChanges.subscribe(() => this.control.markAllAsTouched());
 		this.control.statusChanges
 			.pipe(
 				distinctUntilChanged(),

@@ -9,7 +9,6 @@ import {
 	FormArray,
 	FormControl,
 	FormGroup,
-	NonNullableFormBuilder,
 	ReactiveFormsModule,
 } from '@angular/forms';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
@@ -23,12 +22,14 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { Unit } from '@kordis/shared/model';
 import { DateMaskInputComponent } from '@kordis/spa/core/misc';
 
-export type UnitInvolvementsFormArray = FormArray<
-	FormGroup<{
-		start: FormControl<Date | null>;
-		end: FormControl<Date | null>;
-	}>
->;
+import { InvolvementFormFactory } from '../../involvement-form.factory';
+
+export type InvolvementTimeFormGroup = FormGroup<{
+	start: FormControl<Date | null>;
+	end: FormControl<Date | null>;
+}>;
+
+export type UnitInvolvementsFormArray = FormArray<InvolvementTimeFormGroup>;
 
 export type UnitInvolvementFormGroup = FormGroup<{
 	unit: FormControl<Unit>;
@@ -40,13 +41,13 @@ export type UnitInvolvementFormGroup = FormGroup<{
 	selector: 'krd-operation-unit-involvement-times',
 	imports: [
 		CommonModule,
-		DateMaskInputComponent,
-		NzButtonComponent,
-		NzFormControlComponent,
-		NzFormItemComponent,
-		NzIconDirective,
 		NzTableModule,
 		ReactiveFormsModule,
+		NzFormItemComponent,
+		DateMaskInputComponent,
+		NzFormControlComponent,
+		NzButtonComponent,
+		NzIconDirective,
 	],
 	template: `
 		<nz-table
@@ -64,20 +65,29 @@ export type UnitInvolvementFormGroup = FormGroup<{
 			</thead>
 			<tbody>
 				<ng-template #errorTplt let-control>
-					@if (control.errors?.dateNotInPast) {
+					@if (control.errors?.dateInPast) {
 						Darf nicht in der Zukunft liegen!
 					} @else if (control.errors?.outOfRange) {
 						Liegt außerhalb der Einsatzzeit!
 					} @else if (control.errors?.intersectingTimes) {
 						Überschneidet sich mit anderen Zeiten!
+					} @else if (control.errors?.required) {
+						Muss angegeben werden!
 					}
 				</ng-template>
 				@for (fg of formArray().controls; track $index) {
 					<tr [formGroup]="fg">
 						<td>
-							<nz-form-control [nzErrorTip]="errorTplt">
-								<krd-date-mask-input formControlName="start" size="small" />
-							</nz-form-control>
+							<nz-form-item>
+								<nz-form-control [nzErrorTip]="errorTplt">
+									<krd-date-mask-input formControlName="start" size="small" />
+								</nz-form-control>
+							</nz-form-item>
+							@if (fg.errors?.startAfterEnd) {
+								<span class="ant-form-item-explain-error"
+									>Der Start muss vor dem Ende liegen!</span
+								>
+							}
 						</td>
 						<td>
 							<nz-form-item>
@@ -146,7 +156,7 @@ export type UnitInvolvementFormGroup = FormGroup<{
 })
 export class OperationUnitInvolvementTimesComponent {
 	readonly formArray = input.required<UnitInvolvementsFormArray>();
-	private readonly fb = inject(NonNullableFormBuilder);
+	private readonly formFactory = inject(InvolvementFormFactory);
 
 	removeInvolvementTime(index: number): void {
 		this.formArray().removeAt(index);
@@ -155,13 +165,7 @@ export class OperationUnitInvolvementTimesComponent {
 
 	addInvolvementTime(): void {
 		this.formArray().push(
-			this.fb.group({
-				start: this.fb.control<Date | null>(null),
-				end: this.fb.control<Date | null>(null),
-			}),
-			{
-				emitEvent: false,
-			},
+			this.formFactory.createInvolvementTimeFormGroup(null, null),
 		);
 	}
 }

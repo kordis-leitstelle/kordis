@@ -10,7 +10,6 @@ import { FormState } from '../../service/tabs-form-state.service';
 import { FormStateIndicatorComponent } from './form-state-indicator.component';
 
 describe('FormStateIndicatorComponent', () => {
-	let component: FormStateIndicatorComponent;
 	let fixture: ComponentFixture<FormStateIndicatorComponent>;
 
 	beforeEach(async () => {
@@ -25,7 +24,6 @@ describe('FormStateIndicatorComponent', () => {
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(FormStateIndicatorComponent);
-		component = fixture.componentInstance;
 	});
 
 	it('should display loading spinner when form state is LOADING', () => {

@@ -39,7 +39,7 @@ import {
 } from '@kordis/spa/core/ui';
 
 import { makeOperationLocationForm } from '../../helper/operation-address-form.factory';
-import { dateInPastValidator } from '../../validator/date-in-past.validator';
+import { dateNotInPastValidator } from '../../validator/date-not-in-past.validator';
 import { nameOrStreetRequiredValidator } from '../../validator/name-or-street-required.validator';
 import { startBeforeEndValidator } from '../../validator/start-before-end.validator';
 import { OperationAlarmKeywordSelectComponent } from '../operation-detail/base-data/form/operation-alarm-keyword-select.component';
@@ -90,11 +90,11 @@ export class CreateOperationModalComponent {
 		{
 			start: this.fb.control(new Date(), [
 				Validators.required,
-				dateInPastValidator,
+				dateNotInPastValidator,
 			]),
 			end: this.fb.control<Date | null>(null, [
 				Validators.required,
-				dateInPastValidator,
+				dateNotInPastValidator,
 			]),
 			location: makeOperationLocationForm(this.fb, {
 				address: [nameOrStreetRequiredValidator],

@@ -2,15 +2,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
+import { InvolvementFormFactory } from '../../involvement-form.factory';
+import { InvolvementOperationTimeState } from '../../involvement-operation-time.state';
 import { OperationUnitInvolvementTimesComponent } from './operation-unit-involvement-times.component';
 
 describe('OperationUnitInvolvementTimesComponent', () => {
 	let fixture: ComponentFixture<OperationUnitInvolvementTimesComponent>;
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			imports: [OperationUnitInvolvementTimesComponent],
-		}).compileComponents();
+		TestBed.configureTestingModule({
+			providers: [InvolvementFormFactory, InvolvementOperationTimeState],
+		});
 	});
 
 	beforeEach(() => {

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { InvolvementFormFactory } from '../../involvement-form.factory';
+import { InvolvementOperationTimeState } from '../../involvement-operation-time.state';
 import { OperationInvolvementsFormComponent } from './operation-unit-involvements-form.component';
 
 describe('OperationInvolvementsFormComponent', () => {
@@ -10,6 +12,7 @@ describe('OperationInvolvementsFormComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [NoopAnimationsModule],
+			providers: [InvolvementFormFactory, InvolvementOperationTimeState],
 		}).compileComponents();
 	});
 

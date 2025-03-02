@@ -22,6 +22,7 @@
 
 		<krd-operation-unit-involvements-form
 			(addUnit)="addUnit($event)"
+			(deleteUnit)="deleteUnit($event.unit, $event.index)"
 			[formArray]="control.controls.unitInvolvements"
 		/>
 	</div>

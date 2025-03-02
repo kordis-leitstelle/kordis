@@ -4,6 +4,7 @@ import {
 	Component,
 	OnDestroy,
 	effect,
+	inject,
 	input,
 	output,
 } from '@angular/core';
@@ -26,6 +27,7 @@ import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { Unit } from '@kordis/shared/model';
 import { UnitAutocompleteComponent } from '@kordis/spa/core/ui';
 
+import { InvolvementFormFactory } from '../../involvement-form.factory';
 import { OperationUnitInvolvementTimesComponent } from './operation-unit-involvement-times.component';
 
 export type UnitInvolvementFormGroup = FormGroup<{
@@ -67,29 +69,31 @@ export type UnitInvolvementFormGroup = FormGroup<{
 								{{ control.value.unit!.name }}</span
 							>
 
-							<button
-								nz-button
-								nzSize="small"
-								nzType="link"
-								(click)="deleteInvolvement(i)"
-								[disabled]="control.disabled"
-							>
-								<span nz-icon nzTheme="outline" nzType="delete"></span>
-							</button>
+							<div>
+								@if (control.invalid) {
+									<span
+										class="error-icon"
+										nz-icon
+										nzType="warning"
+										nzTheme="outline"
+										nz-tooltip="Die Zeiten der Einheit weisen Fehler auf!"
+									></span>
+								}
+								<button
+									nz-button
+									nzSize="small"
+									nzType="link"
+									(click)="
+										deleteUnit.emit({ unit: control.value.unit!, index: i })
+									"
+									[disabled]="control.disabled"
+								>
+									<span nz-icon nzTheme="outline" nzType="delete"></span>
+								</button>
+							</div>
 						</div>
 					</ng-template>
-					<ng-template #errorIcon>
-						@if (control.invalid) {
-							<span
-								class="error-icon"
-								nz-icon
-								nzType="warning"
-								nzTheme="outline"
-								nz-tooltip="Die Zeiten der Einheit weisen Fehler auf!"
-							></span>
-						}
-					</ng-template>
-					<nz-collapse-panel [nzHeader]="header" [nzExtra]="errorIcon">
+					<nz-collapse-panel [nzHeader]="header">
 						@if (control.value.isPending) {
 							<div class="pending-note-container">
 								<nz-alert
@@ -171,7 +175,9 @@ export type UnitInvolvementFormGroup = FormGroup<{
 export class OperationInvolvementsFormComponent implements OnDestroy {
 	readonly formArray = input.required<FormArray<UnitInvolvementFormGroup>>();
 	readonly addUnit = output<Unit>();
+	readonly deleteUnit = output<{ unit: Unit; index: number }>();
 	private readonly cleanupSubject$ = new Subject<void>();
+	private readonly formFactory = inject(InvolvementFormFactory);
 
 	constructor(nzIconService: NzIconService, cd: ChangeDetectorRef) {
 		nzIconService.addIcon(WarningOutline, InfoCircleOutline);
@@ -192,9 +198,5 @@ export class OperationInvolvementsFormComponent implements OnDestroy {
 
 	ngOnDestroy(): void {
 		this.cleanupSubject$.next();
-	}
-
-	deleteInvolvement(index: number): void {
-		this.formArray().removeAt(index);
 	}
 }

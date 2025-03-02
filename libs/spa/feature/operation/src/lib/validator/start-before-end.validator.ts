@@ -11,9 +11,12 @@ export const startBeforeEndValidator: ValidatorFn = (
 	const endDate = group.get('end')!.value;
 	/* eslint-enable @typescript-eslint/no-non-null-assertion */
 
-	if (startDate && (!endDate || startDate < endDate)) {
+	if (
+		(startDate && (!endDate || startDate < endDate)) ||
+		(!startDate && !endDate)
+	) {
 		return null;
 	}
 
-	return { dateRangeInvalid: true };
+	return { startAfterEnd: true };
 };

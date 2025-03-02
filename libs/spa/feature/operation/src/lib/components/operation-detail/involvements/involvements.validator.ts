@@ -1,9 +1,4 @@
-import {
-	AbstractControl,
-	FormControl,
-	FormGroup,
-	ValidationErrors,
-} from '@angular/forms';
+import { AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
 
 import { UnitInvolvementsFormArray } from './form/unit/operation-unit-involvement-times.component';
 
@@ -46,37 +41,14 @@ export function involvementsTimeIntersectingValidator(
 	return null;
 }
 
-/*
- * Validates that the involvement time is not out of the operation time range
- */
-export function involvementTimeRangeValidator(
-	rangeStart: Date,
-	rangeEnd: Date | null,
-) {
+export function isOutOfRangeValidator(
+	start: Date,
+	end: Date | null,
+): (control: AbstractControl) => ValidationErrors | null {
 	return (control: AbstractControl): ValidationErrors | null => {
-		const formGroup = control as FormGroup<{
-			start: FormControl<Date>;
-			end: FormControl<Date | null>;
-		}>;
-		const involvementTime = formGroup.getRawValue();
+		const { value } = control as FormControl<Date | null>;
 
-		if (
-			// if start is before operation start
-			involvementTime.start < rangeStart
-		) {
-			formGroup.controls.start.setErrors({
-				outOfRange: true,
-			});
-			return { outOfRange: true };
-		} else if (
-			// or if end is after operation end
-			involvementTime.end &&
-			rangeEnd &&
-			involvementTime.end > rangeEnd
-		) {
-			formGroup.controls.end.setErrors({
-				outOfRange: true,
-			});
+		if (value && (value < start || (end && value > end))) {
 			return { outOfRange: true };
 		}
 

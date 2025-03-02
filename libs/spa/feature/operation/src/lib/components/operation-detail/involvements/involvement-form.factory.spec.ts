@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FormsModule, NonNullableFormBuilder } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import {
 	AlertGroup,
@@ -9,18 +9,21 @@ import {
 } from '@kordis/shared/model';
 
 import { InvolvementFormFactory } from './involvement-form.factory';
+import { InvolvementOperationTimeState } from './involvement-operation-time.state';
 
 describe('InvolvementFormFactory', () => {
 	let service: InvolvementFormFactory;
-	let fb: NonNullableFormBuilder;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule],
-			providers: [InvolvementFormFactory],
+			providers: [InvolvementFormFactory, InvolvementOperationTimeState],
 		});
 		service = TestBed.inject(InvolvementFormFactory);
-		fb = TestBed.inject(NonNullableFormBuilder);
+		TestBed.inject(InvolvementOperationTimeState).setOperationTime(
+			new Date(),
+			new Date(),
+		);
 	});
 
 	it('should create an empty involvement form', () => {
@@ -55,14 +58,10 @@ describe('InvolvementFormFactory', () => {
 				involvementTimes: [{ start: new Date(), end: new Date() }],
 			},
 		];
-		const minStart = new Date();
-		const maxEnd = new Date();
 
 		const formGroup = service.createAlertGroupInvolvementFormGroup(
 			alertGroup,
 			unitInvolvements,
-			minStart,
-			maxEnd,
 		);
 		expect(formGroup.get('alertGroup')).toBeTruthy();
 		expect(formGroup.get('unitInvolvements')?.value).toEqual(unitInvolvements);
@@ -70,14 +69,8 @@ describe('InvolvementFormFactory', () => {
 
 	it('should create unit involvements form array', () => {
 		const unitInvolvements: OperationUnitInvolvement[] = [];
-		const minStart = new Date();
-		const maxEnd = new Date();
 
-		const formArray = service.createUnitInvolvementsFormArray(
-			unitInvolvements,
-			minStart,
-			maxEnd,
-		);
+		const formArray = service.createUnitInvolvementsFormArray(unitInvolvements);
 		expect(formArray.length).toBe(0);
 	});
 
@@ -87,14 +80,8 @@ describe('InvolvementFormFactory', () => {
 			isPending: false,
 			involvementTimes: [{ start: new Date(), end: new Date() }],
 		} as OperationUnitInvolvement;
-		const minStart = new Date();
-		const maxEnd = new Date();
 
-		const formGroup = service.createUnitInvolvementFormGroup(
-			unitInvolvement,
-			minStart,
-			maxEnd,
-		);
+		const formGroup = service.createUnitInvolvementFormGroup(unitInvolvement);
 		expect(formGroup.get('unit')).toBeTruthy();
 		expect(formGroup.get('isPending')?.value).toBe(unitInvolvement.isPending);
 		expect(formGroup.get('involvementTimes')?.value).toEqual(

@@ -19,7 +19,7 @@ describe('startBeforeEndValidator', () => {
 		});
 
 		const result = startBeforeEndValidator(form);
-		expect(result).toEqual({ dateRangeInvalid: true });
+		expect(result).toEqual({ startAfterEnd: true });
 	});
 
 	it('should return an error if start date is the same as end date', () => {
@@ -29,7 +29,7 @@ describe('startBeforeEndValidator', () => {
 		});
 
 		const result = startBeforeEndValidator(form);
-		expect(result).toEqual({ dateRangeInvalid: true });
+		expect(result).toEqual({ startAfterEnd: true });
 	});
 
 	it('should not return an error if end date is not set', () => {

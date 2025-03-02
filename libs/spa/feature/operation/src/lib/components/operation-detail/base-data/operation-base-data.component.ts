@@ -15,7 +15,7 @@ import { gql } from '@kordis/spa/core/graphql';
 
 import { getTopLevelDirtyValues } from '../../../helper/get-top-level-dirty-values.helper';
 import { makeOperationLocationForm } from '../../../helper/operation-address-form.factory';
-import { dateInPastValidator } from '../../../validator/date-in-past.validator';
+import { dateNotInPastValidator } from '../../../validator/date-not-in-past.validator';
 import { nameOrStreetRequiredValidator } from '../../../validator/name-or-street-required.validator';
 import { startBeforeEndValidator } from '../../../validator/start-before-end.validator';
 import { BaseOperationTabComponent } from '../base-operation-tab.component';
@@ -71,9 +71,9 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 			{
 				start: fb.control(new Date(), [
 					Validators.required,
-					dateInPastValidator,
+					dateNotInPastValidator,
 				]),
-				end: fb.control<Date | null>(null, dateInPastValidator),
+				end: fb.control<Date | null>(null, dateNotInPastValidator),
 				alarmKeyword: fb.control(''),
 				reporter: fb.control(''),
 				commander: fb.control(''),
