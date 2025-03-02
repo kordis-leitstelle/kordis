@@ -1,5 +1,5 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CqrsModule, EventBus } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 
 import { uowMockProvider } from '@kordis/api/test-helpers';
@@ -10,7 +10,6 @@ import {
 } from '../../infra/controller/args/update-operation-involvement.args';
 import { OperationProcessState } from '../entity/operation-process-state.enum';
 import { OperationEntity } from '../entity/operation.entity';
-import { OperationInvolvementsUpdatedEvent } from '../event/operation-involvements-updated.event';
 import { OperationNotCompletedException } from '../exceptions/operation-not-completed.exception';
 import {
 	OPERATION_REPOSITORY,
@@ -18,21 +17,20 @@ import {
 } from '../repository/operation.repository';
 import { OperationInvolvementService } from '../service/unit-involvement/operation-involvement.service';
 import {
-	UpdateOperationInvolvementsCommand,
-	UpdateOperationInvolvementsHandler,
-} from './update-operation-involvements.command';
+	SetCompletedOperationInvolvementsCommand,
+	SetCompletedOperationInvolvementsHandler,
+} from './set-completed-operation-involvements.command';
 
-describe('UpdateOperationInvolvementsHandler', () => {
-	let handler: UpdateOperationInvolvementsHandler;
+describe('SetCompletedOperationInvolvementsHandler', () => {
+	let handler: SetCompletedOperationInvolvementsHandler;
 	let mockInvolvementService: jest.Mocked<OperationInvolvementService>;
-	let eventBus: EventBus;
 	let mockOperationRepository: DeepMocked<OperationRepository>;
 	beforeEach(async () => {
 		mockInvolvementService = createMock<OperationInvolvementService>();
 
 		const moduleRef = await Test.createTestingModule({
 			providers: [
-				UpdateOperationInvolvementsHandler,
+				SetCompletedOperationInvolvementsHandler,
 				{
 					provide: OperationInvolvementService,
 					useValue: mockInvolvementService,
@@ -46,15 +44,14 @@ describe('UpdateOperationInvolvementsHandler', () => {
 			imports: [CqrsModule],
 		}).compile();
 
-		handler = moduleRef.get<UpdateOperationInvolvementsHandler>(
-			UpdateOperationInvolvementsHandler,
+		handler = moduleRef.get<SetCompletedOperationInvolvementsHandler>(
+			SetCompletedOperationInvolvementsHandler,
 		);
 		mockOperationRepository = moduleRef.get(OPERATION_REPOSITORY);
-		eventBus = moduleRef.get(EventBus);
 	});
 
 	it('should update operation involvements and emit involvements updated event', async () => {
-		const command = new UpdateOperationInvolvementsCommand(
+		const command = new SetCompletedOperationInvolvementsCommand(
 			'org1',
 			'op1',
 			[new UpdateOperationUnitInvolvementInput()],
@@ -65,18 +62,7 @@ describe('UpdateOperationInvolvementsHandler', () => {
 			id: 'someId',
 		} as OperationEntity);
 
-		await new Promise<void>((done) => {
-			eventBus.subscribe((event) => {
-				expect(event).toBeInstanceOf(OperationInvolvementsUpdatedEvent);
-				expect(event).toEqual({
-					orgId: 'org1',
-					operationId: 'op1',
-				});
-				done();
-			});
-
-			return handler.execute(command);
-		});
+		await handler.execute(command);
 
 		expect(mockInvolvementService.setUnitInvolvements).toHaveBeenCalledWith(
 			'org1',
@@ -88,7 +74,7 @@ describe('UpdateOperationInvolvementsHandler', () => {
 	});
 
 	it('should throw error if operation is not completed', async () => {
-		const command = new UpdateOperationInvolvementsCommand(
+		const command = new SetCompletedOperationInvolvementsCommand(
 			'org1',
 			'op1',
 			[new UpdateOperationUnitInvolvementInput()],

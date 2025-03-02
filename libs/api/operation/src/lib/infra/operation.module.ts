@@ -5,9 +5,9 @@ import {
 	ArchiveOperationHandler,
 	CreateOperationHandler,
 	DeleteOperationHandler,
+	SetCompletedOperationInvolvementsHandler,
 	StartPendingUnitInvolvementHandler,
 	UpdateOperationBaseDataHandler,
-	UpdateOperationInvolvementsHandler,
 } from '../core/command';
 import { GetOperationByIdHandler } from '../core/query/get-operation-by-id.query';
 import { GetOperationIdOfPendingUnitHandler } from '../core/query/get-operation-id-of-pending-unit.query';
@@ -84,7 +84,7 @@ const COMMAND_HANDLERS = [
 	DeleteOperationHandler,
 	StartPendingUnitInvolvementHandler,
 	UpdateOperationBaseDataHandler,
-	UpdateOperationInvolvementsHandler,
+	SetCompletedOperationInvolvementsHandler,
 ];
 const QUERY_HANDLERS = [
 	GetOperationByIdHandler,

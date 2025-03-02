@@ -1,17 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, IEvent, QueryBus, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, filter, map, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 
 import { KordisLogger } from '@kordis/api/observability';
 import {
 	GetOperationByIdQuery,
-	OperationInvolvementsUpdatedEvent,
+	OngoingOperationInvolvementsUpdatedEvent,
 } from '@kordis/api/operation';
 import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
-import { Operation, OperationProcessState } from '@kordis/shared/model';
+import { Operation } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
-import { UpdateOperationAssignmentsCommand } from '../core/command/operation/update-operation-assignments.command';
+import { SetOperationDeploymentAssignmentsCommand } from '../core/command/operation/set-operation-deployment-assignments.command';
 
 @Injectable()
 export class OperationDeploymentSaga {
@@ -52,24 +52,22 @@ export class OperationDeploymentSaga {
 			),
 		);
 
-	// update assignments of an operation deployment when operation involvements are updated
+	// update assignments of an ongoing operation deployment when operation involvements are updated
 	@Saga()
 	operationInvolvementsChanged = (
 		events$: Observable<IEvent>,
 	): Observable<ICommand> =>
 		events$.pipe(
-			ofType(OperationInvolvementsUpdatedEvent),
+			ofType(OngoingOperationInvolvementsUpdatedEvent),
 			switchMap((event) =>
 				this.queryBus.execute<GetOperationByIdQuery, Operation>(
 					new GetOperationByIdQuery(event.orgId, event.operationId),
 				),
 			),
-			filter(
-				(operation) => operation.processState === OperationProcessState.OnGoing,
-			),
 			map(
 				(operation) =>
-					new UpdateOperationAssignmentsCommand(
+					// naively set the assignments to the same as the involvements
+					new SetOperationDeploymentAssignmentsCommand(
 						operation.orgId,
 						operation.id,
 						operation.unitInvolvements.map(

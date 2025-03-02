@@ -4,14 +4,14 @@ import { Test } from '@nestjs/testing';
 import { lastValueFrom, of, toArray } from 'rxjs';
 
 import {
-	OperationInvolvementsUpdatedEvent,
+	OngoingOperationInvolvementsUpdatedEvent,
 	OperationViewModel,
 } from '@kordis/api/operation';
 import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
 import { OperationProcessState } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
-import { UpdateOperationAssignmentsCommand } from '../core/command/operation/update-operation-assignments.command';
+import { SetOperationDeploymentAssignmentsCommand } from '../core/command/operation/set-operation-deployment-assignments.command';
 import { OperationDeploymentSaga } from './operation-deployment.saga';
 
 describe('OperationDeploymentSaga', () => {
@@ -60,7 +60,7 @@ describe('OperationDeploymentSaga', () => {
 
 	it('should update assignments of an ongoing operation deployment', async () => {
 		const events$ = of(
-			new OperationInvolvementsUpdatedEvent('org1', 'operation1'),
+			new OngoingOperationInvolvementsUpdatedEvent('org1', 'operation1'),
 		);
 
 		queryBus.execute.mockResolvedValue({
@@ -76,7 +76,7 @@ describe('OperationDeploymentSaga', () => {
 			],
 		});
 
-		const expectedCommand = new UpdateOperationAssignmentsCommand(
+		const expectedCommand = new SetOperationDeploymentAssignmentsCommand(
 			'org1',
 			'operation1',
 			['unit1'],

@@ -25,8 +25,8 @@ import {
 	ArchiveOperationCommand,
 	CreateOperationCommand,
 	DeleteOperationCommand,
+	SetCompletedOperationInvolvementsCommand,
 	UpdateOperationBaseDataCommand,
-	UpdateOperationInvolvementsCommand,
 } from '../../core/command';
 import { OperationEntity } from '../../core/entity/operation.entity';
 import { OperationCreatedEvent } from '../../core/event/operation-created.event';
@@ -169,7 +169,7 @@ export class OperationResolver {
 	): Promise<OperationViewModel> {
 		try {
 			await this.commandBus.execute(
-				new UpdateOperationInvolvementsCommand(
+				new SetCompletedOperationInvolvementsCommand(
 					organizationId,
 					id,
 					unitInvolvements,

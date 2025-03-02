@@ -8,7 +8,6 @@ import {
 	UpdateOperationUnitInvolvementInput,
 } from '../../infra/controller/args/update-operation-involvement.args';
 import { OperationProcessState } from '../entity/operation-process-state.enum';
-import { OperationInvolvementsUpdatedEvent } from '../event/operation-involvements-updated.event';
 import { OperationNotCompletedException } from '../exceptions/operation-not-completed.exception';
 import {
 	OPERATION_REPOSITORY,
@@ -16,7 +15,7 @@ import {
 } from '../repository/operation.repository';
 import { OperationInvolvementService } from '../service/unit-involvement/operation-involvement.service';
 
-export class UpdateOperationInvolvementsCommand {
+export class SetCompletedOperationInvolvementsCommand {
 	constructor(
 		readonly orgId: string,
 		readonly operationId: string,
@@ -25,9 +24,9 @@ export class UpdateOperationInvolvementsCommand {
 	) {}
 }
 
-@CommandHandler(UpdateOperationInvolvementsCommand)
-export class UpdateOperationInvolvementsHandler
-	implements ICommandHandler<UpdateOperationInvolvementsCommand>
+@CommandHandler(SetCompletedOperationInvolvementsCommand)
+export class SetCompletedOperationInvolvementsHandler
+	implements ICommandHandler<SetCompletedOperationInvolvementsCommand>
 {
 	constructor(
 		private readonly unitInvolvementService: OperationInvolvementService,
@@ -38,7 +37,9 @@ export class UpdateOperationInvolvementsHandler
 		private readonly eventBus: EventBus,
 	) {}
 
-	async execute(command: UpdateOperationInvolvementsCommand): Promise<void> {
+	async execute(
+		command: SetCompletedOperationInvolvementsCommand,
+	): Promise<void> {
 		await this.uowService.asTransaction(async (uow) => {
 			const { processState } = await this.operationRepository.findById(
 				command.orgId,
@@ -59,9 +60,5 @@ export class UpdateOperationInvolvementsHandler
 				uow,
 			);
 		});
-
-		this.eventBus.publish(
-			new OperationInvolvementsUpdatedEvent(command.orgId, command.operationId),
-		);
 	}
 }

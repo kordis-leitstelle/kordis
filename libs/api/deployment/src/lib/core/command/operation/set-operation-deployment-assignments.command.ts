@@ -10,7 +10,7 @@ import {
 } from '../../repository/operation-deployment.repository';
 import { DeploymentAssignmentService } from '../../service/deployment-assignment.service';
 
-export class UpdateOperationAssignmentsCommand {
+export class SetOperationDeploymentAssignmentsCommand {
 	constructor(
 		readonly orgId: string,
 		readonly operationId: string,
@@ -22,9 +22,9 @@ export class UpdateOperationAssignmentsCommand {
 	) {}
 }
 
-@CommandHandler(UpdateOperationAssignmentsCommand)
-export class UpdateOperationAssignmentsHandler
-	implements ICommandHandler<UpdateOperationAssignmentsCommand>
+@CommandHandler(SetOperationDeploymentAssignmentsCommand)
+export class SetOperationDeploymentAssignmentsHandler
+	implements ICommandHandler<SetOperationDeploymentAssignmentsCommand>
 {
 	constructor(
 		private readonly deploymentAssignmentService: DeploymentAssignmentService,
@@ -35,7 +35,9 @@ export class UpdateOperationAssignmentsHandler
 		private readonly eventBus: EventBus,
 	) {}
 
-	async execute(command: UpdateOperationAssignmentsCommand): Promise<void> {
+	async execute(
+		command: SetOperationDeploymentAssignmentsCommand,
+	): Promise<void> {
 		await this.uow.asTransaction(async (uow) => {
 			const { id: deploymentId } =
 				await this.deploymentRepository.findByOperationId(

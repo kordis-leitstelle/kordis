@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 
-import { OperationInvolvementsUpdatedEvent } from '../event/operation-involvements-updated.event';
+import { OngoingOperationInvolvementsUpdatedEvent } from '../event/ongoing-operation-involvements-updated.event';
 import {
 	OPERATION_INVOLVEMENT_REPOSITORY,
 	OperationInvolvementsRepository,
@@ -40,7 +40,7 @@ export class StartPendingUnitInvolvementHandler
 		);
 
 		this.eventBus.publish(
-			new OperationInvolvementsUpdatedEvent(orgId, operationId),
+			new OngoingOperationInvolvementsUpdatedEvent(orgId, operationId),
 		);
 	}
 }

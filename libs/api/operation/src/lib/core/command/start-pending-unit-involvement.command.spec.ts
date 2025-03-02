@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 
 import { uowMockProvider } from '@kordis/api/test-helpers';
 
-import { OperationInvolvementsUpdatedEvent } from '../event/operation-involvements-updated.event';
+import { OngoingOperationInvolvementsUpdatedEvent } from '../event/ongoing-operation-involvements-updated.event';
 import {
 	OPERATION_INVOLVEMENT_REPOSITORY,
 	OperationInvolvementsRepository,
@@ -51,7 +51,7 @@ describe('StartPendingUnitInvolvementHandler', () => {
 
 		await new Promise<void>((done) => {
 			eventBus.subscribe((event) => {
-				expect(event).toBeInstanceOf(OperationInvolvementsUpdatedEvent);
+				expect(event).toBeInstanceOf(OngoingOperationInvolvementsUpdatedEvent);
 				expect(event).toEqual({
 					orgId: 'org1',
 					operationId: 'op1',

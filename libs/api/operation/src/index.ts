@@ -6,6 +6,6 @@ export { CreateOperationInput } from './lib/infra/controller/args/create-complet
 export { OperationCreatedEvent } from './lib/core/event/operation-created.event';
 export { GetOperationByIdQuery } from './lib/core/query/get-operation-by-id.query';
 export { OperationDeletedEvent } from './lib/core/event/operation-deleted.event';
-export { OperationInvolvementsUpdatedEvent } from './lib/core/event/operation-involvements-updated.event';
+export { OngoingOperationInvolvementsUpdatedEvent } from './lib/core/event/ongoing-operation-involvements-updated.event';
 export { OPERATION_DATA_LOADER } from './lib/operations.data-loader';
 export * from './lib/saga/operation-saga.module';

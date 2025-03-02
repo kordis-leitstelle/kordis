@@ -12,12 +12,12 @@ import {
 } from '../../repository/operation-deployment.repository';
 import { DeploymentAssignmentService } from '../../service/deployment-assignment.service';
 import {
-	UpdateOperationAssignmentsCommand,
-	UpdateOperationAssignmentsHandler,
-} from './update-operation-assignments.command';
+	SetOperationDeploymentAssignmentsCommand,
+	SetOperationDeploymentAssignmentsHandler,
+} from './set-operation-deployment-assignments.command';
 
-describe('UpdateOperationAssignmentsHandler', () => {
-	let handler: UpdateOperationAssignmentsHandler;
+describe('SetOperationDeploymentAssignmentsHandler', () => {
+	let handler: SetOperationDeploymentAssignmentsHandler;
 	const mockDeploymentAssignmentService =
 		createMock<DeploymentAssignmentService>();
 	const mockDeploymentRepository = createMock<OperationDeploymentRepository>();
@@ -26,7 +26,7 @@ describe('UpdateOperationAssignmentsHandler', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				UpdateOperationAssignmentsHandler,
+				SetOperationDeploymentAssignmentsHandler,
 				{
 					provide: DeploymentAssignmentService,
 					useValue: mockDeploymentAssignmentService,
@@ -43,13 +43,13 @@ describe('UpdateOperationAssignmentsHandler', () => {
 			],
 		}).compile();
 
-		handler = module.get<UpdateOperationAssignmentsHandler>(
-			UpdateOperationAssignmentsHandler,
+		handler = module.get<SetOperationDeploymentAssignmentsHandler>(
+			SetOperationDeploymentAssignmentsHandler,
 		);
 	});
 
 	it('should set assignments and publish OperationDeploymentUpdatedEvent', async () => {
-		const command = new UpdateOperationAssignmentsCommand(
+		const command = new SetOperationDeploymentAssignmentsCommand(
 			'orgId',
 			'operationId',
 			['unitId1', 'unitId2'],
