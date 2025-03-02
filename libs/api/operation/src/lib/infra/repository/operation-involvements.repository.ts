@@ -83,7 +83,7 @@ export class OperationInvolvementsRepositoryImpl
 
 		await this.operationInvolvementModel.create(
 			documents,
-			uow?.session ? { session: uow?.session } : undefined,
+			uow?.session ? { session: uow?.session, ordered: true } : undefined,
 		);
 	}
 
