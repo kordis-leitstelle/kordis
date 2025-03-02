@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
-import { map, Observable } from 'rxjs';
+import { QueryRef } from 'apollo-angular';
+import { Observable, map } from 'rxjs';
 
 export type QueryReturnType<TData> = {
 	$: Observable<TData>;
 	refresh: (variables?: Record<string, unknown>) => Promise<TData>;
-	fetchMore: any; // TODO: fix type
-};
+} & Pick<QueryRef<TData, Record<string, unknown>>, 'fetchMore'>;
 
 @Injectable({
 	providedIn: 'root',
