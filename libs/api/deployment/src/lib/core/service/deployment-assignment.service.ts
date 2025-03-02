@@ -20,6 +20,19 @@ export class DeploymentAssignmentService {
 		private readonly unitAssignmentRepository: UnitAssignmentRepository,
 	) {}
 
+	async removeAssignmentsOfDeployment(
+		orgId: string,
+		deploymentId: string,
+		uow?: DbSessionProvider | undefined,
+	): Promise<void> {
+		// first remove all assignments
+		await this.deploymentAssignmentRepository.removeAssignmentsOfDeployment(
+			orgId,
+			deploymentId,
+			uow,
+		);
+	}
+
 	/**
 	 * Sets the assignments of a deployment by completely removing all previous assignments and assigning the new units and alert groups.
 	 * Keeps units of alert groups that are not assigned to the deployment in their old deployment but without the alert group assignment.

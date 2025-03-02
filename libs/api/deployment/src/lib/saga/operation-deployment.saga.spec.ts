@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import { lastValueFrom, of, toArray } from 'rxjs';
 
 import {
+	OngoingOperationEndedEvent,
 	OngoingOperationInvolvementsUpdatedEvent,
 	OperationViewModel,
 } from '@kordis/api/operation';
@@ -11,6 +12,7 @@ import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
 import { OperationProcessState } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
+import { RemoveOperationDeploymentCommand } from '../core/command/operation/remove-operation-deployment.command';
 import { SetOperationDeploymentAssignmentsCommand } from '../core/command/operation/set-operation-deployment-assignments.command';
 import { OperationDeploymentSaga } from './operation-deployment.saga';
 
@@ -29,6 +31,10 @@ describe('OperationDeploymentSaga', () => {
 
 		saga = moduleRef.get(OperationDeploymentSaga);
 		queryBus = moduleRef.get(QueryBus);
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 
 	it('should create a deployment for an ongoing operation', async () => {
@@ -85,6 +91,24 @@ describe('OperationDeploymentSaga', () => {
 
 		await expect(
 			lastValueFrom(saga.operationInvolvementsChanged(events$).pipe(toArray())),
+		).resolves.toEqual([expectedCommand]);
+	});
+
+	it('should remove deployment on operation ended', async () => {
+		const events$ = of(new OngoingOperationEndedEvent('org1', 'operation1'));
+		const expectedCommand = new RemoveOperationDeploymentCommand(
+			'org1',
+			'operation1',
+		);
+
+		queryBus.execute.mockResolvedValue({
+			id: 'operation1',
+			orgId: 'org1',
+			processState: OperationProcessState.Completed,
+		});
+
+		await expect(
+			lastValueFrom(saga.operationEnded(events$).pipe(toArray())),
 		).resolves.toEqual([expectedCommand]);
 	});
 });

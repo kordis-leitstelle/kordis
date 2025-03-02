@@ -91,4 +91,15 @@ describe('DeploymentAssignmentService', () => {
 			undefined,
 		);
 	});
+
+	it('should remove assignments of deployment', async () => {
+		const orgId = 'orgId';
+		const deploymentId = 'deploymentId';
+
+		await service.removeAssignmentsOfDeployment(orgId, deploymentId);
+
+		expect(
+			mockDeploymentAssignmentRepository.removeAssignmentsOfDeployment,
+		).toHaveBeenCalledWith(orgId, deploymentId, undefined);
+	});
 });

@@ -85,4 +85,15 @@ export class OperationDeploymentRepositoryImpl
 			this.entityTypeValue,
 		);
 	}
+
+	async remove(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<void> {
+		await runDbOperation(
+			this.deploymentModel.deleteOne({ orgId, operationId }),
+			uow,
+		);
+	}
 }

@@ -6,7 +6,7 @@ import { uowMockProvider } from '@kordis/api/test-helpers';
 
 import { OperationProcessState } from '../entity/operation-process-state.enum';
 import { OperationEntity } from '../entity/operation.entity';
-import { OperationEndedEvent } from '../event/operation-ended.event';
+import { OngoingOperationEndedEvent } from '../event/ongoing-operation-ended.event';
 import { OperationNotOngoingException } from '../exceptions/operation-not-ongoing.exception';
 import {
 	OPERATION_REPOSITORY,
@@ -119,7 +119,7 @@ describe('EndOngoingOperationHandler', () => {
 		await handler.execute(command);
 
 		expect(eventBus.publish).toHaveBeenCalledWith(
-			new OperationEndedEvent(orgId, operationId),
+			new OngoingOperationEndedEvent(orgId, operationId),
 		);
 	});
 });

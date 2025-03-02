@@ -4,7 +4,7 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { UNIT_OF_WORK_SERVICE, UnitOfWorkService } from '@kordis/api/shared';
 
 import { OperationProcessState } from '../entity/operation-process-state.enum';
-import { OperationEndedEvent } from '../event/operation-ended.event';
+import { OngoingOperationEndedEvent } from '../event/ongoing-operation-ended.event';
 import { OperationNotOngoingException } from '../exceptions/operation-not-ongoing.exception';
 import {
 	OPERATION_REPOSITORY,
@@ -66,7 +66,7 @@ export class EndOngoingOperationHandler
 				uow,
 			);
 
-			this.eventBus.publish(new OperationEndedEvent(orgId, operationId));
+			this.eventBus.publish(new OngoingOperationEndedEvent(orgId, operationId));
 		});
 	}
 }

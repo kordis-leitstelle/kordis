@@ -153,4 +153,16 @@ describe('OperationDeploymentRepositoryImpl', () => {
 			expect.anything(),
 		);
 	});
+
+	it('should remove operation deployment', async () => {
+		const orgId = 'org1';
+		const operationId = 'operationId';
+
+		await repository.remove(orgId, operationId);
+
+		expect(operationDeploymentDocument.deleteOne).toHaveBeenCalledWith({
+			orgId,
+			operationId,
+		});
+	});
 });

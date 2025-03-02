@@ -5,12 +5,14 @@ import { Observable, map, switchMap, tap } from 'rxjs';
 import { KordisLogger } from '@kordis/api/observability';
 import {
 	GetOperationByIdQuery,
+	OngoingOperationEndedEvent,
 	OngoingOperationInvolvementsUpdatedEvent,
 } from '@kordis/api/operation';
 import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
 import { Operation } from '@kordis/shared/model';
 
 import { CreateOperationDeploymentCommand } from '../core/command/operation/create-operation-deployment.command';
+import { RemoveOperationDeploymentCommand } from '../core/command/operation/remove-operation-deployment.command';
 import { SetOperationDeploymentAssignmentsCommand } from '../core/command/operation/set-operation-deployment-assignments.command';
 
 @Injectable()
@@ -86,6 +88,30 @@ export class OperationDeploymentSaga {
 					'Updated assignments of operation deployment due to involvement change',
 					{
 						orgId: event.orgId,
+						operationId: event.operationId,
+					},
+				),
+			),
+		);
+
+	@Saga()
+	operationEnded = (events$: Observable<IEvent>): Observable<ICommand> =>
+		events$.pipe(
+			ofType(OngoingOperationEndedEvent),
+			switchMap((event) =>
+				this.queryBus.execute<GetOperationByIdQuery, Operation>(
+					new GetOperationByIdQuery(event.orgId, event.operationId),
+				),
+			),
+			map(
+				(operation) =>
+					new RemoveOperationDeploymentCommand(operation.orgId, operation.id),
+			),
+			tap((event) =>
+				this.logger.log(
+					'Removed deployment and assignments of operation deployment due to operation end',
+					{
+						orgId: event.operationId,
 						operationId: event.operationId,
 					},
 				),

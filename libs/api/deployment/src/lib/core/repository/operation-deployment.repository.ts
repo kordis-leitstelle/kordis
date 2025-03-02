@@ -23,4 +23,10 @@ export interface OperationDeploymentRepository
 		operationId: string,
 		uow?: DbSessionProvider,
 	): Promise<OperationDeploymentEntity>;
+
+	remove(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<void>;
 }
