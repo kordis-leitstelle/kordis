@@ -68,4 +68,9 @@ export class OperationReporterSelectComponent extends ControlValueAccessorBase {
 			this.onChange(value);
 		}
 	}
+
+	override writeValue(value: string): void {
+		this.proxyValue.set(value);
+		super.writeValue(value);
+	}
 }
