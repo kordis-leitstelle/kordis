@@ -66,6 +66,28 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 		return protocolEntry !== null;
 	}
 
+	async getFromUnitTimes(
+		organizationId: string,
+		units: {
+			unitId: string;
+			range: { start: Date; end: Date | null };
+		}[],
+	): Promise<ProtocolEntryBase[]> {
+		const docs = await this.protocolEntryModel
+			.find({
+				orgId: organizationId,
+				$or: units.map(({ unitId, range }) => ({
+					'sender.unitId': unitId,
+					time: range.end
+						? { $gte: range.start, $lte: range.end }
+						: { $gte: range.start },
+				})),
+			})
+			.lean<ProtocolEntryBaseDocument[]>();
+
+		return docs.map((doc) => this.mapper.map(doc));
+	}
+
 	private getQueryForSubset(
 		organizationId: string,
 		sort: 'asc' | 'desc',

@@ -117,4 +117,40 @@ describe('ProtocolEntryRepositoryImpl', () => {
 		expect(queryMockFn.find).toHaveBeenCalled();
 		expect(queryMockFn.findOne).toHaveBeenCalled();
 	});
+
+	it('should return protocol entries for given unit times', async () => {
+		const organizationId = 'orgId';
+		const units = [
+			{
+				unitId: 'unit1',
+				range: {
+					start: new Date('2023-01-01T00:00:00Z'),
+					end: new Date('2023-01-01T01:00:00Z'),
+				},
+			},
+			{
+				unitId: 'unit2',
+				range: { start: new Date('2023-01-02T00:00:00Z'), end: null },
+			},
+		];
+
+		await repository.getFromUnitTimes(organizationId, units);
+
+		expect(protocolEntryModel.find).toHaveBeenCalledWith({
+			orgId: organizationId,
+			$or: [
+				{
+					'sender.unitId': 'unit1',
+					time: {
+						$gte: new Date('2023-01-01T00:00:00Z'),
+						$lte: new Date('2023-01-01T01:00:00Z'),
+					},
+				},
+				{
+					'sender.unitId': 'unit2',
+					time: { $gte: new Date('2023-01-02T00:00:00Z') },
+				},
+			],
+		});
+	});
 });
