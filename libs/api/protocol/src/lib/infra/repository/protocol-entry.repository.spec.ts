@@ -140,14 +140,14 @@ describe('ProtocolEntryRepositoryImpl', () => {
 			orgId: organizationId,
 			$or: [
 				{
-					'sender.unitId': 'unit1',
+					$or: [{ 'sender.unitId': 'unit1' }, { 'recipient.unitId': 'unit1' }],
 					time: {
 						$gte: new Date('2023-01-01T00:00:00Z'),
 						$lte: new Date('2023-01-01T01:00:00Z'),
 					},
 				},
 				{
-					'sender.unitId': 'unit2',
+					$or: [{ 'sender.unitId': 'unit2' }, { 'recipient.unitId': 'unit2' }],
 					time: { $gte: new Date('2023-01-02T00:00:00Z') },
 				},
 			],

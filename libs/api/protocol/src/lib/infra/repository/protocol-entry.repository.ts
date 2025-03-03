@@ -77,7 +77,7 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 			.find({
 				orgId: organizationId,
 				$or: units.map(({ unitId, range }) => ({
-					'sender.unitId': unitId,
+					$or: [{ 'sender.unitId': unitId }, { 'recipient.unitId': unitId }],
 					time: range.end
 						? { $gte: range.start, $lte: range.end }
 						: { $gte: range.start },
