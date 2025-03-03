@@ -121,7 +121,7 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 		super(
 			'involvements',
 			gql`
-				query OperationUnitInvolvements($operationId: String!) {
+				query OperationUnitInvolvements($operationId: ID!) {
 					operation(id: $operationId) {
 						...OperationUnitInvolvements
 					}
@@ -130,7 +130,7 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 			`,
 			gql`
 				mutation UpdateOperationInvolvements(
-					$operationId: String!
+					$operationId: ID!
 					$formValue: UpdateOperationInvolvementsInput!
 				) {
 					updateOperationInvolvements(

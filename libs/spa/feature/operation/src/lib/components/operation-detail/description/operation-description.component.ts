@@ -28,7 +28,7 @@ export class OperationDescriptionComponent extends BaseOperationTabComponent {
 		super(
 			'description',
 			gql`
-				query GetOperationDescription($operationId: String!) {
+				query GetOperationDescription($operationId: ID!) {
 					operation(id: $operationId) {
 						id
 						description
@@ -37,7 +37,7 @@ export class OperationDescriptionComponent extends BaseOperationTabComponent {
 			`,
 			gql`
 				mutation UpdateOperationBaseData(
-					$operationId: String!
+					$operationId: ID!
 					$formValue: String!
 				) {
 					updateOperationBaseData(
