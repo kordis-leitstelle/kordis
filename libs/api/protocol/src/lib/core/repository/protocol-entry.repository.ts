@@ -22,4 +22,12 @@ export interface ProtocolEntryRepository {
 		direction: 'preceding' | 'subsequent',
 		startingFrom?: Date,
 	): Promise<boolean>;
+
+	getFromUnitTimes(
+		organizationId: string,
+		units: {
+			unitId: string;
+			range: { start: Date; end: Date | null };
+		}[],
+	): Promise<ProtocolEntryBase[]>;
 }

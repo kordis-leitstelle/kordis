@@ -12,6 +12,7 @@ import { OperationDescriptionComponent } from './description/operation-descripti
 import { FormStateIndicatorComponent } from './form-state-indicator.component';
 import { OperationInvolvementsComponent } from './involvements/operation-involvements.component';
 import { OperationPatientsComponent } from './patients/operation-patients.component';
+import { OperationProtocolComponent } from './protocol/operation-protocol.component';
 
 @Component({
 	selector: 'krd-operation-detail',
@@ -25,6 +26,7 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 		OperationInvolvementsComponent,
 		OperationPatientsComponent,
 		OperationCategoriesComponent,
+		OperationProtocolComponent,
 	],
 	template: `
 		<nz-tabset [nzAnimated]="false" nzSize="small">
@@ -98,7 +100,9 @@ import { OperationPatientsComponent } from './patients/operation-patients.compon
 				</ng-template>
 			</nz-tab>
 			<nz-tab nzTitle="Protokoll">
-				<ng-template nz-tab>Protokoll</ng-template>
+				<ng-template nz-tab>
+					<krd-operation-protocol />
+				</ng-template>
 			</nz-tab>
 		</nz-tabset>
 	`,

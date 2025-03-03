@@ -45,7 +45,7 @@ export class OperationCategoriesComponent extends BaseOperationTabComponent {
 		super(
 			'categories',
 			gql`
-				query GetOperationCategories($operationId: String!) {
+				query GetOperationCategories($operationId: ID!) {
 					operation(id: $operationId) {
 						${CATEGORY_QUERY_FIELDS}
 					}
@@ -53,7 +53,7 @@ export class OperationCategoriesComponent extends BaseOperationTabComponent {
 			`,
 			gql`
 				mutation UpdateOperationCategories(
-					$operationId: String!
+					$operationId: ID!
 					$formValue: [OperationCategoryInput!]!
 				) {
 					updateOperationBaseData(id: $operationId, data:{ categories: $formValue}) {

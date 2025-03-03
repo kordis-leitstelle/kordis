@@ -8,10 +8,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { ProtocolEntryUnion } from '@kordis/shared/model';
 import { GraphqlService } from '@kordis/spa/core/graphql';
+import { ProtocolTableComponent } from '@kordis/spa/core/ui';
 
 import { ProtocolClient } from '../../services/protocol.client';
 import { CreateProtocolMessageComponent } from '../create-protocol-message/create-protocol-message.component';
-import { ProtocolTableComponent } from '../protocol-table/protocol-table.component';
 
 @Component({
 	selector: 'krd-protocol-view',
