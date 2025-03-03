@@ -1,0 +1,10 @@
+#map {
+	height: 100%;
+	width: 100%;
+}
+
+.search {
+	padding: var(--base-spacing);
+	position: absolute;
+	width: 500px;
+}
