@@ -2,20 +2,22 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzInputDirective, NzInputGroupComponent } from 'ng-zorro-antd/input';
-import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
 import { GlobalSearchStateService } from './global-search-state.service';
 
 @Component({
 	selector: 'krd-global-search',
 	template: `
-		<nz-input-group [nzSuffix]="suffixTemplate">
+		<nz-input-group [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
 			<input
 				[(ngModel)]="searchStateService.searchValue"
 				nz-input
 				placeholder="Einheiten, Alarmgruppen, Rettungswachen und Einsätze durchsuchen"
 			/>
 		</nz-input-group>
+		<ng-template #prefixTemplate
+			><nz-icon nzType="search" nzTheme="outline"
+		/></ng-template>
 		<ng-template #suffixTemplate>
 			@if (searchStateService.searchValue()) {
 				<span

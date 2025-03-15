@@ -27,10 +27,11 @@ nz-layout {
 		display: grid;
 		grid-gap: var(--base-spacing);
 		grid-template-areas:
+			'action-bar-section action-bar-section'
 			'deployments-section deployments-section'
 			'protocol-section operation-section';
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		grid-template-rows: minmax(0, 1fr) minmax(0, 2fr);
+		grid-template-rows: auto minmax(0, 1fr) minmax(0, 2fr);
 		min-height: 720px;
 		min-width: 1280px;
 		padding: var(--base-spacing);
@@ -39,7 +40,8 @@ nz-layout {
 
 		section.protocol-section,
 		section.operation-section,
-		section.deployments-section {
+		section.deployments-section,
+		section.action-bar-section {
 			background-color: #f0f2f5;
 			border-radius: 2px;
 			padding: var(--base-spacing);
@@ -55,6 +57,10 @@ nz-layout {
 
 		section.deployments-section {
 			grid-area: deployments-section;
+		}
+
+		section.action-bar-section {
+			grid-area: action-bar-section;
 		}
 	}
 }

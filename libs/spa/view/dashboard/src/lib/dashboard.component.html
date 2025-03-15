@@ -1,7 +1,6 @@
 <nz-layout>
 	<nz-header>
 		<div class="logo">Kordis</div>
-		<krd-global-search />
 		<div>
 			<nz-avatar
 				[nzDropdownMenu]="userMenu"
@@ -25,6 +24,9 @@
 		</div>
 	</nz-header>
 	<nz-content>
+		<section class="action-bar-section">
+			<krd-action-bar />
+		</section>
 		<section class="deployments-section">
 			<krd-deployments />
 		</section>
