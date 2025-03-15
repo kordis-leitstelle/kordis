@@ -13,23 +13,29 @@ import { GlobalSearchStateService } from './global-search-state.service';
 			<input
 				[(ngModel)]="searchStateService.searchValue"
 				nz-input
-				nz-tooltip="Einheiten, Alarmgruppen, Rettungswachen und Einsätze durchsuchen"
-				placeholder="Suche"
+				placeholder="Einheiten, Alarmgruppen, Rettungswachen und Einsätze durchsuchen"
 			/>
 		</nz-input-group>
 		<ng-template #suffixTemplate>
-			<i
-				(click)="searchStateService.searchValue.set('')"
-				class="reset-icon"
-				nz-icon
-				nzType="close"
-			></i>
+			@if (searchStateService.searchValue()) {
+				<span
+					nz-icon
+					nzTheme="fill"
+					class="ant-input-clear-icon"
+					nzType="close-circle"
+					(click)="searchStateService.searchValue.set('')"
+				></span>
+			}
 		</ng-template>
+	`,
+	styles: `
+		:host {
+			width: 100%;
+		}
 	`,
 	imports: [
 		NzInputDirective,
 		NzInputGroupComponent,
-		NzTooltipDirective,
 		NzIconDirective,
 		FormsModule,
 	],
