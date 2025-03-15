@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DeploymentsSearchStateService } from './deployments-search-state.service';
+import { GlobalSearchStateService } from './global-search-state.service';
 
-describe('DeploymentsSearchStateService', () => {
-	let service: DeploymentsSearchStateService;
+describe('GlobalSearchStateService', () => {
+	let service: GlobalSearchStateService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [DeploymentsSearchStateService],
+			providers: [GlobalSearchStateService],
 		});
 
-		service = TestBed.inject(DeploymentsSearchStateService);
+		service = TestBed.inject(GlobalSearchStateService);
 	});
 
 	it('should emit new value when searchValue is set', () =>

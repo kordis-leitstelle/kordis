@@ -2,8 +2,8 @@ import { Component, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeploymentAssignment } from '@kordis/shared/model';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.component';
 
 @Component({
@@ -33,7 +33,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 		fixture = TestBed.configureTestingModule({
 			imports: [DeploymentSearchWrapperComponent],
 			declarations: [MockSearchWrapperComponent],
-			providers: [DeploymentsSearchStateService],
+			providers: [GlobalSearchStateService],
 		}).createComponent(MockSearchWrapperComponent);
 	});
 
@@ -47,7 +47,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 				fixture.componentRef.setInput('alwaysShow', true);
 				fixture.detectChanges();
 				// no match
-				TestBed.inject(DeploymentsSearchStateService).searchValue.set('lorem');
+				TestBed.inject(GlobalSearchStateService).searchValue.set('lorem');
 
 				expect(
 					fixture.nativeElement.querySelector('[data-testid="child-content"]'),
@@ -56,7 +56,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 
 			it('should not be visible if `alwaysShow` is false', () => {
 				fixture.componentRef.setInput('alwaysShow', false);
-				TestBed.inject(DeploymentsSearchStateService).searchValue.set('lorem');
+				TestBed.inject(GlobalSearchStateService).searchValue.set('lorem');
 				fixture.detectChanges();
 
 				expect(
@@ -67,7 +67,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 
 		it('should show if search value matches name', () => {
 			fixture.componentRef.setInput('name', 'test');
-			TestBed.inject(DeploymentsSearchStateService).searchValue.set('te');
+			TestBed.inject(GlobalSearchStateService).searchValue.set('te');
 
 			fixture.detectChanges();
 
@@ -77,7 +77,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 		});
 
 		it('should show if no search value', () => {
-			TestBed.inject(DeploymentsSearchStateService).searchValue.set('');
+			TestBed.inject(GlobalSearchStateService).searchValue.set('');
 			fixture.detectChanges();
 
 			expect(
@@ -88,7 +88,7 @@ describe('DeploymentSearchWrapperComponent', () => {
 		it('should show if search results found', async () => {
 			fixture.autoDetectChanges();
 
-			TestBed.inject(DeploymentsSearchStateService).searchValue.set('te');
+			TestBed.inject(GlobalSearchStateService).searchValue.set('te');
 
 			expect(
 				fixture.nativeElement.querySelector('[data-testid="child-content"]'),

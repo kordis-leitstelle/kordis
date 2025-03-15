@@ -1,20 +1,4 @@
 <div class="header-bar">
-	<nz-input-group [nzSuffix]="suffixTemplate">
-		<input
-			[(ngModel)]="searchStateService.searchValue"
-			nz-input
-			nz-tooltip="Einheiten, Alarmgruppen, Rettungswachen und Einsätze durchsuchen"
-			placeholder="Suche"
-		/>
-	</nz-input-group>
-	<ng-template #suffixTemplate>
-		<i
-			(click)="searchStateService.searchValue.set('')"
-			class="reset-icon"
-			nz-icon
-			nzType="close"
-		></i>
-	</ng-template>
 	<div>
 		<button (click)="openAlertGroupsEditModal()" nz-button>
 			<span nz-icon nzTheme="outline" nzType="edit"></span> Alarmgruppen

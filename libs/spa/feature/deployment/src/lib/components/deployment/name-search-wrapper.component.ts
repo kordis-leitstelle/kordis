@@ -1,6 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 
 @Component({
 	selector: 'krd-name-search-wrapper',
@@ -12,7 +12,7 @@ import { DeploymentsSearchStateService } from '../../services/deployments-search
 })
 export class NameSearchWrapperComponent {
 	readonly name = input.required<string>();
-	private readonly searchStateService = inject(DeploymentsSearchStateService);
+	private readonly searchStateService = inject(GlobalSearchStateService);
 	readonly isVisible = computed(
 		() =>
 			// no search

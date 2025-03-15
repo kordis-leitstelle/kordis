@@ -15,6 +15,10 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { async } from 'rxjs';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
+import {
+	GlobalSearchComponent,
+	GlobalSearchStateService,
+} from '@kordis/spa/core/misc';
 import { TraceComponent } from '@kordis/spa/core/observability';
 import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
 import { OperationsComponent } from '@kordis/spa/feature/operation';
@@ -35,7 +39,9 @@ import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 		OperationsComponent,
 		ProtocolViewComponent,
 		AsyncPipe,
+		GlobalSearchComponent,
 	],
+	providers: [GlobalSearchStateService],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,

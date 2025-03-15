@@ -10,7 +10,6 @@ import {
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzDividerComponent } from 'ng-zorro-antd/divider';
 import { NzIconDirective, NzIconService } from 'ng-zorro-antd/icon';
-import { NzInputDirective, NzInputGroupComponent } from 'ng-zorro-antd/input';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPopconfirmDirective } from 'ng-zorro-antd/popconfirm';
@@ -24,7 +23,6 @@ import {
 	gql,
 } from '@kordis/spa/core/graphql';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 import { AlertGroupEditModalComponent } from '../alert-group-edit-modal/alert-group-edit-modal.component';
 import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.component';
 import { DEPLOYMENTS_QUERY } from './deployments.query';
@@ -42,22 +40,17 @@ import { SignedOffDeploymentsComponent } from './signed-off-deployments.componen
 		NzButtonComponent,
 		NzDividerComponent,
 		NzIconDirective,
-		NzInputDirective,
-		NzInputGroupComponent,
 		NzPopconfirmDirective,
 		SignedInRescueStationsComponent,
 		SignedOffDeploymentsComponent,
 		OperationDeploymentsComponent,
 		NzTooltipDirective,
 	],
-	providers: [DeploymentsSearchStateService],
 	templateUrl: './deployments.component.html',
 	styleUrl: './deployments.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentsComponent {
-	readonly searchStateService = inject(DeploymentsSearchStateService);
-
 	private readonly modalService = inject(NzModalService);
 	private readonly notificationService = inject(NzNotificationService);
 	private readonly gqlService = inject(GraphqlService);
