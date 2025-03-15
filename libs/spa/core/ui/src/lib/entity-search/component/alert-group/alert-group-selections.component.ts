@@ -7,12 +7,7 @@ import {
 	input,
 	viewChildren,
 } from '@angular/core';
-import {
-	FormArray,
-	FormControl,
-	FormGroup,
-	NonNullableFormBuilder,
-} from '@angular/forms';
+import { FormArray, NonNullableFormBuilder } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import {
 	NzFormControlComponent,
@@ -20,17 +15,13 @@ import {
 } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
 
-import { AlertGroup, Unit } from '@kordis/shared/model';
+import { AlertGroup } from '@kordis/shared/model';
+import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/misc';
 
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
 import { AlertGroupAutocompleteComponent } from './alert-group-autocomplete.component';
 import { AlertGroupSelectionComponent } from './alert-group-selection.component';
-
-export type AlertGroupAssignmentFormGroup = FormGroup<{
-	alertGroup: FormControl<AlertGroup>;
-	assignedUnits: FormControl<Unit[]>;
-}>;
 
 @Component({
 	selector: 'krd-alert-group-selections',

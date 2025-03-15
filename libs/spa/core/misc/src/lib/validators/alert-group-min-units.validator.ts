@@ -1,6 +1,6 @@
 import { AbstractControl, FormArray, ValidationErrors } from '@angular/forms';
 
-import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/ui';
+import { AlertGroupAssignmentFormGroup } from '../forms/alert-group';
 
 export const alertGroupMinUnitsValidator = (
 	control: AbstractControl,
