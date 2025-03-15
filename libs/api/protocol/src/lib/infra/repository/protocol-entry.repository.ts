@@ -83,6 +83,7 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 						: { $gte: range.start },
 				})),
 			})
+			.sort({ time: 'desc' })
 			.lean<ProtocolEntryBaseDocument[]>();
 
 		return docs.map((doc) => this.mapper.map(doc));
