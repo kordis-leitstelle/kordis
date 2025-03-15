@@ -73,7 +73,7 @@ import { RescueStationDeploymentCardHeaderComponent } from './rescue-station/res
 		:host {
 			display: flex;
 			flex-direction: row;
-			gap: calc(var(--base-spacing) / 2);
+			gap: var(--base-spacing);
 			height: 100%;
 		}
 
