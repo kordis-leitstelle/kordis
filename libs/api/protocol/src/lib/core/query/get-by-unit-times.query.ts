@@ -39,6 +39,10 @@ export class GetByUnitInvolvementsHandler
 				this.getUnitRangeFromUnitInvolvement(involvement.unitInvolvements),
 		);
 
+		if (units.length === 0 && alertGroupUnits.length === 0) {
+			return Promise.resolve([]);
+		}
+
 		return this.protocolRepository.getFromUnitTimes(query.orgId, [
 			...units,
 			...alertGroupUnits,
