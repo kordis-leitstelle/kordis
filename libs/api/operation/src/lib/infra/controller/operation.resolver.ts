@@ -5,6 +5,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
 	Args,
 	Field,
+	ID,
 	Mutation,
 	ObjectType,
 	Query,
@@ -41,9 +42,6 @@ import { OperationFilterInput } from './args/operation-filter.args';
 import { UpdateOperationBaseDataInput } from './args/update-operation-base-data.args';
 import { UpdateOperationInvolvementsInput } from './args/update-operation-involvement.args';
 
-// todo: im manager, wenn einsatz beendet, müssen alle ausstehenden zuordnungen gelöscht werden (isPending=false)
-// vielleicht ende nur via einsatzende setzen können?
-
 @ObjectType()
 export class DeletedOperationModel {
 	@Field()
@@ -73,7 +71,7 @@ export class OperationResolver {
 	@Query(() => OperationViewModel)
 	async operation(
 		@RequestUser() { organizationId }: AuthUser,
-		@Args('id') operationId: string,
+		@Args('id', { type: () => ID }) operationId: string,
 	): Promise<OperationViewModel[]> {
 		return this.queryBus.execute(
 			new GetOperationByIdQuery(organizationId, operationId),
@@ -101,7 +99,7 @@ export class OperationResolver {
 	@Mutation(() => Boolean)
 	async deleteOperation(
 		@RequestUser() requestUser: AuthUser,
-		@Args('id') id: string,
+		@Args('id', { type: () => ID }) id: string,
 	): Promise<true | never> {
 		await this.commandBus.execute(
 			new DeleteOperationCommand(requestUser.organizationId, requestUser, id),
@@ -112,7 +110,7 @@ export class OperationResolver {
 	@Mutation(() => Boolean)
 	async archiveOperation(
 		@RequestUser() { organizationId }: AuthUser,
-		@Args('id') id: string,
+		@Args('id', { type: () => ID }) id: string,
 	): Promise<true | never> {
 		try {
 			await this.commandBus.execute(
@@ -135,7 +133,7 @@ export class OperationResolver {
 	@Mutation(() => OperationViewModel)
 	async updateOperationBaseData(
 		@RequestUser() { organizationId }: AuthUser,
-		@Args('id') id: string,
+		@Args('id', { type: () => ID }) id: string,
 		@Args('data') payload: UpdateOperationBaseDataInput,
 	): Promise<OperationViewModel> {
 		if (!Object.keys(payload).length) {
@@ -160,7 +158,7 @@ export class OperationResolver {
 	@Mutation(() => OperationViewModel)
 	async updateOperationInvolvements(
 		@RequestUser() { organizationId }: AuthUser,
-		@Args('id') id: string,
+		@Args('id', { type: () => ID }) id: string,
 		@Args('involvements')
 		{
 			unitInvolvements,

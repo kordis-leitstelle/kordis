@@ -72,7 +72,7 @@ export class OperationPatientsComponent extends BaseOperationTabComponent {
 		super(
 			'patients',
 			gql`
-				query OperationUnitInvolvements($operationId: String!) {
+				query OperationUnitInvolvements($operationId: ID!) {
 					operation(id: $operationId) {
 						${PATIENT_QUERY_FIELDS}
 					}
@@ -80,7 +80,7 @@ export class OperationPatientsComponent extends BaseOperationTabComponent {
 			`,
 			gql`
 				mutation UpdateOperationPatients(
-					$operationId: String!
+					$operationId: ID!
 					$formValue: [OperationPatientInput!]!
 				) {
 					updateOperationBaseData(

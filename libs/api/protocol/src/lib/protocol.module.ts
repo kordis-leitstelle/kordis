@@ -6,9 +6,11 @@ import { RescueStationMessageFactory } from './core/command/helper/rescue-statio
 import { CreateRescueStationSignOffMessageHandler } from './core/command/rescue-station/create-rescue-station-sign-off-message.command';
 import { CreateRescueStationSignOnMessageHandler } from './core/command/rescue-station/create-rescue-station-sign-on-message.command';
 import { CreateRescueStationUpdateMessageHandler } from './core/command/rescue-station/create-rescue-station-update-message.command';
+import { GetByUnitInvolvementsHandler } from './core/query/get-by-unit-times.query';
 import { GetProtocolEntriesHandler } from './core/query/get-protocol-entries.query';
 import { PROTOCOL_ENTRY_REPOSITORY } from './core/repository/protocol-entry.repository';
 import { CommunicationMessageResolver } from './infra/controller/communication-message.resolver';
+import { OperationProtocolResolver } from './infra/controller/operation-protocol.resolver';
 import {
 	ProtocolEntryResolver,
 	RegisteredUnitResolver,
@@ -61,33 +63,33 @@ import { RescueStationUpdateMessageEntityProfile } from './mapper-profile/rescue
 import { UnitPartialProfile } from './mapper-profile/unit-partial.mapper-profile';
 
 const MAPPER_PROFILES = [
-	OperationStartedMessagePayloadEntityProfile,
-	OperationStartedMessagePayloadDocumentProfile,
 	CommunicationMessageDocumentProfile,
 	CommunicationMessagePayloadDocumentProfile,
 	CommunicationMessagePayloadProfile,
 	CommunicationMessageProfile,
+	OperationEndedMessageDocumentProfile,
+	OperationEndedMessagePayloadDocumentProfile,
+	OperationMessageAssignmentsDocumentProfile,
+	OperationMessageAssignmentsEntityProfile,
+	OperationMessageAssignmentsUpdatedDocumentProfile,
+	OperationMessageAssignmentsUpdatedEntityProfile,
+	OperationStartedMessagePayloadDocumentProfile,
+	OperationStartedMessagePayloadDocumentProfile,
+	OperationStartedMessagePayloadEntityProfile,
+	OperationStartedMessagePayloadEntityProfile,
 	ProducerPartialProfile,
 	ProtocolEntryMapper,
 	RescueStationMessagePayloadDocumentProfile,
 	RescueStationMessagePayloadProfile,
-	RescueStationSignOffMessagePayloadDocumentProfile,
 	RescueStationSignOffMessageDocumentProfile,
 	RescueStationSignOffMessageEntityProfile,
+	RescueStationSignOffMessagePayloadDocumentProfile,
 	RescueStationSignOffMessagePayloadEntityProfile,
 	RescueStationSignOnMessageDocumentProfile,
 	RescueStationSignOnMessageEntityProfile,
 	RescueStationUpdateMessageDocumentProfile,
 	RescueStationUpdateMessageEntityProfile,
 	UnitPartialProfile,
-	OperationMessageAssignmentsDocumentProfile,
-	OperationMessageAssignmentsEntityProfile,
-	OperationMessageAssignmentsUpdatedDocumentProfile,
-	OperationMessageAssignmentsUpdatedEntityProfile,
-	OperationEndedMessageDocumentProfile,
-	OperationEndedMessagePayloadDocumentProfile,
-	OperationStartedMessagePayloadDocumentProfile,
-	OperationStartedMessagePayloadEntityProfile,
 ];
 const COMMAND_HANDLERS = [
 	CreateCommunicationMessageHandler,
@@ -95,9 +97,11 @@ const COMMAND_HANDLERS = [
 	CreateRescueStationSignOnMessageHandler,
 	CreateRescueStationUpdateMessageHandler,
 	GetProtocolEntriesHandler,
+	GetByUnitInvolvementsHandler,
 ];
 const RESOLVERS = [
 	CommunicationMessageResolver,
+	OperationProtocolResolver,
 	ProtocolEntryResolver,
 	RegisteredUnitResolver,
 ];

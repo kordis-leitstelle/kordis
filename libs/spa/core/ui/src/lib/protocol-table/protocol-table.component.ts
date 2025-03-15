@@ -12,10 +12,10 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 import { ProtocolEntryUnion } from '@kordis/shared/model';
 
-import { ProtocolEntryTimePipe } from '../protocol-entry-time/protocol-entry-time.pipe';
-import { UnitChipComponent } from '../unit-chip/unit-chip.component';
 import { NzTableFullHeightDirective } from './nz-table-full-height.directive';
+import { ProtocolEntryTimePipe } from './protocol-entry-time/protocol-entry-time.pipe';
 import { RescueStationMessageComponent } from './rescue-station-message.component';
+import { UnitChipComponent } from './unit-chip/unit-chip.component';
 
 @Component({
 	selector: 'krd-protocol-table',

@@ -90,7 +90,7 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 		super(
 			'baseData',
 			gql`
-				query GetOperationBaseData($operationId: String!) {
+				query GetOperationBaseData($operationId: ID!) {
 					operation(id: $operationId) {
 						...OperationBaseData
 					}
@@ -99,7 +99,7 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 			`,
 			gql`
 				mutation UpdateOperationBaseData(
-					$operationId: String!
+					$operationId: ID!
 					$formValue: UpdateOperationBaseDataInput!
 				) {
 					updateOperationBaseData(id: $operationId, data: $formValue) {
