@@ -134,7 +134,6 @@ import { ProtocolClient } from '../../services/protocol.client';
 	styles: `
 		.create-form {
 			display: flex;
-			padding: 0 var(--base-spacing);
 
 			.unit-input {
 				flex: 3;
