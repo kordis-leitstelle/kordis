@@ -9,7 +9,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { AlertGroup } from '@kordis/shared/model';
 
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
-import { AutocompleteComponent } from '../search.component';
+import { AutocompleteComponent } from '../autocomplete.directive';
 
 @Component({
 	selector: 'krd-alert-group-autocomplete',

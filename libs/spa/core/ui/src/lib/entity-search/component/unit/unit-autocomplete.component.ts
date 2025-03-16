@@ -9,7 +9,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { Unit } from '@kordis/shared/model';
 
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
-import { AutocompleteComponent } from '../search.component';
+import { AutocompleteComponent } from '../autocomplete.directive';
 
 @Component({
 	selector: 'krd-unit-autocomplete',
