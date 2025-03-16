@@ -11,13 +11,13 @@ export class ControlValueAccessorBase<T = string>
 
 	/* eslint-disable @typescript-eslint/no-empty-function */
 	onTouch: () => void = () => {};
-	onChange: (value: T) => void = () => {};
+	onChange: (value: T | null) => void = () => {};
 
-	writeValue(value: T): void {
+	writeValue(value: T | null): void {
 		this.value.set(value);
 	}
 
-	registerOnChange(fn: (value: T) => void): void {
+	registerOnChange(fn: (value: T | null) => void): void {
 		this.onChange = fn;
 	}
 
