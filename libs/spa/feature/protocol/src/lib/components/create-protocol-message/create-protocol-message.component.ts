@@ -9,6 +9,9 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
+import { Unit, UnitInput } from '@kordis/shared/model';
+import { UnitAutocompleteComponent } from '@kordis/spa/core/ui';
+
 import { ProtocolClient } from '../../services/protocol.client';
 
 const CHANNELS = Object.freeze([
@@ -47,6 +50,7 @@ const CHANNELS = Object.freeze([
 		NzInputModule,
 		NzSelectModule,
 		ReactiveFormsModule,
+		UnitAutocompleteComponent,
 	],
 	template: `
 		<form
@@ -57,17 +61,12 @@ const CHANNELS = Object.freeze([
 		>
 			<nz-form-item>
 				<nz-form-control nzErrorTip="Absender benötigt!">
-					<input nz-input formControlName="sender" required placeholder="Von" />
+					<krd-unit-autocomplete nz-input formControlName="sender" />
 				</nz-form-control>
 			</nz-form-item>
 			<nz-form-item>
 				<nz-form-control nzErrorTip="Empfänger benötigt!">
-					<input
-						nz-input
-						formControlName="recipient"
-						required
-						placeholder="An"
-					/>
+					<krd-unit-autocomplete nz-input formControlName="recipient" />
 				</nz-form-control>
 			</nz-form-item>
 			<nz-form-item class="message-input">
@@ -107,32 +106,43 @@ const CHANNELS = Object.freeze([
 export class CreateProtocolMessageComponent {
 	readonly channels = CHANNELS;
 
-	public messageForm = inject(NonNullableFormBuilder).group({
-		sender: ['', Validators.required],
-		recipient: ['', Validators.required],
-		message: ['', Validators.required],
-		channel: [
+	private readonly fb = inject(NonNullableFormBuilder);
+	public messageForm = this.fb.group({
+		sender: this.fb.control<Unit | undefined>(undefined, Validators.required),
+		recipient: this.fb.control<Unit | undefined>(
+			undefined,
+			Validators.required,
+		),
+		message: this.fb.control<string>('', Validators.required),
+		channel: this.fb.control<string>(
 			this.channels.find((channel) => channel.default)?.value ?? '',
 			Validators.required,
-		],
+		),
 	});
 
 	private readonly client = inject(ProtocolClient);
 
 	addProtocolMessage(): void {
 		const formValue = this.messageForm.getRawValue();
+
+		// checking presence of sender and recipient is necessary for type inference
+		if (this.messageForm.invalid || !formValue.sender || !formValue.recipient) {
+			return;
+		}
+
 		this.client.addMessageAsync({
-			sender: {
-				type: 'UNKNOWN_UNIT',
-				name: formValue.sender,
-			},
-			recipient: {
-				type: 'UNKNOWN_UNIT',
-				name: formValue.recipient,
-			},
+			sender: this.generateUnitInput(formValue.sender),
+			recipient: this.generateUnitInput(formValue.recipient),
 			channel: formValue.channel,
 			message: formValue.message,
 		});
 		this.messageForm.reset();
+	}
+
+	private generateUnitInput(unit: Unit): UnitInput {
+		return {
+			type: 'REGISTERED_UNIT',
+			id: unit.id,
+		};
 	}
 }
