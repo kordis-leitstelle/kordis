@@ -7,7 +7,7 @@ import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 import { EntitySearchService } from '../service/entity-selection-search.service';
 
 @Directive()
-export abstract class AutocompleteComponent<
+export abstract class AutocompleteDirective<
 	T,
 > extends ControlValueAccessorBase<T> {
 	private readonly searchInputSubject$ = new Subject<string>();
