@@ -1,21 +1,21 @@
 import { signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
-export class ControlValueAccessorBase implements ControlValueAccessor {
-	protected readonly value = signal<string>('');
+export class ControlValueAccessorBase<T = string>
+	implements ControlValueAccessor
+{
+	protected readonly value = signal<T | undefined>(undefined);
 	protected readonly isDisabled = signal<boolean>(false);
 
 	/* eslint-disable @typescript-eslint/no-empty-function */
 	onTouch: () => void = () => {};
-	onChange: (value: string) => void = () => {};
+	onChange: (value: T) => void = () => {};
 
-	/* eslint-enable @typescript-eslint/no-empty-function */
-
-	writeValue(value: string): void {
+	writeValue(value: T): void {
 		this.value.set(value);
 	}
 
-	registerOnChange(fn: (value: string) => void): void {
+	registerOnChange(fn: (value: T) => void): void {
 		this.onChange = fn;
 	}
 
