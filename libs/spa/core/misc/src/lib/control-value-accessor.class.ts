@@ -4,7 +4,9 @@ import { ControlValueAccessor } from '@angular/forms';
 export class ControlValueAccessorBase<T = string>
 	implements ControlValueAccessor
 {
-	protected readonly value = signal<T | undefined>(undefined);
+	// Note: this is not really nullable as signals
+	// don't emit when the value is set to null
+	protected readonly value = signal<T | null>(null);
 	protected readonly isDisabled = signal<boolean>(false);
 
 	/* eslint-disable @typescript-eslint/no-empty-function */

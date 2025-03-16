@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
@@ -21,12 +21,23 @@ import { AutocompleteComponent } from '../search.component';
 		NzSelectModule,
 		ReactiveFormsModule,
 	],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => UnitAutocompleteComponent),
+			multi: true,
+		},
+	],
 	template: `
 		<input
-			[formControl]="searchInput"
+			#input
+			(input)="search(input.value)"
 			nz-input
 			(focus)="onSearchInputFocus()"
 			[nzAutocomplete]="auto"
+			(blur)="onTouch()"
+			[value]="searchInput$ | async"
+			[disabled]="isDisabled()"
 		/>
 		<nz-autocomplete
 			(selectionChange)="onSelect($event)"
@@ -35,7 +46,7 @@ import { AutocompleteComponent } from '../search.component';
 			#auto
 		>
 			@for (unit of result$ | async; track unit.id) {
-				<nz-auto-option [nzValue]="unit">
+				<nz-auto-option [nzValue]="unit" [nzLabel]="unit.callSign">
 					<span class="call-sign">{{ unit.callSign }}</span>
 					<span class="name">{{ unit.name }}</span>
 				</nz-auto-option>
@@ -56,6 +67,6 @@ import { AutocompleteComponent } from '../search.component';
 })
 export class UnitAutocompleteComponent extends AutocompleteComponent<Unit> {
 	constructor(possibleUnitSelectionsService: PossibleUnitSelectionsService) {
-		super(possibleUnitSelectionsService);
+		super(possibleUnitSelectionsService, (unit) => unit.callSign);
 	}
 }

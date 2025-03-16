@@ -7,7 +7,12 @@ import {
 	input,
 	viewChildren,
 } from '@angular/core';
-import { FormArray, NonNullableFormBuilder } from '@angular/forms';
+import {
+	FormArray,
+	FormControl,
+	NonNullableFormBuilder,
+	ReactiveFormsModule,
+} from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import {
 	NzFormControlComponent,
@@ -32,12 +37,13 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 		NzFormControlComponent,
 		NzFormItemComponent,
 		NzColDirective,
+		ReactiveFormsModule,
 	],
 	template: `
 		<nz-form-item>
 			<nz-form-label>Alarmgruppen</nz-form-label>
 			<nz-form-control>
-				<krd-alert-group-autocomplete (selected)="addAlertGroup($event)" />
+				<krd-alert-group-autocomplete [formControl]="alertGroupControl" />
 			</nz-form-control>
 		</nz-form-item>
 		@if (formArray().length) {
@@ -106,6 +112,8 @@ export class AlertGroupSelectionsComponent {
 	private readonly fb = inject(NonNullableFormBuilder);
 	private readonly cd = inject(ChangeDetectorRef);
 
+	readonly alertGroupControl = new FormControl<AlertGroup | null>(null);
+
 	constructor() {
 		effect(() => {
 			// initially mark alert groups as selected
@@ -116,6 +124,13 @@ export class AlertGroupSelectionsComponent {
 						value.alertGroup,
 					),
 				);
+		});
+
+		this.alertGroupControl.valueChanges.subscribe((alertGroup) => {
+			if (alertGroup) {
+				this.addAlertGroup(alertGroup);
+				this.alertGroupControl.setValue(null, { emitEvent: false });
+			}
 		});
 	}
 

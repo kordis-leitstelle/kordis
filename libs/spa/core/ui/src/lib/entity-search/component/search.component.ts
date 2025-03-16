@@ -1,43 +1,63 @@
-import { Directive, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Directive } from '@angular/core';
 import { NzAutocompleteOptionComponent } from 'ng-zorro-antd/auto-complete';
-import { Subject, debounceTime, filter, merge, share, switchMap } from 'rxjs';
+import { Subject, debounceTime, filter, merge, switchMap } from 'rxjs';
+
+import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 
 import { EntitySearchService } from '../service/entity-selection-search.service';
 
 @Directive()
-export abstract class AutocompleteComponent<T> {
-	readonly searchInput = new FormControl<string | T>('');
-	private readonly selectionSubject$ = new Subject<T>();
-	// eslint-disable-next-line rxjs/finnish
-	@Output() readonly selected = this.selectionSubject$.pipe(share());
+export abstract class AutocompleteComponent<
+	T,
+> extends ControlValueAccessorBase<T> {
+	private readonly searchInputSubject$ = new Subject<string>();
+	public readonly searchInput$ = this.searchInputSubject$.asObservable();
 	private readonly searchInputFocusedSubject$ = new Subject<void>();
 	readonly result$ = merge(
 		merge(
 			this.searchInputFocusedSubject$,
-			this.searchInput.valueChanges.pipe(filter((value) => value === '')),
+			this.searchInputSubject$.pipe(filter((value) => value === '')),
 		).pipe(
 			switchMap(() => this.selectionsService.allPossibleEntitiesToSelect$),
 		),
-		this.searchInput.valueChanges.pipe(
+		this.searchInputSubject$.pipe(
 			filter((value): value is string => typeof value === 'string'),
 			debounceTime(300),
-			switchMap((value) =>
-				value ? this.selectionsService.searchAllPossibilities(value) : [],
-			),
+			switchMap((value) => {
+				return value
+					? this.selectionsService.searchAllPossibilities(value)
+					: [];
+			}),
 		),
 	);
 
 	protected constructor(
 		private readonly selectionsService: EntitySearchService<T>,
-	) {}
+		private readonly labelFn: (value: T) => string,
+	) {
+		super();
+	}
 
-	onSelect({ nzValue: unit }: NzAutocompleteOptionComponent): void {
-		this.selectionSubject$.next(unit);
-		this.searchInput.reset();
+	search(query: string): void {
+		this.searchInputSubject$.next(query);
+	}
+
+	onSelect({ nzValue: nextValue }: NzAutocompleteOptionComponent): void {
+		this.searchInputSubject$.next(this.labelFn(nextValue));
+		this.onChange(nextValue);
 	}
 
 	onSearchInputFocus(): void {
 		this.searchInputFocusedSubject$.next();
+	}
+
+	// we cannot use the value signal from the base class because
+	// signals don't emit when the value is set to null
+	override writeValue(value: T | null): void {
+		if (value) {
+			this.searchInputSubject$.next(this.labelFn(value));
+		} else {
+			this.searchInputSubject$.next('');
+		}
 	}
 }

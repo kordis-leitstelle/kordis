@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
@@ -21,12 +21,23 @@ import { AutocompleteComponent } from '../search.component';
 		NzNoAnimationDirective,
 		AsyncPipe,
 	],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => AlertGroupAutocompleteComponent),
+			multi: true,
+		},
+	],
 	template: `
 		<input
-			[formControl]="searchInput"
+			#input
+			(input)="search(input.value)"
 			nz-input
 			(focus)="onSearchInputFocus()"
 			[nzAutocomplete]="auto"
+			(blur)="onTouch()"
+			[value]="searchInput$ | async"
+			[disabled]="isDisabled()"
 		/>
 		<nz-autocomplete
 			(selectionChange)="onSelect($event)"
@@ -35,7 +46,7 @@ import { AutocompleteComponent } from '../search.component';
 			#auto
 		>
 			@for (alertGroup of result$ | async; track alertGroup.id) {
-				<nz-auto-option [nzValue]="alertGroup">
+				<nz-auto-option [nzValue]="alertGroup" [nzLabel]="alertGroup.name">
 					<div class="result-item">
 						<span class="name">{{ alertGroup.name }}</span>
 						@if (
@@ -72,6 +83,6 @@ export class AlertGroupAutocompleteComponent extends AutocompleteComponent<Alert
 	constructor(
 		possibleAlertGroupSelectionsService: PossibleAlertGroupSelectionsService,
 	) {
-		super(possibleAlertGroupSelectionsService);
+		super(possibleAlertGroupSelectionsService, (alertGroup) => alertGroup.name);
 	}
 }
