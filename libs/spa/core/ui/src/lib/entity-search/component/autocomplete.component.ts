@@ -78,6 +78,7 @@ export class OptionTemplateDirective<T> {
 			(blur)="onTouch()"
 			[value]="searchInput$ | async"
 			[disabled]="isDisabled()"
+			[placeholder]="placeholder()"
 		/>
 		<nz-autocomplete
 			(selectionChange)="onSelect($event)"
@@ -106,6 +107,7 @@ export class AutocompleteComponent<
 	readonly labelFn = input.required<(value: T) => string>();
 	readonly options = input<T[]>([]);
 	readonly searchFields = input<StringKey<T>[]>([]);
+	readonly placeholder = input<string>('');
 
 	private readonly searchInputSubject$ = new BehaviorSubject<string>('');
 	public readonly searchInput$ = this.searchInputSubject$.asObservable();
