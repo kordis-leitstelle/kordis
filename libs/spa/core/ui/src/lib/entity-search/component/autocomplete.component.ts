@@ -25,6 +25,7 @@ import {
 	filter,
 	map,
 	merge,
+	take,
 } from 'rxjs';
 
 import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
@@ -75,7 +76,7 @@ export class OptionTemplateDirective<T> {
 			nz-input
 			(focus)="onSearchInputFocus()"
 			[nzAutocomplete]="auto"
-			(blur)="onTouch()"
+			(blur)="onBlur()"
 			[value]="searchInput$ | async"
 			[disabled]="isDisabled()"
 			[placeholder]="placeholder()"
@@ -168,6 +169,32 @@ export class AutocompleteComponent<
 		this.searchInputFocusedSubject$.next();
 	}
 
+	onBlur(): void {
+		let currentSearchInput = '';
+
+		// Get the latest value from the searchInput$ observable
+		this.searchInput$.pipe(take(1)).subscribe((value) => {
+			if (typeof value === 'string') {
+				currentSearchInput = value;
+			}
+		});
+
+		if (currentSearchInput) {
+			const perfectMatch = this.findMatchingOptions(
+				currentSearchInput,
+				true,
+			)[0];
+
+			// if there is a perfect match, select it
+			if (perfectMatch) {
+				this.lastSelectedEntitySubject$.next(perfectMatch);
+				this.searchInputSubject$.next(this.labelFn()(perfectMatch));
+			}
+		}
+
+		this.onTouch();
+	}
+
 	// we cannot use the value signal from the base class because
 	// signals don't emit when the value is set to null
 	override writeValue(value: T | null): void {
@@ -180,28 +207,53 @@ export class AutocompleteComponent<
 		}
 	}
 
-	private filterOptions(options: T[], searchInput: string): T[] {
+	/**
+	 * Unified method to find options matching the search input
+	 * @param searchInput The search input to match against
+	 * @param exactMatch Whether to require an exact match (true) or partial match (false)
+	 * @param options Optional list of options to search through, defaults to all options
+	 * @returns Array of matching options, sorted by label
+	 */
+	private findMatchingOptions(
+		searchInput: string,
+		exactMatch = false,
+		options: T[] = this.options(),
+	): T[] {
+		const lowerSearchInput = searchInput.toLocaleLowerCase();
+		let matchedOptions: T[];
+
 		if (this.searchFields().length === 0) {
-			return options
-				.filter((option) =>
-					this.labelFn()(option)
-						.toLocaleLowerCase()
-						.includes(searchInput.toLocaleLowerCase()),
-				)
-				.toSorted((a, b) => this.labelFn()(a).localeCompare(this.labelFn()(b)));
+			// If no search fields specified, use only the labelFn
+			matchedOptions = options.filter((option) => {
+				const labelValue = this.labelFn()(option).toLocaleLowerCase();
+				return exactMatch
+					? labelValue === lowerSearchInput
+					: labelValue.includes(lowerSearchInput);
+			});
+		} else {
+			// Otherwise, check search fields
+			matchedOptions = options.filter((option) =>
+				this.searchFields().some((field) => {
+					const value = (option[field] as string).toLocaleLowerCase();
+					return exactMatch
+						? value === lowerSearchInput
+						: value.includes(lowerSearchInput);
+				}),
+			);
 		}
 
-		return options
-			.filter((option) =>
-				this.searchFields().some((field) => {
-					// we know this because we only allow `StringKey<T>`s
-					const value = option[field] as string;
+		return matchedOptions.toSorted((a, b) =>
+			this.labelFn()(a).localeCompare(this.labelFn()(b)),
+		);
+	}
 
-					return value
-						.toLocaleLowerCase()
-						.includes(searchInput.toLocaleLowerCase());
-				}),
-			)
-			.toSorted((a, b) => this.labelFn()(a).localeCompare(this.labelFn()(b)));
+	/**
+	 * Find options matching the search input using partial matching
+	 * @param options The options to filter
+	 * @param searchInput The search input to filter by
+	 * @returns The filtered and sorted options
+	 */
+	private filterOptions(options: T[], searchInput: string): T[] {
+		return this.findMatchingOptions(searchInput, false, options);
 	}
 }
