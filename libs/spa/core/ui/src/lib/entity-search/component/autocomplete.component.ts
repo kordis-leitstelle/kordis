@@ -1,5 +1,12 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, forwardRef, input } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import {
+	Component,
+	ContentChild,
+	Directive,
+	TemplateRef,
+	forwardRef,
+	input,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -26,11 +33,28 @@ type StringKey<T> = {
 	[K in keyof T]: T[K] extends string ? K : never;
 }[keyof T];
 
-// TODO: support template for option rendering
+@Directive({
+	selector: 'ng-template[krdOptionTemplate]',
+	standalone: true,
+})
+export class OptionTemplateDirective<T> {
+	readonly list = input.required<T[]>();
+
+	constructor(public templateRef: TemplateRef<{ $implicit: T }>) {}
+
+	static ngTemplateContextGuard<TContext>(
+		dir: OptionTemplateDirective<TContext>,
+		ctx: unknown,
+	): ctx is { $implicit: TContext; list: TContext[] } {
+		return true;
+	}
+}
+
 @Component({
 	selector: 'krd-autocomplete',
 	imports: [
 		AsyncPipe,
+		CommonModule,
 		NzAutocompleteModule,
 		NzInputDirective,
 		NzNoAnimationDirective,
@@ -63,7 +87,14 @@ type StringKey<T> = {
 		>
 			@for (option of result$ | async; track labelFn()(option)) {
 				<nz-auto-option [nzValue]="option" [nzLabel]="labelFn()(option)">
-					<span>{{ labelFn()(option) }}</span>
+					<ng-container *ngIf="optionTemplate as tRef; else defaultOption">
+						<ng-container
+							*ngTemplateOutlet="tRef; context: { $implicit: option }"
+						></ng-container>
+					</ng-container>
+					<ng-template #defaultOption>
+						<span>{{ labelFn()(option) }}</span>
+					</ng-template>
 				</nz-auto-option>
 			}
 		</nz-autocomplete>
@@ -103,6 +134,13 @@ export class AutocompleteComponent<
 			map((searchInput) => this.filterOptions(this.options(), searchInput)),
 		),
 	);
+
+	@ContentChild(OptionTemplateDirective)
+	optionTemplateDir?: OptionTemplateDirective<T>;
+
+	get optionTemplate(): TemplateRef<{ $implicit: T }> | undefined {
+		return this.optionTemplateDir?.templateRef;
+	}
 
 	constructor() {
 		super();
