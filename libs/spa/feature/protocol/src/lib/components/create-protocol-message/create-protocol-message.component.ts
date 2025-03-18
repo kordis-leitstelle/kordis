@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	OnInit,
+	inject,
+	signal,
+} from '@angular/core';
 import {
 	NonNullableFormBuilder,
 	ReactiveFormsModule,
@@ -10,7 +17,11 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { Unit, UnitInput } from '@kordis/shared/model';
-import { UnitAutocompleteComponent } from '@kordis/spa/core/ui';
+import {
+	AutocompleteComponent,
+	OptionTemplateDirective,
+	PossibleUnitSelectionsService,
+} from '@kordis/spa/core/ui';
 
 import { ProtocolClient } from '../../services/protocol.client';
 
@@ -50,7 +61,9 @@ const CHANNELS = Object.freeze([
 		NzInputModule,
 		NzSelectModule,
 		ReactiveFormsModule,
-		UnitAutocompleteComponent,
+		AutocompleteComponent,
+		OptionTemplateDirective,
+		JsonPipe,
 	],
 	template: `
 		<form
@@ -61,12 +74,38 @@ const CHANNELS = Object.freeze([
 		>
 			<nz-form-item>
 				<nz-form-control nzErrorTip="Absender benötigt!">
-					<krd-unit-autocomplete nz-input formControlName="sender" />
+					<krd-autocomplete
+						[labelFn]="labelFn"
+						[options]="units()"
+						formControlName="sender"
+						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+						placeholder="Von"
+						[allowCustomValues]="true"
+					>
+						<ng-template krdOptionTemplate [list]="units()" let-unit>
+							<span class="call-sign">{{ unit.callSign }}</span>
+							<span class="name">{{ unit.name }}</span>
+						</ng-template>
+					</krd-autocomplete>
 				</nz-form-control>
 			</nz-form-item>
 			<nz-form-item>
 				<nz-form-control nzErrorTip="Empfänger benötigt!">
-					<krd-unit-autocomplete nz-input formControlName="recipient" />
+					<nz-form-control nzErrorTip="Absender benötigt!">
+						<krd-autocomplete
+							[labelFn]="labelFn"
+							[options]="units()"
+							formControlName="recipient"
+							[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+							placeholder="An"
+							[allowCustomValues]="true"
+						>
+							<ng-template krdOptionTemplate [list]="units()" let-unit>
+								<span class="call-sign">{{ unit.callSign }}</span>
+								<span class="name">{{ unit.name }}</span>
+							</ng-template>
+						</krd-autocomplete>
+					</nz-form-control>
 				</nz-form-control>
 			</nz-form-item>
 			<nz-form-item class="message-input">
@@ -95,21 +134,39 @@ const CHANNELS = Object.freeze([
 				Gespräch eintragen
 			</button>
 		</form>
+		<pre>{{ messageForm.value | json }}</pre>
 	`,
 	styles: `
 		.message-input {
 			flex-grow: 1;
 		}
+
+		.call-sign {
+			font-weight: 500;
+			margin-right: var(--base-spacing);
+		}
+
+		.name {
+			color: grey;
+			font-size: 0.9em;
+		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateProtocolMessageComponent {
+export class CreateProtocolMessageComponent implements OnInit {
 	readonly channels = CHANNELS;
+	readonly labelFn = (unit: Unit): string => unit.callSign;
+
+	private readonly unitService = inject(PossibleUnitSelectionsService);
+	readonly units = signal<Unit[]>([]);
 
 	private readonly fb = inject(NonNullableFormBuilder);
 	public messageForm = this.fb.group({
-		sender: this.fb.control<Unit | undefined>(undefined, Validators.required),
-		recipient: this.fb.control<Unit | undefined>(
+		sender: this.fb.control<Unit | string | undefined>(
+			undefined,
+			Validators.required,
+		),
+		recipient: this.fb.control<Unit | string | undefined>(
 			undefined,
 			Validators.required,
 		),
@@ -121,6 +178,12 @@ export class CreateProtocolMessageComponent {
 	});
 
 	private readonly client = inject(ProtocolClient);
+
+	ngOnInit(): void {
+		this.unitService.allPossibleEntitiesToSelect$.subscribe((units) => {
+			this.units.set(units);
+		});
+	}
 
 	addProtocolMessage(): void {
 		const formValue = this.messageForm.getRawValue();
@@ -136,10 +199,33 @@ export class CreateProtocolMessageComponent {
 			channel: formValue.channel,
 			message: formValue.message,
 		});
-		this.messageForm.reset();
+
+		const defaultChannel =
+			this.channels.find((channel) => channel.default)?.value ?? '';
+
+		// Use setTimeout to push reset to the next change detection cycle
+		setTimeout(() => {
+			// Reset with default values
+			this.messageForm.reset({
+				sender: undefined,
+				recipient: undefined,
+				message: '',
+				channel: defaultChannel,
+			});
+
+			// Mark form controls as pristine and untouched
+			this.messageForm.markAsPristine();
+			this.messageForm.markAsUntouched();
+		}, 0);
 	}
 
-	private generateUnitInput(unit: Unit): UnitInput {
+	private generateUnitInput(unit: Unit | string): UnitInput {
+		if (typeof unit === 'string') {
+			return {
+				type: 'UNKNOWN_UNIT',
+				name: unit,
+			};
+		}
 		return {
 			type: 'REGISTERED_UNIT',
 			id: unit.id,
