@@ -1,30 +1,56 @@
 :host {
 	--deployment-card-width: 230px;
-
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--base-spacing) / 2);
+	position: relative;
 	height: 100%;
 
-	.header-bar {
+	.actions {
+		position: absolute;
+		bottom: var(--base-spacing);
+		right: var(--base-spacing);
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
+		flex-direction: column;
+		gap: var(--base-spacing);
 
-		nz-input-group {
-			width: 400px;
+		.description {
+			display: inline-block;
+			max-width: 0;
+			opacity: 0;
+			white-space: nowrap;
+			overflow: hidden;
+			margin-left: 0;
+			transition:
+				max-width 0.3s ease-in-out,
+				opacity 0.3s ease-in-out,
+				margin-left 0.3s ease-in-out;
+		}
 
-			.reset-icon {
-				cursor: pointer;
-			}
+		button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 4px 8px;
+			transition:
+				width 0.3s ease-in-out,
+				justify-content 0.3s ease-in-out,
+				padding 0.3s ease-in-out;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
-			.reset-icon:hover {
-				color: var(--ant-primary-color);
+			span {
+				margin: 0;
 			}
 		}
 
-		div > :not(:last-child) {
-			margin-right: calc(var(--base-spacing) / 2);
+		&:hover {
+			button {
+				justify-content: flex-start;
+				padding: 4px 16px;
+
+				.description {
+					max-width: 150px;
+					opacity: 1;
+					margin-left: 8px;
+				}
+			}
 		}
 	}
 
@@ -33,6 +59,8 @@
 		flex-direction: row;
 		flex-grow: 1;
 		overflow: auto;
+		gap: var(--base-spacing);
+		height: 100%;
 
 		nz-divider {
 			height: 90%;
