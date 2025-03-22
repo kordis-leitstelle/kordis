@@ -80,7 +80,8 @@ const CHANNELS = Object.freeze([
 						formControlName="sender"
 						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
 						placeholder="Von"
-						[allowCustomValues]="true"
+						(optionSelected)="recipientInput.focus()"
+						allowCustomValues
 					>
 						<ng-template krdOptionTemplate [list]="units()" let-unit>
 							<span class="call-sign">{{ unit.callSign }}</span>
@@ -93,12 +94,14 @@ const CHANNELS = Object.freeze([
 				<nz-form-control nzErrorTip="Empfänger benötigt!">
 					<nz-form-control nzErrorTip="Absender benötigt!">
 						<krd-autocomplete
+							#recipientInput
 							[labelFn]="labelFn"
 							[options]="units()"
 							formControlName="recipient"
 							[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
 							placeholder="An"
-							[allowCustomValues]="true"
+							allowCustomValues
+							(optionSelected)="msgInput.focus()"
 						>
 							<ng-template krdOptionTemplate [list]="units()" let-unit>
 								<span class="call-sign">{{ unit.callSign }}</span>
@@ -110,6 +113,7 @@ const CHANNELS = Object.freeze([
 			</nz-form-item>
 			<nz-form-item class="message-input">
 				<input
+					#msgInput
 					nz-input
 					formControlName="message"
 					required

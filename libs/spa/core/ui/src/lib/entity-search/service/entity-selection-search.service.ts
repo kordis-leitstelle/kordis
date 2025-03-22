@@ -18,6 +18,9 @@ export interface EntitySearchService<TEntity> {
 	allPossibleEntitiesToSelect$: Observable<TEntity[]>;
 	searchAllPossibilities(query: string): Promise<TEntity[]>;
 }
+
+// todo: remove search capabilities
+
 /*
  * This service handles the selection of entities in a context where an entity can only be selected once.
  * If a entity is selected, it will not be visible in the search results anymore. It can be deselected to be visible again.
