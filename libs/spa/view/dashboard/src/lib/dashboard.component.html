@@ -24,14 +24,17 @@
 		</div>
 	</nz-header>
 	<nz-content>
-		<div class="protocol">
-			<krd-protocol-view />
-		</div>
-		<div class="operations">
-			<krd-operations />
-		</div>
-		<div class="deployments">
+		<section class="action-bar-section">
+			<krd-action-bar />
+		</section>
+		<section class="deployments-section">
 			<krd-deployments />
-		</div>
+		</section>
+		<section class="protocol-section">
+			<krd-protocol-view />
+		</section>
+		<section class="operation-section">
+			<krd-operations />
+		</section>
 	</nz-content>
 </nz-layout>

@@ -14,9 +14,11 @@ import { forkJoin } from 'rxjs';
 
 import { Query, Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
-import { alertGroupMinUnitsValidator } from '@kordis/spa/core/misc';
 import {
 	AlertGroupAssignmentFormGroup,
+	alertGroupMinUnitsValidator,
+} from '@kordis/spa/core/misc';
+import {
 	PossibleUnitSelectionsService,
 	UnitsSelectionComponent,
 } from '@kordis/spa/core/ui';
