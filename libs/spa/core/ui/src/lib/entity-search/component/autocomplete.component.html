@@ -1,0 +1,34 @@
+<input
+	#input
+	(input)="search(input.value)"
+	nz-input
+	[nzAutocomplete]="auto"
+	(blur)="onBlur()"
+	(focus)='onSearchInputFocus()'
+	[value]="value()"
+	[disabled]="isDisabled()"
+	[placeholder]="placeholder()"
+/>
+<nz-autocomplete
+	(selectionChange)="selectValue($event.nzValue)"
+	[nzBackfill]="false"
+	[nzNoAnimation]="true"
+	#auto
+>
+	@for (option of result$ | async; track getOptionId(option)) {
+		<nz-auto-option [nzValue]="option" [nzLabel]="getOptionLabel(option)">
+			@if (isCustomValueOption(option)) {
+				<span>"{{ getCustomValue(option) }}"</span>
+			} @else {
+				<ng-container *ngIf="optionTemplate as tRef; else defaultOption">
+					<ng-container
+						*ngTemplateOutlet="tRef; context: { $implicit: option }"
+					/>
+				</ng-container>
+				<ng-template #defaultOption>
+					<span>{{ labelFn()(option) }}</span>
+				</ng-template>
+			}
+		</nz-auto-option>
+	}
+</nz-autocomplete>

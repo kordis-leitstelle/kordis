@@ -3,29 +3,30 @@ import {
 	Component,
 	ContentChild,
 	Directive,
+	ElementRef,
 	TemplateRef,
+	booleanAttribute,
 	forwardRef,
 	input,
+	output,
+	viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import {
+	NzAutocompleteComponent,
 	NzAutocompleteModule,
-	NzAutocompleteOptionComponent,
 } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import {
-	BehaviorSubject,
 	Subject,
 	combineLatest,
-	debounceTime,
 	distinctUntilChanged,
 	filter,
 	map,
 	merge,
-	take,
 } from 'rxjs';
 
 import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
@@ -75,42 +76,7 @@ export class OptionTemplateDirective<T> {
 			multi: true,
 		},
 	],
-	template: `
-		<input
-			#input
-			(input)="search(input.value)"
-			nz-input
-			(focus)="onSearchInputFocus()"
-			[nzAutocomplete]="auto"
-			(blur)="onBlur()"
-			[value]="searchInput$ | async"
-			[disabled]="isDisabled()"
-			[placeholder]="placeholder()"
-		/>
-		<nz-autocomplete
-			(selectionChange)="onSelect($event)"
-			[nzBackfill]="false"
-			[nzNoAnimation]="true"
-			#auto
-		>
-			@for (option of result$ | async; track getOptionId(option)) {
-				<nz-auto-option [nzValue]="option" [nzLabel]="getOptionLabel(option)">
-					@if (isCustomValueOption(option)) {
-						<span>"{{ getCustomValue(option) }}"</span>
-					} @else {
-						<ng-container *ngIf="optionTemplate as tRef; else defaultOption">
-							<ng-container
-								*ngTemplateOutlet="tRef; context: { $implicit: option }"
-							></ng-container>
-						</ng-container>
-						<ng-template #defaultOption>
-							<span>{{ labelFn()(option) }}</span>
-						</ng-template>
-					}
-				</nz-auto-option>
-			}
-		</nz-autocomplete>
-	`,
+	templateUrl: `./autocomplete.component.html`,
 })
 export class AutocompleteComponent<
 	T extends object,
@@ -119,18 +85,18 @@ export class AutocompleteComponent<
 	readonly options = input<T[]>([]);
 	readonly searchFields = input<StringKey<T>[]>([]);
 	readonly placeholder = input<string>('');
-	readonly allowCustomValues = input<boolean>(false);
+	readonly allowCustomValues = input(false, {
+		transform: booleanAttribute,
+	});
+	readonly itemSelected = output<T | string>();
 
-	private readonly searchInputSubject$ = new BehaviorSubject<string>('');
-	public readonly searchInput$ = this.searchInputSubject$.asObservable();
-
+	private readonly searchInputValue$ = toObservable(this.value);
 	private readonly searchInputFocusedSubject$ = new Subject<void>();
-	private readonly lastSelectedEntitySubject$ = new BehaviorSubject<
-		T | string | null
-	>(null);
-
+	private readonly nextValueSubject$ = new Subject<ResultItem<T>>();
 	// Custom value symbol for type safety when handling custom inputs
 	private readonly CUSTOM_VALUE = Symbol('CUSTOM_VALUE');
+	private readonly autocompleteComponent = viewChild(NzAutocompleteComponent);
+	private readonly inputEle = viewChild<ElementRef>('input');
 
 	// Type to represent a custom value option that contains the input string
 	private readonly customValueOption = (value: string): CustomValueOption => ({
@@ -140,19 +106,25 @@ export class AutocompleteComponent<
 	readonly result$ = merge(
 		// show all options if the search input is empty
 		combineLatest([
-			this.searchInputSubject$,
+			this.searchInputValue$,
 			this.searchInputFocusedSubject$,
 		]).pipe(
-			filter(([searchInput]) => searchInput.trim() === ''),
+			filter(([searchInput]) => {
+				if (searchInput == null) {
+					return true;
+				} else if (typeof searchInput === 'string') {
+					return searchInput.trim() === '';
+				}
+				return false;
+			}),
 			map(() => this.options()),
 		),
 		// else show options based on the search input
-		this.searchInputSubject$.pipe(
+		this.searchInputValue$.pipe(
 			filter(
 				(searchInput): searchInput is string => typeof searchInput === 'string',
 			),
 			filter((searchInput) => searchInput.trim() !== ''),
-			debounceTime(300),
 			map((searchInput) => {
 				const filteredOptions = this.filterOptions(this.options(), searchInput);
 
@@ -172,8 +144,8 @@ export class AutocompleteComponent<
 
 				// Add the custom value as the first option
 				return [
-					this.customValueOption(searchInput),
 					...filteredOptions,
+					this.customValueOption(searchInput),
 				] as ResultItem<T>[];
 			}),
 		),
@@ -189,13 +161,15 @@ export class AutocompleteComponent<
 	constructor() {
 		super();
 
-		this.lastSelectedEntitySubject$
-			.pipe(takeUntilDestroyed(), distinctUntilChanged())
-			.subscribe((selected) => {
-				this.onChange(selected);
-			});
+		this.nextValueSubject$
+			.pipe(
+				// Emit only when the value changes
+				distinctUntilChanged(),
+				// Emit only when the input is focused
+				takeUntilDestroyed(),
+			)
+			.subscribe((value) => this.changeValue(value));
 	}
-
 	/**
 	 * Check if an option is a custom value
 	 */
@@ -249,68 +223,65 @@ export class AutocompleteComponent<
 	}
 
 	search(query: string): void {
-		this.lastSelectedEntitySubject$.next(null);
-		this.searchInputSubject$.next(query);
+		this.onChange(null);
+		this.value.set(query);
 	}
 
-	onSelect({ nzValue: nextValue }: NzAutocompleteOptionComponent): void {
+	selectValue(nextValue: ResultItem<T>): void {
+		this.nextValueSubject$.next(nextValue);
+	}
+
+	changeValue(nextValue: ResultItem<T>): void {
+		this.isDisabled.set(true);
 		if (this.isCustomValueOption(nextValue as ResultItem<T>)) {
 			// Handle custom value selection
 			const customValue = this.getCustomValue(nextValue as CustomValueOption);
-			this.lastSelectedEntitySubject$.next(customValue);
-			this.searchInputSubject$.next(customValue);
+			this.onChange(customValue);
+			this.value.set(customValue);
+			this.itemSelected.emit(customValue);
 		} else {
 			// Handle regular option selection
-			this.lastSelectedEntitySubject$.next(nextValue as T);
-			this.searchInputSubject$.next(this.labelFn()(nextValue as T));
+			this.onChange(nextValue as T);
+			this.value.set(this.labelFn()(nextValue as T));
+			this.itemSelected.emit(nextValue as T);
 		}
+
+		// prevent ng zorro autocomplete directive to open the dropdown after selecting a value. Otherwise it will jump back if we focus another element after value changes
+		setTimeout(() => this.isDisabled.set(false), 10);
 	}
 
 	onSearchInputFocus(): void {
 		this.searchInputFocusedSubject$.next();
 	}
 
-	onBlur(): void {
-		let currentSearchInput = '';
+	async onBlur(): Promise<void> {
+		this.selectActiveOption();
+	}
 
-		// Get the latest value from the searchInput$ observable
-		this.searchInput$.pipe(take(1)).subscribe((value) => {
-			if (typeof value === 'string') {
-				currentSearchInput = value;
-			}
-		});
+	selectActiveOption(): void {
+		const activeOption = this.autocompleteComponent()?.activeItem;
 
-		if (currentSearchInput) {
-			const perfectMatches = this.findMatchingOptions(currentSearchInput, true);
-
-			// If there is a perfect match, select it
-			if (perfectMatches.length > 0) {
-				const perfectMatch = perfectMatches[0];
-				this.lastSelectedEntitySubject$.next(perfectMatch);
-				this.searchInputSubject$.next(this.labelFn()(perfectMatch));
-			}
-			// If custom values are allowed and there's no perfect match, use the input as value
-			else if (this.allowCustomValues() && currentSearchInput.trim() !== '') {
-				this.lastSelectedEntitySubject$.next(currentSearchInput);
-				this.searchInputSubject$.next(currentSearchInput);
-			}
+		if (activeOption) {
+			this.selectValue(activeOption.nzValue);
 		}
+	}
 
-		this.onTouch();
+	focus(): void {
+		this.inputEle()?.nativeElement.focus();
 	}
 
 	// we cannot use the value signal from the base class because
 	// signals don't emit when the value is set to null
 	override writeValue(value: T | string | null): void {
 		if (!value) {
-			this.lastSelectedEntitySubject$.next(null);
-			this.searchInputSubject$.next('');
+			this.onChange(null);
+			this.value.set('');
 		} else if (typeof value === 'string') {
-			this.lastSelectedEntitySubject$.next(value);
-			this.searchInputSubject$.next(value);
+			this.onChange(value);
+			this.value.set(value);
 		} else {
-			this.lastSelectedEntitySubject$.next(value);
-			this.searchInputSubject$.next(this.labelFn()(value));
+			this.onChange(value);
+			this.value.set(this.labelFn()(value));
 		}
 	}
 
