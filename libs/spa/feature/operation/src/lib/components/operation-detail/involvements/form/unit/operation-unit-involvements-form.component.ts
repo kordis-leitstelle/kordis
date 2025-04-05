@@ -8,7 +8,12 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+	FormArray,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+} from '@angular/forms';
 import {
 	InfoCircleOutline,
 	WarningOutline,
@@ -53,6 +58,7 @@ export type UnitInvolvementFormGroup = FormGroup<{
 		UnitAutocompleteComponent,
 		NzPopoverDirective,
 		NzButtonComponent,
+		ReactiveFormsModule,
 	],
 	template: `
 		@if (formArray().length > 0) {
@@ -115,7 +121,7 @@ export type UnitInvolvementFormGroup = FormGroup<{
 
 		<div class="footer">
 			<ng-template #addUnitPopover>
-				<krd-unit-autocomplete (selected)="addUnit.emit($event)" />
+				<krd-unit-autocomplete [formControl]="unitControl" />
 			</ng-template>
 
 			<button
@@ -179,6 +185,8 @@ export class OperationInvolvementsFormComponent implements OnDestroy {
 	private readonly cleanupSubject$ = new Subject<void>();
 	private readonly formFactory = inject(InvolvementFormFactory);
 
+	readonly unitControl = new FormControl<Unit | null>(null);
+
 	constructor(nzIconService: NzIconService, cd: ChangeDetectorRef) {
 		nzIconService.addIcon(WarningOutline, InfoCircleOutline);
 
@@ -193,6 +201,13 @@ export class OperationInvolvementsFormComponent implements OnDestroy {
 					takeUntil(this.cleanupSubject$),
 				)
 				.subscribe(() => cd.detectChanges());
+		});
+
+		this.unitControl.valueChanges.subscribe((unit) => {
+			if (unit) {
+				this.addUnit.emit(unit);
+				this.unitControl.setValue(null, { emitEvent: false });
+			}
 		});
 	}
 

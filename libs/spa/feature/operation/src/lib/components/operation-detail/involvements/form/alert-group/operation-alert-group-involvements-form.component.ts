@@ -4,7 +4,12 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+	FormArray,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+} from '@angular/forms';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
@@ -32,6 +37,7 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 		NzButtonComponent,
 		NzIconDirective,
 		NzPopoverDirective,
+		ReactiveFormsModule,
 	],
 	template: `
 		@if (formArray().length > 0) {
@@ -57,7 +63,7 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 
 		<div class="footer">
 			<ng-template #addAlertGroupPopover>
-				<krd-alert-group-autocomplete (selected)="addAlertGroup.emit($event)" />
+				<krd-alert-group-autocomplete [formControl]="alertGroupControl" />
 			</ng-template>
 			<button
 				[nzPopoverContent]="addAlertGroupPopover"
@@ -99,10 +105,20 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 export class OperationAlertGroupInvolvementsFormComponent {
 	readonly formArray =
 		input.required<FormArray<AlertGroupInvolvementFormGroup>>();
+	readonly alertGroupControl = new FormControl<AlertGroup | null>(null);
 
 	readonly addAlertGroup = output<AlertGroup>();
 	readonly addAlertGroupUnit = output<{
 		unit: Unit;
 		alertGroup: AlertGroup;
 	}>();
+
+	constructor() {
+		this.alertGroupControl.valueChanges.subscribe((alertGroup) => {
+			if (alertGroup) {
+				this.addAlertGroup.emit(alertGroup);
+				this.alertGroupControl.setValue(null, { emitEvent: false });
+			}
+		});
+	}
 }

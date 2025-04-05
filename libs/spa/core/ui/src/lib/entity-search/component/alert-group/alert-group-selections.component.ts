@@ -10,8 +10,8 @@ import {
 import {
 	FormArray,
 	FormControl,
-	FormGroup,
 	NonNullableFormBuilder,
+	ReactiveFormsModule,
 } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import {
@@ -20,17 +20,13 @@ import {
 } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
 
-import { AlertGroup, Unit } from '@kordis/shared/model';
+import { AlertGroup } from '@kordis/shared/model';
+import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/misc';
 
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
 import { AlertGroupAutocompleteComponent } from './alert-group-autocomplete.component';
 import { AlertGroupSelectionComponent } from './alert-group-selection.component';
-
-export type AlertGroupAssignmentFormGroup = FormGroup<{
-	alertGroup: FormControl<AlertGroup>;
-	assignedUnits: FormControl<Unit[]>;
-}>;
 
 @Component({
 	selector: 'krd-alert-group-selections',
@@ -41,12 +37,13 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 		NzFormControlComponent,
 		NzFormItemComponent,
 		NzColDirective,
+		ReactiveFormsModule,
 	],
 	template: `
 		<nz-form-item>
 			<nz-form-label>Alarmgruppen</nz-form-label>
 			<nz-form-control>
-				<krd-alert-group-autocomplete (selected)="addAlertGroup($event)" />
+				<krd-alert-group-autocomplete [formControl]="alertGroupControl" />
 			</nz-form-control>
 		</nz-form-item>
 		@if (formArray().length) {
@@ -115,6 +112,8 @@ export class AlertGroupSelectionsComponent {
 	private readonly fb = inject(NonNullableFormBuilder);
 	private readonly cd = inject(ChangeDetectorRef);
 
+	readonly alertGroupControl = new FormControl<AlertGroup | null>(null);
+
 	constructor() {
 		effect(() => {
 			// initially mark alert groups as selected
@@ -125,6 +124,13 @@ export class AlertGroupSelectionsComponent {
 						value.alertGroup,
 					),
 				);
+		});
+
+		this.alertGroupControl.valueChanges.subscribe((alertGroup) => {
+			if (alertGroup) {
+				this.addAlertGroup(alertGroup);
+				this.alertGroupControl.setValue(null, { emitEvent: false });
+			}
 		});
 	}
 
