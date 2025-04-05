@@ -1,34 +1,45 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
+	ChangeDetectionStrategy,
 	Component,
-	ContentChild,
 	Directive,
+	ElementRef,
 	TemplateRef,
+	booleanAttribute,
+	contentChild,
 	forwardRef,
 	input,
+	output,
+	viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
-	NzAutocompleteModule,
+	NzAutocompleteComponent,
 	NzAutocompleteOptionComponent,
+	NzAutocompleteTriggerDirective,
 } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import {
-	BehaviorSubject,
-	Subject,
-	combineLatest,
-	debounceTime,
-	distinctUntilChanged,
-	filter,
-	map,
-	merge,
-	take,
-} from 'rxjs';
+import { Subject, filter, map, merge } from 'rxjs';
 
 import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
+
+@Directive({
+	selector: '[krdAutocompleteOptionTmpl]',
+})
+export class AutocompleteOptionTemplateDirective<TContext> {
+	// type token, so we get type hints for the context variable
+	readonly list = input.required<TContext[]>();
+
+	constructor(public templateRef: TemplateRef<{ $implicit: TContext }>) {}
+
+	static ngTemplateContextGuard<TContext>(
+		dir: AutocompleteOptionTemplateDirective<TContext>,
+		ctx: unknown,
+	): ctx is { $implicit: TContext; list: TContext[] } {
+		return true;
+	}
+}
 
 type StringKey<T> = {
 	[K in keyof T]: T[K] extends string ? K : never;
@@ -40,41 +51,8 @@ interface CustomValueOption {
 
 type ResultItem<T> = T | CustomValueOption;
 
-@Directive({
-	selector: 'ng-template[krdOptionTemplate]',
-	standalone: true,
-})
-export class OptionTemplateDirective<T> {
-	readonly list = input.required<T[]>();
-
-	constructor(public templateRef: TemplateRef<{ $implicit: T }>) {}
-
-	static ngTemplateContextGuard<TContext>(
-		dir: OptionTemplateDirective<TContext>,
-		ctx: unknown,
-	): ctx is { $implicit: TContext; list: TContext[] } {
-		return true;
-	}
-}
-
 @Component({
 	selector: 'krd-autocomplete',
-	imports: [
-		AsyncPipe,
-		CommonModule,
-		NzAutocompleteModule,
-		NzInputDirective,
-		NzNoAnimationDirective,
-		NzSelectModule,
-		ReactiveFormsModule,
-	],
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => AutocompleteComponent),
-			multi: true,
-		},
-	],
 	template: `
 		<input
 			#input
@@ -84,25 +62,27 @@ export class OptionTemplateDirective<T> {
 			[nzAutocomplete]="auto"
 			(blur)="onBlur()"
 			[value]="searchInput$ | async"
-			[disabled]="isDisabled()"
 			[placeholder]="placeholder()"
+			[disabled]="isDisabled()"
 		/>
 		<nz-autocomplete
-			(selectionChange)="onSelect($event)"
+			(selectionChange)="onSelect($event.nzValue)"
 			[nzBackfill]="false"
-			[nzNoAnimation]="true"
+			nzNoAnimation
 			#auto
 		>
 			@for (option of result$ | async; track getOptionId(option)) {
 				<nz-auto-option [nzValue]="option" [nzLabel]="getOptionLabel(option)">
 					@if (isCustomValueOption(option)) {
 						<span>"{{ getCustomValue(option) }}"</span>
-					} @else {
-						<ng-container *ngIf="optionTemplate as tRef; else defaultOption">
-							<ng-container
-								*ngTemplateOutlet="tRef; context: { $implicit: option }"
-							></ng-container>
-						</ng-container>
+					} @else if (optionTemplateDir()) {
+						<ng-container
+							*ngTemplateOutlet="
+								optionTemplate!;
+								context: { $implicit: option }
+							"
+						/>
+
 						<ng-template #defaultOption>
 							<span>{{ labelFn()(option) }}</span>
 						</ng-template>
@@ -111,48 +91,66 @@ export class OptionTemplateDirective<T> {
 			}
 		</nz-autocomplete>
 	`,
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => AutocompleteComponent),
+			multi: true,
+		},
+	],
+	imports: [
+		NzInputDirective,
+		NzAutocompleteComponent,
+		NzNoAnimationDirective,
+		NzAutocompleteOptionComponent,
+		NgTemplateOutlet,
+		NzAutocompleteTriggerDirective,
+		AsyncPipe,
+	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteComponent<
 	T extends object,
 > extends ControlValueAccessorBase<T | string> {
-	readonly labelFn = input.required<(value: T) => string>();
 	readonly options = input<T[]>([]);
+	readonly labelFn = input.required<(value: T) => string>();
 	readonly searchFields = input<StringKey<T>[]>([]);
 	readonly placeholder = input<string>('');
-	readonly allowCustomValues = input<boolean>(false);
+	readonly allowCustomValues = input(false, {
+		transform: booleanAttribute,
+	});
+	readonly selectOnBlur = input(false, {
+		transform: booleanAttribute,
+	});
+	readonly optionSelected = output<T | string>();
+	readonly optionTemplateDir = contentChild<
+		AutocompleteOptionTemplateDirective<T>
+	>(AutocompleteOptionTemplateDirective);
+	get optionTemplate(): TemplateRef<{ $implicit: T }> | undefined {
+		return this.optionTemplateDir()?.templateRef;
+	}
 
-	private readonly searchInputSubject$ = new BehaviorSubject<string>('');
-	public readonly searchInput$ = this.searchInputSubject$.asObservable();
-
+	private readonly searchInputSubject$ = new Subject<string>();
+	readonly searchInput$ = this.searchInputSubject$.asObservable();
 	private readonly searchInputFocusedSubject$ = new Subject<void>();
-	private readonly lastSelectedEntitySubject$ = new BehaviorSubject<
-		T | string | null
-	>(null);
+
+	private readonly autocompleteComponent = viewChild(NzAutocompleteComponent);
+	private readonly inputEle = viewChild<ElementRef>('input');
 
 	// Custom value symbol for type safety when handling custom inputs
 	private readonly CUSTOM_VALUE = Symbol('CUSTOM_VALUE');
-
 	// Type to represent a custom value option that contains the input string
 	private readonly customValueOption = (value: string): CustomValueOption => ({
 		[this.CUSTOM_VALUE]: value,
 	});
 
 	readonly result$ = merge(
-		// show all options if the search input is empty
-		combineLatest([
-			this.searchInputSubject$,
+		merge(
 			this.searchInputFocusedSubject$,
-		]).pipe(
-			filter(([searchInput]) => searchInput.trim() === ''),
-			map(() => this.options()),
-		),
-		// else show options based on the search input
+			this.searchInputSubject$.pipe(filter((value) => value.trim() === '')),
+		).pipe(map(() => this.options())),
 		this.searchInputSubject$.pipe(
-			filter(
-				(searchInput): searchInput is string => typeof searchInput === 'string',
-			),
 			filter((searchInput) => searchInput.trim() !== ''),
-			debounceTime(300),
 			map((searchInput) => {
 				const filteredOptions = this.filterOptions(this.options(), searchInput);
 
@@ -172,28 +170,36 @@ export class AutocompleteComponent<
 
 				// Add the custom value as the first option
 				return [
-					this.customValueOption(searchInput),
 					...filteredOptions,
+					this.customValueOption(searchInput),
 				] as ResultItem<T>[];
 			}),
 		),
 	);
 
-	@ContentChild(OptionTemplateDirective)
-	optionTemplateDir?: OptionTemplateDirective<T>;
-
-	get optionTemplate(): TemplateRef<{ $implicit: T }> | undefined {
-		return this.optionTemplateDir?.templateRef;
+	search(query: string): void {
+		this.searchInputSubject$.next(query);
 	}
 
-	constructor() {
-		super();
+	onSelect(nextValue: ResultItem<T>): void {
+		if (this.isCustomValueOption(nextValue)) {
+			// Handle custom value selection
+			const customValue = this.getCustomValue(nextValue as CustomValueOption);
+			this.searchInputSubject$.next(customValue);
+			this.onChange(customValue);
+			this.value.set(customValue);
+			this.optionSelected.emit(customValue);
+		} else {
+			// Handle regular option selection
+			this.searchInputSubject$.next(this.labelFn()(nextValue as T));
+			this.onChange(nextValue);
+			this.value.set(nextValue);
+			this.optionSelected.emit(nextValue);
+		}
+	}
 
-		this.lastSelectedEntitySubject$
-			.pipe(takeUntilDestroyed(), distinctUntilChanged())
-			.subscribe((selected) => {
-				this.onChange(selected);
-			});
+	onSearchInputFocus(): void {
+		this.searchInputFocusedSubject$.next();
 	}
 
 	/**
@@ -248,70 +254,18 @@ export class AutocompleteComponent<
 		});
 	}
 
-	search(query: string): void {
-		this.lastSelectedEntitySubject$.next(null);
-		this.searchInputSubject$.next(query);
-	}
-
-	onSelect({ nzValue: nextValue }: NzAutocompleteOptionComponent): void {
-		if (this.isCustomValueOption(nextValue as ResultItem<T>)) {
-			// Handle custom value selection
-			const customValue = this.getCustomValue(nextValue as CustomValueOption);
-			this.lastSelectedEntitySubject$.next(customValue);
-			this.searchInputSubject$.next(customValue);
-		} else {
-			// Handle regular option selection
-			this.lastSelectedEntitySubject$.next(nextValue as T);
-			this.searchInputSubject$.next(this.labelFn()(nextValue as T));
-		}
-	}
-
-	onSearchInputFocus(): void {
-		this.searchInputFocusedSubject$.next();
-	}
-
 	onBlur(): void {
-		let currentSearchInput = '';
+		if (this.selectOnBlur()) {
+			// on leaving, select the last active option (e.g. on tab)
+			const activeOption = this.autocompleteComponent()?.activeItem;
 
-		// Get the latest value from the searchInput$ observable
-		this.searchInput$.pipe(take(1)).subscribe((value) => {
-			if (typeof value === 'string') {
-				currentSearchInput = value;
-			}
-		});
-
-		if (currentSearchInput) {
-			const perfectMatches = this.findMatchingOptions(currentSearchInput, true);
-
-			// If there is a perfect match, select it
-			if (perfectMatches.length > 0) {
-				const perfectMatch = perfectMatches[0];
-				this.lastSelectedEntitySubject$.next(perfectMatch);
-				this.searchInputSubject$.next(this.labelFn()(perfectMatch));
-			}
-			// If custom values are allowed and there's no perfect match, use the input as value
-			else if (this.allowCustomValues() && currentSearchInput.trim() !== '') {
-				this.lastSelectedEntitySubject$.next(currentSearchInput);
-				this.searchInputSubject$.next(currentSearchInput);
-			}
+			this.onSelect(activeOption?.nzValue);
 		}
-
 		this.onTouch();
 	}
 
-	// we cannot use the value signal from the base class because
-	// signals don't emit when the value is set to null
-	override writeValue(value: T | string | null): void {
-		if (!value) {
-			this.lastSelectedEntitySubject$.next(null);
-			this.searchInputSubject$.next('');
-		} else if (typeof value === 'string') {
-			this.lastSelectedEntitySubject$.next(value);
-			this.searchInputSubject$.next(value);
-		} else {
-			this.lastSelectedEntitySubject$.next(value);
-			this.searchInputSubject$.next(this.labelFn()(value));
-		}
+	focus(): void {
+		this.inputEle()?.nativeElement.focus();
 	}
 
 	/**
@@ -367,5 +321,14 @@ export class AutocompleteComponent<
 	 */
 	private filterOptions(options: T[], searchInput: string): T[] {
 		return this.findMatchingOptions(searchInput, false, options);
+	}
+
+	override writeValue(value: T | null): void {
+		this.value.set(value);
+		if (value) {
+			this.searchInputSubject$.next(this.labelFn()(value));
+		} else {
+			this.searchInputSubject$.next('');
+		}
 	}
 }

@@ -19,8 +19,9 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { Unit, UnitInput } from '@kordis/shared/model';
 import {
 	AutocompleteComponent,
-	OptionTemplateDirective,
+	AutocompleteOptionTemplateDirective,
 	PossibleUnitSelectionsService,
+	UnitOptionComponent,
 } from '@kordis/spa/core/ui';
 
 import { ProtocolClient } from '../../services/protocol.client';
@@ -61,9 +62,10 @@ const CHANNELS = Object.freeze([
 		NzInputModule,
 		NzSelectModule,
 		ReactiveFormsModule,
-		AutocompleteComponent,
-		OptionTemplateDirective,
 		JsonPipe,
+		AutocompleteComponent,
+		AutocompleteOptionTemplateDirective,
+		UnitOptionComponent,
 	],
 	template: `
 		<form
@@ -79,37 +81,37 @@ const CHANNELS = Object.freeze([
 						[options]="units()"
 						formControlName="sender"
 						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+						(optionSelected)="recipientInput.focus()"
 						placeholder="Von"
-						[allowCustomValues]="true"
+						allowCustomValues
 					>
-						<ng-template krdOptionTemplate [list]="units()" let-unit>
-							<span class="call-sign">{{ unit.callSign }}</span>
-							<span class="name">{{ unit.name }}</span>
+						<ng-template krdAutocompleteOptionTmpl [list]="units()" let-unit>
+							<krd-unit-option [unit]="unit" />
 						</ng-template>
 					</krd-autocomplete>
 				</nz-form-control>
 			</nz-form-item>
 			<nz-form-item>
 				<nz-form-control nzErrorTip="Empfänger benötigt!">
-					<nz-form-control nzErrorTip="Absender benötigt!">
-						<krd-autocomplete
-							[labelFn]="labelFn"
-							[options]="units()"
-							formControlName="recipient"
-							[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
-							placeholder="An"
-							[allowCustomValues]="true"
-						>
-							<ng-template krdOptionTemplate [list]="units()" let-unit>
-								<span class="call-sign">{{ unit.callSign }}</span>
-								<span class="name">{{ unit.name }}</span>
-							</ng-template>
-						</krd-autocomplete>
-					</nz-form-control>
+					<krd-autocomplete
+						#recipientInput
+						[labelFn]="labelFn"
+						[options]="units()"
+						formControlName="recipient"
+						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+						placeholder="An"
+						allowCustomValues
+						(optionSelected)="msgInput.focus()"
+					>
+						<ng-template krdAutocompleteOptionTmpl [list]="units()" let-unit>
+							<krd-unit-option [unit]="unit" />
+						</ng-template>
+					</krd-autocomplete>
 				</nz-form-control>
 			</nz-form-item>
 			<nz-form-item class="message-input">
 				<input
+					#msgInput
 					nz-input
 					formControlName="message"
 					required
