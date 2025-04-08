@@ -6,14 +6,14 @@ import { gql } from '@kordis/spa/core/graphql';
 
 import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
 import { EntitySearchEngine } from './entity-search.service';
-import { EntitySelectionSearchService } from './entity-selection-search.service';
+import { EntitySelectionService } from './entity-selection.service';
 import { unitMatchesByNameOrCallSign } from './match-strategies';
 
 /*
 	This service handles the selection of units in a context where a unit can only be selected once.
  */
 @Injectable()
-export class PossibleUnitSelectionsService extends EntitySelectionSearchService<
+export class PossibleUnitSelectionsService extends EntitySelectionService<
 	Unit,
 	{ units: Query['units'] }
 > {

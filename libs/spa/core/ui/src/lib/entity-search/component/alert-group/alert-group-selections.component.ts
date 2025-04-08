@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -25,25 +26,66 @@ import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/misc';
 
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
-import { AlertGroupAutocompleteComponent } from './alert-group-autocomplete.component';
+import {
+	AutocompleteComponent,
+	AutocompleteOptionTemplateDirective,
+} from '../autocomplete.component';
 import { AlertGroupSelectionComponent } from './alert-group-selection.component';
 
 @Component({
 	selector: 'krd-alert-group-selections',
 	imports: [
-		AlertGroupAutocompleteComponent,
 		AlertGroupSelectionComponent,
 		NzCardComponent,
 		NzFormControlComponent,
 		NzFormItemComponent,
 		NzColDirective,
 		ReactiveFormsModule,
+		AutocompleteComponent,
+		AutocompleteOptionTemplateDirective,
+		AsyncPipe,
 	],
 	template: `
 		<nz-form-item>
 			<nz-form-label>Alarmgruppen</nz-form-label>
 			<nz-form-control>
-				<krd-alert-group-autocomplete [formControl]="alertGroupControl" />
+				<krd-autocomplete
+					[formControl]="alertGroupControl"
+					[searchFields]="['name']"
+					[options]="
+						(possibleAlertGroupSelectionsService.allPossibleEntitiesToSelect$
+							| async) ?? []
+					"
+					[labelFn]="alertGroupLabelFn"
+				>
+					<ng-template
+						krdAutocompleteOptionTmpl
+						let-alertGroup
+						[list]="
+							(possibleAlertGroupSelectionsService.allPossibleEntitiesToSelect$
+								| async) ?? []
+						"
+					>
+						<div class="result-item">
+							<span class="name">{{ alertGroup.name }}</span>
+							@if (
+								alertGroup.assignment?.__typename ===
+								'EntityRescueStationAssignment'
+							) {
+								<small>Zuordnung: {{ $any(alertGroup.assignment).name }}</small>
+							} @else if (
+								alertGroup.assignment?.__typename ===
+								'EntityOperationAssignment'
+							) {
+								<small
+									>Zuordnung:
+									{{ $any(alertGroup.assignment).operation.alarmKeyword }}
+									{{ $any(alertGroup.assignment).operation.sign }}</small
+								>
+							}
+						</div>
+					</ng-template>
+				</krd-autocomplete>
 			</nz-form-control>
 		</nz-form-item>
 		@if (formArray().length) {
@@ -100,9 +142,12 @@ export class AlertGroupSelectionsComponent {
 	readonly alertGroupSelectionElements = viewChildren(
 		AlertGroupSelectionComponent,
 	);
-	private readonly possibleAlertGroupSelectionsService = inject(
+	readonly possibleAlertGroupSelectionsService = inject(
 		PossibleAlertGroupSelectionsService,
 	);
+	readonly alertGroupLabelFn = (alertGroup: AlertGroup): string =>
+		alertGroup.name;
+
 	private readonly possibleUnitSelectionsService = inject(
 		PossibleUnitSelectionsService,
 		{

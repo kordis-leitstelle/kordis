@@ -6,14 +6,14 @@ import { gql } from '@kordis/spa/core/graphql';
 
 import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
 import { EntitySearchEngine } from './entity-search.service';
-import { EntitySelectionSearchService } from './entity-selection-search.service';
+import { EntitySelectionService } from './entity-selection.service';
 import { alertGroupMatchesByName } from './match-strategies';
 
 /*
 	This service handles the selection of alert groups in a context where a unit can only be selected once.
  */
 @Injectable()
-export class PossibleAlertGroupSelectionsService extends EntitySelectionSearchService<
+export class PossibleAlertGroupSelectionsService extends EntitySelectionService<
 	AlertGroup,
 	{ alertGroups: Query['alertGroups'] }
 > {

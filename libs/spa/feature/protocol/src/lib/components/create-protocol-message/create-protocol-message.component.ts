@@ -84,6 +84,7 @@ const CHANNELS = Object.freeze([
 						(optionSelected)="recipientInput.focus()"
 						placeholder="Von"
 						allowCustomValues
+						selectOnBlur
 					>
 						<ng-template krdAutocompleteOptionTmpl [list]="units()" let-unit>
 							<krd-unit-option [unit]="unit" />
@@ -101,6 +102,7 @@ const CHANNELS = Object.freeze([
 						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
 						placeholder="An"
 						allowCustomValues
+						selectOnBlur
 						(optionSelected)="msgInput.focus()"
 					>
 						<ng-template krdAutocompleteOptionTmpl [list]="units()" let-unit>

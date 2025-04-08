@@ -1,6 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
+	inject,
 	input,
 	output,
 } from '@angular/core';
@@ -16,7 +18,11 @@ import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 
 import { AlertGroup, Unit } from '@kordis/shared/model';
-import { AlertGroupAutocompleteComponent } from '@kordis/spa/core/ui';
+import {
+	AutocompleteComponent,
+	AutocompleteOptionTemplateDirective,
+	PossibleAlertGroupSelectionsService,
+} from '@kordis/spa/core/ui';
 
 import {
 	OperationInvolvementsFormComponent,
@@ -33,11 +39,13 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 	imports: [
 		NzCollapseModule,
 		OperationInvolvementsFormComponent,
-		AlertGroupAutocompleteComponent,
 		NzButtonComponent,
 		NzIconDirective,
 		NzPopoverDirective,
 		ReactiveFormsModule,
+		AsyncPipe,
+		AutocompleteComponent,
+		AutocompleteOptionTemplateDirective,
 	],
 	template: `
 		@if (formArray().length > 0) {
@@ -63,7 +71,24 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 
 		<div class="footer">
 			<ng-template #addAlertGroupPopover>
-				<krd-alert-group-autocomplete [formControl]="alertGroupControl" />
+				<krd-autocomplete
+					[labelFn]="labelFn"
+					[options]="
+						(selectionService.allPossibleEntitiesToSelect$ | async) ?? []
+					"
+					[formControl]="alertGroupControl"
+					[searchFields]="['name']"
+				>
+					<ng-template
+						krdAutocompleteOptionTmpl
+						[list]="
+							(selectionService.allPossibleEntitiesToSelect$ | async) ?? []
+						"
+						let-alertGroup
+					>
+						{{ alertGroup.name }}
+					</ng-template>
+				</krd-autocomplete>
 			</ng-template>
 			<button
 				[nzPopoverContent]="addAlertGroupPopover"
@@ -106,7 +131,8 @@ export class OperationAlertGroupInvolvementsFormComponent {
 	readonly formArray =
 		input.required<FormArray<AlertGroupInvolvementFormGroup>>();
 	readonly alertGroupControl = new FormControl<AlertGroup | null>(null);
-
+	readonly labelFn = (alertGroup: AlertGroup): string => alertGroup.name;
+	readonly selectionService = inject(PossibleAlertGroupSelectionsService);
 	readonly addAlertGroup = output<AlertGroup>();
 	readonly addAlertGroupUnit = output<{
 		unit: Unit;
