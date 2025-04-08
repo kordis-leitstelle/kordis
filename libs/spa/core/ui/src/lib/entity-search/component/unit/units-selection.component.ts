@@ -20,6 +20,7 @@ import {
 	Observable,
 	Subject,
 	filter,
+	map,
 	merge,
 	scan,
 	share,
@@ -30,6 +31,7 @@ import {
 
 import { Unit } from '@kordis/shared/model';
 
+import { unitMatchesByNameOrCallSign } from '../../service/match-strategies';
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
 
 @Component({
@@ -130,7 +132,11 @@ export class UnitsSelectionComponent implements OnDestroy {
 		this.searchValueChanged$.pipe(
 			filter((value) => value !== ''),
 			switchMap((value) =>
-				this.possibleUnitSelectionsService.searchAllPossibilities(value),
+				this.possibleUnitSelectionsService.allPossibleEntitiesToSelect$.pipe(
+					map((units) =>
+						units.filter((unit) => unitMatchesByNameOrCallSign(unit, value)),
+					),
+				),
 			),
 		),
 	);

@@ -3,16 +3,16 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Unit } from '@kordis/shared/model';
 
 import { StatusBadgeComponent } from '../../../status-badge.component';
+import { UnitOptionComponent } from './unit-option.component';
 
 @Component({
 	selector: 'krd-unit-selection-option',
-	imports: [StatusBadgeComponent],
+	imports: [StatusBadgeComponent, UnitOptionComponent],
 	template: `
 		<div class="result-item">
 			<div class="info">
 				<div>
-					<span class="call-sign">{{ unit().callSign }}</span>
-					<span class="name">{{ unit().name }}</span>
+					<krd-unit-option [unit]="unit()" />
 				</div>
 				<krd-status-badge [status]="unit().status?.status" />
 			</div>
@@ -40,16 +40,6 @@ import { StatusBadgeComponent } from '../../../status-badge.component';
 			.info {
 				display: flex;
 				justify-content: space-between;
-
-				.call-sign {
-					font-weight: 500;
-					margin-right: calc(var(--base-spacing) / 2);
-				}
-
-				.name {
-					color: grey;
-					font-size: 0.9em;
-				}
 			}
 
 			.assignment-note {

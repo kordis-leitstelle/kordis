@@ -8,8 +8,8 @@ import {
 import { NzCardComponent } from 'ng-zorro-antd/card';
 
 import { RescueStationDeployment } from '@kordis/shared/model';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 
 @Component({
@@ -39,7 +39,7 @@ import { NameSearchWrapperComponent } from './name-search-wrapper.component';
 			display: flex;
 			flex-direction: column;
 			flex-wrap: wrap;
-			gap: calc(var(--base-spacing) / 2);
+			gap: var(--base-spacing);
 			height: 100%;
 
 			.empty-state {
@@ -58,7 +58,7 @@ export class SignedOffDeploymentsComponent {
 	readonly rescueStations = input.required<RescueStationDeployment[]>();
 
 	private readonly searchWrappers = viewChildren(NameSearchWrapperComponent);
-	private readonly searchStateService = inject(DeploymentsSearchStateService);
+	private readonly searchStateService = inject(GlobalSearchStateService);
 	readonly showNoSearchResults = computed(
 		() =>
 			!this.searchWrappers().some((wrapper) => wrapper.isVisible()) &&
