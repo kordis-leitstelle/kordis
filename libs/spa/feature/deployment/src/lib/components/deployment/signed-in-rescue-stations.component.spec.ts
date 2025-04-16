@@ -3,8 +3,8 @@ import { createMock } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 
 import { GraphqlService } from '@kordis/spa/core/graphql';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 import { SignedInRescueStationsComponent } from './signed-in-rescue-stations.component';
 
 describe('SignedInRescueStationsComponent', () => {
@@ -18,7 +18,7 @@ describe('SignedInRescueStationsComponent', () => {
 				}),
 			}),
 		})
-			.overrideProvider(DeploymentsSearchStateService, {
+			.overrideProvider(GlobalSearchStateService, {
 				useValue: createMock(),
 			})
 			.createComponent(SignedInRescueStationsComponent);

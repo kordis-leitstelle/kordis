@@ -5,9 +5,9 @@ import { of } from 'rxjs';
 import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import { IEntitySearchEngine } from './entity-search.service';
-import { EntitySelectionSearchService } from './entity-selection-search.service';
+import { EntitySelectionService } from './entity-selection.service';
 
-class TestEntitySelectionService extends EntitySelectionSearchService<
+class TestEntitySelectionService extends EntitySelectionService<
 	{ id: string; name: string },
 	{
 		testEntities: { id: string; name: string }[];
@@ -20,7 +20,7 @@ class TestEntitySelectionService extends EntitySelectionSearchService<
 }
 
 describe('EntitySelectionSearchService', () => {
-	let service: EntitySelectionSearchService<
+	let service: EntitySelectionService<
 		{ id: string; name: string },
 		{
 			testEntities: { id: string; name: string }[];
