@@ -33,6 +33,12 @@ const routes: Routes = [
 			import('@kordis/spa/view/dashboard').then((m) => m.DashboardComponent),
 		canActivate: [authGuard],
 	},
+	{
+		path: 'action-map',
+		loadComponent: () =>
+			import('@kordis/spa/view/map').then((m) => m.MapComponent),
+		canActivate: [authGuard],
+	},
 	{ path: '**', redirectTo: 'dashboard' },
 ];
 

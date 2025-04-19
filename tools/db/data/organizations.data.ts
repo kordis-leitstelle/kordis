@@ -31,6 +31,22 @@ const collectionData = {
 					lat: 53.551086,
 					lon: 9.993682,
 				},
+				mapStyles: {
+					// for demonstration, just a simple osm style
+					darkUrl:
+						'https://gist.githubusercontent.com/timonmasberg/0d3e333d62bb46d6b2a50e6808250218/raw/6232c77bd56984ea237e62a7e591aecf932e7b10/osm.json',
+					streetUrl:
+						'https://gist.githubusercontent.com/timonmasberg/0d3e333d62bb46d6b2a50e6808250218/raw/6232c77bd56984ea237e62a7e591aecf932e7b10/osm.json',
+					satelliteUrl:
+						'https://gist.githubusercontent.com/timonmasberg/0d3e333d62bb46d6b2a50e6808250218/raw/6232c77bd56984ea237e62a7e591aecf932e7b10/osm.json',
+				},
+				mapLayers: [
+					{
+						name: 'Seekarte',
+						wmsUrl: 'https://t1.openseamap.org/seamark/{z}/{x}/{y}.png',
+						defaultActive: true,
+					},
+				],
 			},
 		},
 	],

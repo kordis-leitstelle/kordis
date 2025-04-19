@@ -51,7 +51,8 @@
 				"libs/spa/feature/protocol/src/index.ts"
 			],
 			"@kordis/spa/view/auth": ["libs/spa/view/auth/src/index.ts"],
-			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"]
+			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"],
+			"@kordis/spa/view/map": ["libs/spa/view/map/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

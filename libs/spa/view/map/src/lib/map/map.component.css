@@ -1,0 +1,51 @@
+#map {
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+
+	.hide {
+		display: none;
+	}
+
+	.no-padding-popup {
+		.maplibregl-popup-content {
+			padding: 0;
+		}
+	}
+}
+
+.components {
+	top: var(--base-spacing);
+	right: var(--base-spacing);
+	max-width: 500px;
+
+	.ant-card-body {
+		padding: var(--base-spacing);
+		a {
+			position: absolute;
+			right: var(--base-spacing);
+		}
+	}
+}
+
+.map-overlay {
+	z-index: 2;
+	position: absolute;
+}
+
+.search {
+	padding: var(--base-spacing);
+	width: 500px;
+}
+
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: var(--base-spacing);
+	bottom: var(--base-spacing);
+	left: var(--base-spacing);
+}
+
+.popup-container {
+	display: none;
+}

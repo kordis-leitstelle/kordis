@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import {
@@ -16,6 +17,7 @@ import { AuthService } from './auth-service';
 @Injectable()
 export class AADB2COAuthService implements AuthService {
 	readonly user$: Observable<AuthUser | null>;
+	readonly user: Signal<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
 
 	private readonly isAuthenticatedSubject$ = new BehaviorSubject<boolean>(
@@ -58,6 +60,7 @@ export class AADB2COAuthService implements AuthService {
 			}),
 			shareReplay({ bufferSize: 1, refCount: true }),
 		);
+		this.user = toSignal(this.user$, { initialValue: null });
 	}
 
 	login(): void {

@@ -58,6 +58,12 @@ describe('OrganizationResolver', () => {
 					lon: 9.993682,
 					lat: 53.551086,
 				},
+				mapLayers: [],
+				mapStyles: {
+					streetUrl: 'street',
+					satelliteUrl: 'satellite',
+					darkUrl: 'dark',
+				},
 			};
 
 			queryBusMock.execute.mockResolvedValueOnce(org);
@@ -88,6 +94,12 @@ describe('OrganizationResolver', () => {
 				centroid: {
 					lon: 9.993682,
 					lat: 53.551086,
+				},
+				mapLayers: [],
+				mapStyles: {
+					streetUrl: 'street',
+					satelliteUrl: 'satellite',
+					darkUrl: 'dark',
 				},
 			};
 			await expect(
@@ -125,6 +137,12 @@ describe('OrganizationResolver', () => {
 				centroid: {
 					lon: 9.993682,
 					lat: 53.551086,
+				},
+				mapLayers: [],
+				mapStyles: {
+					streetUrl: 'street',
+					satelliteUrl: 'satellite',
+					darkUrl: 'dark',
 				},
 			};
 			await expect(

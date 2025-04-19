@@ -1,6 +1,6 @@
 import { gql } from '@kordis/spa/core/graphql';
 
-const ASSIGNMENT_QUERY_FIELDS = `
+export const ASSIGNMENT_QUERY_FIELDS = `
 		... on DeploymentUnit {
 			unit {
 				...UnitData
@@ -18,7 +18,7 @@ const ASSIGNMENT_QUERY_FIELDS = `
 			}
 		}`;
 
-const UNIT_FRAGMENT = gql`
+export const UNIT_FRAGMENT = gql`
 	fragment UnitData on Unit {
 		id
 		callSign
@@ -52,20 +52,8 @@ const RESCUE_STATION_FRAGMENT = gql`
 		}
 	}
 `;
-
-export const DEPLOYMENTS_QUERY = gql`
-	${RESCUE_STATION_FRAGMENT}
-	query {
-		signedInStations: rescueStationDeployments(signedIn: true) {
-			...RescueStationData
-		}
-		signedOffStations: rescueStationDeployments(signedIn: false) {
-			...RescueStationData
-		}
-		unassignedEntities {
-			${ASSIGNMENT_QUERY_FIELDS}
-		}
-		operationDeployments {
+const OPERATION_DEPLOYMENT_FRAGMENT = gql`
+		fragment OperationData on OperationDeployment {
 			operation {
 				id
 				sign
@@ -80,6 +68,23 @@ export const DEPLOYMENTS_QUERY = gql`
 			assignments {
 				${ASSIGNMENT_QUERY_FIELDS}
 			}
+		}
+`;
+export const DEPLOYMENTS_QUERY = gql`
+	${RESCUE_STATION_FRAGMENT}
+	${OPERATION_DEPLOYMENT_FRAGMENT}
+	query {
+		signedInStations: rescueStationDeployments(signedIn: true) {
+			...RescueStationData
+		}
+		signedOffStations: rescueStationDeployments(signedIn: false) {
+			...RescueStationData
+		}
+		unassignedEntities {
+			${ASSIGNMENT_QUERY_FIELDS}
+		}
+		operationDeployments {
+			...OperationData
 		}
 	}
 `;

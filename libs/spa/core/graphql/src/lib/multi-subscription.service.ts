@@ -16,15 +16,33 @@ export class MultiSubscriptionService {
 		A helper function to subscribe to multiple subscriptions at once where no return is required.
 		It subscribes to the fields and only queries the id field of the returned object type.
 	 */
-	subscribeToMultiple$(fields: (keyof Subscription)[]): Observable<void> {
+	subscribeToMultiple$(
+		fields: (
+			| keyof Subscription
+			| { field: keyof Subscription; queryFields: string | null }
+		)[],
+	): Observable<void> {
 		return merge(
 			fields.map((field) => {
-				const query = `subscription {
-					${field} {
-						id
-					}
-				}`;
-				this.gqlService.subscribe$(gql`
+				let query: string;
+				if (typeof field === 'string') {
+					query = `subscription {
+						${field} {
+							id
+						}
+					}`;
+				} else if (field.queryFields) {
+					query = `subscription {
+						${field.field} {
+							${field.queryFields}
+						}
+					}`;
+				} else {
+					query = `subscription {
+						${field.field}
+					}`;
+				}
+				return this.gqlService.subscribe$(gql`
 					${query}
 				`);
 			}),

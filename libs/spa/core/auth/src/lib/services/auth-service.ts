@@ -1,10 +1,11 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AuthUser } from '@kordis/shared/model';
 
 export interface AuthService {
 	readonly user$: Observable<AuthUser | null>;
+	readonly user: Signal<AuthUser | null>;
 	readonly isAuthenticated$: Observable<boolean>;
 
 	login(): void;

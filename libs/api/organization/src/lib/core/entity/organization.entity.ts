@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import {
+	IsBoolean,
 	IsNotEmpty,
 	IsString,
 	Validate,
@@ -29,6 +30,44 @@ export class BBox {
 }
 
 @ObjectType()
+@InputType('MapStylesInput')
+export class MapStyles {
+	@Field()
+	@IsString()
+	@AutoMap()
+	streetUrl: string;
+
+	@Field()
+	@IsString()
+	@AutoMap()
+	satelliteUrl: string;
+
+	@Field()
+	@IsString()
+	@AutoMap()
+	darkUrl: string;
+}
+
+@ObjectType()
+@InputType('MapLayerInput')
+export class MapLayer {
+	@Field()
+	@IsString()
+	@AutoMap()
+	name: string;
+
+	@Field()
+	@IsString()
+	@AutoMap()
+	wmsUrl: string;
+
+	@Field()
+	@IsBoolean()
+	@AutoMap()
+	defaultActive: boolean;
+}
+
+@ObjectType()
 @InputType('OrganizationGeoSettingsInput')
 export class OrganizationGeoSettings {
 	@ValidateNested()
@@ -46,6 +85,17 @@ export class OrganizationGeoSettings {
 	@Field()
 	@AutoMap()
 	bbox: BBox;
+
+	@ValidateNested()
+	@Field()
+	@AutoMap()
+	mapStyles: MapStyles;
+
+	@Field(() => [MapLayer])
+	@AutoMap(() => [MapLayer])
+	@ValidateNested({ each: true })
+	@Type(() => MapLayer)
+	mapLayers: MapLayer[];
 }
 
 @ObjectType()
