@@ -12,7 +12,6 @@ import {
 } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { async } from 'rxjs';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
 import { TraceComponent } from '@kordis/spa/core/observability';
@@ -42,7 +41,6 @@ import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 })
 @TraceComponent()
 export class DashboardComponent {
-	protected readonly async = async;
 	private readonly authService = inject(AUTH_SERVICE);
 	readonly user$ = this.authService.user$;
 	private readonly modal = inject(NzModalService);
