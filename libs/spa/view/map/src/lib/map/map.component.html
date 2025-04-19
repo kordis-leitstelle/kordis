@@ -1,16 +1,20 @@
-@if(mapState.state().type === MapStateType.Default) {
-	<div class='search map-overlay'>
-		<krd-geo-search placeholder='Geo-Suche' (resultSelected)='onGeoResultSelected($event)' size='large' />
+@if (mapState.state().type === MapStateType.Default) {
+	<div class="search map-overlay">
+		<krd-geo-search
+			placeholder="Geo-Suche"
+			(resultSelected)="onGeoResultSelected($event)"
+			size="large"
+		/>
 	</div>
 } @else {
-	<div class='components map-overlay'>
+	<div class="components map-overlay">
 		<nz-card>
 			<a nz-icon nzType="close" (click)="closePopup()"></a>
 			@switch (mapState.state().type) {
 				@case (MapStateType.GeoInformation) {
 					<krd-geo-result
-						[markerCoordinate]='$any(mapState.state()).markerCoordinate'
-						[searchResult]='$any(mapState.state()).searchResult'
+						[markerCoordinate]="$any(mapState.state()).markerCoordinate"
+						[searchResult]="$any(mapState.state()).searchResult"
 					/>
 				}
 			}
@@ -18,20 +22,30 @@
 	</div>
 }
 
-
-<div class='actions map-overlay'>
-	<button nz-button nzType='primary' nzSize='large' nzShape='circle' nz-popover [nzPopoverContent]='layersTmpl'
-					nzPopoverTrigger='click'>
-		<nz-icon nzType='bars' nzTheme='outline' />
+<div class="actions map-overlay">
+	<button
+		nz-button
+		nzType="primary"
+		nzSize="large"
+		nzShape="circle"
+		nz-popover
+		[nzPopoverContent]="layersTmpl"
+		nzPopoverTrigger="click"
+	>
+		<nz-icon nzType="bars" nzTheme="outline" />
 	</button>
 	<ng-template #layersTmpl>
 		<krd-select-map-layers />
 	</ng-template>
-	<button nz-button nzType='primary' nzSize='large' nzShape='circle' (click)='centerMap()'>
-		<nz-icon nzType='aim' nzTheme='outline' />
+	<button
+		nz-button
+		nzType="primary"
+		nzSize="large"
+		nzShape="circle"
+		(click)="centerMap()"
+	>
+		<nz-icon nzType="aim" nzTheme="outline" />
 	</button>
 </div>
 
-<div id='map'></div>
-
-
+<div id="map"></div>
