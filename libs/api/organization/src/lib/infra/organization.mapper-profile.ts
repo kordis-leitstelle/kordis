@@ -7,11 +7,15 @@ import { BaseMapperProfile, Coordinate } from '@kordis/api/shared';
 
 import {
 	BBox as BBoxEntity,
+	MapLayer as MapLayerEntity,
+	MapStyles as MapStylesEntity,
 	OrganizationEntity,
 	OrganizationGeoSettings as OrganizationGeoSettingsEntity,
 } from '../core/entity/organization.entity';
 import {
 	BBox as BBoxDocument,
+	MapLayer as MapLayerDocument,
+	MapStyles as MapStylesDocument,
 	OrganizationDocument,
 	OrganizationGeoSettings as OrganizationGeoSettingsDocument,
 } from './schema/organization.schema';
@@ -30,6 +34,8 @@ export class OrganizationValueObjectsProfile extends AutomapperProfile {
 				OrganizationGeoSettingsEntity,
 			);
 			createMap(mapper, BBoxDocument, BBoxEntity);
+			createMap(mapper, MapStylesDocument, MapStylesEntity);
+			createMap(mapper, MapLayerDocument, MapLayerEntity);
 			createMap(mapper, Coordinate, Coordinate);
 		};
 	}
