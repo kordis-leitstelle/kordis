@@ -242,7 +242,7 @@ export type Mutation = {
 };
 
 export type MutationArchiveOperationArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 };
 
 export type MutationChangeEmailArgs = {
@@ -289,7 +289,7 @@ export type MutationDeactivateUserArgs = {
 };
 
 export type MutationDeleteOperationArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 };
 
 export type MutationEndOngoingOperationArgs = {
@@ -318,11 +318,11 @@ export type MutationSignOffRescueStationArgs = {
 
 export type MutationUpdateOperationBaseDataArgs = {
 	data: UpdateOperationBaseDataInput;
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 };
 
 export type MutationUpdateOperationInvolvementsArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 	involvements: UpdateOperationInvolvementsInput;
 };
 
@@ -366,6 +366,7 @@ export type Operation = {
 	orgId: Scalars['String']['output'];
 	patients: Array<OperationPatient>;
 	processState: OperationProcessState;
+	protocol: Array<ProtocolEntryUnion>;
 	reporter: Scalars['String']['output'];
 	sign: Scalars['String']['output'];
 	start: Scalars['DateTime']['output'];
@@ -616,7 +617,7 @@ export type QueryAlertGroupsArgs = {
 };
 
 export type QueryOperationArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 };
 
 export type QueryOperationsArgs = {
