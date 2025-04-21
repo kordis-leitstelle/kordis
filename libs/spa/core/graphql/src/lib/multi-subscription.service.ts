@@ -6,6 +6,10 @@ import { Subscription } from '@kordis/shared/model';
 import { gql } from './gql-tag';
 import { GraphqlService } from './graphql.service';
 
+export type SubscriptionField =
+	| keyof Subscription
+	| { field: keyof Subscription; queryFields: string | null };
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -16,12 +20,7 @@ export class MultiSubscriptionService {
 		A helper function to subscribe to multiple subscriptions at once where no return is required.
 		It subscribes to the fields and only queries the id field of the returned object type.
 	 */
-	subscribeToMultiple$(
-		fields: (
-			| keyof Subscription
-			| { field: keyof Subscription; queryFields: string | null }
-		)[],
-	): Observable<void> {
+	subscribeToMultiple$(fields: SubscriptionField[]): Observable<void> {
 		return merge(
 			fields.map((field) => {
 				let query: string;

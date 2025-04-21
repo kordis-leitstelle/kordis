@@ -110,7 +110,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
 	protected readonly MapStateType = MapStateType;
 
-	private keyDownHandler = (event: KeyboardEvent): void => {
+	private readonly keyDownHandler = (event: KeyboardEvent): void => {
 		if (event.key === 'Escape') {
 			this.closePopup();
 		}
