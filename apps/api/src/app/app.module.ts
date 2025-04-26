@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AlertingModule } from 'alerting';
 import * as path from 'path';
 
 import { AuthModule } from '@kordis/api/auth';
@@ -36,6 +37,7 @@ import { HealthCheckController } from './controllers/health-check.controller';
 import environment from './environment';
 
 const FEATURE_MODULES = [
+	AlertingModule,
 	OrganizationModule,
 	ProtocolModule,
 	UsersModule.forRoot(process.env.AUTH_PROVIDER === 'dev' ? 'dev' : 'aadb2c'),
