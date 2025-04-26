@@ -5,9 +5,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AlertingModule } from 'alerting';
 import * as path from 'path';
 
+import { AlertingModule } from '@kordis/api/alerting';
 import { AuthModule } from '@kordis/api/auth';
 import {
 	DeploymentModule,

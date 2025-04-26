@@ -36,7 +36,7 @@ export class OperationManagerResolver {
 					reqUser,
 					operationData,
 					await protocolMessageData.asTransformedPayload(),
-					alertData,
+					alertData ?? null,
 				),
 			);
 		} catch (error) {
