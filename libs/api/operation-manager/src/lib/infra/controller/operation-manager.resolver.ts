@@ -12,7 +12,10 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
+import {
+	CreateOngoingOperationArgs,
+	OperationAlertArgs,
+} from './create-ongoing-operation.args';
 
 @Resolver()
 export class OperationManagerResolver {
@@ -25,6 +28,7 @@ export class OperationManagerResolver {
 		@RequestUser() reqUser: AuthUser,
 		@Args('operation') operationData: CreateOngoingOperationArgs,
 		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
+		@Args('alertData', { defaultValue: null }) alertData?: OperationAlertArgs,
 	): Promise<OperationViewModel> {
 		try {
 			return await this.commandBus.execute(
@@ -32,6 +36,7 @@ export class OperationManagerResolver {
 					reqUser,
 					operationData,
 					await protocolMessageData.asTransformedPayload(),
+					alertData,
 				),
 			);
 		} catch (error) {
