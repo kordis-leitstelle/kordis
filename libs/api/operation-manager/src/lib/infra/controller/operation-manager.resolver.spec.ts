@@ -71,6 +71,11 @@ describe('OperationManagerResolver', () => {
 				reqUser,
 				operationArgs,
 				MOCK_BASE_CREATE_MESSAGE_ARGS,
+				{
+					alertGroupIds: ['alertGroupId'],
+					description: 'somewhere',
+					hasPriority: false,
+				},
 			);
 
 			expect(result).toEqual({
@@ -81,6 +86,11 @@ describe('OperationManagerResolver', () => {
 					reqUser,
 					operationArgs,
 					TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+					{
+						alertGroupIds: ['alertGroupId'],
+						description: 'somewhere',
+						hasPriority: false,
+					},
 				),
 			);
 		});

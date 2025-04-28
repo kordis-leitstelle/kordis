@@ -14,6 +14,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
+			"@kordis/api/alerting": ["libs/api/alerting/src/index.ts"],
 			"@kordis/api/auth": ["libs/api/auth/src/index.ts"],
 			"@kordis/api/deployment": ["libs/api/deployment/src/index.ts"],
 			"@kordis/api/observability": ["libs/api/observability/src/index.ts"],

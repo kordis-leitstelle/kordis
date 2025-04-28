@@ -1,6 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 
+import { CreateAlertForOperationCommand } from '@kordis/api/alerting';
 import {
 	CreateOperationCommand,
 	OperationCreatedEvent,
@@ -17,6 +18,35 @@ import {
 	LaunchCreateOngoingOperationProcessCommand,
 	LaunchCreateOngoingOperationProcessHandler,
 } from './launch-create-ongoing-operation-process.command';
+
+const OPERATION_ARGS = Object.freeze({
+	start: new Date(),
+	alarmKeyword: 'THWAY',
+	location: {
+		address: {
+			name: 'somewhere',
+			street: '',
+			postalCode: '',
+			city: '',
+		},
+		coordinate: null,
+	},
+	assignedUnitIds: ['unitId1', 'unitId2'],
+	assignedAlertGroups: [
+		{
+			alertGroupId: 'alertGroupId',
+			assignedUnitIds: ['unitId3', 'unitId4'],
+		},
+	],
+});
+
+const OPERATION = Object.freeze({
+	id: 'operationId',
+	sign: 'sign',
+	start: OPERATION_ARGS.start,
+	alarmKeyword: OPERATION_ARGS.alarmKeyword,
+	location: OPERATION_ARGS.location,
+} as OperationViewModel);
 
 describe('LaunchCreateOngoingOperationProcessHandler', () => {
 	let handler: LaunchCreateOngoingOperationProcessHandler;
@@ -38,41 +68,14 @@ describe('LaunchCreateOngoingOperationProcessHandler', () => {
 
 	it('should execute CreateOperationCommand and CreateOperationStartedMessageCommand', async () => {
 		const requestUser: AuthUser = { organizationId: 'orgId' } as AuthUser;
-		const operationArgs = {
-			start: new Date(),
-			alarmKeyword: 'THWAY',
-			location: {
-				address: {
-					name: 'somewhere',
-					street: '',
-					postalCode: '',
-					city: '',
-				},
-				coordinate: null,
-			},
-			assignedUnitIds: ['unitId1', 'unitId2'],
-			assignedAlertGroups: [
-				{
-					alertGroupId: 'alertGroupId',
-					assignedUnitIds: ['unitId3', 'unitId4'],
-				},
-			],
-		};
-
 		const command = new LaunchCreateOngoingOperationProcessCommand(
 			requestUser,
-			operationArgs,
+			OPERATION_ARGS,
 			TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+			null,
 		);
 
-		const operation = {
-			id: 'operationId',
-			sign: 'sign',
-			start: operationArgs.start,
-			alarmKeyword: operationArgs.alarmKeyword,
-			location: operationArgs.location,
-		} as OperationViewModel;
-		commandBusMock.execute.mockResolvedValueOnce(operation);
+		commandBusMock.execute.mockResolvedValueOnce(OPERATION);
 
 		const mockAssignedUnits = [
 			{ id: 'unitId1', name: 'Unit 1', callSign: 'U1' },
@@ -97,20 +100,20 @@ describe('LaunchCreateOngoingOperationProcessHandler', () => {
 
 		const result = await handler.execute(command);
 
-		expect(result).toEqual(operation);
+		expect(result).toEqual(OPERATION);
 		expect(commandBusMock.execute).toHaveBeenCalledWith(
 			new CreateOperationCommand(
 				requestUser,
-				operationArgs.start,
+				OPERATION_ARGS.start,
 				null,
-				operationArgs.location,
-				operationArgs.alarmKeyword,
-				operationArgs.assignedUnitIds,
-				operationArgs.assignedAlertGroups,
+				OPERATION_ARGS.location,
+				OPERATION_ARGS.alarmKeyword,
+				OPERATION_ARGS.assignedUnitIds,
+				OPERATION_ARGS.assignedAlertGroups,
 			),
 		);
 		expect(eventBusMock.publish).toHaveBeenCalledWith(
-			new OperationCreatedEvent(requestUser.organizationId, operation),
+			new OperationCreatedEvent(requestUser.organizationId, OPERATION),
 		);
 		expect(commandBusMock.execute).toHaveBeenCalledWith(
 			new CreateOperationStartedMessageCommand(
@@ -118,15 +121,46 @@ describe('LaunchCreateOngoingOperationProcessHandler', () => {
 				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.recipient,
 				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.channel,
 				{
-					id: operation.id,
-					sign: operation.sign,
-					alarmKeyword: operation.alarmKeyword,
-					start: operation.start,
-					location: operation.location.address,
+					id: OPERATION.id,
+					sign: OPERATION.sign,
+					alarmKeyword: OPERATION.alarmKeyword,
+					start: OPERATION.start,
+					location: OPERATION.location.address,
 					assignedUnits: mockAssignedUnits,
 					assignedAlertGroups: mockAssignedAlertGroups,
 				},
 				requestUser,
+			),
+		);
+	});
+
+	it('should execute CreateAlertForOperationCommand if alertData is provided', async () => {
+		const requestUser: AuthUser = { organizationId: 'orgId' } as AuthUser;
+
+		const alertData = {
+			alertGroupIds: ['alertGroupId1', 'alertGroupId2'],
+			description: 'Test alert description',
+			hasPriority: true,
+		};
+
+		const command = new LaunchCreateOngoingOperationProcessCommand(
+			requestUser,
+			OPERATION_ARGS,
+			TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+			alertData,
+		);
+
+		commandBusMock.execute.mockResolvedValueOnce(OPERATION);
+
+		await handler.execute(command);
+
+		expect(commandBusMock.execute).toHaveBeenCalledWith(
+			new CreateAlertForOperationCommand(
+				alertData.alertGroupIds,
+				alertData.description,
+				OPERATION,
+				alertData.hasPriority,
+				requestUser.organizationId,
 			),
 		);
 	});
