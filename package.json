@@ -36,7 +36,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/config-nx-scopes": "^19.5.0",
     "@golevelup/ts-jest": "^0.6.1",
-    "@graphql-codegen/cli": "5.0.5",
+    "@graphql-codegen/cli": "5.0.6",
     "@nestjs/schematics": "10.2.3",
     "@nestjs/testing": "10.4.15",
     "@ngneat/spectator": "^19.3.0",
