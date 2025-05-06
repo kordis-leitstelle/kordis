@@ -24,7 +24,7 @@ export class GetRescueStationsDeploymentsHandler
 		private readonly rescueStationDeploymentRepository: RescueStationDeploymentRepository,
 	) {}
 
-	execute({
+	async execute({
 		orgId,
 		filter,
 	}: GetRescueStationDeploymentsQuery): Promise<
