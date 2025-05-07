@@ -1,5 +1,5 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import {
 	PresentableNotFoundException,
@@ -24,7 +24,9 @@ export class OrganizationResolver {
 	) {}
 
 	@Query(() => OrganizationEntity)
-	async organization(@Args('id') id: string): Promise<OrganizationEntity> {
+	async organization(
+		@Args('id', { type: () => ID }) id: string,
+	): Promise<OrganizationEntity> {
 		try {
 			return await this.queryBus.execute<
 				GetOrganizationQuery,
@@ -43,7 +45,7 @@ export class OrganizationResolver {
 
 	@Mutation(() => OrganizationEntity)
 	async updateOrganizationGeoSettings(
-		@Args('id') id: string,
+		@Args('id', { type: () => ID }) id: string,
 		@Args('geoSettings') geoSettings: OrganizationGeoSettings,
 	): Promise<OrganizationEntity> {
 		try {

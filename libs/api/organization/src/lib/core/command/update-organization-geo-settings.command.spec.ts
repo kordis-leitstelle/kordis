@@ -40,6 +40,12 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 				lon: 12,
 				lat: 53.551086,
 			},
+			mapLayers: [],
+			mapStyles: {
+				streetUrl: 'street',
+				satelliteUrl: 'satellite',
+				darkUrl: 'dark',
+			},
 		};
 		const org: {
 			-readonly [K in keyof OrganizationEntity]: OrganizationEntity[K];
@@ -77,6 +83,12 @@ describe('UpdateOrganizationGeoSettingsHandler', () => {
 			centroid: {
 				lon: 9.993682,
 				lat: 53.551086,
+			},
+			mapLayers: [],
+			mapStyles: {
+				streetUrl: 'street',
+				satelliteUrl: 'satellite',
+				darkUrl: 'dark',
 			},
 		};
 		repositoryMock.findById.mockResolvedValueOnce(null);

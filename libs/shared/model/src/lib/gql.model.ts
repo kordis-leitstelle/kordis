@@ -184,6 +184,32 @@ export type InvolvementTime = {
 	start: Scalars['DateTime']['output'];
 };
 
+export type MapLayer = {
+	__typename?: 'MapLayer';
+	defaultActive: Scalars['Boolean']['output'];
+	name: Scalars['String']['output'];
+	wmsUrl: Scalars['String']['output'];
+};
+
+export type MapLayerInput = {
+	defaultActive: Scalars['Boolean']['input'];
+	name: Scalars['String']['input'];
+	wmsUrl: Scalars['String']['input'];
+};
+
+export type MapStyles = {
+	__typename?: 'MapStyles';
+	darkUrl: Scalars['String']['output'];
+	satelliteUrl: Scalars['String']['output'];
+	streetUrl: Scalars['String']['output'];
+};
+
+export type MapStylesInput = {
+	darkUrl: Scalars['String']['input'];
+	satelliteUrl: Scalars['String']['input'];
+	streetUrl: Scalars['String']['input'];
+};
+
 export type Mutation = {
 	__typename?: 'Mutation';
 	archiveOperation: Scalars['Boolean']['output'];
@@ -302,7 +328,7 @@ export type MutationUpdateOperationInvolvementsArgs = {
 
 export type MutationUpdateOrganizationGeoSettingsArgs = {
 	geoSettings: OrganizationGeoSettingsInput;
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 };
 
 export type MutationUpdateRescueStationNoteArgs = {
@@ -523,11 +549,15 @@ export type OrganizationGeoSettings = {
 	__typename?: 'OrganizationGeoSettings';
 	bbox: BBox;
 	centroid: Coordinate;
+	mapLayers: Array<MapLayer>;
+	mapStyles: MapStyles;
 };
 
 export type OrganizationGeoSettingsInput = {
 	bbox: BBoxInput;
 	centroid: CoordinateInput;
+	mapLayers: Array<MapLayerInput>;
+	mapStyles: MapStylesInput;
 };
 
 export type PageInfo = {
@@ -596,7 +626,7 @@ export type QueryOperationsArgs = {
 };
 
 export type QueryOrganizationArgs = {
-	id: Scalars['String']['input'];
+	id: Scalars['ID']['input'];
 };
 
 export type QueryProtocolEntriesArgs = {
