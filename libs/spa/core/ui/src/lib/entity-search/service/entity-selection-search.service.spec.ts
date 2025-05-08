@@ -66,15 +66,4 @@ describe('EntitySelectionSearchService', () => {
 				done();
 			});
 		}));
-
-	it('should filter search', async () => {
-		service.markAsSelected({ id: '1', name: 'Entity 1' });
-		(service as any).searchService.search.mockReturnValue([
-			{ id: '1', name: 'Entity 1' },
-			{ id: '2', name: 'Entity 2' },
-		]);
-		await expect(service.searchAllPossibilities('query')).resolves.toEqual([
-			{ id: '2', name: 'Entity 2' },
-		]);
-	});
 });

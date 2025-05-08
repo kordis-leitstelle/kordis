@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray } from '@angular/forms';
+import { createMock } from '@golevelup/ts-jest';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
 import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 
-import { AlertGroupAutocompleteComponent } from '@kordis/spa/core/ui';
+import { PossibleAlertGroupSelectionsService } from '@kordis/spa/core/ui';
 
 import { OperationAlertGroupInvolvementsFormComponent } from './operation-alert-group-involvements-form.component';
 
@@ -17,10 +18,15 @@ describe('OperationAlertGroupInvolvementsFormComponent', () => {
 		await TestBed.configureTestingModule({
 			imports: [
 				NzCollapseModule,
-				AlertGroupAutocompleteComponent,
 				NzButtonComponent,
 				NzIconDirective,
 				NzPopoverDirective,
+			],
+			providers: [
+				{
+					provide: PossibleAlertGroupSelectionsService,
+					useValue: createMock(),
+				},
 			],
 		}).compileComponents();
 	});

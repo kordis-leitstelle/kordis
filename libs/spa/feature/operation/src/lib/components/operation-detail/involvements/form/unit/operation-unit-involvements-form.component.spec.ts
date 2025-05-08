@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { createMock } from '@golevelup/ts-jest';
+
+import { PossibleUnitSelectionsService } from '@kordis/spa/core/ui';
 
 import { InvolvementFormFactory } from '../../involvement-form.factory';
 import { InvolvementOperationTimeState } from '../../involvement-operation-time.state';
@@ -12,7 +15,14 @@ describe('OperationInvolvementsFormComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [NoopAnimationsModule],
-			providers: [InvolvementFormFactory, InvolvementOperationTimeState],
+			providers: [
+				InvolvementFormFactory,
+				InvolvementOperationTimeState,
+				{
+					provide: PossibleUnitSelectionsService,
+					useValue: createMock(),
+				},
+			],
 		}).compileComponents();
 	});
 
