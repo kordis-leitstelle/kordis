@@ -1,13 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 import { GlobalSearchComponent } from '@kordis/spa/core/misc';
 
 @Component({
 	selector: 'krd-action-bar',
-	imports: [CommonModule, GlobalSearchComponent],
+	imports: [
+		CommonModule,
+		GlobalSearchComponent,
+		NzButtonComponent,
+		NzIconModule,
+		RouterLink,
+	],
 	template: `
-		<div class="actions-container">Placeholder for actions</div>
+		<div class="actions-container">
+			<a nz-button routerLink="/action-map" target="_blank">Karte</a>
+		</div>
 		<div class="search-container">
 			<krd-global-search />
 		</div>

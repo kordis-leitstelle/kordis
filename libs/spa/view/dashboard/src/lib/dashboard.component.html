@@ -2,7 +2,7 @@
 	<nz-header>
 		<div class="logo">Kordis</div>
 		<div>
-			@let user = (user$ | async);
+			@let user = user$ | async;
 			<nz-avatar
 				[nzDropdownMenu]="userMenu"
 				nz-dropdown
