@@ -14,10 +14,14 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 import { AUTH_SERVICE } from '@kordis/spa/core/auth';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 import { TraceComponent } from '@kordis/spa/core/observability';
+import { PossibleUnitSelectionsService } from '@kordis/spa/core/ui';
 import { DeploymentsComponent } from '@kordis/spa/feature/deployment';
 import { OperationsComponent } from '@kordis/spa/feature/operation';
 import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
+
+import { ActionBarComponent } from './action-bar.component';
 
 @Component({
 	selector: 'krd-dashboard-view',
@@ -34,7 +38,9 @@ import { ProtocolViewComponent } from '@kordis/spa/feature/protocol';
 		OperationsComponent,
 		ProtocolViewComponent,
 		AsyncPipe,
+		ActionBarComponent,
 	],
+	providers: [GlobalSearchStateService, PossibleUnitSelectionsService],
 	templateUrl: './dashboard.component.html',
 	styleUrl: './dashboard.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,

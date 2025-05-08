@@ -12,8 +12,8 @@ import { Subject, debounceTime, delay, switchMap, tap } from 'rxjs';
 
 import { RescueStationDeployment } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 import { DeploymentNotePopupComponent } from './deployment-note-popup.component';
 import { DeploymentSearchWrapperComponent } from './deployment-search-wrapper.component';
 import { DeploymentCardComponent } from './deplyoment-card.component';
@@ -73,7 +73,7 @@ import { RescueStationDeploymentCardHeaderComponent } from './rescue-station/res
 		:host {
 			display: flex;
 			flex-direction: row;
-			gap: calc(var(--base-spacing) / 2);
+			gap: var(--base-spacing);
 			height: 100%;
 		}
 
@@ -103,7 +103,7 @@ export class SignedInRescueStationsComponent {
 	private readonly searchWrappers = viewChildren(
 		DeploymentSearchWrapperComponent,
 	);
-	private readonly searchStateService = inject(DeploymentsSearchStateService);
+	private readonly searchStateService = inject(GlobalSearchStateService);
 	readonly showNoSearchResults = computed(
 		() =>
 			// if no cards are visible and search value is not empty, this is a bit weird but right now the best I have got

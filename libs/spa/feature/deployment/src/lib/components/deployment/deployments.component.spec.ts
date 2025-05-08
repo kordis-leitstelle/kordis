@@ -4,6 +4,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { of } from 'rxjs';
 
 import { GraphqlService } from '@kordis/spa/core/graphql';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 
 import { DeploymentsComponent } from './deployments.component';
 import { DeploymentCardComponent } from './deplyoment-card.component';
@@ -12,13 +13,16 @@ describe('DeploymentsComponent', () => {
 	let fixture: ComponentFixture<DeploymentsComponent>;
 
 	beforeEach(async () => {
-		fixture = TestBed.overrideProvider(GraphqlService, {
-			useValue: createMock<GraphqlService>({
-				query: jest.fn().mockReturnValue({
-					$: of(),
-				}),
-			}),
+		fixture = TestBed.configureTestingModule({
+			providers: [GlobalSearchStateService],
 		})
+			.overrideProvider(GraphqlService, {
+				useValue: createMock<GraphqlService>({
+					query: jest.fn().mockReturnValue({
+						$: of(),
+					}),
+				}),
+			})
 			.overrideProvider(NzModalService, {
 				useValue: createMock<NzModalService>(),
 			})

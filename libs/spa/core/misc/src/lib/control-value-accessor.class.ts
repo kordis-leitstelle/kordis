@@ -1,21 +1,23 @@
 import { signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
-export class ControlValueAccessorBase implements ControlValueAccessor {
-	protected readonly value = signal<string>('');
+export class ControlValueAccessorBase<T = string>
+	implements ControlValueAccessor
+{
+	// Note: this is not really nullable as signals
+	// don't emit when the value is set to null
+	protected readonly value = signal<T | null>(null);
 	protected readonly isDisabled = signal<boolean>(false);
 
 	/* eslint-disable @typescript-eslint/no-empty-function */
 	onTouch: () => void = () => {};
-	onChange: (value: string) => void = () => {};
+	onChange: (value: T | null) => void = () => {};
 
-	/* eslint-enable @typescript-eslint/no-empty-function */
-
-	writeValue(value: string): void {
+	writeValue(value: T | null): void {
 		this.value.set(value);
 	}
 
-	registerOnChange(fn: (value: string) => void): void {
+	registerOnChange(fn: (value: T | null) => void): void {
 		this.onChange = fn;
 	}
 

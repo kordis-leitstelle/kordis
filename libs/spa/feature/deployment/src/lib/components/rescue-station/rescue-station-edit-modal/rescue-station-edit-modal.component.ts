@@ -18,9 +18,11 @@ import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { RescueStationDeployment, Unit } from '@kordis/shared/model';
-import { alertGroupMinUnitsValidator } from '@kordis/spa/core/misc';
 import {
 	AlertGroupAssignmentFormGroup,
+	alertGroupMinUnitsValidator,
+} from '@kordis/spa/core/misc';
+import {
 	AlertGroupSelectionsComponent,
 	PossibleAlertGroupSelectionsService,
 	PossibleUnitSelectionsService,

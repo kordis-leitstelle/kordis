@@ -12,12 +12,11 @@ import {
 } from '@angular/core';
 
 import { DeploymentAssignment } from '@kordis/shared/model';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
 import {
 	EntitySearchEngine,
 	unitOrAlertGroupOfAssignmentMatches,
 } from '@kordis/spa/core/ui';
-
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
 
 @Component({
 	selector: 'krd-deployment-search-wrapper',
@@ -42,7 +41,7 @@ export class DeploymentSearchWrapperComponent {
 
 	protected readonly templateRef = contentChild(TemplateRef);
 
-	private readonly searchStateService = inject(DeploymentsSearchStateService);
+	private readonly searchStateService = inject(GlobalSearchStateService);
 	private readonly hasNameMatch = computed(() =>
 		this.name()
 			.toLowerCase()

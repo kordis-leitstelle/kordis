@@ -2,14 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
-import { DeploymentsSearchStateService } from '../../services/deployments-search-state.service';
+import { GlobalSearchStateService } from '@kordis/spa/core/misc';
+
 import { SignedOffDeploymentsComponent } from './signed-off-deployments.component';
 
 describe('SignedOffDeploymentsComponent', () => {
 	let fixture: ComponentFixture<SignedOffDeploymentsComponent>;
 
 	beforeEach(async () => {
-		fixture = TestBed.overrideProvider(DeploymentsSearchStateService, {
+		fixture = TestBed.overrideProvider(GlobalSearchStateService, {
 			useValue: createMock(),
 		})
 			.overrideProvider(NzModalService, {

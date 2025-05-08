@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -8,7 +9,12 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+	FormArray,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+} from '@angular/forms';
 import {
 	InfoCircleOutline,
 	WarningOutline,
@@ -22,12 +28,16 @@ import {
 import { NzIconDirective, NzIconService } from 'ng-zorro-antd/icon';
 import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { Subject, distinctUntilChanged, filter, map, takeUntil } from 'rxjs';
 
 import { Unit } from '@kordis/shared/model';
-import { UnitAutocompleteComponent } from '@kordis/spa/core/ui';
+import {
+	AutocompleteComponent,
+	AutocompleteOptionTemplateDirective,
+	PossibleUnitSelectionsService,
+	UnitOptionComponent,
+} from '@kordis/spa/core/ui';
 
-import { InvolvementFormFactory } from '../../involvement-form.factory';
 import { OperationUnitInvolvementTimesComponent } from './operation-unit-involvement-times.component';
 
 export type UnitInvolvementFormGroup = FormGroup<{
@@ -50,9 +60,13 @@ export type UnitInvolvementFormGroup = FormGroup<{
 		NzTooltipDirective,
 		OperationUnitInvolvementTimesComponent,
 		NzAlertComponent,
-		UnitAutocompleteComponent,
 		NzPopoverDirective,
 		NzButtonComponent,
+		ReactiveFormsModule,
+		AsyncPipe,
+		AutocompleteComponent,
+		AutocompleteOptionTemplateDirective,
+		UnitOptionComponent,
 	],
 	template: `
 		@if (formArray().length > 0) {
@@ -115,7 +129,24 @@ export type UnitInvolvementFormGroup = FormGroup<{
 
 		<div class="footer">
 			<ng-template #addUnitPopover>
-				<krd-unit-autocomplete (selected)="addUnit.emit($event)" />
+				<krd-autocomplete
+					[labelFn]="labelFn"
+					[options]="
+						(unitSelectionsService.allPossibleEntitiesToSelect$ | async) ?? []
+					"
+					[formControl]="unitControl"
+					[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+				>
+					<ng-template
+						krdAutocompleteOptionTmpl
+						[list]="
+							(unitSelectionsService.allPossibleEntitiesToSelect$ | async) ?? []
+						"
+						let-unit
+					>
+						<krd-unit-option [unit]="unit" />
+					</ng-template>
+				</krd-autocomplete>
 			</ng-template>
 
 			<button
@@ -176,8 +207,12 @@ export class OperationInvolvementsFormComponent implements OnDestroy {
 	readonly formArray = input.required<FormArray<UnitInvolvementFormGroup>>();
 	readonly addUnit = output<Unit>();
 	readonly deleteUnit = output<{ unit: Unit; index: number }>();
+	readonly unitSelectionsService = inject(PossibleUnitSelectionsService);
+	readonly labelFn = (unit: Unit): string => unit.callSign;
+
+	readonly unitControl = new FormControl<Unit | null>(null);
+
 	private readonly cleanupSubject$ = new Subject<void>();
-	private readonly formFactory = inject(InvolvementFormFactory);
 
 	constructor(nzIconService: NzIconService, cd: ChangeDetectorRef) {
 		nzIconService.addIcon(WarningOutline, InfoCircleOutline);
@@ -194,6 +229,13 @@ export class OperationInvolvementsFormComponent implements OnDestroy {
 				)
 				.subscribe(() => cd.detectChanges());
 		});
+
+		this.unitControl.valueChanges
+			.pipe(filter((unit) => !!unit))
+			.subscribe((unit) => {
+				this.addUnit.emit(unit);
+				this.unitControl.reset();
+			});
 	}
 
 	ngOnDestroy(): void {
