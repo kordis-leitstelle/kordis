@@ -27,7 +27,6 @@ export class GetOrganizationHandler
 		if (!org) {
 			throw new OrganizationNotFoundException(id);
 		}
-
 		return org;
 	}
 }

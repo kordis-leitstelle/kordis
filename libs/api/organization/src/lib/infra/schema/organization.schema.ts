@@ -14,13 +14,52 @@ export class BBox {
 }
 
 @Schema({ _id: false })
+export class MapStyles {
+	@Prop()
+	@AutoMap()
+	streetUrl: string;
+
+	@Prop()
+	@AutoMap()
+	satelliteUrl: string;
+
+	@Prop()
+	@AutoMap()
+	darkUrl: string;
+}
+
+@Schema({ _id: false })
+export class MapLayer {
+	@Prop()
+	@AutoMap()
+	name: string;
+
+	@Prop()
+	@AutoMap()
+	wmsUrl: string;
+
+	@Prop()
+	@AutoMap()
+	defaultActive: boolean;
+}
+
+@Schema({ _id: false })
 export class OrganizationGeoSettings {
 	@Prop()
 	@AutoMap()
 	centroid: Coordinate;
+
 	@Prop()
 	@AutoMap()
 	bbox: BBox;
+
+	@Prop()
+	@AutoMap()
+	mapStyles: MapStyles;
+
+	@Prop()
+	@AutoMap(() => [MapLayer])
+	mapLayers: MapLayer[];
 }
 
 @Schema({ timestamps: true, collection: 'organizations' })

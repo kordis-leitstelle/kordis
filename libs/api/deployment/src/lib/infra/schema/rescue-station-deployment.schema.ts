@@ -48,9 +48,11 @@ const RescueStationAddressSchema =
 @Schema()
 export class RescueStationLocation {
 	@Prop({ type: RescueStationCoordinatesSchema })
+	@AutoMap()
 	coordinate: Coordinate;
 
 	@Prop({ type: RescueStationAddressSchema })
+	@AutoMap()
 	address: RescueStationAddress;
 }
 
