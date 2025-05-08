@@ -192,12 +192,12 @@ export class AutocompleteComponent<
 		let valueToSet: string | T;
 		if (this.isCustomValueOption(nextValue)) {
 			// Handle custom value selection
-			const customValue = this.getCustomValue(nextValue as CustomValueOption);
+			const customValue = this.getCustomValue(nextValue);
 			this.searchInputSubject$.next(customValue);
 			valueToSet = customValue;
 		} else {
 			// Handle regular option selection
-			this.searchInputSubject$.next(this.labelFn()(nextValue as T));
+			this.searchInputSubject$.next(this.labelFn()(nextValue));
 			valueToSet = nextValue;
 		}
 		this.onChange(valueToSet);
