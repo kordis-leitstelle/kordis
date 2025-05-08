@@ -1,10 +1,11 @@
-import { JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
-	OnInit,
+	ElementRef,
 	inject,
 	signal,
+	viewChild,
 } from '@angular/core';
 import {
 	NonNullableFormBuilder,
@@ -13,8 +14,10 @@ import {
 } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { filter, pairwise, pipe, startWith, tap } from 'rxjs';
 
 import { Unit, UnitInput } from '@kordis/shared/model';
 import {
@@ -62,108 +65,34 @@ const CHANNELS = Object.freeze([
 		NzInputModule,
 		NzSelectModule,
 		ReactiveFormsModule,
-		JsonPipe,
+		NzIconModule,
 		AutocompleteComponent,
-		AutocompleteOptionTemplateDirective,
 		UnitOptionComponent,
+		AutocompleteOptionTemplateDirective,
+		AsyncPipe,
 	],
-	template: `
-		<form
-			nz-form
-			nzLayout="inline"
-			[formGroup]="messageForm"
-			(submit)="addProtocolMessage()"
-		>
-			<nz-form-item>
-				<nz-form-control nzErrorTip="Absender benötigt!">
-					<krd-autocomplete
-						[labelFn]="labelFn"
-						[options]="units()"
-						formControlName="sender"
-						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
-						(optionSelected)="recipientInput.focus()"
-						placeholder="Von"
-						allowCustomValues
-						selectOnBlur
-					>
-						<ng-template krdAutocompleteOptionTmpl [list]="units()" let-unit>
-							<krd-unit-option [unit]="unit" />
-						</ng-template>
-					</krd-autocomplete>
-				</nz-form-control>
-			</nz-form-item>
-			<nz-form-item>
-				<nz-form-control nzErrorTip="Empfänger benötigt!">
-					<krd-autocomplete
-						#recipientInput
-						[labelFn]="labelFn"
-						[options]="units()"
-						formControlName="recipient"
-						[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
-						placeholder="An"
-						allowCustomValues
-						selectOnBlur
-						(optionSelected)="msgInput.focus()"
-					>
-						<ng-template krdAutocompleteOptionTmpl [list]="units()" let-unit>
-							<krd-unit-option [unit]="unit" />
-						</ng-template>
-					</krd-autocomplete>
-				</nz-form-control>
-			</nz-form-item>
-			<nz-form-item class="message-input">
-				<input
-					#msgInput
-					nz-input
-					formControlName="message"
-					required
-					placeholder="Nachricht"
-				/>
-			</nz-form-item>
-			<nz-form-item>
-				<nz-form-control nzErrorTip="Kanal benötigt">
-					<nz-select formControlName="channel">
-						@for (channel of channels; track channel.value) {
-							<nz-option [nzValue]="channel.value" [nzLabel]="channel.label" />
-						}
-					</nz-select>
-				</nz-form-control>
-			</nz-form-item>
-			<button
-				nz-button
-				nzType="primary"
-				(click)="addProtocolMessage()"
-				[disabled]="messageForm.invalid"
-			>
-				Gespräch eintragen
-			</button>
-		</form>
-		<pre>{{ messageForm.value | json }}</pre>
-	`,
+	templateUrl: `./create-protocol-message.component.html`,
 	styles: `
-		.message-input {
-			flex-grow: 1;
-		}
-
-		.call-sign {
-			font-weight: 500;
-			margin-right: var(--base-spacing);
-		}
-
-		.name {
-			color: grey;
-			font-size: 0.9em;
+		.form {
+			display: grid;
+			grid-template-columns: 3fr 3fr 7fr 2fr 1fr;
+			gap: 8px;
+			button {
+				width: 100%;
+			}
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateProtocolMessageComponent implements OnInit {
+export class CreateProtocolMessageComponent {
 	readonly channels = CHANNELS;
 	readonly labelFn = (unit: Unit): string => unit.callSign;
 
-	private readonly unitService = inject(PossibleUnitSelectionsService);
+	readonly unitService = inject(PossibleUnitSelectionsService);
 	readonly units = signal<Unit[]>([]);
-
+	readonly recipientInput =
+		viewChild<AutocompleteComponent<Unit>>('recipientInput');
+	readonly msgInput = viewChild<ElementRef>('msgInput');
 	private readonly fb = inject(NonNullableFormBuilder);
 	public messageForm = this.fb.group({
 		sender: this.fb.control<Unit | string | undefined>(
@@ -183,10 +112,31 @@ export class CreateProtocolMessageComponent implements OnInit {
 
 	private readonly client = inject(ProtocolClient);
 
-	ngOnInit(): void {
-		this.unitService.allPossibleEntitiesToSelect$.subscribe((units) => {
-			this.units.set(units);
-		});
+	constructor() {
+		// do not allow same unit as sender and recipient
+		const ensureSingleUnitSelectionPipe = pipe(
+			startWith(undefined),
+			pairwise(),
+			filter(([prev, curr]) => prev !== curr && !!curr),
+			tap(([prev, curr]) => {
+				if (curr && typeof curr !== 'string') {
+					this.unitService.markAsSelected(curr as Unit);
+					if (prev && typeof prev !== 'string') {
+						this.unitService.unmarkAsSelected(prev as Unit);
+					}
+				}
+			}),
+		);
+
+		this.messageForm.controls.sender.valueChanges
+			.pipe(ensureSingleUnitSelectionPipe)
+			.subscribe(() => setTimeout(() => this.recipientInput()?.focus()));
+
+		this.messageForm.controls.recipient.valueChanges
+			.pipe(ensureSingleUnitSelectionPipe)
+			.subscribe(() =>
+				setTimeout(() => this.msgInput()?.nativeElement.focus()),
+			);
 	}
 
 	addProtocolMessage(): void {
@@ -207,20 +157,21 @@ export class CreateProtocolMessageComponent implements OnInit {
 		const defaultChannel =
 			this.channels.find((channel) => channel.default)?.value ?? '';
 
-		// Use setTimeout to push reset to the next change detection cycle
-		setTimeout(() => {
-			// Reset with default values
-			this.messageForm.reset({
-				sender: undefined,
-				recipient: undefined,
-				message: '',
-				channel: defaultChannel,
-			});
+		// Reset with default values
+		this.messageForm.reset({
+			sender: undefined,
+			recipient: undefined,
+			message: '',
+			channel: defaultChannel,
+		});
 
-			// Mark form controls as pristine and untouched
-			this.messageForm.markAsPristine();
-			this.messageForm.markAsUntouched();
-		}, 0);
+		// Mark form controls as pristine and untouched
+		this.messageForm.markAsPristine();
+		this.messageForm.markAsUntouched();
+
+		this.msgInput()?.nativeElement.blur();
+
+		this.unitService.resetSelections();
 	}
 
 	private generateUnitInput(unit: Unit | string): UnitInput {

@@ -6,10 +6,10 @@ import {
 	ElementRef,
 	TemplateRef,
 	booleanAttribute,
+	computed,
 	contentChild,
 	forwardRef,
 	input,
-	output,
 	viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -70,6 +70,7 @@ type ResultItem<T> = T | CustomValueOption;
 			[nzBackfill]="false"
 			nzNoAnimation
 			#auto
+			[nzOverlayStyle]="dropdownStyle()"
 		>
 			@for (option of result$ | async; track getOptionId(option)) {
 				<nz-auto-option [nzValue]="option" [nzLabel]="getOptionLabel(option)">
@@ -99,13 +100,13 @@ type ResultItem<T> = T | CustomValueOption;
 		},
 	],
 	imports: [
-		NzInputDirective,
-		NzAutocompleteComponent,
-		NzNoAnimationDirective,
-		NzAutocompleteOptionComponent,
-		NgTemplateOutlet,
-		NzAutocompleteTriggerDirective,
 		AsyncPipe,
+		NgTemplateOutlet,
+		NzAutocompleteComponent,
+		NzAutocompleteOptionComponent,
+		NzAutocompleteTriggerDirective,
+		NzInputDirective,
+		NzNoAnimationDirective,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -113,6 +114,13 @@ export class AutocompleteComponent<
 	T extends object,
 > extends ControlValueAccessorBase<T | string> {
 	readonly options = input<T[]>([]);
+	readonly dropdownWidth = input<number>();
+	readonly dropdownStyle = computed(
+		() =>
+			(this.dropdownWidth()
+				? { minWidth: `${this.dropdownWidth()}px` }
+				: {}) as Record<string, string>,
+	);
 	readonly labelFn = input.required<(value: T) => string>();
 	readonly searchFields = input<StringKey<T>[]>([]);
 	readonly placeholder = input<string>('');
@@ -122,7 +130,6 @@ export class AutocompleteComponent<
 	readonly selectOnBlur = input(false, {
 		transform: booleanAttribute,
 	});
-	readonly optionSelected = output<T | string>();
 	readonly optionTemplateDir = contentChild<
 		AutocompleteOptionTemplateDirective<T>
 	>(AutocompleteOptionTemplateDirective);
@@ -182,20 +189,19 @@ export class AutocompleteComponent<
 	}
 
 	onSelect(nextValue: ResultItem<T>): void {
+		let valueToSet: string | T;
 		if (this.isCustomValueOption(nextValue)) {
 			// Handle custom value selection
 			const customValue = this.getCustomValue(nextValue as CustomValueOption);
 			this.searchInputSubject$.next(customValue);
-			this.onChange(customValue);
-			this.value.set(customValue);
-			this.optionSelected.emit(customValue);
+			valueToSet = customValue;
 		} else {
 			// Handle regular option selection
 			this.searchInputSubject$.next(this.labelFn()(nextValue as T));
-			this.onChange(nextValue);
-			this.value.set(nextValue);
-			this.optionSelected.emit(nextValue);
+			valueToSet = nextValue;
 		}
+		this.onChange(valueToSet);
+		this.value.set(valueToSet);
 	}
 
 	onSearchInputFocus(): void {
@@ -217,7 +223,7 @@ export class AutocompleteComponent<
 	}
 
 	/**
-	 * Get appropriate label for display based on option type
+	 * Get the appropriate label for display based on option type
 	 */
 	getOptionLabel(option: ResultItem<T>): string {
 		if (this.isCustomValueOption(option)) {
@@ -258,7 +264,6 @@ export class AutocompleteComponent<
 		if (this.selectOnBlur()) {
 			// on leaving, select the last active option (e.g. on tab)
 			const activeOption = this.autocompleteComponent()?.activeItem;
-
 			this.onSelect(activeOption?.nzValue);
 		}
 		this.onTouch();

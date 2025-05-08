@@ -5,6 +5,7 @@ import {
 	Component,
 	ElementRef,
 	OnInit,
+	booleanAttribute,
 	inject,
 	input,
 	viewChild,
@@ -50,7 +51,7 @@ export class ProtocolDataComponent implements OnInit {
 		}>
 	>();
 	readonly focusInitially = input(false, {
-		transform: (x: unknown) => x !== false,
+		transform: booleanAttribute,
 	});
 
 	private readonly senderInputEle =
