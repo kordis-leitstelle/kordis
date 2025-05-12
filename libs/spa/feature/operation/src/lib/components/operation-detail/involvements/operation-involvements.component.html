@@ -39,6 +39,9 @@
 		<krd-operation-alert-group-involvement-form
 			(addAlertGroup)="addAlertGroup($event)"
 			(addAlertGroupUnit)="addUnitToAlertGroup($event.alertGroup, $event.unit)"
+			(deleteAlertGroupUnit)="
+				deleteAlertGroupUnit($event.alertGroup, $event.unit, $event.index)
+			"
 			[formArray]="control.controls.alertGroupInvolvements"
 		/>
 	</div>

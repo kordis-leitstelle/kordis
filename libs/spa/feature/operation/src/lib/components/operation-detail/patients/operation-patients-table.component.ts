@@ -30,12 +30,6 @@ import { PatientFormGroup } from './operation-patients.component';
 	],
 	templateUrl: `./operation-patients-table.component.html`,
 	styles: `
-		nz-table {
-			.ant-table-expanded-row {
-				padding: calc(var(--base-spacing) / 2);
-			}
-		}
-
 		.footer {
 			padding-top: calc(var(--base-spacing) / 2);
 			display: flex;

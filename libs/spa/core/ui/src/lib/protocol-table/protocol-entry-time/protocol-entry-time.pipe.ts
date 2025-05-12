@@ -85,16 +85,16 @@ export class ProtocolEntryTimePipe implements PipeTransform, OnDestroy {
 	// Since an non-pure pipe is called on every change detection run (which might even be on mouse hover),
 	// we need to cache the caculated value to avoid costly recalculations. This is especially true for this pipe
 	// since the value changes happen very rarely. See {@link @angular/common/AsyncPipe} for a similar approach.
-	transform(date: Date): string {
-		if (!this.date || this.date !== date) {
-			this.date = date;
+	transform(date: string): string {
+		const parsedDate = new Date(date);
+		if (!this.date || this.date !== parsedDate) {
+			this.date = parsedDate;
 			this.calculateDisplayValue();
 
 			if (!this.dateChangeSubscription) {
 				this.initDateChangeSubscription();
 			}
 		}
-
 		return this.displayValue;
 	}
 
@@ -111,7 +111,6 @@ export class ProtocolEntryTimePipe implements PipeTransform, OnDestroy {
 		if (!this.date) {
 			throw new Error('Date is not set');
 		}
-
 		this.displayValue = this.dateTransformer.transform(this.date);
 	}
 }

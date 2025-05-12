@@ -29,10 +29,6 @@
 
 nz-card {
 	margin-bottom: calc(var(--base-spacing) / 2);
-
-	.ant-card-body {
-		padding: var(--base-spacing);
-	}
 }
 
 nz-alert {

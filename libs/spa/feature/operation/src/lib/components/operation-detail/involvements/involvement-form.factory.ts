@@ -76,8 +76,8 @@ export class InvolvementFormFactory {
 	}
 
 	createInvolvementTimeFormGroup(
-		start: Date | null,
-		end: Date | null,
+		start: string | null,
+		end: string | undefined | null,
 	): InvolvementTimeFormGroup {
 		return this.fb.group(
 			{

@@ -63,6 +63,13 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 									alertGroup: control.value.alertGroup!,
 								})
 							"
+							(deleteUnit)="
+								deleteAlertGroupUnit.emit({
+									alertGroup: control.value.alertGroup!,
+									unit: $event.unit,
+									index: $event.index,
+								})
+							"
 						/>
 					</nz-collapse-panel>
 				}
@@ -110,11 +117,11 @@ export type AlertGroupInvolvementFormGroup = FormGroup<{
 		nz-collapse {
 			width: 100%;
 
-			.ant-collapse-header {
+			::ng-deep .ant-collapse-header {
 				padding: calc(var(--base-spacing) / 2) !important;
 			}
 
-			.ant-collapse-content-box {
+			::ng-deep .ant-collapse-content-box {
 				padding: calc(var(--base-spacing) / 4) !important;
 			}
 		}
@@ -138,7 +145,11 @@ export class OperationAlertGroupInvolvementsFormComponent {
 		unit: Unit;
 		alertGroup: AlertGroup;
 	}>();
-
+	readonly deleteAlertGroupUnit = output<{
+		alertGroup: AlertGroup;
+		unit: Unit;
+		index: number;
+	}>();
 	constructor() {
 		this.alertGroupControl.valueChanges.subscribe((alertGroup) => {
 			if (alertGroup) {

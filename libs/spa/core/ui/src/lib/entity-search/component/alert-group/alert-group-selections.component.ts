@@ -89,7 +89,7 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 			</nz-form-control>
 		</nz-form-item>
 		@if (formArray().length) {
-			<nz-card>
+			<nz-card [nzBodyStyle]="{ padding: 'calc(var(--base-spacing) / 2)' }">
 				<div class="selections">
 					@for (
 						alertGroupAssignment of formArray().controls;
@@ -123,10 +123,6 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 		}
 
 		nz-card {
-			.ant-card-body {
-				padding: calc(var(--base-spacing) / 2);
-			}
-
 			margin-top: calc(var(--base-spacing) / 2);
 		}
 

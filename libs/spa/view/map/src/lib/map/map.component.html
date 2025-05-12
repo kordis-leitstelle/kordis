@@ -8,7 +8,7 @@
 	</div>
 } @else {
 	<div class="components map-overlay">
-		<nz-card>
+		<nz-card [nzBodyStyle]="{ padding: 'var(--base-spacing)' }">
 			<a nz-icon nzType="close" (click)="closePopup()"></a>
 			@switch (mapState.state().type) {
 				@case (MapStateType.GeoInformation) {

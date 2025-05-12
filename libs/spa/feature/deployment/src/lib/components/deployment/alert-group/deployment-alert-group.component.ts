@@ -10,7 +10,12 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 	selector: 'krd-deployment-alert-group',
 	imports: [CommonModule, DeploymentUnitComponent, NzCardComponent],
 	template: `
-		<nz-card>
+		<nz-card
+			[nzBodyStyle]="{
+				padding: ' calc(var(--base-spacing) / 2) var(--base-spacing)',
+				'background-color': '#fafafa',
+			}"
+		>
 			<div class="alert-group">
 				<span class="name">{{ alertGroup().name }}</span>
 				@for (
@@ -33,13 +38,6 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 
 		.name {
 			font-weight: 500;
-		}
-
-		nz-card {
-			.ant-card-body {
-				padding: calc(var(--base-spacing) / 2) var(--base-spacing);
-				background-color: #fafafa;
-			}
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

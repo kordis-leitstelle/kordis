@@ -100,6 +100,7 @@ export class SignedInStationLayerManager extends AbstractStationLayerManager {
 		return new MapComponentPopup(inject(ViewContainerRef), {
 			closeButton: false,
 			offset: 15,
+			className: 'no-padding-popup',
 		});
 	}
 }
