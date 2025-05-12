@@ -36,6 +36,10 @@ export class ResolverTraceWrapper extends TraceWrapper {
 	}
 
 	private wrapResolver(provider: InstanceWrapper): void {
+		if (!provider.metatype) {
+			return;
+		}
+
 		const methods = Object.getOwnPropertyNames(provider.metatype.prototype);
 
 		for (const methodName of methods) {

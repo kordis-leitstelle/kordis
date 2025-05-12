@@ -49,7 +49,10 @@ export class GraphQLSubscriptionService implements OnModuleDestroy {
 		fieldName: string,
 		operators?: SubscriptionOperators<InstanceType<TEvent>, TReturn>,
 	): AsyncIterableIterator<TReturn> {
-		let typeEventStream$ = this.eventStream$.pipe(ofType(event));
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let typeEventStream$: Observable<any> = this.eventStream$.pipe(
+			ofType(event),
+		);
 
 		if (operators?.filter) {
 			typeEventStream$ = typeEventStream$.pipe(filter(operators.filter));
