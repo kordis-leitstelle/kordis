@@ -81,6 +81,9 @@ const UTILITY_MODULES = [
 					...ctx,
 					loadersProvider: new DataLoaderContextProvider(dataLoaderContainer),
 				}),
+				buildSchemaOptions: {
+					dateScalarMode: 'isoDate',
+				},
 			}),
 			inject: [ConfigService, DataLoaderContainer],
 		}),

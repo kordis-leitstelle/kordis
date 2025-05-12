@@ -27,13 +27,6 @@ export class MapComponentPopup<T extends MapPopupComponent> extends Popup {
 		super(options);
 	}
 
-	hide(): void {
-		this.addClassName('hide');
-	}
-	show(): void {
-		this.removeClassName('hide');
-	}
-
 	setComponent(
 		component: ComponentType<T>,
 		componentInputs?: ComponentInputs<T>,

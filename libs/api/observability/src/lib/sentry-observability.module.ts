@@ -4,11 +4,7 @@ import { APP_FILTER, APP_INTERCEPTOR, ModulesContainer } from '@nestjs/core';
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
 import { MongooseInstrumentation } from '@opentelemetry/instrumentation-mongoose';
 import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
-import {
-	addOpenTelemetryInstrumentation,
-	init as initSentry,
-	validateOpenTelemetrySetup,
-} from '@sentry/node';
+import { init as initSentry, validateOpenTelemetrySetup } from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 import { SentryExceptionsFilter } from './filters/sentry-exceptions.filter';
@@ -49,13 +45,12 @@ export class SentryObservabilityModule implements OnModuleInit {
 			environment: this.config.get('ENVIRONMENT_NAME') ?? 'local-dev',
 			release: this.config.get('RELEASE_VERSION') ?? '0.0.0-development',
 			integrations: [nodeProfilingIntegration()],
+			openTelemetryInstrumentations: [
+				new GraphQLInstrumentation(),
+				new MongooseInstrumentation(),
+				new PinoInstrumentation(),
+			],
 		});
-
-		addOpenTelemetryInstrumentation(
-			new GraphQLInstrumentation(),
-			new MongooseInstrumentation(),
-			new PinoInstrumentation(),
-		);
 
 		validateOpenTelemetrySetup();
 

@@ -2,16 +2,6 @@
 	height: 100%;
 	width: 100%;
 	z-index: 1;
-
-	.hide {
-		display: none;
-	}
-
-	.no-padding-popup {
-		.maplibregl-popup-content {
-			padding: 0;
-		}
-	}
 }
 
 .components {
@@ -19,12 +9,9 @@
 	right: var(--base-spacing);
 	max-width: 500px;
 
-	.ant-card-body {
-		padding: var(--base-spacing);
-		a {
-			position: absolute;
-			right: var(--base-spacing);
-		}
+	nz-card a {
+		position: absolute;
+		right: var(--base-spacing);
 	}
 }
 

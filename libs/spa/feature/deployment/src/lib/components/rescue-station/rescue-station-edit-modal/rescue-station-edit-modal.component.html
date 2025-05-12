@@ -7,7 +7,7 @@
 	{{ rescueStation.name }}
 </h3>
 
-<nz-card>
+<nz-card [nzBodyStyle]="{ padding: 'var(--base-spacing)' }">
 	<h4>Funkspruch</h4>
 	<krd-protocol-data
 		[formGroup]="formGroup.controls.protocolData"
@@ -28,7 +28,7 @@
 	}
 </nz-card>
 
-<nz-card>
+<nz-card [nzBodyStyle]="{ padding: 'var(--base-spacing)' }">
 	<h4>RW-Daten</h4>
 	<div class="form">
 		<div class="form-item">

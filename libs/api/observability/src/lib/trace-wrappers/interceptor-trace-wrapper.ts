@@ -16,8 +16,10 @@ export class InterceptorTraceWrapper extends TraceWrapper {
 				provider.subtype === 'interceptor' &&
 				provider.name !== 'SentryOTelUserContextInterceptor'
 			) {
-				provider.metatype.prototype['intercept'] = this.asWrapped(
-					provider.metatype.prototype['intercept'],
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				provider.metatype!.prototype['intercept'] = this.asWrapped(
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					provider.metatype!.prototype['intercept'],
 					`${provider.name} (Interceptor)`,
 					{
 						interceptor: provider.name,

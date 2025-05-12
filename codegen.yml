@@ -4,3 +4,6 @@ generates:
   libs/shared/model/src/lib/gql.model.ts:
     plugins:
       - typescript
+    config:
+      scalars:
+        DateTime: string

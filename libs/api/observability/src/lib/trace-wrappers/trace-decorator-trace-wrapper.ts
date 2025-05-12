@@ -15,8 +15,10 @@ export class TraceDecoratorTraceWrapper extends TraceWrapper {
 	wrapWithSpans(): void {
 		for (const provider of this.getProviders()) {
 			for (const traceMethod of this.getTraceMethods(provider)) {
-				provider.metatype.prototype[traceMethod.methodName] = this.asWrapped(
-					provider.metatype.prototype[traceMethod.methodName],
+				/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+				provider.metatype!.prototype[traceMethod.methodName] = this.asWrapped(
+					provider.metatype!.prototype[traceMethod.methodName],
+					/* eslint-enable  @typescript-eslint/no-non-null-assertion */
 					`${provider.name} (Provider) -> ${traceMethod.methodName}${
 						traceMethod.traceName ? ` (${traceMethod.traceName})` : ''
 					}`,
@@ -35,14 +37,16 @@ export class TraceDecoratorTraceWrapper extends TraceWrapper {
 	private getTraceMethods(
 		provider: InstanceWrapper,
 	): { methodName: string; traceName?: string }[] {
-		const methods = this.getFilteredMethodNames(provider.metatype.prototype);
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const methods = this.getFilteredMethodNames(provider.metatype!.prototype);
 		const traceMethods = [];
 
 		for (const methodName of methods) {
 			const spanActive = Boolean(
 				Reflect.getMetadata(
 					SPAN_ACTIVE,
-					provider.metatype.prototype[methodName],
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					provider.metatype!.prototype[methodName],
 				),
 			);
 			if (!spanActive) {
@@ -51,7 +55,9 @@ export class TraceDecoratorTraceWrapper extends TraceWrapper {
 
 			const traceName = Reflect.getMetadata(
 				TRACE_NAME,
-				provider.metatype.prototype[methodName],
+
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				provider.metatype!.prototype[methodName],
 			);
 			traceMethods.push({ methodName, traceName });
 		}

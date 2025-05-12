@@ -54,3 +54,10 @@ nz-table.krd-small-table {
 		text-align: center;
 	}
 }
+
+/* Map related styles */
+.no-padding-popup {
+	.maplibregl-popup-content {
+		padding: 0;
+	}
+}

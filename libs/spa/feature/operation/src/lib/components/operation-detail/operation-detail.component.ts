@@ -22,10 +22,10 @@ import { OperationProtocolComponent } from './protocol/operation-protocol.compon
 		NzTabDirective,
 		NzTabSetComponent,
 		OperationBaseDataComponent,
+		OperationCategoriesComponent,
 		OperationDescriptionComponent,
 		OperationInvolvementsComponent,
 		OperationPatientsComponent,
-		OperationCategoriesComponent,
 		OperationProtocolComponent,
 	],
 	template: `
@@ -119,13 +119,13 @@ import { OperationProtocolComponent } from './protocol/operation-protocol.compon
 			display: flex;
 			flex-direction: column;
 
-			.ant-tabs-content-holder {
+			::ng-deep .ant-tabs-content-holder {
 				flex-grow: 1;
+			}
 
-				.ant-tabs-content,
-				.ant-tabs-tabpane {
-					height: 100%;
-				}
+			::ng-deep .ant-tabs-content,
+			::ng-deep .ant-tabs-tabpane {
+				height: 100%;
 			}
 		}
 	`,

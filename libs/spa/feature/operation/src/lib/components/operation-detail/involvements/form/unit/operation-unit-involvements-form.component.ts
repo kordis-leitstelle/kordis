@@ -54,18 +54,18 @@ export type UnitInvolvementFormGroup = FormGroup<{
 @Component({
 	selector: 'krd-operation-unit-involvements-form',
 	imports: [
-		NzCollapseComponent,
-		NzCollapsePanelComponent,
-		NzIconDirective,
-		NzTooltipDirective,
-		OperationUnitInvolvementTimesComponent,
-		NzAlertComponent,
-		NzPopoverDirective,
-		NzButtonComponent,
-		ReactiveFormsModule,
 		AsyncPipe,
 		AutocompleteComponent,
 		AutocompleteOptionTemplateDirective,
+		NzAlertComponent,
+		NzButtonComponent,
+		NzCollapseComponent,
+		NzCollapsePanelComponent,
+		NzIconDirective,
+		NzPopoverDirective,
+		NzTooltipDirective,
+		OperationUnitInvolvementTimesComponent,
+		ReactiveFormsModule,
 		UnitOptionComponent,
 	],
 	template: `
@@ -169,11 +169,11 @@ export type UnitInvolvementFormGroup = FormGroup<{
 		nz-collapse {
 			width: 100%;
 
-			.ant-collapse-header {
+			::ng-deep .ant-collapse-header {
 				padding: calc(var(--base-spacing) / 2) !important;
 			}
 
-			.ant-collapse-content-box {
+			::ng-deep .ant-collapse-content-box {
 				padding: 0 !important;
 
 				.pending-note-container {

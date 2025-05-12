@@ -32,7 +32,17 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 		NzEmptyComponent,
 	],
 	template: `
-		<nz-card [class.clickable]="clickable()" (click)="clicked.emit()">
+		<nz-card
+			[class.clickable]="clickable()"
+			(click)="clicked.emit()"
+			[nzBodyStyle]="{
+				padding: 'calc(var(--base-spacing) * 2)',
+				display: 'flex',
+				'flex-direction': 'column',
+				'flex-grow': 1,
+				height: '100%',
+			}"
+		>
 			<h3>{{ name() }}</h3>
 
 			<div class="sub-header">
@@ -70,14 +80,6 @@ const STATUS_SORT_ORDER: Readonly<Record<number, number>> = Object.freeze({
 
 			h3 {
 				margin-bottom: 0;
-			}
-
-			.ant-card-body {
-				padding: calc(var(--base-spacing) * 2);
-				display: flex;
-				flex-direction: column;
-				flex-grow: 1;
-				height: 100%;
 			}
 
 			.sub-header {

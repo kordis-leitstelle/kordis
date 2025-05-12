@@ -145,12 +145,6 @@ export type UnitInvolvementFormGroup = FormGroup<{
 				text-align: center;
 			}
 		}
-
-		nz-form-control {
-			.ant-form-item-explain-connected {
-				height: 100%;
-			}
-		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

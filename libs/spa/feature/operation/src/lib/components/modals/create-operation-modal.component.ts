@@ -92,7 +92,7 @@ export class CreateOperationModalComponent {
 				Validators.required,
 				dateNotInPastValidator,
 			]),
-			end: this.fb.control<Date | null>(null, [
+			end: this.fb.control<Date>(new Date(), [
 				Validators.required,
 				dateNotInPastValidator,
 			]),
@@ -179,8 +179,8 @@ export class CreateOperationModalComponent {
 		const formData = this.formGroup.getRawValue();
 
 		return {
-			start: formData.start,
-			end: formData.end,
+			start: formData.start.toISOString(),
+			end: formData.end.toISOString(),
 			alarmKeyword: formData.alarmKeyword,
 			location: {
 				...formData.location,

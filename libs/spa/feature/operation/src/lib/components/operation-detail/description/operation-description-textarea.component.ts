@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -20,7 +19,7 @@ import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 			multi: true,
 		},
 	],
-	imports: [CommonModule, FormsModule, NzInputDirective],
+	imports: [FormsModule, NzInputDirective],
 	template: `
 		<textarea
 			#textarea
