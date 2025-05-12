@@ -36,11 +36,8 @@ export class ResolverTraceWrapper extends TraceWrapper {
 	}
 
 	private wrapResolver(provider: InstanceWrapper): void {
-		if (!provider.metatype) {
-			return;
-		}
-
-		const methods = Object.getOwnPropertyNames(provider.metatype.prototype);
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const methods = Object.getOwnPropertyNames(provider.metatype!.prototype);
 
 		for (const methodName of methods) {
 			if (methodName === 'constructor') {
@@ -49,16 +46,18 @@ export class ResolverTraceWrapper extends TraceWrapper {
 
 			const type = Reflect.getMetadata(
 				RESOLVER_TYPE_METADATA,
-				provider.metatype.prototype[methodName],
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				provider.metatype!.prototype[methodName],
 			);
 
 			if (!type || (type !== 'Query' && type !== 'Mutation')) {
 				continue;
 			}
-
-			provider.metatype.prototype[methodName] = this.asWrapped(
-				provider.metatype.prototype[methodName],
-				`${provider.metatype.name} (Resolver) -> ${methodName} (${type})`,
+			/*  eslint-disable @typescript-eslint/no-non-null-assertion */
+			provider.metatype!.prototype[methodName] = this.asWrapped(
+				provider.metatype!.prototype[methodName],
+				`${provider.metatype!.name} (Resolver) -> ${methodName} (${type})`,
+				/* eslint-enable @typescript-eslint/no-non-null-assertion */
 				{
 					resolver: provider.name,
 					method: methodName,

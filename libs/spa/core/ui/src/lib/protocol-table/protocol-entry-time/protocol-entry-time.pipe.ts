@@ -111,6 +111,7 @@ export class ProtocolEntryTimePipe implements PipeTransform, OnDestroy {
 		if (!this.date) {
 			throw new Error('Date is not set');
 		}
+
 		this.displayValue = this.dateTransformer.transform(this.date);
 	}
 }

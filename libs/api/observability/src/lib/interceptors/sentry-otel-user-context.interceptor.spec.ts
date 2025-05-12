@@ -10,6 +10,14 @@ import { AuthUser, Role } from '@kordis/shared/model';
 
 import { SentryOTelUserContextInterceptor } from './sentry-otel-user-context.interceptor';
 
+jest.mock('@sentry/node', () => {
+	return {
+		__esModule: true,
+		setUser: jest.fn(),
+		...jest.requireActual('@sentry/node'),
+	};
+});
+
 describe('SentryOTelUserContextInterceptor', () => {
 	let interceptor: SentryOTelUserContextInterceptor;
 
