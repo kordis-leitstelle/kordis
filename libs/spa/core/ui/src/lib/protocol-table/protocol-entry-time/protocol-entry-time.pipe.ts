@@ -87,7 +87,7 @@ export class ProtocolEntryTimePipe implements PipeTransform, OnDestroy {
 	// since the value changes happen very rarely. See {@link @angular/common/AsyncPipe} for a similar approach.
 	transform(date: string): string {
 		const parsedDate = new Date(date);
-		if (!this.date || this.date !== parsedDate) {
+		if (!this.date || this.date.getTime() !== parsedDate.getTime()) {
 			this.date = parsedDate;
 			this.calculateDisplayValue();
 
