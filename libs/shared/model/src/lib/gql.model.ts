@@ -25,14 +25,14 @@ export type Scalars = {
 	Boolean: { input: boolean; output: boolean };
 	Int: { input: number; output: number };
 	Float: { input: number; output: number };
-	/** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-	DateTime: { input: any; output: any };
+	/** `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch. */
+	Timestamp: { input: any; output: any };
 };
 
 export type AlertGroup = {
 	__typename?: 'AlertGroup';
 	assignment?: Maybe<EntityAssignment>;
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	/** The current units of the alert group. These units will be presented to the user when the alert group is assigned to a deployment. */
 	currentUnits: Array<Unit>;
 	/** Units actively assigned to the alert group in its current assignment. If not assigned, the array is empty. */
@@ -42,7 +42,7 @@ export type AlertGroup = {
 	id: Scalars['ID']['output'];
 	name: Scalars['String']['output'];
 	orgId: Scalars['String']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type AlertGroupsFilter = {
@@ -69,7 +69,7 @@ export type BaseCreateMessageInput = {
 export type CommunicationMessage = {
 	__typename?: 'CommunicationMessage';
 	channel: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	id: Scalars['ID']['output'];
 	orgId: Scalars['String']['output'];
 	payload: CommunicationMessagePayload;
@@ -77,8 +77,8 @@ export type CommunicationMessage = {
 	recipient: UnitUnion;
 	searchableText: Scalars['String']['output'];
 	sender: UnitUnion;
-	time: Scalars['DateTime']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	time: Scalars['Timestamp']['output'];
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type CommunicationMessagePayload = {
@@ -102,16 +102,16 @@ export type CreateOngoingOperationArgs = {
 	assignedAlertGroups: Array<CreateOperationInvolvedAlertGroupInput>;
 	assignedUnitIds: Array<Scalars['String']['input']>;
 	location: OperationLocationInput;
-	start: Scalars['DateTime']['input'];
+	start: Scalars['Timestamp']['input'];
 };
 
 export type CreateOperationInput = {
 	alarmKeyword: Scalars['String']['input'];
 	assignedAlertGroups: Array<CreateOperationInvolvedAlertGroupInput>;
 	assignedUnitIds: Array<Scalars['String']['input']>;
-	end: Scalars['DateTime']['input'];
+	end: Scalars['Timestamp']['input'];
 	location: OperationLocationInput;
-	start: Scalars['DateTime']['input'];
+	start: Scalars['Timestamp']['input'];
 };
 
 export type CreateOperationInvolvedAlertGroupInput = {
@@ -143,17 +143,17 @@ export type EntityAssignment =
 
 export type EntityOperationAssignment = {
 	__typename?: 'EntityOperationAssignment';
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	id: Scalars['ID']['output'];
 	operation: Operation;
 	orgId: Scalars['String']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type EntityRescueStationAssignment = {
 	__typename?: 'EntityRescueStationAssignment';
 	callSign: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	defaultUnits: Array<Unit>;
 	id: Scalars['ID']['output'];
 	location: RescueStationLocation;
@@ -162,7 +162,7 @@ export type EntityRescueStationAssignment = {
 	orgId: Scalars['String']['output'];
 	signedIn: Scalars['Boolean']['output'];
 	strength: RescueStationStrength;
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export enum FilterableOperationProcessState {
@@ -180,8 +180,8 @@ export type FurtherAttribute = {
 
 export type InvolvementTime = {
 	__typename?: 'InvolvementTime';
-	end?: Maybe<Scalars['DateTime']['output']>;
-	start: Scalars['DateTime']['output'];
+	end?: Maybe<Scalars['Timestamp']['output']>;
+	start: Scalars['Timestamp']['output'];
 };
 
 export type MapLayer = {
@@ -357,21 +357,22 @@ export type Operation = {
 	alertGroupInvolvements: Array<OperationAlertGroupInvolvement>;
 	categories: Array<OperationCategory>;
 	commander: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	description: Scalars['String']['output'];
-	end?: Maybe<Scalars['DateTime']['output']>;
+	end?: Maybe<Scalars['Timestamp']['output']>;
 	externalReference: Scalars['String']['output'];
 	id: Scalars['ID']['output'];
 	location: OperationLocation;
 	orgId: Scalars['String']['output'];
 	patients: Array<OperationPatient>;
 	processState: OperationProcessState;
+	/** Operation protocol contains all protocol entries of registered units and alert group registered units that have any protocol message during there involvements. */
 	protocol: Array<ProtocolEntryUnion>;
 	reporter: Scalars['String']['output'];
 	sign: Scalars['String']['output'];
-	start: Scalars['DateTime']['output'];
+	start: Scalars['Timestamp']['output'];
 	unitInvolvements: Array<OperationUnitInvolvement>;
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type OperationAlertGroupInvolvement = {
@@ -421,11 +422,11 @@ export type OperationCategoryInput = {
 export type OperationDeployment = {
 	__typename?: 'OperationDeployment';
 	assignments: Array<DeploymentAssignment>;
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	id: Scalars['ID']['output'];
 	operation: Operation;
 	orgId: Scalars['String']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type OperationEndedMessagePayload = {
@@ -439,8 +440,8 @@ export type OperationFilterInput = {
 };
 
 export type OperationInvolvementTimeInput = {
-	end?: InputMaybe<Scalars['DateTime']['input']>;
-	start: Scalars['DateTime']['input'];
+	end?: InputMaybe<Scalars['Timestamp']['input']>;
+	start: Scalars['Timestamp']['input'];
 };
 
 export type OperationLocation = {
@@ -486,7 +487,7 @@ export type OperationMessageAssignedUnit = {
 export type OperationPatient = {
 	__typename?: 'OperationPatient';
 	address: OperationBaseAddress;
-	birthDate?: Maybe<Scalars['DateTime']['output']>;
+	birthDate?: Maybe<Scalars['Timestamp']['output']>;
 	firstName: Scalars['String']['output'];
 	lastName: Scalars['String']['output'];
 	phoneNumber: Scalars['String']['output'];
@@ -495,7 +496,7 @@ export type OperationPatient = {
 
 export type OperationPatientInput = {
 	address: OperationBaseAddressInput;
-	birthDate?: InputMaybe<Scalars['DateTime']['input']>;
+	birthDate?: InputMaybe<Scalars['Timestamp']['input']>;
 	firstName: Scalars['String']['input'];
 	lastName: Scalars['String']['input'];
 	phoneNumber: Scalars['String']['input'];
@@ -525,7 +526,7 @@ export type OperationStartedMessagePayload = {
 	location: OperationStartedMessageLocation;
 	operationId: Scalars['String']['output'];
 	operationSign: Scalars['String']['output'];
-	start: Scalars['DateTime']['output'];
+	start: Scalars['Timestamp']['output'];
 };
 
 export type OperationUnitInvolvement = {
@@ -537,12 +538,12 @@ export type OperationUnitInvolvement = {
 
 export type OrganizationEntity = {
 	__typename?: 'OrganizationEntity';
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	geoSettings: OrganizationGeoSettings;
 	id: Scalars['ID']['output'];
 	name: Scalars['String']['output'];
 	orgId: Scalars['String']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type OrganizationGeoSettings = {
@@ -673,7 +674,7 @@ export type RescueStationDeployment = {
 	__typename?: 'RescueStationDeployment';
 	assignments: Array<DeploymentAssignment>;
 	callSign: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	defaultUnits: Array<Unit>;
 	id: Scalars['ID']['output'];
 	location: RescueStationLocation;
@@ -682,13 +683,13 @@ export type RescueStationDeployment = {
 	orgId: Scalars['String']['output'];
 	signedIn: Scalars['Boolean']['output'];
 	strength: RescueStationStrength;
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type RescueStationDeploymentEntity = {
 	__typename?: 'RescueStationDeploymentEntity';
 	callSign: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	defaultUnits: Array<Unit>;
 	id: Scalars['ID']['output'];
 	location: RescueStationLocation;
@@ -697,7 +698,7 @@ export type RescueStationDeploymentEntity = {
 	orgId: Scalars['String']['output'];
 	signedIn: Scalars['Boolean']['output'];
 	strength: RescueStationStrength;
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type RescueStationLocation = {
@@ -740,7 +741,7 @@ export type RescueStationMessageStrength = {
 export type RescueStationSignOffMessage = {
 	__typename?: 'RescueStationSignOffMessage';
 	channel: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	id: Scalars['ID']['output'];
 	orgId: Scalars['String']['output'];
 	payload: RescueStationSignOffMessagePayload;
@@ -748,8 +749,8 @@ export type RescueStationSignOffMessage = {
 	recipient: UnitUnion;
 	searchableText: Scalars['String']['output'];
 	sender: UnitUnion;
-	time: Scalars['DateTime']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	time: Scalars['Timestamp']['output'];
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type RescueStationSignOffMessagePayload = {
@@ -762,7 +763,7 @@ export type RescueStationSignOffMessagePayload = {
 export type RescueStationSignOnMessage = {
 	__typename?: 'RescueStationSignOnMessage';
 	channel: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	id: Scalars['ID']['output'];
 	orgId: Scalars['String']['output'];
 	payload: RescueStationMessagePayload;
@@ -770,8 +771,8 @@ export type RescueStationSignOnMessage = {
 	recipient: UnitUnion;
 	searchableText: Scalars['String']['output'];
 	sender: UnitUnion;
-	time: Scalars['DateTime']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	time: Scalars['Timestamp']['output'];
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type RescueStationStrength = {
@@ -784,7 +785,7 @@ export type RescueStationStrength = {
 export type RescueStationUpdateMessage = {
 	__typename?: 'RescueStationUpdateMessage';
 	channel: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	id: Scalars['ID']['output'];
 	orgId: Scalars['String']['output'];
 	payload: RescueStationMessagePayload;
@@ -792,8 +793,8 @@ export type RescueStationUpdateMessage = {
 	recipient: UnitUnion;
 	searchableText: Scalars['String']['output'];
 	sender: UnitUnion;
-	time: Scalars['DateTime']['output'];
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	time: Scalars['Timestamp']['output'];
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export enum Role {
@@ -824,7 +825,7 @@ export type Unit = {
 	assignment?: Maybe<EntityAssignment>;
 	callSign: Scalars['String']['output'];
 	callSignAbbreviation: Scalars['String']['output'];
-	createdAt: Scalars['DateTime']['output'];
+	createdAt: Scalars['Timestamp']['output'];
 	department: Scalars['String']['output'];
 	furtherAttributes: Array<FurtherAttribute>;
 	id: Scalars['ID']['output'];
@@ -833,7 +834,7 @@ export type Unit = {
 	orgId: Scalars['String']['output'];
 	rcsId: Scalars['String']['output'];
 	status?: Maybe<UnitStatus>;
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+	updatedAt?: Maybe<Scalars['Timestamp']['output']>;
 };
 
 export type UnitInput = {
@@ -870,12 +871,12 @@ export type UpdateOperationBaseDataInput = {
 	categories?: InputMaybe<Array<OperationCategoryInput>>;
 	commander?: InputMaybe<Scalars['String']['input']>;
 	description?: InputMaybe<Scalars['String']['input']>;
-	end?: InputMaybe<Scalars['DateTime']['input']>;
+	end?: InputMaybe<Scalars['Timestamp']['input']>;
 	externalReference?: InputMaybe<Scalars['String']['input']>;
 	location?: InputMaybe<OperationLocationInput>;
 	patients?: InputMaybe<Array<OperationPatientInput>>;
 	reporter?: InputMaybe<Scalars['String']['input']>;
-	start?: InputMaybe<Scalars['DateTime']['input']>;
+	start?: InputMaybe<Scalars['Timestamp']['input']>;
 };
 
 export type UpdateOperationInvolvementsInput = {
