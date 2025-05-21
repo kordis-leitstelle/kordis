@@ -50,3 +50,5 @@ apps/spa-e2e/.env
 
 .nx/cache
 .nx/workspace-data
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
