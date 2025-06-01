@@ -70,10 +70,12 @@ export class LaunchSignOnProcessHandler
 		await this.commandBus.execute(
 			new CreateRescueStationSignOnMessageCommand(
 				new Date(),
-				communicationMessageData.sender,
-				communicationMessageData.recipient,
+				{
+					sender: communicationMessageData.sender,
+					recipient: communicationMessageData.recipient,
+					channel: communicationMessageData.channel,
+				},
 				rsDetails,
-				communicationMessageData.channel,
 				reqUser,
 			),
 		);

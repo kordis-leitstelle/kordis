@@ -4,7 +4,8 @@ import { Observable, mergeMap } from 'rxjs';
 
 import { KordisLogger } from '@kordis/api/observability';
 import { OngoingOperationCreatedEvent } from '@kordis/api/operation-manager';
-import { UpdateUnitStatusCommand } from '@kordis/api/unit';
+
+import { UpdateUnitStatusCommand } from '../../../unit/src/lib/core/command/update-unit-status.command';
 
 @Injectable()
 export class OperationUnitSaga {

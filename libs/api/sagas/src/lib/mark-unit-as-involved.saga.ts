@@ -3,9 +3,10 @@ import { ICommand, IEvent, QueryBus, Saga, ofType } from '@nestjs/cqrs';
 import { Observable, concatMap, filter, groupBy, mergeMap } from 'rxjs';
 
 import { KordisLogger } from '@kordis/api/observability';
-import { StartPendingUnitInvolvementCommand } from '@kordis/api/operation';
-import { GetOperationIdOfPendingUnitQuery } from '@kordis/api/operation';
 import { UnitStatusUpdatedEvent } from '@kordis/api/unit';
+
+import { StartPendingUnitInvolvementCommand } from '../../../operation/src/lib/core/command/start-pending-unit-involvement.command';
+import { GetOperationIdOfPendingUnitQuery } from '../../../operation/src/lib/core/query/get-operation-id-of-pending-unit.query';
 
 @Injectable()
 export class MarkUnitAsInvolvedSaga {

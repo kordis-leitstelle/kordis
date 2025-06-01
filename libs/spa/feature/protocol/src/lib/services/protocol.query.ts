@@ -43,17 +43,32 @@ export const CREATE_COMMUNICATION_MESSAGE = gql`
 			createdAt
 			updatedAt
 			time
-			sender {
-				... on UnknownUnit {
-					name
-				}
-				... on RegisteredUnit {
-					unit {
+			communicationDetails {
+				sender {
+					... on UnknownUnit {
 						name
-						id
-						callSign
+					}
+					... on RegisteredUnit {
+						unit {
+							name
+							id
+							callSign
+						}
 					}
 				}
+				recipient {
+					... on UnknownUnit {
+						name
+					}
+					... on RegisteredUnit {
+						unit {
+							name
+							id
+							callSign
+						}
+					}
+				}
+				channel
 			}
 			searchableText
 			producer {
@@ -61,19 +76,6 @@ export const CREATE_COMMUNICATION_MESSAGE = gql`
 				firstName
 				lastName
 			}
-			recipient {
-				... on UnknownUnit {
-					name
-				}
-				... on RegisteredUnit {
-					unit {
-						name
-						id
-						callSign
-					}
-				}
-			}
-			channel
 			payload {
 				message
 			}

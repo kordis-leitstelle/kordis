@@ -127,7 +127,7 @@ export type ProtocolCommunicationDetailsFormGroup = FormGroup<{
 })
 export class ProtocolCommunicationDetailsComponent {
 	readonly formGroup = input.required<ProtocolCommunicationDetailsFormGroup>();
-	readonly recipientTab = output<void>();
+	readonly recipientSet = output<void>();
 	readonly labelFn = (unit: Unit): string => unit.callSign;
 	readonly unitSelectionsService = inject(PossibleUnitSelectionsService);
 
@@ -152,7 +152,7 @@ export class ProtocolCommunicationDetailsComponent {
 					ensureSingleUnitSelectionPipe(this.unitSelectionsService),
 					takeUntil(destroySubject$),
 				)
-				.subscribe(() => this.recipientTab.emit());
+				.subscribe(() => setTimeout(() => this.recipientSet.emit()));
 		});
 	}
 }

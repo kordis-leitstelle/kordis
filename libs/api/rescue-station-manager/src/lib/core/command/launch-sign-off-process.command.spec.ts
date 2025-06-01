@@ -70,17 +70,19 @@ describe('LaunchSignOffProcessCommand', () => {
 			new CreateRescueStationSignOffMessageCommand(
 				expect.any(Date),
 				{
-					name: 'senderName',
-				},
-				{
-					unit: { id: 'unitId' },
+					sender: {
+						name: 'senderName',
+					},
+					recipient: {
+						unit: { id: 'unitId' },
+					},
+					channel: 'channel',
 				},
 				{
 					id: 'rescueStationId',
 					name: 'rescueStationName',
 					callSign: 'rescueStationCallSign',
 				},
-				'channel',
 				{
 					organizationId: 'orgId',
 				} as AuthUser,

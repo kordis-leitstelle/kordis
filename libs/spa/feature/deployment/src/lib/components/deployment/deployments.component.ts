@@ -90,6 +90,10 @@ export class DeploymentsComponent {
 				'rescueStationSignedIn',
 				'operationDeploymentCreated',
 				'operationDeploymentUpdated',
+				{
+					field: 'operationDeploymentRemoved',
+					queryFields: null,
+				},
 			])
 			.pipe(takeUntilDestroyed())
 			.subscribe(() => this.deploymentsQuery.refresh());

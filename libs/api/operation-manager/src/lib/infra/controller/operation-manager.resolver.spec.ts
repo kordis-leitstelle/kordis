@@ -14,7 +14,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
+import { CreateOngoingOperationInput } from './create-ongoing-operation.input';
 import { OperationManagerResolver } from './operation-manager.resolver';
 
 describe('OperationManagerResolver', () => {
@@ -41,7 +41,7 @@ describe('OperationManagerResolver', () => {
 	} as AuthUser;
 
 	describe('createOngoingOperation', () => {
-		const operationArgs: CreateOngoingOperationArgs = {
+		const operationArgs: CreateOngoingOperationInput = {
 			start: new Date(),
 			alarmKeyword: 'THWAY',
 			location: {
@@ -69,8 +69,8 @@ describe('OperationManagerResolver', () => {
 
 			const result = await operationManagerResolver.createOngoingOperation(
 				reqUser,
+				{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 				operationArgs,
-				MOCK_BASE_CREATE_MESSAGE_ARGS,
 			);
 
 			expect(result).toEqual({
@@ -91,8 +91,8 @@ describe('OperationManagerResolver', () => {
 			await expect(
 				operationManagerResolver.createOngoingOperation(
 					reqUser,
+					{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 					operationArgs,
-					MOCK_BASE_CREATE_MESSAGE_ARGS,
 				),
 			).rejects.toThrow(PresentableValidationException);
 		});
@@ -106,12 +106,10 @@ describe('OperationManagerResolver', () => {
 		const result = await operationManagerResolver.endOngoingOperation(
 			reqUser,
 			'someId',
-			MOCK_BASE_CREATE_MESSAGE_ARGS,
+			{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 		);
 
-		expect(result).toEqual({
-			id: 'someId',
-		});
+		expect(result).toEqual(true);
 		expect(mockCommandBus.execute).toHaveBeenCalledWith(
 			new LaunchEndOperationProcessCommand(
 				reqUser,

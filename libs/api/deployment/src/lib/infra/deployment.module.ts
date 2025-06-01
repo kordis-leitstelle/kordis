@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CreateOperationDeploymentHandler } from '../core/command/operation/create-operation-deployment.command';
+import { RemoveOperationDeploymentHandler } from '../core/command/operation/remove-operation-deployment.command';
 import { SetOperationDeploymentAssignmentsHandler } from '../core/command/operation/set-operation-deployment-assignments.command';
 import { ResetRescueStationsHandler } from '../core/command/rescue-station/reset-rescue-stations.command';
 import { SignInRescueStationHandler } from '../core/command/rescue-station/sign-in-rescue-station.command';
@@ -101,10 +102,11 @@ const CQRS_HANDLERS = [
 	GetRescueStationsDeploymentsHandler,
 	GetUnassignedEntitiesHandler,
 	GetUnitAssignmentHandlerHandler,
+	RemoveOperationDeploymentHandler,
 	ResetRescueStationsHandler,
+	SetOperationDeploymentAssignmentsHandler,
 	SignInRescueStationHandler,
 	SignOffRescueStationHandler,
-	SetOperationDeploymentAssignmentsHandler,
 	UpdateRescueStationNoteHandler,
 	UpdateSignedInRescueStationHandler,
 ];

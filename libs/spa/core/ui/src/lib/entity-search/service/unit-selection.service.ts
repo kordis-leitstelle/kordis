@@ -5,9 +5,7 @@ import { Query, Unit } from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
 
 import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
-import { EntitySearchEngine } from './entity-search.service';
 import { EntitySelectionService } from './entity-selection.service';
-import { unitMatchesByNameOrCallSign } from './match-strategies';
 
 /*
 	This service handles the selection of units in a context where a unit can only be selected once.
@@ -36,5 +34,4 @@ export class PossibleUnitSelectionsService extends EntitySelectionService<
 		}
 	`;
 	protected queryName = 'units' as const;
-	protected searchService = new EntitySearchEngine(unitMatchesByNameOrCallSign);
 }

@@ -8,7 +8,7 @@ export const ensureSingleUnitSelectionPipe = (
 	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) =>
 	pipe(
-		startWith(undefined),
+		startWith(null),
 		pairwise(),
 		filter(([prev, curr]) => prev !== curr && !!curr),
 		tap(([prev, curr]) => {

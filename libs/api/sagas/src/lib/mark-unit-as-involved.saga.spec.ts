@@ -1,10 +1,13 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
+import { Promise } from 'mongoose';
 import { lastValueFrom, of, toArray } from 'rxjs';
 
-import { StartPendingUnitInvolvementCommand } from '@kordis/api/operation';
-import { GetOperationIdOfPendingUnitQuery } from '@kordis/api/operation';
+import {
+	GetOperationIdOfPendingUnitQuery,
+	StartPendingUnitInvolvementCommand,
+} from '@kordis/api/operation';
 import { UnitStatusUpdatedEvent } from '@kordis/api/unit';
 
 import { MarkUnitAsInvolvedSaga } from './mark-unit-as-involved.saga';

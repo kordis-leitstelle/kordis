@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	inject,
+	output,
 	signal,
 	viewChild,
 } from '@angular/core';
@@ -17,7 +18,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { filter, pairwise, pipe, startWith, tap } from 'rxjs';
 
 import { Unit, UnitInput } from '@kordis/shared/model';
 import {
@@ -27,35 +27,8 @@ import {
 	UnitOptionComponent,
 } from '@kordis/spa/core/ui';
 
-import { ProtocolClient } from '../../services/protocol.client';
-
-const CHANNELS = Object.freeze([
-	{
-		value: 'D',
-		label: 'Digital',
-		default: true,
-	},
-	{
-		value: 'T',
-		label: 'Telefon',
-		default: false,
-	},
-	{
-		value: '1',
-		label: 'DLRG-Kanal 1',
-		default: false,
-	},
-	{
-		value: '2',
-		label: 'DLRG-Kanal 2',
-		default: false,
-	},
-	{
-		value: '3',
-		label: 'DLRG-Kanal 3',
-		default: false,
-	},
-]);
+import { CHANNELS, DEFAULT_CHANNEL } from '../../channels';
+import { ensureSingleUnitSelectionPipe } from '../../services/ensure-single-unit.pipe';
 
 @Component({
 	selector: 'krd-create-protocol-message',
@@ -80,6 +53,9 @@ const CHANNELS = Object.freeze([
 			button {
 				width: 100%;
 			}
+			.ant-form-item {
+				margin-bottom: 0;
+			}
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,6 +63,12 @@ const CHANNELS = Object.freeze([
 export class CreateProtocolMessageComponent {
 	readonly channels = CHANNELS;
 	readonly labelFn = (unit: Unit): string => unit.callSign;
+	readonly messageSubmit = output<{
+		sender: Unit | string;
+		recipient: Unit | string;
+		channel: string;
+		message: string;
+	}>();
 
 	readonly unitService = inject(PossibleUnitSelectionsService);
 	readonly units = signal<Unit[]>([]);
@@ -104,42 +86,25 @@ export class CreateProtocolMessageComponent {
 			Validators.required,
 		),
 		message: this.fb.control<string>('', Validators.required),
-		channel: this.fb.control<string>(
-			this.channels.find((channel) => channel.default)?.value ?? '',
-			Validators.required,
-		),
+		channel: this.fb.control<string>(DEFAULT_CHANNEL, Validators.required),
 	});
 
-	private readonly client = inject(ProtocolClient);
-
 	constructor() {
-		// do not allow same unit as sender and recipient
-		const ensureSingleUnitSelectionPipe = pipe(
-			startWith(undefined),
-			pairwise(),
-			filter(([prev, curr]) => prev !== curr && !!curr),
-			tap(([prev, curr]) => {
-				if (curr && typeof curr !== 'string') {
-					this.unitService.markAsSelected(curr as Unit);
-					if (prev && typeof prev !== 'string') {
-						this.unitService.unmarkAsSelected(prev as Unit);
-					}
-				}
-			}),
-		);
-
 		this.messageForm.controls.sender.valueChanges
-			.pipe(ensureSingleUnitSelectionPipe)
+			.pipe(ensureSingleUnitSelectionPipe(this.unitService))
 			.subscribe(() => setTimeout(() => this.recipientInput()?.focus()));
 
 		this.messageForm.controls.recipient.valueChanges
-			.pipe(ensureSingleUnitSelectionPipe)
+			.pipe(ensureSingleUnitSelectionPipe(this.unitService))
 			.subscribe(() =>
 				setTimeout(() => this.msgInput()?.nativeElement.focus()),
 			);
 	}
 
 	addProtocolMessage(): void {
+		if (this.messageForm.invalid) {
+			return;
+		}
 		const formValue = this.messageForm.getRawValue();
 
 		// checking presence of sender and recipient is necessary for type inference
@@ -147,9 +112,9 @@ export class CreateProtocolMessageComponent {
 			return;
 		}
 
-		this.client.addMessageAsync({
-			sender: this.generateUnitInput(formValue.sender),
-			recipient: this.generateUnitInput(formValue.recipient),
+		this.messageSubmit.emit({
+			sender: formValue.sender,
+			recipient: formValue.recipient,
 			channel: formValue.channel,
 			message: formValue.message,
 		});

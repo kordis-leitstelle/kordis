@@ -71,14 +71,16 @@ export class LaunchSignOffProcessHandler
 		await this.commandBus.execute(
 			new CreateRescueStationSignOffMessageCommand(
 				new Date(),
-				cmd.communicationMessageData.sender,
-				cmd.communicationMessageData.recipient,
+				{
+					sender: cmd.communicationMessageData.sender,
+					recipient: cmd.communicationMessageData.recipient,
+					channel: cmd.communicationMessageData.channel,
+				},
 				{
 					id: rs.id,
 					name: rs.name,
 					callSign: rs.callSign,
 				},
-				cmd.communicationMessageData.channel,
 				cmd.reqUser,
 			),
 		);
