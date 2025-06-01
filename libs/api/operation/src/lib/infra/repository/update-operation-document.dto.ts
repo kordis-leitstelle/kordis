@@ -18,7 +18,7 @@ export class UpdateOperationDocumentDto {
 	@AutoMap()
 	start: Date;
 
-	@AutoMap()
+	@AutoMap(() => Date)
 	end: Date | undefined;
 
 	@AutoMap()

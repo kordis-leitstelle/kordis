@@ -9,6 +9,7 @@ import {
 	StartPendingUnitInvolvementHandler,
 	UpdateOperationBaseDataHandler,
 } from '../core/command';
+import { EndOngoingOperationHandler } from '../core/command/end-ongoing-operation.command';
 import { GetOperationByIdHandler } from '../core/query/get-operation-by-id.query';
 import { GetOperationIdOfPendingUnitHandler } from '../core/query/get-operation-id-of-pending-unit.query';
 import { GetOperationByIdsQueryHandler } from '../core/query/get-operations-by-ids.query';
@@ -81,6 +82,7 @@ const PROVIDERS = [
 const COMMAND_HANDLERS = [
 	ArchiveOperationHandler,
 	CreateOperationHandler,
+	EndOngoingOperationHandler,
 	DeleteOperationHandler,
 	StartPendingUnitInvolvementHandler,
 	UpdateOperationBaseDataHandler,

@@ -9,4 +9,3 @@ export { OperationDeletedEvent } from './lib/core/event/operation-deleted.event'
 export { OngoingOperationEndedEvent } from './lib/core/event/ongoing-operation-ended.event';
 export { OngoingOperationInvolvementsUpdatedEvent } from './lib/core/event/ongoing-operation-involvements-updated.event';
 export { OPERATION_DATA_LOADER } from './lib/operations.data-loader';
-export * from './lib/saga/operation-saga.module';

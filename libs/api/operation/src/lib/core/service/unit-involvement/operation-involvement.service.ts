@@ -99,7 +99,7 @@ export class OperationInvolvementService {
 				uow,
 			);
 		} else {
-			// unit was not involved in the operation, so we need to release it from possible ongoing operations and  add it as a pending unit
+			// unit was not involved in the operation, so we need to release it from possible ongoing operations and add it as a pending unit
 			await this.releaseUnitFromPossibleForeignOperation(
 				orgId,
 				unitId,
@@ -170,6 +170,7 @@ export class OperationInvolvementService {
 				start,
 				uow,
 			);
+			//todo: müssen wir hier nicht ein event werfen damit deployments das mitkriegt? oder vielleicht am ende ein recalculate trigger?
 			return;
 		}
 		// has a pending involvement?
