@@ -51,7 +51,7 @@ import { CreateOperationFormComponent } from './create-operation-form.component'
 
 			<krd-protocol-communication-details
 				[formGroup]="formGroup.controls.protocol"
-				(recipientTab)="operationForm.focusLocation()"
+				(recipientSet)="operationForm.focusLocation()"
 			/>
 			<nz-divider nzPlain nzText="Einsatzdaten" />
 

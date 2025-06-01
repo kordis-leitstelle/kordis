@@ -8,11 +8,18 @@ import {
 export const nameOrStreetRequiredValidator: ValidatorFn = (
 	group: AbstractControl<{ name: FormControl; street: FormControl }>,
 ): ValidationErrors | null => {
-	if (!group.get('name')?.value && !group.get('street')?.value) {
-		group.get('name')?.setErrors({ streetAndNameEmpty: true });
-		group.get('street')?.setErrors({ streetAndNameEmpty: true });
+	const nameControl = group.get('name');
+	const streetControl = group.get('street');
+
+	if (!nameControl?.value && !streetControl?.value) {
+		nameControl?.setErrors({ streetAndNameEmpty: true });
+		streetControl?.setErrors({ streetAndNameEmpty: true });
 		return { streetAndNameEmpty: true };
 	}
+
+	// Clear errors if validation passes
+	nameControl?.setErrors(null);
+	streetControl?.setErrors(null);
 
 	return null;
 };

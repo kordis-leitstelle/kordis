@@ -30,7 +30,7 @@ import { OperationSelectComponent } from '../operation-select.component';
 
 		<krd-protocol-communication-details
 			[formGroup]="protocolForm"
-			(recipientTab)="operationSelect.focus()"
+			(recipientSet)="operationSelect.focus()"
 		/>
 
 		<nz-divider nzPlain nzText="Einsatzdaten" />

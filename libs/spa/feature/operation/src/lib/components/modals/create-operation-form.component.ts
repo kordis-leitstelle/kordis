@@ -49,16 +49,18 @@ import { OperationDescriptionTextareaComponent } from '../operation-detail/descr
 						</nz-form-control>
 					</nz-form-item>
 				</div>
-				<div nz-col nzSpan="12">
-					<nz-form-item>
-						<nz-form-label>Ende</nz-form-label>
-						<nz-form-control
-							nzErrorTip="Muss nach dem Start und in der Vergangenheit liegen!"
-						>
-							<krd-date-mask-input formControlName="end" />
-						</nz-form-control>
-					</nz-form-item>
-				</div>
+				@if (formGroup().controls.end.enabled) {
+					<div nz-col nzSpan="12">
+						<nz-form-item>
+							<nz-form-label>Ende</nz-form-label>
+							<nz-form-control
+								nzErrorTip="Muss nach dem Start und in der Vergangenheit liegen!"
+							>
+								<krd-date-mask-input formControlName="end" />
+							</nz-form-control>
+						</nz-form-item>
+					</div>
+				}
 			</div>
 
 			<krd-operation-location-form
