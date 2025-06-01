@@ -1,7 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
-import { Promise } from 'mongoose';
 import { lastValueFrom, of, toArray } from 'rxjs';
 
 import {
@@ -125,7 +124,7 @@ describe('MarkUnitAsInvolvedSaga', () => {
 		queryBus.execute.mockImplementation(async (query) => {
 			const unitQuery = query as GetOperationIdOfPendingUnitQuery;
 			if (unitQuery.orgId === 'org1' && unitQuery.unitId === 'unit1') {
-				await new Promise((resolve) => setTimeout(resolve, 100));
+				await new Promise((resolve: any) => setTimeout(resolve, 100));
 				return 'operationId';
 			} else {
 				throw new Error('Unknown unit detected');
