@@ -13,7 +13,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { Page } from '../../core/entity/page.entity';
 import { RegisteredUnit } from '../../core/entity/partials/unit-partial.entity';
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.query';
 import {
 	ProtocolEntryResolver,

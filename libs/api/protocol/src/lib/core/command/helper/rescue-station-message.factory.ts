@@ -5,7 +5,7 @@ import { RescueStationSignOnMessage } from '../../entity/protocol-entries/rescue
 import { RescueStationUpdateMessage } from '../../entity/protocol-entries/rescue-station/rescue-station-update-message.entity';
 import { CreateRescueStationSignOnMessageCommand } from '../rescue-station/create-rescue-station-sign-on-message.command';
 import { CreateRescueStationUpdateMessageCommand } from '../rescue-station/create-rescue-station-update-message.command';
-import { setProtocolMessageBaseFromCommandHelper } from './set-protocol-message-base-from-command.helper';
+import { setProtocolEntryBaseFromCommandHelper } from './set-protocol-entry-base-from-command.helper';
 
 @Injectable()
 export class RescueStationMessageFactory {
@@ -13,8 +13,10 @@ export class RescueStationMessageFactory {
 		cmd: CreateRescueStationSignOnMessageCommand,
 	): Promise<RescueStationSignOnMessage> {
 		const msg = new RescueStationSignOnMessage();
+		setProtocolEntryBaseFromCommandHelper(cmd, msg);
+
+		msg.referenceId = cmd.rescueStation.id;
 		msg.searchableText = this.makeSearchableText('anmeldung', cmd);
-		setProtocolMessageBaseFromCommandHelper(cmd, msg);
 		msg.payload = this.makeMessagePayload(cmd);
 
 		return msg;
@@ -24,8 +26,10 @@ export class RescueStationMessageFactory {
 		cmd: CreateRescueStationUpdateMessageCommand,
 	): Promise<RescueStationUpdateMessage> {
 		const msg = new RescueStationUpdateMessage();
+		setProtocolEntryBaseFromCommandHelper(cmd, msg);
+
+		msg.referenceId = cmd.rescueStation.id;
 		msg.searchableText = this.makeSearchableText('nachmeldung', cmd);
-		setProtocolMessageBaseFromCommandHelper(cmd, msg);
 		msg.payload = this.makeMessagePayload(cmd);
 
 		return msg;

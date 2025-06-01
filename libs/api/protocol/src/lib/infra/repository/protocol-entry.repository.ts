@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
 
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { ProtocolEntryRepository } from '../../core/repository/protocol-entry.repository';
 import { ProtocolEntryMapper } from '../../mapper-profile/protocol-entry.mapper';
 import { ProtocolEntryBaseDocument } from '../schema/protocol-entry-base.schema';
@@ -14,11 +14,11 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 	) {}
 
 	async create<T extends ProtocolEntryBase>(entry: T): Promise<T> {
-		const document = this.mapper.map(entry);
+		const document = this.mapper.mapEntityToDocument(entry);
 
 		const protocolEntryDoc = await this.protocolEntryModel.create(document);
 
-		return this.mapper.map(
+		return this.mapper.mapDocumentToEntity(
 			protocolEntryDoc.toObject() as ProtocolEntryBaseDocument,
 		) as unknown as T;
 	}
@@ -48,7 +48,9 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 			protocolEntries.reverse();
 		}
 
-		return protocolEntries.map((entry) => this.mapper.map(entry));
+		return protocolEntries.map((entry) =>
+			this.mapper.mapDocumentToEntity(entry),
+		);
 	}
 
 	async hasProtocolEntries(
@@ -86,7 +88,7 @@ export class ImplProtocolEntryRepository implements ProtocolEntryRepository {
 			.sort({ time: 'desc' })
 			.lean<ProtocolEntryBaseDocument[]>();
 
-		return docs.map((doc) => this.mapper.map(doc));
+		return docs.map((doc) => this.mapper.mapDocumentToEntity(doc));
 	}
 
 	private getQueryForSubset(

@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { Page } from '../entity/page.entity';
-import { ProtocolEntryBase } from '../entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../entity/protocol-entries/protocol-entry.entity';
 import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,

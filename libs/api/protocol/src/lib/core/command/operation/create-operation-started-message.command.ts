@@ -14,24 +14,26 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../../repository/protocol-entry.repository';
-import { BaseCreateMessageCommand } from '../base-create-message.command';
+import { BaseCreateProtocolEntryCommand } from '../base-create-protocol-entry.command';
 import {
 	AssignedAlertGroup,
 	AssignedUnit,
 	generateSearchableAssignmentsText,
 	setAssignmentsOnPayload,
 } from '../helper/message-assignments.helper';
-import { setProtocolMessageBaseFromCommandHelper } from '../helper/set-protocol-message-base-from-command.helper';
+import { setProtocolEntryBaseFromCommandHelper } from '../helper/set-protocol-entry-base-from-command.helper';
 
 export class CreateOperationStartedMessageCommand
-	implements BaseCreateMessageCommand
+	implements BaseCreateProtocolEntryCommand
 {
 	readonly time: Date;
 
 	constructor(
-		readonly sender: MessageUnit,
-		readonly recipient: MessageUnit,
-		readonly channel: string,
+		readonly protocolData: {
+			readonly sender: MessageUnit;
+			readonly recipient: MessageUnit;
+			readonly channel: string;
+		} | null,
 		readonly operationData: {
 			id: string;
 			sign: string;
@@ -68,9 +70,12 @@ export class CreateOperationStartedMessageHandler
 
 	async execute(cmd: CreateOperationStartedMessageCommand): Promise<void> {
 		let msg = new OperationStartedMessage();
-		setProtocolMessageBaseFromCommandHelper(cmd, msg);
-		msg.payload = this.getPayloadFromCommand(cmd.operationData);
+		setProtocolEntryBaseFromCommandHelper(cmd, msg);
+
+		msg.referenceId = cmd.operationData.id;
 		msg.searchableText = this.generateSearchableText(cmd.operationData);
+		msg.payload = this.getPayloadFromCommand(cmd.operationData);
+
 		await msg.validOrThrow();
 
 		msg = await this.repository.create(msg);
@@ -92,6 +97,7 @@ export class CreateOperationStartedMessageHandler
 		payload.start = operationData.start;
 		payload.operationSign = operationData.sign;
 		payload.location = operationData.location;
+		payload.alarmKeyword = operationData.alarmKeyword;
 		setAssignmentsOnPayload(
 			operationData.assignedUnits,
 			operationData.assignedAlertGroups,
@@ -110,5 +116,16 @@ export class CreateOperationStartedMessageHandler
 		);
 
 		return `einsatz ${operationData.alarmKeyword} ${operationData.sign} gestartet ${assignmentsStr}`;
+	}
+
+	private getFlattenedInvolvedUnitIds(
+		operationData: CreateOperationStartedMessageCommand['operationData'],
+	): string[] {
+		return [
+			...operationData.assignedUnits.map((unit) => unit.id),
+			...operationData.assignedAlertGroups.flatMap(({ assignedUnits }) =>
+				assignedUnits.map((unit) => unit.id),
+			),
+		];
 	}
 }

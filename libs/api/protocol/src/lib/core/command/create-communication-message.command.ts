@@ -5,10 +5,7 @@ import type { KordisLogger } from '@kordis/api/observability';
 import { AuthUser } from '@kordis/shared/model';
 
 import { UserProducer } from '../entity/partials/producer-partial.entity';
-import {
-	RegisteredUnit,
-	UnknownUnit,
-} from '../entity/partials/unit-partial.entity';
+import { MessageUnit } from '../entity/partials/unit-partial.entity';
 import {
 	CommunicationMessage,
 	CommunicationMessagePayload,
@@ -18,18 +15,20 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../repository/protocol-entry.repository';
-import { BaseCreateMessageCommand } from './base-create-message.command';
-import { setProtocolMessageBaseFromCommandHelper } from './helper/set-protocol-message-base-from-command.helper';
+import { BaseCreateProtocolEntryCommand } from './base-create-protocol-entry.command';
+import { setProtocolEntryBaseFromCommandHelper } from './helper/set-protocol-entry-base-from-command.helper';
 
 export class CreateCommunicationMessageCommand
-	implements BaseCreateMessageCommand
+	implements BaseCreateProtocolEntryCommand
 {
 	constructor(
 		readonly time: Date,
-		readonly sender: RegisteredUnit | UnknownUnit,
-		readonly recipient: RegisteredUnit | UnknownUnit,
+		readonly protocolData: {
+			readonly sender: MessageUnit;
+			readonly recipient: MessageUnit;
+			readonly channel: string;
+		},
 		readonly message: string,
-		readonly channel: string,
 		readonly requestUser: AuthUser,
 	) {}
 }
@@ -81,7 +80,7 @@ export class CreateCommunicationMessageHandler
 		producer.lastName = cmd.requestUser.lastName;
 
 		const commMsg = new CommunicationMessage();
-		setProtocolMessageBaseFromCommandHelper(cmd, commMsg);
+		setProtocolEntryBaseFromCommandHelper(cmd, commMsg);
 
 		commMsg.payload = msgPayload;
 		commMsg.searchableText = cmd.message;

@@ -19,17 +19,16 @@ export class CommunicationMessageResolver {
 	@Mutation(() => CommunicationMessage)
 	async createCommunicationMessage(
 		@RequestUser() reqUser: AuthUser,
-		@Args() baseCreateMessageArgs: BaseCreateMessageArgs,
+		@Args()
+		baseCreateMessageArgs: BaseCreateMessageArgs,
 		@Args('message') message: string,
 	): Promise<CommunicationMessage> {
 		try {
 			return await this.commandBus.execute(
 				new CreateCommunicationMessageCommand(
 					new Date(),
-					await baseCreateMessageArgs.getTransformedSender(),
-					await baseCreateMessageArgs.getTransformedRecipient(),
+					await baseCreateMessageArgs.asTransformedPayload(),
 					message,
-					baseCreateMessageArgs.channel,
 					reqUser,
 				),
 			);

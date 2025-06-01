@@ -14,22 +14,24 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../../repository/protocol-entry.repository';
-import { BaseCreateMessageCommand } from '../base-create-message.command';
-import { setProtocolMessageBaseFromCommandHelper } from '../helper/set-protocol-message-base-from-command.helper';
+import { BaseCreateProtocolEntryCommand } from '../base-create-protocol-entry.command';
+import { setProtocolEntryBaseFromCommandHelper } from '../helper/set-protocol-entry-base-from-command.helper';
 
 export class CreateRescueStationSignOffMessageCommand
-	implements BaseCreateMessageCommand
+	implements BaseCreateProtocolEntryCommand
 {
 	constructor(
 		readonly time: Date,
-		readonly sender: MessageUnit,
-		readonly recipient: MessageUnit,
+		readonly protocolData: {
+			sender: MessageUnit;
+			recipient: MessageUnit;
+			channel: string;
+		} | null,
 		readonly rescueStation: {
 			id: string;
 			name: string;
 			callSign: string;
 		},
-		readonly channel: string,
 		readonly requestUser: AuthUser,
 	) {}
 }
@@ -50,7 +52,7 @@ export class CreateRescueStationSignOffMessageHandler
 
 	async execute(
 		command: CreateRescueStationSignOffMessageCommand,
-	): Promise<RescueStationSignOffMessage> {
+	): Promise<void> {
 		let msg = this.makeMessageFromCommand(command);
 
 		await msg.validOrThrow();
@@ -58,14 +60,12 @@ export class CreateRescueStationSignOffMessageHandler
 		msg = await this.repository.create(msg);
 
 		this.logger.log('Rescue station sign off message created', {
-			commMsgId: msg.id,
+			msgId: msg.id,
 		});
 
 		this.eventBus.publish(
 			new ProtocolEntryCreatedEvent(command.requestUser.organizationId, msg),
 		);
-
-		return msg;
 	}
 
 	private makeMessageFromCommand(
@@ -77,8 +77,9 @@ export class CreateRescueStationSignOffMessageHandler
 		msgPayload.rescueStationCallSign = cmd.rescueStation.callSign;
 
 		const msg = new RescueStationSignOffMessage();
-		setProtocolMessageBaseFromCommandHelper(cmd, msg);
+		setProtocolEntryBaseFromCommandHelper(cmd, msg);
 
+		msg.referenceId = cmd.rescueStation.id;
 		msg.payload = msgPayload;
 		msg.searchableText = `ausmeldung rettungswache ${cmd.rescueStation.name} ${cmd.rescueStation.callSign}`;
 

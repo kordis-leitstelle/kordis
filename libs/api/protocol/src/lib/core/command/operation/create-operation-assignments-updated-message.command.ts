@@ -14,23 +14,25 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../../repository/protocol-entry.repository';
-import { BaseCreateMessageCommand } from '../base-create-message.command';
+import { BaseCreateProtocolEntryCommand } from '../base-create-protocol-entry.command';
 import {
 	AssignedAlertGroup,
 	AssignedUnit,
 	generateSearchableAssignmentsText,
 	setAssignmentsOnPayload,
 } from '../helper/message-assignments.helper';
-import { setProtocolMessageBaseFromCommandHelper } from '../helper/set-protocol-message-base-from-command.helper';
+import { setProtocolEntryBaseFromCommandHelper } from '../helper/set-protocol-entry-base-from-command.helper';
 
 export class CreateOperationAssignmentsUpdatedMessageCommand
-	implements BaseCreateMessageCommand
+	implements BaseCreateProtocolEntryCommand
 {
 	constructor(
-		readonly sender: MessageUnit,
-		readonly recipient: MessageUnit,
-		readonly channel: string,
 		readonly time: Date,
+		readonly protocolData: {
+			readonly sender: MessageUnit;
+			readonly recipient: MessageUnit;
+			readonly channel: string;
+		} | null,
 		readonly assignmentsData: {
 			operationId: string;
 			operationSign: string;
@@ -59,7 +61,7 @@ export class CreateOperationAssignmentsUpdatedMessageHandler
 		cmd: CreateOperationAssignmentsUpdatedMessageCommand,
 	): Promise<void> {
 		let msg = new OperationAssignmentsUpdatedMessage();
-		setProtocolMessageBaseFromCommandHelper(cmd, msg);
+		setProtocolEntryBaseFromCommandHelper(cmd, msg);
 		msg.payload = this.getPayloadFromCommand(cmd);
 		msg.searchableText = this.generateSearchableText(cmd.assignmentsData);
 		await msg.validOrThrow();
