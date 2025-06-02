@@ -4,6 +4,7 @@ import { plainToInstance } from 'class-transformer';
 
 import { AuthUser } from '@kordis/shared/model';
 
+import { UserProducer } from '../../entity/partials/producer-partial.entity';
 import { UnknownUnit } from '../../entity/partials/unit-partial.entity';
 import {
 	OperationEndedMessage,
@@ -15,6 +16,35 @@ import {
 	CreateOperationEndedMessageCommand,
 	CreateOperationEndedMessageHandler,
 } from './create-operation-ended-message.command';
+
+const AUTH_USER = Object.freeze({
+	id: 'user-id',
+	organizationId: 'org-id',
+	firstName: 'John',
+	lastName: 'Doe',
+} as unknown as AuthUser);
+const TIME = new Date('2023-10-19T00:00:00');
+const OPERATION_DATA = Object.freeze({
+	id: '67d5d14d14bc968a6a308358',
+	sign: 'operation-sign',
+	alarmKeyword: 'alarm-keyword',
+});
+
+const BASE_EXPECTED = Object.freeze({
+	time: TIME,
+	searchableText: 'einsatz alarm-keyword operation-sign beendet',
+	payload: plainToInstance(OperationEndedMessagePayload, {
+		operationId: OPERATION_DATA.id,
+		operationSign: OPERATION_DATA.sign,
+	}),
+	producer: plainToInstance(UserProducer, {
+		userId: AUTH_USER.id,
+		firstName: AUTH_USER.firstName,
+		lastName: AUTH_USER.lastName,
+	}),
+	referenceId: OPERATION_DATA.id,
+	orgId: AUTH_USER.organizationId,
+});
 
 describe('CreateOperationEndedMessageCommand', () => {
 	let handler: CreateOperationEndedMessageHandler;
@@ -41,55 +71,59 @@ describe('CreateOperationEndedMessageCommand', () => {
 		sender.name = 'Unit1';
 		const recipient = new UnknownUnit();
 		recipient.name = 'Unit2';
-		const time = new Date('2023-10-19T00:00:00');
 		const channel = 'A';
-		const authUser = {
-			id: 'user-id',
-			organizationId: 'org-id',
-			firstName: 'John',
-			lastName: 'Doe',
-		} as unknown as AuthUser;
-
-		const operationData = {
-			id: 'operation-id',
-			sign: 'operation-sign',
-			alarmKeyword: 'alarm-keyword',
-		};
 
 		const command = new CreateOperationEndedMessageCommand(
-			authUser,
-			sender,
-			recipient,
-			channel,
-			time,
-			operationData,
+			AUTH_USER,
+			{
+				sender,
+				recipient,
+				channel,
+			},
+			TIME,
+			OPERATION_DATA,
 		);
 
 		const expectedMsg = plainToInstance(OperationEndedMessage, {
-			sender,
-			recipient,
-			time,
-			searchableText: 'einsatz alarm-keyword operation-sign beendet',
-			channel,
-			payload: plainToInstance(OperationEndedMessagePayload, {
-				operationId: operationData.id,
-				operationSign: operationData.sign,
-			}),
-			producer: {
-				userId: authUser.id,
-				firstName: authUser.firstName,
-				lastName: authUser.lastName,
+			communicationDetails: {
+				sender,
+				recipient,
+				channel,
 			},
-			orgId: authUser.organizationId,
+			...BASE_EXPECTED,
 		});
 		repositoryMock.create.mockResolvedValueOnce(expectedMsg);
 
 		await handler.execute(command);
+		(expectedMsg.createdAt as any) = expect.any(Date);
+		expect(repositoryMock.create).toHaveBeenCalledWith(expectedMsg);
+		expect(eventBusMock.publish).toHaveBeenCalledWith(
+			new ProtocolEntryCreatedEvent('org-id', expectedMsg),
+		);
+	});
 
-		expect(repositoryMock.create).toHaveBeenCalledWith({
-			...expectedMsg,
-			createdAt: expect.any(Date),
-		});
+	it('should create operation ended log message when no protocol data is provided', async () => {
+		const command = new CreateOperationEndedMessageCommand(
+			AUTH_USER,
+			null, // No protocol data
+			TIME,
+			OPERATION_DATA,
+		);
+		const expectedMsg = plainToInstance(OperationEndedMessage, BASE_EXPECTED);
+
+		repositoryMock.create.mockResolvedValueOnce(expectedMsg);
+
+		await handler.execute(command);
+
+		expect(repositoryMock.create).toHaveBeenCalledWith(
+			expect.objectContaining({
+				time: TIME,
+				referenceId: OPERATION_DATA.id,
+				orgId: AUTH_USER.organizationId,
+				searchableText: 'einsatz alarm-keyword operation-sign beendet',
+			}),
+		);
+
 		expect(eventBusMock.publish).toHaveBeenCalledWith(
 			new ProtocolEntryCreatedEvent('org-id', expectedMsg),
 		);

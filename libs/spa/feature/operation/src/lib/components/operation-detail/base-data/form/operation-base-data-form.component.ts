@@ -8,7 +8,7 @@ import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
 import { DateMaskInputComponent } from '@kordis/spa/core/misc';
 
-import { OperationLocationForm } from '../../../../helper/operation-address-form.factory';
+import { OperationLocationFormGroup } from '../../../../helper/operation-address-form.factory';
 import { OperationAlarmKeywordSelectComponent } from './operation-alarm-keyword-select.component';
 import { OperationLocationFormComponent } from './operation-location-form.component';
 import { OperationReporterSelectComponent } from './operation-reporter-select.component';
@@ -20,7 +20,7 @@ export type OperationBaseDataForm = {
 	reporter: FormControl;
 	commander: FormControl;
 	externalReference: FormControl;
-	location: OperationLocationForm;
+	location: OperationLocationFormGroup;
 };
 export type OperationBaseDataFormGroup = FormGroup<OperationBaseDataForm>;
 

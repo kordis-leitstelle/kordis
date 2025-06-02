@@ -1,6 +1,6 @@
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import {
 	RegisteredUnit,
@@ -23,6 +23,7 @@ export class BaseCreateMessageArgs {
 	recipient: UnitInput;
 
 	@Field()
+	@IsString()
 	channel: string;
 
 	getTransformedSender(): Promise<RegisteredUnit | UnknownUnit> {
@@ -44,4 +45,14 @@ export class BaseCreateMessageArgs {
 			channel: this.channel,
 		};
 	}
+}
+
+// We have this type, since with direct use of an input type, nullable fields will not work as expected (cannot be instantiated as the correct type).
+@ArgsType()
+export class ProtocolMessageArgs {
+	@Field(() => BaseCreateMessageArgs, { nullable: true })
+	@Type(() => BaseCreateMessageArgs)
+	@ValidateNested()
+	@IsOptional()
+	protocolMessage?: BaseCreateMessageArgs;
 }

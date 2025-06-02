@@ -20,7 +20,7 @@ import {
 } from 'ng-zorro-antd/auto-complete';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 import { NzInputDirective } from 'ng-zorro-antd/input';
-import { Subject, filter, map, merge } from 'rxjs';
+import { Subject, filter, map, merge, startWith, withLatestFrom } from 'rxjs';
 
 import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 
@@ -153,7 +153,10 @@ export class AutocompleteComponent<
 
 	readonly result$ = merge(
 		merge(
-			this.searchInputFocusedSubject$,
+			this.searchInputFocusedSubject$.pipe(
+				withLatestFrom(this.searchInput$.pipe(startWith(''))),
+				filter(([, value]) => value.trim() === ''),
+			),
 			this.searchInputSubject$.pipe(filter((value) => value.trim() === '')),
 		).pipe(map(() => this.options())),
 		this.searchInputSubject$.pipe(

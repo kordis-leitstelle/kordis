@@ -2,7 +2,8 @@ import { AutoMap } from '@automapper/classes';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-import { ProtocolMessageEntryBase } from './protocol-entry-base.entity';
+import { UserProducer } from '../partials/producer-partial.entity';
+import { ProtocolEntryBase } from './protocol-entry.entity';
 
 @ObjectType()
 export class CommunicationMessagePayload {
@@ -14,8 +15,11 @@ export class CommunicationMessagePayload {
 }
 
 @ObjectType()
-export class CommunicationMessage extends ProtocolMessageEntryBase {
+export class CommunicationMessage extends ProtocolEntryBase {
 	@Field(() => CommunicationMessagePayload)
 	@AutoMap()
-	payload: CommunicationMessagePayload;
+	declare payload: CommunicationMessagePayload;
+
+	@Field(() => UserProducer)
+	declare producer: UserProducer;
 }

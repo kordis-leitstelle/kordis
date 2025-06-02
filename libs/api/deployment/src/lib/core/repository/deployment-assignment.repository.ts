@@ -19,25 +19,25 @@ export interface DeploymentAssignmentRepository {
 
 	removeAssignmentsOfDeployments(
 		orgId: string,
-		deploymentIds: string[],
+		ids: string[],
 		uow?: DbSessionProvider,
 	): Promise<void>;
 
 	removeAssignmentsOfDeployments(
 		orgId: string,
-		deploymentIds: string[],
+		ids: string[],
 		uow?: DbSessionProvider,
 	): Promise<void>;
 
 	removeAssignmentsOfDeployment(
 		orgId: string,
-		deploymentId: string,
+		id: string,
 		uow?: DbSessionProvider,
 	): Promise<void>;
 
 	assignEntitiesToDeployment(
 		orgId: string,
-		deploymentId: string,
+		id: string,
 		entityIds: string[],
 		uow?: DbSessionProvider,
 	): Promise<void>;

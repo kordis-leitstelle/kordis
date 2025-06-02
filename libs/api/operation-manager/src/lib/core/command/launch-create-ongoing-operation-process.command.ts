@@ -46,7 +46,7 @@ export class LaunchCreateOngoingOperationProcessCommand {
 			sender: MessageUnit;
 			recipient: MessageUnit;
 			channel: string;
-		},
+		} | null,
 	) {}
 }
 
@@ -88,9 +88,7 @@ export class LaunchCreateOngoingOperationProcessHandler
 			);
 		await this.commandBus.execute(
 			new CreateOperationStartedMessageCommand(
-				protocolData.sender,
-				protocolData.recipient,
-				protocolData.channel,
+				protocolData,
 				{
 					id: operation.id,
 					sign: operation.sign,

@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
 	input,
 	model,
 	output,
+	viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
@@ -15,7 +15,6 @@ import { Operation } from '@kordis/shared/model';
 @Component({
 	selector: 'krd-operation-select',
 	imports: [
-		CommonModule,
 		FormsModule,
 		NzNoAnimationDirective,
 		NzOptionComponent,
@@ -81,5 +80,12 @@ export class OperationSelectComponent {
 
 	protected areOperationIdsEqual(o1: Operation, o2: Operation | null): boolean {
 		return o1.id === o2?.id;
+	}
+
+	private readonly selectOperationComponent = viewChild(NzSelectComponent);
+
+	focus(): void {
+		this.selectOperationComponent()?.focus();
+		this.selectOperationComponent()?.setOpenState(true);
 	}
 }

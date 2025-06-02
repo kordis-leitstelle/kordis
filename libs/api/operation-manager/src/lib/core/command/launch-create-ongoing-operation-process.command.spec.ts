@@ -114,9 +114,11 @@ describe('LaunchCreateOngoingOperationProcessHandler', () => {
 		);
 		expect(commandBusMock.execute).toHaveBeenCalledWith(
 			new CreateOperationStartedMessageCommand(
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.sender,
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.recipient,
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.channel,
+				{
+					sender: TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.sender,
+					recipient: TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.recipient,
+					channel: TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.channel,
+				},
 				{
 					id: operation.id,
 					sign: operation.sign,

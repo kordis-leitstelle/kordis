@@ -42,16 +42,19 @@ const SENDING_TIME = new Date();
 const MESSAGE = Object.freeze({
 	orgId: 'organizationId',
 	time: SENDING_TIME,
-	sender: plainToInstance(RegisteredUnit, {
-		unit: { id: 'knownSenderUnit' },
-	}),
-	recipient: plainToInstance(UnknownUnit, { name: 'unknownReceivingUnit' }),
-	channel: 'channel',
+	communicationDetails: {
+		sender: plainToInstance(RegisteredUnit, {
+			unit: { id: 'knownSenderUnit' },
+		}),
+		recipient: plainToInstance(UnknownUnit, { name: 'unknownReceivingUnit' }),
+		channel: 'channel',
+	},
 	producer: plainToInstance(UserProducer, {
 		userId: 'userId',
 		firstName: 'firstName',
 		lastName: 'lastName',
 	}),
+	referenceId: 'rescueStationId',
 	payload: plainToClass(RescueStationMessagePayload, {
 		rescueStationId: 'rescueStationId',
 		rescueStationName: 'rescueStationName',
@@ -84,10 +87,16 @@ describe('RescueStationMessageFactory', () => {
 	it('should create RescueStationSignOnMessage from command', async () => {
 		const command = new CreateRescueStationSignOnMessageCommand(
 			SENDING_TIME,
-			{ unit: { id: 'knownSenderUnit' } },
-			{ name: 'unknownReceivingUnit' },
+			{
+				sender: plainToInstance(RegisteredUnit, {
+					unit: { id: 'knownSenderUnit' },
+				}),
+				recipient: plainToInstance(UnknownUnit, {
+					name: 'unknownReceivingUnit',
+				}),
+				channel: 'channel',
+			},
 			RESCUE_STATION_DETAILS,
-			'channel',
 			AUTH_USER,
 		);
 
@@ -105,10 +114,16 @@ describe('RescueStationMessageFactory', () => {
 	it('should create RescueStationUpdateMessage from command', async () => {
 		const command = new CreateRescueStationUpdateMessageCommand(
 			SENDING_TIME,
-			{ unit: { id: 'knownSenderUnit' } },
-			{ name: 'unknownReceivingUnit' },
+			{
+				sender: plainToInstance(RegisteredUnit, {
+					unit: { id: 'knownSenderUnit' },
+				}),
+				recipient: plainToInstance(UnknownUnit, {
+					name: 'unknownReceivingUnit',
+				}),
+				channel: 'channel',
+			},
 			RESCUE_STATION_DETAILS,
-			'channel',
 			AUTH_USER,
 		);
 

@@ -41,8 +41,8 @@ describe('InvolvementFormFactory', () => {
 					unitInvolvements: [] as OperationUnitInvolvement[],
 				},
 			],
-			start: new Date(),
-			end: new Date(),
+			start: new Date().toISOString(),
+			end: new Date().toISOString(),
 		} as Operation;
 
 		const formArray = service.createAlertGroupInvolvementsFormArray(operation);
@@ -51,13 +51,13 @@ describe('InvolvementFormFactory', () => {
 
 	it('should create alert group involvement form group', () => {
 		const alertGroup = {} as AlertGroup;
-		const unitInvolvements: OperationUnitInvolvement[] = [
+		const unitInvolvements = [
 			{
 				unit: {} as Unit,
 				isPending: false,
 				involvementTimes: [{ start: new Date(), end: new Date() }],
 			},
-		];
+		] as any;
 
 		const formGroup = service.createAlertGroupInvolvementFormGroup(
 			alertGroup,
@@ -75,13 +75,15 @@ describe('InvolvementFormFactory', () => {
 	});
 
 	it('should create unit involvement form group', () => {
-		const unitInvolvement: OperationUnitInvolvement = {
-			unit: {},
+		const unitInvolvement = {
+			unit: {} as Unit,
 			isPending: false,
 			involvementTimes: [{ start: new Date(), end: new Date() }],
-		} as OperationUnitInvolvement;
+		};
 
-		const formGroup = service.createUnitInvolvementFormGroup(unitInvolvement);
+		const formGroup = service.createUnitInvolvementFormGroup(
+			unitInvolvement as any,
+		);
 		expect(formGroup.get('unit')).toBeTruthy();
 		expect(formGroup.get('isPending')?.value).toBe(unitInvolvement.isPending);
 		expect(formGroup.get('involvementTimes')?.value).toEqual(

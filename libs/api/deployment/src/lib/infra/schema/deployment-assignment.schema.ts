@@ -52,7 +52,7 @@ DeploymentAssignmentSchema.index(
 
 @Schema()
 export class UnitAssignmentDocument extends DeploymentAssignmentsDocumentContract {
-	@Prop({ default: null, type: Types.ObjectId, index: true })
+	@Prop({ default: null, type: String, index: true })
 	alertGroupId: string | null;
 }
 

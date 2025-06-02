@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 
 import { OperationInvolvementDocument } from '../../../libs/api/operation/src/lib/infra/schema/operation-involvement.schema';
 import { CollectionData } from './collection-data.model';
+import { getUnitIdAsStringByName } from './units.data';
 
 const collectionData: CollectionData<OperationInvolvementDocument> = {
 	collectionName: 'operation-involvements',
@@ -9,7 +10,7 @@ const collectionData: CollectionData<OperationInvolvementDocument> = {
 		{
 			orgId: 'dff7584efe2c174eee8bae45',
 			operation: new Types.ObjectId('663b47a3146d7fbe28ad1e66'),
-			unitId: '65d7d9ae8b516612650163d8',
+			unitId: getUnitIdAsStringByName('ATV'),
 			involvementTimes: [
 				{
 					start: new Date('2024-01-01T00:00:00Z'),
@@ -21,12 +22,13 @@ const collectionData: CollectionData<OperationInvolvementDocument> = {
 				},
 			],
 			isPending: false,
+			isDeleted: false,
 			alertGroupId: null,
 		},
 		{
 			orgId: 'dff7584efe2c174eee8bae45',
 			operation: new Types.ObjectId('663b47a3146d7fbe28ad1e66'),
-			unitId: '65d7d90709cdb6f3b2082ab3',
+			unitId: getUnitIdAsStringByName('MRB Greif 5'),
 			involvementTimes: [
 				{
 					start: new Date('2024-01-01T00:00:00Z'),
@@ -34,12 +36,13 @@ const collectionData: CollectionData<OperationInvolvementDocument> = {
 				},
 			],
 			isPending: true,
+			isDeleted: false,
 			alertGroupId: '66239459ef2a6ac579f55cce',
 		},
 		{
 			orgId: 'dff7584efe2c174eee8bae45',
 			operation: new Types.ObjectId('663b47a3146d7fbe28ad1e66'),
-			unitId: '65d7da8630f360f158caec53',
+			unitId: getUnitIdAsStringByName('GW Tauchen'),
 			involvementTimes: [
 				{
 					start: new Date('2024-01-01T00:00:00Z'),
@@ -47,6 +50,7 @@ const collectionData: CollectionData<OperationInvolvementDocument> = {
 				},
 			],
 			isPending: false,
+			isDeleted: false,
 			alertGroupId: '66239459ef2a6ac579f55cce',
 		},
 	],

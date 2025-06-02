@@ -3,7 +3,7 @@ export class UnitStatusUpdatedEvent {
 		readonly orgId: string,
 		readonly unitId: string,
 		readonly status: {
-			status: number;
+			status: number | null;
 			receivedAt: Date;
 			source: string;
 		},

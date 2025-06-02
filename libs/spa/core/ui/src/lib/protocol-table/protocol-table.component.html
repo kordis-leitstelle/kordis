@@ -27,14 +27,19 @@
 				>
 					{{ entry.time | krdProtocolEntryTime }}
 				</td>
-				<td class="sender">
-					<krd-unit-chip [unit]="entry.sender" />
-				</td>
-				<td class="recipient">
-					@if (entry.recipient) {
-						<krd-unit-chip [unit]="entry.recipient" />
-					}
-				</td>
+				@if (entry.communicationDetails) {
+					<td class="sender">
+						<krd-unit-chip [unit]="entry.communicationDetails.sender" />
+					</td>
+					<td class="recipient">
+						@if (entry.communicationDetails.recipient) {
+							<krd-unit-chip [unit]="entry.communicationDetails.recipient" />
+						}
+					</td>
+				} @else {
+					<td class="sender"></td>
+					<td class="recipient"></td>
+				}
 				<td class="message">
 					@switch (entry.payload.__typename) {
 						@case ('CommunicationMessagePayload') {
@@ -51,14 +56,21 @@
 							/>
 						}
 						@case ('RescueStationSignOffMessagePayload') {
-							Rettungswache Ausmeldung: {{ entry.payload.rescueStationName }}
+							Rettungswache {{ entry.payload.rescueStationName }} ausgemeldet.
+						}
+						@case ('OperationStartedMessagePayload') {
+							<krd-start-operation-message [message]="entry.payload" />
+						}
+						@case ('OperationEndedMessagePayload') {
+							Einsatz {{ entry.payload.operationSign }} beendet.
 						}
 						@default {
+							{{ entry.__typename }}
 							{{ entry.searchableText }}
 						}
 					}
 				</td>
-				<td class="channel">{{ entry.channel }}</td>
+				<td class="channel">{{ entry.communicationDetails?.channel ?? '' }}</td>
 			</tr>
 		}
 		<tr #sentinel></tr>

@@ -25,6 +25,7 @@ import {
 } from '../../core/entity/deployment.entity';
 import { OperationDeploymentEntity } from '../../core/entity/operation-deplyoment.entity';
 import { OperationDeploymentCreatedEvent } from '../../core/event/operation-deployment-created.event';
+import { OperationDeploymentRemovedEvent } from '../../core/event/operation-deployment-removed.event';
 import { OperationDeploymentUpdatedEvent } from '../../core/event/operation-deployment-updated.event';
 import { GetOperationDeploymentByIdQuery } from '../../core/query/get-operation-deployment-by-id.query';
 import { GetOperationDeploymentsQuery } from '../../core/query/get-operation-deployments.query';
@@ -80,6 +81,20 @@ export class OperationDeploymentResolver {
 					this.queryBus.execute(
 						new GetOperationDeploymentByIdQuery(organizationId, deploymentId),
 					),
+			},
+		);
+	}
+
+	@Subscription(() => Boolean)
+	operationDeploymentRemoved(
+		@RequestUser() { organizationId }: AuthUser,
+	): AsyncIterableIterator<true> {
+		return this.gqlSubscriptionService.getSubscriptionIteratorForEvent(
+			OperationDeploymentRemovedEvent,
+			'operationDeploymentRemoved',
+			{
+				filter: (event) => event.orgId === organizationId,
+				map: () => true,
 			},
 		);
 	}

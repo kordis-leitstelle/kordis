@@ -6,4 +6,6 @@ export * from './lib/infra/view-model/rescue-station.view-model';
 export * from './lib/core/command/rescue-station/sign-in-rescue-station.command';
 export * from './lib/core/command/rescue-station/sign-off-rescue-station.command';
 export * from './lib/core/command/rescue-station/update-signed-in-rescue-station.command';
-export * from './lib/saga/operation-deployment-saga.module';
+export { CreateOperationDeploymentCommand } from './lib/core/command/operation/create-operation-deployment.command';
+export { SetOperationDeploymentAssignmentsCommand } from './lib/core/command/operation/set-operation-deployment-assignments.command';
+export { RemoveOperationDeploymentCommand } from './lib/core/command/operation/remove-operation-deployment.command';

@@ -63,9 +63,11 @@ describe('LaunchEndOperationProcessHandler', () => {
 		expect(commandBusMock.execute).toHaveBeenCalledWith(
 			new CreateOperationEndedMessageCommand(
 				requestUser,
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.sender,
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.recipient,
-				TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.channel,
+				{
+					sender: TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.sender,
+					recipient: TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.recipient,
+					channel: TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS.channel,
+				},
 				operation.end!,
 				operation,
 			),

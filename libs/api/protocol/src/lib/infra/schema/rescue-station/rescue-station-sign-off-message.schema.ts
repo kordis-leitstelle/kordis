@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { ProtocolMessageEntryBaseDocument } from '../protocol-entry-base.schema';
-import { ProtocolEntryType } from '../protocol-entry-type';
+import { ProtocolEntryBaseDocument } from '../protocol-entry-base.schema';
+import { ProtocolEntryType } from '../protocol-entry-type.enum';
 
 @Schema({ _id: false })
 export class RescueStationSignOffMessagePayloadDocument {
@@ -20,12 +20,12 @@ export class RescueStationSignOffMessagePayloadDocument {
 }
 
 @Schema()
-export class RescueStationSignOffMessageDocument extends ProtocolMessageEntryBaseDocument {
+export class RescueStationSignOffMessageDocument extends ProtocolEntryBaseDocument {
 	override type = ProtocolEntryType.RESCUE_STATION_SIGN_OFF_ENTRY;
 
 	@Prop()
 	@AutoMap()
-	payload: RescueStationSignOffMessagePayloadDocument;
+	declare payload: RescueStationSignOffMessagePayloadDocument;
 }
 
 export const RescueStationSignOffMessageSchema = SchemaFactory.createForClass(

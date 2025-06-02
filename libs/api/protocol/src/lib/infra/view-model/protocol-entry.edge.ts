@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { EdgeInterface } from 'nestjs-graphql-connection';
 import { Initializable } from 'ts-class-initializable';
 
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { ProtocolEntryUnion } from '../../core/entity/protocol.entity';
 
 @ObjectType()

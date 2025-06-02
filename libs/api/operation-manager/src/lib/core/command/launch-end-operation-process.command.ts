@@ -1,4 +1,9 @@
-import { CommandBus, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import {
+	CommandBus,
+	CommandHandler,
+	ICommandHandler,
+	QueryBus,
+} from '@nestjs/cqrs';
 
 import {
 	EndOngoingOperationCommand,
@@ -19,10 +24,11 @@ export class LaunchEndOperationProcessCommand {
 			sender: MessageUnit;
 			recipient: MessageUnit;
 			channel: string;
-		},
+		} | null,
 	) {}
 }
 
+@CommandHandler(LaunchEndOperationProcessCommand)
 export class LaunchEndOperationProcessHandler
 	implements ICommandHandler<LaunchEndOperationProcessCommand>
 {
@@ -51,9 +57,7 @@ export class LaunchEndOperationProcessHandler
 		await this.commandBus.execute(
 			new CreateOperationEndedMessageCommand(
 				requestUser,
-				protocolMessageData.sender,
-				protocolMessageData.recipient,
-				protocolMessageData.channel,
+				protocolMessageData,
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				operation.end!,
 				operation,
