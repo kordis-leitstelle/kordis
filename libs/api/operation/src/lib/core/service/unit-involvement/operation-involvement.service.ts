@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventBus } from '@nestjs/cqrs';
 
 import { DbSessionProvider } from '@kordis/api/shared';
 
+import { OngoingOperationInvolvementsUpdatedEvent } from '../../event/ongoing-operation-involvements-updated.event';
 import { UnitAlreadyInvolvedException } from '../../exceptions/unit-already-involved.exception';
 import {
 	CreateUnitInvolvementDto,
@@ -18,6 +20,7 @@ export class OperationInvolvementService {
 	constructor(
 		@Inject(OPERATION_INVOLVEMENT_REPOSITORY)
 		private readonly involvementsRepository: OperationInvolvementsRepository,
+		private readonly eventBus: EventBus,
 	) {}
 
 	/*
@@ -151,6 +154,7 @@ export class OperationInvolvementService {
 		start: Date,
 		uow?: DbSessionProvider,
 	): Promise<void> {
+		let changedOperationID: string | undefined;
 		// has the unit an active involvement?
 		let involvement =
 			await this.involvementsRepository.findByUnitInvolvementTimeRange(
@@ -170,8 +174,7 @@ export class OperationInvolvementService {
 				start,
 				uow,
 			);
-			//todo: müssen wir hier nicht ein event werfen damit deployments das mitkriegt? oder vielleicht am ende ein recalculate trigger?
-			return;
+			changedOperationID = involvement.operationId;
 		}
 		// has a pending involvement?
 		involvement =
@@ -200,6 +203,13 @@ export class OperationInvolvementService {
 					uow,
 				);
 			}
+			changedOperationID = involvement.operationId;
+		}
+
+		if (changedOperationID) {
+			this.eventBus.publish(
+				new OngoingOperationInvolvementsUpdatedEvent(orgId, changedOperationID),
+			);
 		}
 	}
 
