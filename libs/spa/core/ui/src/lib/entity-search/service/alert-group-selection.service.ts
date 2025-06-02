@@ -5,9 +5,7 @@ import { AlertGroup, Query } from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
 
 import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
-import { EntitySearchEngine } from './entity-search.service';
 import { EntitySelectionService } from './entity-selection.service';
-import { alertGroupMatchesByName } from './match-strategies';
 
 /*
 	This service handles the selection of alert groups in a context where a unit can only be selected once.
@@ -42,5 +40,4 @@ export class PossibleAlertGroupSelectionsService extends EntitySelectionService<
 		}
 	`;
 	protected queryName = 'alertGroups' as const;
-	protected searchService = new EntitySearchEngine(alertGroupMatchesByName);
 }

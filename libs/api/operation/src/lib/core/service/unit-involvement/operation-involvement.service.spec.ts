@@ -1,4 +1,5 @@
 import { createMock } from '@golevelup/ts-jest';
+import { EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DbSessionProvider } from '@kordis/api/shared';
@@ -27,6 +28,10 @@ describe('OperationInvolvementService', () => {
 				{
 					provide: OPERATION_INVOLVEMENT_REPOSITORY,
 					useValue: mockInvolvementsRepository,
+				},
+				{
+					provide: EventBus,
+					useValue: createMock(),
 				},
 			],
 		}).compile();

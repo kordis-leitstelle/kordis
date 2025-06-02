@@ -3,7 +3,7 @@ import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { OperationViewModel } from '@kordis/api/operation';
 
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { ProtocolEntryUnion } from '../../core/entity/protocol.entity';
 import { GetByUnitInvolvementsQuery } from '../../core/query/get-by-unit-times.query';
 

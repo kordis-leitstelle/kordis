@@ -20,7 +20,7 @@ import {
 	GeoSearchResult,
 } from '@kordis/spa/core/geocoding';
 
-import { OperationLocationForm } from '../../../../helper/operation-address-form.factory';
+import { OperationLocationFormGroup } from '../../../../helper/operation-address-form.factory';
 
 @Component({
 	selector: 'krd-operation-location-form',
@@ -125,7 +125,7 @@ import { OperationLocationForm } from '../../../../helper/operation-address-form
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationLocationFormComponent implements OnDestroy {
-	readonly formGroup = input.required<OperationLocationForm>();
+	readonly formGroup = input.required<OperationLocationFormGroup>();
 	readonly focusInitially = input(false, {
 		transform: (x: unknown) => booleanAttribute(x),
 	});
@@ -140,7 +140,7 @@ export class OperationLocationFormComponent implements OnDestroy {
 
 			if (this.focusInitially()) {
 				setTimeout(() => {
-					this.nameGeoSearchEle()?.focus();
+					this.focusGeoSearch();
 				}, 0);
 			}
 
@@ -173,5 +173,9 @@ export class OperationLocationFormComponent implements OnDestroy {
 			coordinate: result.coordinate,
 		});
 		this.formCompleted.emit();
+	}
+
+	focusGeoSearch(): void {
+		this.nameGeoSearchEle()?.focus();
 	}
 }

@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { ProtocolMessageEntryBaseDocument } from '../protocol-entry-base.schema';
-import { ProtocolEntryType } from '../protocol-entry-type';
+import { ProtocolEntryBaseDocument } from '../protocol-entry-base.schema';
+import { ProtocolEntryType } from '../protocol-entry-type.enum';
 import {
 	OperationMessageAssignedAlertGroupDocument,
 	OperationMessageAssignedUnitDocument,
@@ -28,12 +28,12 @@ export class OperationAssignmentsUpdatedMessagePayloadDocument {
 }
 
 @Schema()
-export class OperationAssignmentsUpdatedMessageDocument extends ProtocolMessageEntryBaseDocument {
+export class OperationAssignmentsUpdatedMessageDocument extends ProtocolEntryBaseDocument {
 	override type = ProtocolEntryType.OPERATION_ASSIGNMENTS_UPDATED_ENTRY;
 
 	@Prop()
 	@AutoMap()
-	payload: OperationAssignmentsUpdatedMessagePayloadDocument;
+	declare payload: OperationAssignmentsUpdatedMessagePayloadDocument;
 }
 
 export const OperationAssignmentsUpdatedMessageSchema =

@@ -9,10 +9,9 @@ import {
 	ProducerDocuments,
 	ProducerType,
 	SystemProducerSchema,
-	UserProducerDocument,
 	UserProducerSchema,
 } from './producer-partial.schema';
-import { ProtocolEntryType } from './protocol-entry-type';
+import { ProtocolEntryType } from './protocol-entry-type.enum';
 import {
 	RegisteredUnitSchema,
 	UnitDocument,
@@ -20,6 +19,21 @@ import {
 	UnitType,
 	UnknownUnitSchema,
 } from './unit-partial.schema';
+
+@Schema({ _id: false })
+export class CommunicationDetailsDocument {
+	@Prop({ type: UnitDocument })
+	@AutoMap()
+	sender: UnitDocuments;
+
+	@Prop({ type: UnitDocument })
+	@AutoMap()
+	recipient: UnitDocuments;
+
+	@Prop()
+	@AutoMap()
+	channel: string;
+}
 
 @Schema({
 	timestamps: true,
@@ -31,10 +45,11 @@ export class ProtocolEntryBaseDocument extends BaseDocument {
 
 	@Prop()
 	@AutoMap()
-	time: Date;
+	communicationDetails: CommunicationDetailsDocument;
 
-	@Prop({ type: UnitDocument })
-	sender: UnitDocuments;
+	@Prop()
+	@AutoMap()
+	time: Date;
 
 	@Prop()
 	@AutoMap()
@@ -42,6 +57,13 @@ export class ProtocolEntryBaseDocument extends BaseDocument {
 
 	@Prop({ type: ProducerDocument })
 	producer: ProducerDocuments;
+
+	@Prop(() => String)
+	@AutoMap(() => String)
+	referenceId?: string;
+
+	// for convenience, check base entity for more information
+	payload: unknown;
 }
 
 export const ProtocolEntryBaseSchema = SchemaFactory.createForClass(
@@ -49,9 +71,18 @@ export const ProtocolEntryBaseSchema = SchemaFactory.createForClass(
 );
 
 const senderPath =
-	ProtocolEntryBaseSchema.path<MongooseSchema.Types.Subdocument>('sender');
+	ProtocolEntryBaseSchema.path<MongooseSchema.Types.Subdocument>(
+		'communicationDetails.sender',
+	);
 senderPath.discriminator(UnitType.REGISTERED_UNIT, RegisteredUnitSchema);
 senderPath.discriminator(UnitType.UNKNOWN_UNIT, UnknownUnitSchema);
+
+const recipientPath =
+	ProtocolEntryBaseSchema.path<MongooseSchema.Types.Subdocument>(
+		'communicationDetails.recipient',
+	);
+recipientPath.discriminator(UnitType.REGISTERED_UNIT, RegisteredUnitSchema);
+recipientPath.discriminator(UnitType.UNKNOWN_UNIT, UnknownUnitSchema);
 
 const producerPath =
 	ProtocolEntryBaseSchema.path<MongooseSchema.Types.Subdocument>('producer');
@@ -59,27 +90,4 @@ producerPath.discriminator(ProducerType.USER_PRODUCER, UserProducerSchema);
 producerPath.discriminator(ProducerType.SYSTEM_PRODUCER, SystemProducerSchema);
 
 ProtocolEntryBaseSchema.index({ orgId: 1, time: 1 }, { unique: false });
-
-@Schema()
-export class ProtocolMessageEntryBaseDocument extends ProtocolEntryBaseDocument {
-	@Prop({ type: UnitDocument })
-	@AutoMap()
-	recipient: UnitDocuments;
-
-	@Prop()
-	@AutoMap()
-	channel: string;
-
-	@Prop()
-	declare producer: UserProducerDocument;
-}
-
-export const ProtocolMessageEntryBaseSchema = SchemaFactory.createForClass(
-	ProtocolMessageEntryBaseDocument,
-);
-const recipientPath =
-	ProtocolMessageEntryBaseSchema.path<MongooseSchema.Types.Subdocument>(
-		'recipient',
-	);
-recipientPath.discriminator(UnitType.REGISTERED_UNIT, RegisteredUnitSchema);
-recipientPath.discriminator(UnitType.UNKNOWN_UNIT, UnknownUnitSchema);
+ProtocolEntryBaseSchema.index({ orgId: 1, referenceId: 1 }, { unique: false });

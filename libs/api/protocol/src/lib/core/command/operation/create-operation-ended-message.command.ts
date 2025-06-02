@@ -14,17 +14,19 @@ import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,
 } from '../../repository/protocol-entry.repository';
-import { BaseCreateMessageCommand } from '../base-create-message.command';
-import { setProtocolMessageBaseFromCommandHelper } from '../helper/set-protocol-message-base-from-command.helper';
+import { BaseCreateProtocolEntryCommand } from '../base-create-protocol-entry.command';
+import { setProtocolEntryBaseFromCommandHelper } from '../helper/set-protocol-entry-base-from-command.helper';
 
 export class CreateOperationEndedMessageCommand
-	implements BaseCreateMessageCommand
+	implements BaseCreateProtocolEntryCommand
 {
 	constructor(
 		readonly requestUser: AuthUser,
-		readonly sender: MessageUnit,
-		readonly recipient: MessageUnit,
-		readonly channel: string,
+		readonly protocolData: {
+			readonly sender: MessageUnit;
+			readonly recipient: MessageUnit;
+			readonly channel: string;
+		} | null,
 		readonly time: Date,
 		readonly operationData: {
 			id: string;
@@ -48,11 +50,11 @@ export class CreateOperationEndedMessageHandler
 		private readonly eventBus: EventBus,
 	) {}
 
-	async execute(
-		cmd: CreateOperationEndedMessageCommand,
-	): Promise<OperationEndedMessage> {
+	async execute(cmd: CreateOperationEndedMessageCommand): Promise<void> {
 		let msg = new OperationEndedMessage();
-		setProtocolMessageBaseFromCommandHelper(cmd, msg);
+		setProtocolEntryBaseFromCommandHelper(cmd, msg);
+
+		msg.referenceId = cmd.operationData.id;
 		msg.searchableText = `einsatz ${cmd.operationData.alarmKeyword} ${cmd.operationData.sign} beendet`;
 		msg.payload = this.getPayloadFromCommand(cmd);
 
@@ -67,8 +69,6 @@ export class CreateOperationEndedMessageHandler
 		this.eventBus.publish(
 			new ProtocolEntryCreatedEvent(cmd.requestUser.organizationId, msg),
 		);
-
-		return msg;
 	}
 
 	private getPayloadFromCommand(

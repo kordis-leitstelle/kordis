@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProtocolMessageEntryBase } from '../protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../protocol-entry.entity';
 
 @ObjectType()
 export class RescueStationSignOffMessagePayload {
@@ -19,8 +19,8 @@ export class RescueStationSignOffMessagePayload {
 }
 
 @ObjectType()
-export class RescueStationSignOffMessage extends ProtocolMessageEntryBase {
+export class RescueStationSignOffMessage extends ProtocolEntryBase {
 	@Field(() => RescueStationSignOffMessagePayload)
 	@AutoMap()
-	payload: RescueStationSignOffMessagePayload;
+	declare payload: RescueStationSignOffMessagePayload;
 }

@@ -6,10 +6,10 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { ProtocolEntryUnion } from '@kordis/shared/model';
-import { GraphqlService } from '@kordis/spa/core/graphql';
+import { ProtocolEntryUnion, Unit } from '@kordis/shared/model';
 import { ProtocolTableComponent } from '@kordis/spa/core/ui';
 
+import { makeUnitInput } from '../../services/make-unit-input.helper';
 import { ProtocolClient } from '../../services/protocol.client';
 import { CreateProtocolMessageComponent } from '../create-protocol-message/create-protocol-message.component';
 
@@ -18,7 +18,11 @@ import { CreateProtocolMessageComponent } from '../create-protocol-message/creat
 	imports: [ProtocolTableComponent, CreateProtocolMessageComponent],
 	providers: [ProtocolClient],
 	template: `
-		<krd-create-protocol-message class="create-form" />
+		<krd-create-protocol-message
+			class="create-form"
+			(messageSubmit)="addMessage($event)"
+		/>
+
 		<krd-protocol-table
 			[protocolEntries]="protocolEntries()"
 			(reachedBottom)="loadMore()"
@@ -30,7 +34,6 @@ import { CreateProtocolMessageComponent } from '../create-protocol-message/creat
 			height: 100%;
 			display: flex;
 			flex-direction: column;
-			gap: 8px;
 
 			.table-view {
 				flex-grow: 1;
@@ -41,16 +44,29 @@ import { CreateProtocolMessageComponent } from '../create-protocol-message/creat
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProtocolViewComponent {
-	protocolEntries: Signal<ProtocolEntryUnion[]>;
 	private readonly client = inject(ProtocolClient);
-
-	constructor(private readonly gqlService: GraphqlService) {
-		this.protocolEntries = toSignal(this.client.protocolEntries$, {
+	protocolEntries: Signal<ProtocolEntryUnion[]> = toSignal(
+		this.client.protocolEntries$,
+		{
 			initialValue: [],
-		});
-	}
+		},
+	);
 
 	loadMore(): void {
 		this.client.loadNextPage();
+	}
+
+	addMessage(value: {
+		sender: Unit | string;
+		recipient: Unit | string;
+		channel: string;
+		message: string;
+	}): void {
+		this.client.addMessageAsync({
+			sender: makeUnitInput(value.sender),
+			recipient: makeUnitInput(value.recipient),
+			channel: value.channel,
+			message: value.message,
+		});
 	}
 }

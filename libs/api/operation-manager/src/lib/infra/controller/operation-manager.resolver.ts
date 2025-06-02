@@ -1,9 +1,9 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
 import { OperationViewModel } from '@kordis/api/operation';
-import { BaseCreateMessageArgs } from '@kordis/api/protocol';
+import { ProtocolMessageArgs } from '@kordis/api/protocol';
 import {
 	PresentableValidationException,
 	ValidationException,
@@ -12,7 +12,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
+import { CreateOngoingOperationInput } from './create-ongoing-operation.input';
 
 @Resolver()
 export class OperationManagerResolver {
@@ -23,15 +23,15 @@ export class OperationManagerResolver {
 	})
 	async createOngoingOperation(
 		@RequestUser() reqUser: AuthUser,
-		@Args('operation') operationData: CreateOngoingOperationArgs,
-		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageArgs,
+		@Args('operation') operation: CreateOngoingOperationInput,
 	): Promise<OperationViewModel> {
 		try {
 			return await this.commandBus.execute(
 				new LaunchCreateOngoingOperationProcessCommand(
 					reqUser,
-					operationData,
-					await protocolMessageData.asTransformedPayload(),
+					operation,
+					protocolMessage ? await protocolMessage.asTransformedPayload() : null,
 				),
 			);
 		} catch (error) {
@@ -46,20 +46,22 @@ export class OperationManagerResolver {
 		}
 	}
 
-	@Mutation(() => OperationViewModel, {
-		description: 'Ends an ongoing operation with a protocol entry.tet',
+	@Mutation(() => Boolean, {
+		description: 'Ends an ongoing operation with a protocol entry.',
 	})
 	async endOngoingOperation(
 		@RequestUser() reqUser: AuthUser,
-		@Args('operationId') operationId: string,
-		@Args('protocolMessage') protocolMessageData: BaseCreateMessageArgs,
-	): Promise<OperationViewModel> {
-		return this.commandBus.execute(
+		@Args('operationId', { type: () => ID }) operationId: string,
+		@Args() { protocolMessage }: ProtocolMessageArgs,
+	): Promise<boolean> {
+		await this.commandBus.execute(
 			new LaunchEndOperationProcessCommand(
 				reqUser,
 				operationId,
-				await protocolMessageData.asTransformedPayload(),
+				protocolMessage ? await protocolMessage.asTransformedPayload() : null,
 			),
 		);
+
+		return true;
 	}
 }

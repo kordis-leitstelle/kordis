@@ -35,11 +35,12 @@ export class FurtherAttribute {
 
 @ObjectType()
 export class UnitStatus extends Validatable {
-	@Field(() => Number)
+	@Field(() => Number, { nullable: true })
 	@IsInt()
 	@IsIn(ALLOWED_PERSISTENT_UNIT_STATUS)
+	@ValidateIf(({ status }) => status != null)
 	@AutoMap(() => Number)
-	status: PersistentUnitStatus;
+	status: PersistentUnitStatus | null;
 
 	@Field(() => String)
 	@IsDate()

@@ -137,10 +137,12 @@ describe('LaunchUpdateSignedInRescueStationProcessHandler', () => {
 		expect(commandBus.execute).toHaveBeenCalledWith(
 			new CreateRescueStationSignOnMessageCommand(
 				expect.any(Date),
-				{ name: 'senderName' },
-				{ unit: { id: 'unitId' } },
+				{
+					sender: { name: 'senderName' },
+					recipient: { unit: { id: 'unitId' } },
+					channel: 'channel',
+				},
 				rsDetails,
-				'channel',
 				{ organizationId: 'orgId' } as AuthUser,
 			),
 		);

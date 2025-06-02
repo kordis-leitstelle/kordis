@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { OperationViewModel } from '@kordis/api/operation';
 
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { GetByUnitInvolvementsQuery } from '../../core/query/get-by-unit-times.query';
 import { OperationProtocolResolver } from './operation-protocol.resolver';
 

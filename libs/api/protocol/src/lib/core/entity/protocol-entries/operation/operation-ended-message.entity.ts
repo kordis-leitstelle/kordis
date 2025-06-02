@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
-import { ProtocolMessageEntryBase } from '../protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../protocol-entry.entity';
 
 @ObjectType()
 export class OperationEndedMessagePayload {
@@ -20,8 +20,8 @@ export class OperationEndedMessagePayload {
 }
 
 @ObjectType()
-export class OperationEndedMessage extends ProtocolMessageEntryBase {
+export class OperationEndedMessage extends ProtocolEntryBase {
 	@Field(() => OperationEndedMessagePayload)
 	@AutoMap()
-	payload: OperationEndedMessagePayload;
+	declare payload: OperationEndedMessagePayload;
 }

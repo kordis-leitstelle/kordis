@@ -8,7 +8,7 @@ import {
 	ValidateNested,
 } from 'class-validator';
 
-import { ProtocolMessageEntryBase } from '../protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../protocol-entry.entity';
 import {
 	OperationMessageAssignedAlertGroup,
 	OperationMessageAssignedUnit,
@@ -81,8 +81,8 @@ export class OperationStartedMessagePayload {
 }
 
 @ObjectType()
-export class OperationStartedMessage extends ProtocolMessageEntryBase {
+export class OperationStartedMessage extends ProtocolEntryBase {
 	@Field(() => OperationStartedMessagePayload)
 	@AutoMap()
-	payload: OperationStartedMessagePayload;
+	declare payload: OperationStartedMessagePayload;
 }

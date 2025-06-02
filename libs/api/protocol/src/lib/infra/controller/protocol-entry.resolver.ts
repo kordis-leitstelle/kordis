@@ -18,7 +18,7 @@ import { UNITS_DATA_LOADER, UnitViewModel } from '@kordis/api/unit';
 import { AuthUser } from '@kordis/shared/model';
 
 import { RegisteredUnit } from '../../core/entity/partials/unit-partial.entity';
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { ProtocolEntryUnion } from '../../core/entity/protocol.entity';
 import { ProtocolEntryCreatedEvent } from '../../core/event/protocol-entry-created.event';
 import { GetProtocolEntriesQuery } from '../../core/query/get-protocol-entries.query';

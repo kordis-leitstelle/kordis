@@ -76,10 +76,12 @@ describe('CreateOperationAssignmentsUpdatedMessageCommand', () => {
 		};
 
 		const command = new CreateOperationAssignmentsUpdatedMessageCommand(
-			sender,
-			recipient,
-			channel,
 			time,
+			{
+				sender,
+				recipient,
+				channel,
+			},
 			assignmentsData,
 			authUser,
 		);

@@ -25,6 +25,66 @@ import {
 	CreateOperationStartedMessageHandler,
 } from './create-operation-started-message.command';
 
+const TIME = new Date('2023-10-19T00:00:00');
+const OPERATION_DATA = Object.freeze({
+	id: '67d5cd788589e9f157b9cd0f',
+	sign: 'operation-sign',
+	alarmKeyword: 'alarm-keyword',
+	start: TIME,
+	location: {
+		name: 'LocationName',
+		street: 'StreetName',
+		city: 'CityName',
+		postalCode: 'PostalCode',
+	},
+	assignedUnits: [{ callSign: 'Unit1-Sign', name: 'Unit1' } as AssignedUnit],
+	assignedAlertGroups: [
+		{
+			name: 'AlertGroup',
+			assignedUnits: [
+				{ callSign: 'Unit2-Sign', name: 'Unit2' } as AssignedUnit,
+			],
+		} as AssignedAlertGroup,
+	],
+});
+
+const AUTH_USER = Object.freeze({
+	id: 'user-id',
+	organizationId: 'org-id',
+	firstName: 'John',
+	lastName: 'Doe',
+} as unknown as AuthUser);
+
+const BASE_EXPECTED = Object.freeze({
+	time: TIME,
+	searchableText:
+		'einsatz alarm-keyword operation-sign gestartet einheiten Unit1 (Unit1-Sign), Unit2 (Unit2-Sign) alarm gruppen AlertGroup',
+	payload: plainToInstance(OperationStartedMessagePayload, {
+		operationId: OPERATION_DATA.id,
+		start: OPERATION_DATA.start,
+		operationSign: OPERATION_DATA.sign,
+		location: OPERATION_DATA.location,
+		assignedAlertGroups: [
+			plainToInstance(OperationMessageAssignedAlertGroup, {
+				alertGroupName: 'AlertGroup',
+				assignedUnits: [{ callSign: 'Unit2-Sign', name: 'Unit2' }],
+			}),
+		],
+		assignedUnits: [
+			plainToInstance(OperationMessageAssignedUnit, {
+				unitSign: 'Unit1-Sign',
+				unitName: 'Unit1',
+			}),
+		],
+	}),
+	producer: plainToInstance(UserProducer, {
+		userId: AUTH_USER.id,
+		firstName: AUTH_USER.firstName,
+		lastName: AUTH_USER.lastName,
+	}),
+	orgId: AUTH_USER.organizationId,
+});
+
 describe('CreateOperationStartedMessageCommand', () => {
 	let handler: CreateOperationStartedMessageHandler;
 	const repositoryMock = createMock<ProtocolEntryRepository>();
@@ -45,88 +105,62 @@ describe('CreateOperationStartedMessageCommand', () => {
 		jest.resetAllMocks();
 	});
 
-	it('should create operation started message protocol entry and emit event', async () => {
+	it('should create operation started message protocol communication entry and emit event', async () => {
 		const sender = new UnknownUnit();
 		sender.name = 'Unit1';
 		const recipient = new UnknownUnit();
 		recipient.name = 'Unit2';
-		const time = new Date('2023-10-19T00:00:00');
 		const channel = 'A';
-		const authUser = {
-			id: 'user-id',
-			organizationId: 'org-id',
-			firstName: 'John',
-			lastName: 'Doe',
-		} as unknown as AuthUser;
-
-		const operationData = {
-			id: 'operation-id',
-			sign: 'operation-sign',
-			alarmKeyword: 'alarm-keyword',
-			start: time,
-			location: {
-				name: 'LocationName',
-				street: 'StreetName',
-				city: 'CityName',
-				postalCode: 'PostalCode',
-			},
-			assignedUnits: [
-				{ callSign: 'Unit1-Sign', name: 'Unit1' } as AssignedUnit,
-			],
-			assignedAlertGroups: [
-				{
-					name: 'AlertGroup',
-					assignedUnits: [
-						{ callSign: 'Unit2-Sign', name: 'Unit2' } as AssignedUnit,
-					],
-				} as AssignedAlertGroup,
-			],
-		};
 
 		const command = new CreateOperationStartedMessageCommand(
-			sender,
-			recipient,
-			channel,
-			operationData,
-			authUser,
+			{
+				sender,
+				recipient,
+				channel,
+			},
+			OPERATION_DATA,
+			AUTH_USER,
 		);
 
 		const expectedMsg = plainToInstance(OperationStartedMessage, {
 			channel,
 			sender,
 			recipient,
-			time,
-			searchableText:
-				'einsatz alarm-keyword operation-sign gestartet einheiten Unit1 (Unit1-Sign), Unit2 (Unit2-Sign) alarm gruppen AlertGroup',
-			payload: plainToInstance(OperationStartedMessagePayload, {
-				operationId: operationData.id,
-				start: operationData.start,
-				operationSign: operationData.sign,
-				location: operationData.location,
-				assignedAlertGroups: [
-					plainToInstance(OperationMessageAssignedAlertGroup, {
-						alertGroupName: 'AlertGroup',
-						assignedUnits: [{ callSign: 'Unit2-Sign', name: 'Unit2' }],
-					}),
-				],
-				assignedUnits: [
-					plainToInstance(OperationMessageAssignedUnit, {
-						unitSign: 'Unit1-Sign',
-						unitName: 'Unit1',
-					}),
-				],
-			}),
-			producer: plainToInstance(UserProducer, {
-				userId: authUser.id,
-				firstName: authUser.firstName,
-				lastName: authUser.lastName,
-			}),
-			orgId: authUser.organizationId,
+			...BASE_EXPECTED,
 		});
 
 		repositoryMock.create.mockResolvedValueOnce(expectedMsg);
 
 		await handler.execute(command);
+
+		expect(eventBusMock.publish).toHaveBeenCalledWith(
+			new ProtocolEntryCreatedEvent('org-id', expectedMsg),
+		);
+	});
+
+	it('should create operation started message protocol log entry', async () => {
+		const command = new CreateOperationStartedMessageCommand(
+			null,
+			OPERATION_DATA,
+			AUTH_USER,
+		);
+		const time = new Date('2023-10-19T00:00:00');
+		const expectedMsg = plainToInstance(OperationStartedMessage, BASE_EXPECTED);
+
+		repositoryMock.create.mockResolvedValueOnce(expectedMsg);
+
+		await handler.execute(command);
+
+		expect(repositoryMock.create).toHaveBeenCalledWith(
+			expect.objectContaining({
+				time,
+				referenceId: OPERATION_DATA.id,
+				orgId: AUTH_USER.organizationId,
+				searchableText: expect.stringContaining(
+					'einsatz alarm-keyword operation-sign gestartet',
+				),
+			}),
+		);
 
 		expect(eventBusMock.publish).toHaveBeenCalledWith(
 			new ProtocolEntryCreatedEvent('org-id', expectedMsg),

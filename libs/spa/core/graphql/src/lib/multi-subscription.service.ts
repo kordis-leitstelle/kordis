@@ -22,7 +22,7 @@ export class MultiSubscriptionService {
 	 */
 	subscribeToMultiple$(fields: SubscriptionField[]): Observable<void> {
 		return merge(
-			fields.map((field) => {
+			...fields.map((field) => {
 				let query: string;
 				if (typeof field === 'string') {
 					query = `subscription {
@@ -41,6 +41,7 @@ export class MultiSubscriptionService {
 						${field.field}
 					}`;
 				}
+
 				return this.gqlService.subscribe$(gql`
 					${query}
 				`);
