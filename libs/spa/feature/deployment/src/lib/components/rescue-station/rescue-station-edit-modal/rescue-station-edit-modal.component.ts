@@ -1,26 +1,39 @@
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
+	Injectable,
+	effect,
 	inject,
 	signal,
 } from '@angular/core';
 import {
+	FormsModule,
 	NonNullableFormBuilder,
 	ReactiveFormsModule,
 	Validators,
 } from '@angular/forms';
 import { NzAlertComponent } from 'ng-zorro-antd/alert';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
-import { NzCardComponent } from 'ng-zorro-antd/card';
+import { NzDividerComponent } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputDirective } from 'ng-zorro-antd/input';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
+import { map } from 'rxjs';
 
-import { RescueStationDeployment, Unit } from '@kordis/shared/model';
+import {
+	AlertGroup,
+	Query,
+	RescueStationDeployment,
+	Unit,
+} from '@kordis/shared/model';
+import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 import {
 	AlertGroupAssignmentFormGroup,
 	alertGroupMinUnitsValidator,
+	markInvalidFormControlsAsDirty,
 } from '@kordis/spa/core/misc';
 import {
 	AlertGroupSelectionsComponent,
@@ -29,44 +42,112 @@ import {
 	UnitSelectionOptionComponent,
 	UnitsSelectionComponent,
 } from '@kordis/spa/core/ui';
+import {
+	ProtocolCommunicationDetailsComponent,
+	getProtocolPayloadIfFormValid,
+	makeProtocolCommunicationDetailsForm,
+} from '@kordis/spa/feature/protocol';
 
-import { ProtocolDataComponent } from './component/protocol-data.component';
+import { UNIT_FRAGMENT } from '../../deployment/deployments.query';
 import { StrengthComponent } from './component/strength.component';
 import {
-	ProtocolMessageData,
 	RescueStationData,
 	RescueStationEditService,
 } from './service/rescue-station-edit.service';
 import { minStrengthValidator } from './validator/min-strength.validator';
 
+@Injectable()
+export class NonOperationUnitsSelectionService extends PossibleUnitSelectionsService {
+	override filter = (unit: Unit): boolean =>
+		unit.assignment?.__typename !== 'EntityOperationAssignment';
+}
+
+@Injectable()
+export class NonOperationAlertGroupSelectionService extends PossibleAlertGroupSelectionsService {
+	override filter = (alertGroup: AlertGroup): boolean =>
+		alertGroup.assignment?.__typename !== 'EntityOperationAssignment';
+}
+
 @Component({
 	selector: 'krd-rescue-station-edit-modal',
 	imports: [
 		AlertGroupSelectionsComponent,
+		AsyncPipe,
+		FormsModule,
 		NzAlertComponent,
 		NzButtonComponent,
-		NzCardComponent,
+		NzDividerComponent,
 		NzFormModule,
 		NzInputDirective,
-		ProtocolDataComponent,
+		NzOptionComponent,
+		NzSelectComponent,
+		ProtocolCommunicationDetailsComponent,
 		ReactiveFormsModule,
 		StrengthComponent,
-		UnitsSelectionComponent,
 		UnitSelectionOptionComponent,
+		UnitsSelectionComponent,
 	],
 	templateUrl: './rescue-station-edit-modal.component.html',
 	styleUrl: './rescue-station-edit-modal.component.css',
 	providers: [
-		PossibleUnitSelectionsService,
-		PossibleAlertGroupSelectionsService,
+		{
+			provide: PossibleUnitSelectionsService,
+			useClass: NonOperationUnitsSelectionService,
+		},
+		{
+			provide: PossibleAlertGroupSelectionsService,
+			useClass: NonOperationAlertGroupSelectionService,
+		},
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RescueStationEditModalComponent {
-	readonly rescueStation: RescueStationDeployment = inject(NZ_MODAL_DATA);
+	readonly rescueStation = signal<RescueStationDeployment | null>(null);
 	readonly loadingState = signal<'UPDATE' | 'SIGN_OFF' | 'SIGN_IN' | false>(
 		false,
 	);
+
+	readonly rescueStations$ = inject(GraphqlService)
+		.queryOnce$<{
+			rescueStationDeployments: Query['rescueStationDeployments'];
+		}>(gql`
+			${UNIT_FRAGMENT}
+			query {
+				rescueStationDeployments {
+					id
+					name
+					signedIn
+					strength {
+						leaders
+						subLeaders
+						helpers
+					}
+					defaultUnits {
+						...UnitData
+					}
+					assignments {
+						__typename
+						... on DeploymentUnit {
+							unit {
+								...UnitData
+							}
+						}
+						... on DeploymentAlertGroup {
+							alertGroup {
+								id
+								name
+							}
+							assignedUnits {
+								unit {
+									...UnitData
+								}
+							}
+						}
+					}
+				}
+			}
+		`)
+		.pipe(map(({ rescueStationDeployments }) => rescueStationDeployments));
 
 	private readonly modal = inject(NzModalRef);
 	private readonly fb = inject(NonNullableFormBuilder);
@@ -74,63 +155,67 @@ export class RescueStationEditModalComponent {
 		rescueStationData: this.fb.group({
 			strength: this.fb.group(
 				{
-					leaders: this.fb.control(
-						this.rescueStation.strength.leaders,
-						Validators.min(0),
-					),
-					subLeaders: this.fb.control(
-						this.rescueStation.strength.subLeaders,
-						Validators.min(0),
-					),
-					helpers: this.fb.control(
-						this.rescueStation.strength.helpers,
-						Validators.min(0),
-					),
+					leaders: this.fb.control(0, Validators.min(0)),
+					subLeaders: this.fb.control(0, Validators.min(0)),
+					helpers: this.fb.control(0, Validators.min(0)),
 				},
 				{
 					validators: [minStrengthValidator],
 				},
 			),
-			note: this.fb.control(this.rescueStation.note),
-			units: this.fb.control<Unit[]>(this.getInitialUnitsFromStation()),
+			note: this.fb.control(''),
+			units: this.fb.control<Unit[]>([]),
 			alertGroups: this.fb.array<AlertGroupAssignmentFormGroup>(
-				this.getInitialAlertGroupsFromStation(),
+				[],
 				alertGroupMinUnitsValidator,
 			),
 		}),
-		protocolData: this.fb.group({
-			sender: this.fb.control<string | Unit>('', Validators.required),
-			recipient: this.fb.control<string | Unit>('', Validators.required),
-			channel: this.fb.control('', Validators.required),
-		}),
+		protocolData: makeProtocolCommunicationDetailsForm(this.fb),
 	});
 
-	private readonly possibleUnitSelectionsService = inject(
-		PossibleUnitSelectionsService,
-	);
-	private readonly possibleAlertGroupSelectionsService = inject(
-		PossibleAlertGroupSelectionsService,
-	);
 	private readonly rescueStationService = inject(RescueStationEditService);
 	private readonly notificationService = inject(NzNotificationService);
 
+	constructor() {
+		effect(() => {
+			if (this.rescueStation()) {
+				this.formGroup.patchValue({
+					rescueStationData: {
+						/* eslint-disable @typescript-eslint/no-non-null-assertion */
+						strength: this.rescueStation()!.strength,
+						note: this.rescueStation()!.note,
+						/* eslint-enable @typescript-eslint/no-non-null-assertion */
+						units: this.getUnitsFromStation(),
+					},
+				});
+				this.formGroup.controls.rescueStationData.setControl(
+					'alertGroups',
+					this.fb.array(
+						this.getAlertGroupFormArrayFromStation(),
+						alertGroupMinUnitsValidator,
+					),
+				);
+			}
+		});
+	}
+
 	updateSignedInStation(): void {
-		if (!this.isFormValidForUpdate()) {
+		markInvalidFormControlsAsDirty(this.formGroup.controls.rescueStationData);
+		if (this.formGroup.controls.rescueStationData.invalid) {
+			this.formGroup.controls.rescueStationData.markAllAsTouched();
 			return;
 		}
 		this.loadingState.set('UPDATE');
 		this.rescueStationService
 			.update$(
 				this.getRescueStationPayload(),
-				this.formGroup.controls.protocolData.dirty
-					? this.getProtocolPayload()
-					: undefined,
+				getProtocolPayloadIfFormValid(this.formGroup.controls.protocolData),
 			)
 			.subscribe({
 				next: () => {
 					this.notificationService.success(
 						'RW Nachmeldung',
-						`${this.rescueStation.name} wurde erfolgreich nachgemeldet.`,
+						`${this.rescueStation()?.name} wurde erfolgreich nachgemeldet.`,
 					);
 					this.modal.destroy();
 				},
@@ -144,20 +229,23 @@ export class RescueStationEditModalComponent {
 	}
 
 	signInStation(): void {
-		this.formGroup.markAllAsTouched();
-		this.formGroup.controls.protocolData.markAsDirty();
-		if (this.formGroup.invalid) {
+		markInvalidFormControlsAsDirty(this.formGroup.controls.rescueStationData);
+		if (this.formGroup.controls.rescueStationData.invalid) {
+			this.formGroup.controls.rescueStationData.markAllAsTouched();
 			return;
 		}
 
 		this.loadingState.set('SIGN_IN');
 		this.rescueStationService
-			.signIn$(this.getRescueStationPayload(), this.getProtocolPayload())
+			.signIn$(
+				this.getRescueStationPayload(),
+				getProtocolPayloadIfFormValid(this.formGroup.controls.protocolData),
+			)
 			.subscribe({
 				next: () => {
 					this.notificationService.success(
 						'RW Anmeldung',
-						`${this.rescueStation.name} wurde erfolgreich angemeldet.`,
+						`${this.rescueStation()?.name} wurde erfolgreich angemeldet.`,
 					);
 					this.modal.destroy();
 				},
@@ -171,20 +259,24 @@ export class RescueStationEditModalComponent {
 	}
 
 	signOffStation(): void {
-		this.formGroup.controls.protocolData.markAllAsTouched();
-		this.formGroup.controls.protocolData.markAsDirty();
-		if (this.formGroup.controls.protocolData.invalid) {
+		markInvalidFormControlsAsDirty(this.formGroup.controls.rescueStationData);
+		if (this.formGroup.controls.rescueStationData.invalid) {
+			this.formGroup.controls.rescueStationData.markAllAsTouched();
 			return;
 		}
 
 		this.loadingState.set('SIGN_OFF');
 		this.rescueStationService
-			.signOff$(this.rescueStation.id, this.getProtocolPayload())
+			.signOff$(
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				this.rescueStation()!.id,
+				getProtocolPayloadIfFormValid(this.formGroup.controls.protocolData),
+			)
 			.subscribe({
 				next: () => {
 					this.notificationService.success(
 						'RW Abmeldung',
-						`${this.rescueStation.name} wurde erfolgreich abgemeldet.`,
+						`${this.rescueStation()?.name} wurde erfolgreich abgemeldet.`,
 					);
 					this.modal.destroy();
 				},
@@ -197,24 +289,27 @@ export class RescueStationEditModalComponent {
 			.add(() => this.loadingState.set(false));
 	}
 
-	private getInitialUnitsFromStation(): Unit[] {
+	private getUnitsFromStation(): Unit[] {
 		let units: Unit[];
 		// if the station is not signed in, we want to preselect the default units
-		if (!this.rescueStation.signedIn) {
-			units = this.rescueStation.defaultUnits;
+		/* eslint-disable @typescript-eslint/no-non-null-assertion */
+		if (!this.rescueStation()!.signedIn) {
+			units = this.rescueStation()!.defaultUnits;
 		} else {
-			units = this.rescueStation.assignments.reduce((acc, assignment) => {
+			units = this.rescueStation()!.assignments.reduce((acc, assignment) => {
+				/* eslint-enable @typescript-eslint/no-non-null-assertion */
 				if (assignment.__typename === 'DeploymentUnit') {
 					acc.push(assignment.unit);
 				}
 				return acc;
 			}, [] as Unit[]);
 		}
+
 		return units;
 	}
 
-	private getInitialAlertGroupsFromStation(): AlertGroupAssignmentFormGroup[] {
-		return this.rescueStation.assignments.reduce((acc, assignment) => {
+	private getAlertGroupFormArrayFromStation(): AlertGroupAssignmentFormGroup[] {
+		return this.rescueStation()!.assignments.reduce((acc, assignment) => {
 			if (assignment.__typename === 'DeploymentAlertGroup') {
 				acc.push(
 					this.fb.group({
@@ -232,40 +327,11 @@ export class RescueStationEditModalComponent {
 	private getRescueStationPayload(): RescueStationData {
 		const rsData = this.formGroup.controls.rescueStationData.getRawValue();
 		return {
-			rescueStationId: this.rescueStation.id,
+			rescueStationId: this.rescueStation()!.id,
 			strength: rsData.strength,
 			note: rsData.note,
 			assignedUnits: rsData.units,
 			assignedAlertGroups: rsData.alertGroups,
 		};
-	}
-
-	private getProtocolPayload(): ProtocolMessageData {
-		const protocolData = this.formGroup.controls.protocolData.getRawValue();
-		return {
-			sender: protocolData.sender,
-			recipient: protocolData.recipient,
-			channel: protocolData.channel,
-		};
-	}
-
-	/*
-	 	If the protocol data is dirty, we want to make sure it is valid as it is an optional form
-		first check if some fields are filled, if not, we mark the form as pristine to handle the case where a user enters a value, validates it, deletes it => should not be required
-	 */
-	private isFormValidForUpdate(): boolean {
-		if (
-			Object.values(this.formGroup.controls.protocolData.controls).every(
-				(control) => control.value === null || control.value === '',
-			)
-		) {
-			this.formGroup.controls.protocolData.markAsPristine();
-		}
-
-		return !(
-			(this.formGroup.controls.protocolData.dirty &&
-				this.formGroup.controls.protocolData.invalid) ||
-			this.formGroup.controls.rescueStationData.invalid
-		);
 	}
 }

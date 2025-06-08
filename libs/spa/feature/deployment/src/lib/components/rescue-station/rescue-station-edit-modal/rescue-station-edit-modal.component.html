@@ -1,42 +1,37 @@
-<h3>
-	@if (rescueStation.signedIn) {
-		Nachmeldung
-	} @else {
-		Anmeldung
-	}
-	{{ rescueStation.name }}
-</h3>
+<nz-divider nzPlain nzText="Funkdaten" />
 
-<nz-card [nzBodyStyle]="{ padding: 'var(--base-spacing)' }">
-	<h4>Funkspruch</h4>
-	<krd-protocol-data
-		[formGroup]="formGroup.controls.protocolData"
-		focusInitially
-	/>
-	@if (
-		formGroup.controls.protocolData.dirty &&
-		formGroup.controls.protocolData.invalid &&
-		formGroup.controls.protocolData.controls.sender.touched &&
-		formGroup.controls.protocolData.controls.channel.touched &&
-		formGroup.controls.protocolData.controls.recipient.touched
-	) {
-		<nz-alert
-			nzType="error"
-			nzMessage="Es muss ein vollständiger Funkspruch eingetragen werden."
-			nzShowIcon
-		/>
-	}
-</nz-card>
+<krd-protocol-communication-details
+	[formGroup]="formGroup.controls.protocolData"
+	(recipientSet)="rsSelect.setOpenState(true); rsSelect.focus()"
+/>
 
-<nz-card [nzBodyStyle]="{ padding: 'var(--base-spacing)' }">
-	<h4>RW-Daten</h4>
-	<div class="form">
-		<div class="form-item">
-			<span>Stärke</span>
-			<krd-strength
-				[formGroup]="formGroup.controls.rescueStationData.controls.strength"
-			/>
-		</div>
+<nz-divider nzPlain nzText="RW Daten" />
+
+<nz-select
+	[(ngModel)]="rescueStation"
+	nzPlaceHolder="Rettungswache auswählen"
+	#rsSelect
+>
+	@for (rs of rescueStations$ | async; track rs.id) {
+		<nz-option [nzValue]="rs" [nzLabel]="rs.name" />
+	}
+</nz-select>
+
+@if (rescueStation()) {
+	<form
+		[formGroup]="formGroup.controls.rescueStationData"
+		nz-form
+		nzLayout="vertical"
+	>
+		<nz-form-item>
+			<nz-form-label>Stärke</nz-form-label>
+			<nz-form-control>
+				<krd-strength
+					[formGroup]="formGroup.controls.rescueStationData.controls.strength"
+				/>
+			</nz-form-control>
+		</nz-form-item>
+
 		@if (
 			formGroup.controls.rescueStationData.controls.strength.touched &&
 			formGroup.controls.rescueStationData.controls.strength.errors
@@ -48,22 +43,31 @@
 				nzMessage="Die Gesamtstärke muss mindestens 1 sein."
 			/>
 		}
-		<div class="form-item">
-			<span>Einheiten</span>
-			<krd-units-select
-				[control]="formGroup.controls.rescueStationData.controls.units"
-			>
-				<ng-template let-unit>
-					<krd-unit-selection-option [unit]="unit" />
-				</ng-template>
-			</krd-units-select>
-		</div>
-		<div class="form-item">
-			<span>Alarmgruppen</span>
-			<krd-alert-group-selections
-				[formArray]="formGroup.controls.rescueStationData.controls.alertGroups"
-			/>
-		</div>
+
+		<nz-form-item>
+			<nz-form-label>Einheiten</nz-form-label>
+			<nz-form-control>
+				<krd-units-select
+					[control]="formGroup.controls.rescueStationData.controls.units"
+				>
+					<ng-template let-unit>
+						<krd-unit-selection-option [unit]="unit" />
+					</ng-template>
+				</krd-units-select>
+			</nz-form-control>
+		</nz-form-item>
+
+		<nz-form-item>
+			<nz-form-label>Alarmgruppen</nz-form-label>
+			<nz-form-control>
+				<krd-alert-group-selections
+					[formArray]="
+						formGroup.controls.rescueStationData.controls.alertGroups
+					"
+				/>
+			</nz-form-control>
+		</nz-form-item>
+
 		@if (
 			formGroup.controls.rescueStationData.controls.alertGroups.touched &&
 			formGroup.controls.rescueStationData.controls.alertGroups.errors
@@ -75,49 +79,60 @@
 				nzMessage="Für jede Alarmgruppe muss mindestens eine Einheit zugeordnet werden."
 			/>
 		}
-		<div class="form-item">
-			<span>Anmerkungen</span>
-			<textarea
-				[formControl]="formGroup.controls.rescueStationData.controls.note"
-				nz-input
-			></textarea>
-		</div>
-	</div>
-</nz-card>
 
-@if (rescueStation.signedIn) {
-	<div class="actions signed-in-actions">
-		<button
-			(click)="signOffStation()"
-			[disabled]="loadingState() !== false"
-			[nzLoading]="loadingState() === 'SIGN_OFF'"
-			nz-button
-			nzSize="large"
-		>
-			Ausmelden
-		</button>
-		<button
-			(click)="updateSignedInStation()"
-			[nzLoading]="loadingState() === 'UPDATE'"
-			[disabled]="loadingState() !== false"
-			nz-button
-			nzSize="large"
-			nzType="primary"
-		>
-			Nachmelden
-		</button>
-	</div>
-} @else {
-	<div class="actions signed-off-actions">
-		<button
-			(click)="signInStation()"
-			[nzLoading]="loadingState() === 'SIGN_IN'"
-			[disabled]="loadingState() !== false"
-			nz-button
-			nzSize="large"
-			nzType="primary"
-		>
-			Anmelden
-		</button>
-	</div>
+		<nz-form-item>
+			<nz-form-label>Anmerkungen</nz-form-label>
+			<nz-form-control>
+				<textarea
+					[formControl]="formGroup.controls.rescueStationData.controls.note"
+					nz-input
+				></textarea>
+			</nz-form-control>
+		</nz-form-item>
+	</form>
+
+	@if (rescueStation()!.signedIn) {
+		<nz-form-item>
+			<nz-form-control>
+				<div class="actions signed-in-actions">
+					<button
+						(click)="signOffStation()"
+						[disabled]="loadingState() !== false"
+						[nzLoading]="loadingState() === 'SIGN_OFF'"
+						nz-button
+						nzSize="large"
+					>
+						Ausmelden
+					</button>
+					<button
+						(click)="updateSignedInStation()"
+						[nzLoading]="loadingState() === 'UPDATE'"
+						[disabled]="loadingState() !== false"
+						nz-button
+						nzSize="large"
+						nzType="primary"
+					>
+						Nachmelden
+					</button>
+				</div>
+			</nz-form-control>
+		</nz-form-item>
+	} @else {
+		<nz-form-item>
+			<nz-form-control>
+				<div class="actions signed-off-actions">
+					<button
+						(click)="signInStation()"
+						[nzLoading]="loadingState() === 'SIGN_IN'"
+						[disabled]="loadingState() !== false"
+						nz-button
+						nzSize="large"
+						nzType="primary"
+					>
+						Anmelden
+					</button>
+				</div>
+			</nz-form-control>
+		</nz-form-item>
+	}
 }

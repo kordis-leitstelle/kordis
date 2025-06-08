@@ -19,13 +19,12 @@ import { Subject, map, of, startWith, takeUntil } from 'rxjs';
 @Component({
 	selector: 'krd-strength',
 	template: `
-		<div [formGroup]="formGroup()" nz-form nzLayout="inline">
+		<div [formGroup]="formGroup()" nz-form>
 			<nz-form-item>
 				<nz-form-control [nzValidateStatus]="formGroup()">
 					<nz-input-number
 						[nzMin]="0"
 						formControlName="leaders"
-						nzInputMode="numeric"
 						nz-tooltip="Führer"
 					/>
 				</nz-form-control>
@@ -36,7 +35,6 @@ import { Subject, map, of, startWith, takeUntil } from 'rxjs';
 					<nz-input-number
 						[nzMin]="0"
 						formControlName="subLeaders"
-						nzInputMode="numeric"
 						nz-tooltip="Unterführer"
 					/>
 				</nz-form-control>
@@ -47,22 +45,22 @@ import { Subject, map, of, startWith, takeUntil } from 'rxjs';
 					<nz-input-number
 						[nzMin]="0"
 						formControlName="helpers"
-						nzInputMode="numeric"
 						nz-tooltip="Helfer"
 					/>
 				</nz-form-control>
 			</nz-form-item>
-			<span>// {{ total$ | async }}</span>
+			<span>//</span>
+			<span>{{ total$ | async }}</span>
 		</div>
 	`,
 	imports: [
-		AsyncPipe,
 		NzInputNumberComponent,
 		NzTooltipDirective,
 		ReactiveFormsModule,
 		NzFormItemComponent,
 		NzFormControlComponent,
 		NzFormDirective,
+		AsyncPipe,
 	],
 	styles: `
 		div {
