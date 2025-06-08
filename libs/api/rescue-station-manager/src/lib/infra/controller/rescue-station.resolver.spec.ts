@@ -4,7 +4,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 
 import { DeploymentNotFoundException } from '@kordis/api/deployment';
-import { BaseCreateMessageArgs, UnitInput } from '@kordis/api/protocol';
+import {
+	BaseCreateMessageArgs,
+	ProtocolMessageArgs,
+	UnitInput,
+} from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -13,17 +17,19 @@ import { LaunchSignOnProcessCommand } from '../../core/command/launch-sign-on-pr
 import { LaunchUpdateSignedInRescueStationProcessCommand } from '../../core/command/launch-update-signed-in-rescue-station-process.command';
 import { RescueStationResolver } from './rescue-station.resolver';
 
-const PROTOCOL_ARGS_DATA = plainToInstance(BaseCreateMessageArgs, {
-	sender: plainToInstance(UnitInput, {
-		type: 'REGISTERED_UNIT',
-		id: 'senderId',
+const PROTOCOL_ARGS_DATA: ProtocolMessageArgs = {
+	protocolMessage: plainToInstance(BaseCreateMessageArgs, {
+		sender: plainToInstance(UnitInput, {
+			type: 'REGISTERED_UNIT',
+			id: 'senderId',
+		}),
+		recipient: plainToInstance(UnitInput, {
+			type: 'UNKNOWN_UNIT',
+			name: 'recipientName',
+		}),
+		channel: 'channel',
 	}),
-	recipient: plainToInstance(UnitInput, {
-		type: 'UNKNOWN_UNIT',
-		name: 'recipientName',
-	}),
-	channel: 'channel',
-});
+};
 
 const RS_ARGS_DATA = {
 	rescueStationId: 'rescueStationId',

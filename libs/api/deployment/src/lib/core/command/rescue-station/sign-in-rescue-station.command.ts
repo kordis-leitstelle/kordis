@@ -42,6 +42,16 @@ export class SignInRescueStationHandler
 
 	async execute(command: SignInRescueStationCommand): Promise<void> {
 		await this.uow.asTransaction(async (uow) => {
+			await this.deploymentAssignmentService.assertNoActiveOperationAssignment(
+				[
+					...command.assignedUnitIds,
+					...command.assignedAlertGroups.flatMap(
+						(alertGroup) => alertGroup.unitIds,
+					),
+				],
+				command.orgId,
+				uow,
+			);
 			await this.deploymentAssignmentService.setAssignmentsOfDeployment(
 				command.orgId,
 				command.rescueStationId,

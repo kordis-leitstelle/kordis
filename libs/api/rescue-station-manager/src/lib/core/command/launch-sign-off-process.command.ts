@@ -27,7 +27,7 @@ export class LaunchSignOffProcessCommand {
 			sender: MessageUnit;
 			recipient: MessageUnit;
 			channel: string;
-		},
+		} | null,
 	) {}
 }
 
@@ -56,12 +56,6 @@ export class LaunchSignOffProcessHandler
 			),
 		);
 
-		await this.executeMessageCommand(cmd);
-	}
-
-	private async executeMessageCommand(
-		cmd: LaunchSignOffProcessCommand,
-	): Promise<void> {
 		const rs: RescueStationDeploymentViewModel = await this.queryBus.execute(
 			new GetRescueStationDeploymentQuery(
 				cmd.reqUser.organizationId,
@@ -71,11 +65,7 @@ export class LaunchSignOffProcessHandler
 		await this.commandBus.execute(
 			new CreateRescueStationSignOffMessageCommand(
 				new Date(),
-				{
-					sender: cmd.communicationMessageData.sender,
-					recipient: cmd.communicationMessageData.recipient,
-					channel: cmd.communicationMessageData.channel,
-				},
+				cmd.communicationMessageData,
 				{
 					id: rs.id,
 					name: rs.name,

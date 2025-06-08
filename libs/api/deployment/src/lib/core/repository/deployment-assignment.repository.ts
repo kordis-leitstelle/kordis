@@ -15,6 +15,7 @@ export interface DeploymentAssignmentRepository {
 	getAssignment(
 		orgId: string,
 		entityId: string,
+		uow?: DbSessionProvider,
 	): Promise<RescueStationDeploymentEntity | OperationDeploymentEntity | null>;
 
 	removeAssignmentsOfDeployments(

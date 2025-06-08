@@ -64,25 +64,25 @@ export class DeploymentAssignmentRepositoryImpl
 	async getAssignment(
 		orgId: string,
 		entityId: string,
+		uow?: DbSessionProvider,
 	): Promise<RescueStationDeploymentEntity | OperationDeploymentEntity | null> {
-		const assignments = await this.deploymentAssignmentModel
-			.aggregate([
-				{
-					$match: {
-						orgId,
-						entityId,
-					},
+		const query = this.deploymentAssignmentModel.aggregate([
+			{
+				$match: {
+					orgId,
+					entityId,
 				},
-				{
-					$lookup: {
-						from: 'deployments',
-						localField: 'deploymentId',
-						foreignField: '_id',
-						as: 'deployment',
-					},
+			},
+			{
+				$lookup: {
+					from: 'deployments',
+					localField: 'deploymentId',
+					foreignField: '_id',
+					as: 'deployment',
 				},
-			])
-			.exec();
+			},
+		]);
+		const assignments = await runDbOperation(query, uow);
 
 		if (assignments.length > 0 && assignments[0].deployment.length > 0) {
 			const assignment = assignments[0].deployment[0];

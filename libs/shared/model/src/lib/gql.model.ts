@@ -314,12 +314,12 @@ export type MutationSetCurrentAlertGroupUnitsArgs = {
 };
 
 export type MutationSignInRescueStationArgs = {
-	protocolMessageData: BaseCreateMessageInput;
+	protocolMessage?: InputMaybe<BaseCreateMessageInput>;
 	rescueStationData: UpdateRescueStationInput;
 };
 
 export type MutationSignOffRescueStationArgs = {
-	protocolMessageData: BaseCreateMessageInput;
+	protocolMessage?: InputMaybe<BaseCreateMessageInput>;
 	rescueStationId: Scalars['String']['input'];
 };
 
@@ -344,7 +344,7 @@ export type MutationUpdateRescueStationNoteArgs = {
 };
 
 export type MutationUpdateSignedInRescueStationArgs = {
-	protocolMessageData?: InputMaybe<BaseCreateMessageInput>;
+	protocolMessage?: InputMaybe<BaseCreateMessageInput>;
 	rescueStationData: UpdateRescueStationInput;
 };
 

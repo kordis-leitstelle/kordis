@@ -60,25 +60,19 @@ export class LaunchUpdateSignedInRescueStationProcessHandler
 			),
 		);
 
-		if (communicationMessageData) {
-			const rsDetails =
-				await this.rescueStationMessageDetailsFactory.createFromCommandRescueStationData(
-					reqUser.organizationId,
-					rescueStationData,
-				);
-
-			await this.commandBus.execute(
-				new CreateRescueStationUpdateMessageCommand(
-					new Date(),
-					{
-						sender: communicationMessageData.sender,
-						recipient: communicationMessageData.recipient,
-						channel: communicationMessageData.channel,
-					},
-					rsDetails,
-					reqUser,
-				),
+		const rsDetails =
+			await this.rescueStationMessageDetailsFactory.createFromCommandRescueStationData(
+				reqUser.organizationId,
+				rescueStationData,
 			);
-		}
+
+		await this.commandBus.execute(
+			new CreateRescueStationUpdateMessageCommand(
+				new Date(),
+				communicationMessageData,
+				rsDetails,
+				reqUser,
+			),
+		);
 	}
 }
