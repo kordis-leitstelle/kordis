@@ -70,7 +70,7 @@ import { PossibleUnitSelectionsService } from '../../service/unit-selection.serv
 										templateRef()!;
 										context: { $implicit: unit }
 									"
-								></ng-container>
+								/>
 							} @else {
 								{{ unit.callSign }}
 								<span class="unit-name">{{ unit.name }}</span>

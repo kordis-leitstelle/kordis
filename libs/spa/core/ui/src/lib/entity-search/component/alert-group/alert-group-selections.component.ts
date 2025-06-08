@@ -15,11 +15,7 @@ import {
 	ReactiveFormsModule,
 } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import {
-	NzFormControlComponent,
-	NzFormItemComponent,
-} from 'ng-zorro-antd/form';
-import { NzColDirective } from 'ng-zorro-antd/grid';
+import { NzFormModule } from 'ng-zorro-antd/form';
 
 import { AlertGroup } from '@kordis/shared/model';
 import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/misc';
@@ -36,58 +32,46 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 	selector: 'krd-alert-group-selections',
 	imports: [
 		AlertGroupSelectionComponent,
-		NzCardComponent,
-		NzFormControlComponent,
-		NzFormItemComponent,
-		NzColDirective,
-		ReactiveFormsModule,
+		AsyncPipe,
 		AutocompleteComponent,
 		AutocompleteOptionTemplateDirective,
-		AsyncPipe,
+		NzCardComponent,
+		NzFormModule,
+		ReactiveFormsModule,
 	],
 	template: `
-		<nz-form-item>
-			<nz-form-label>Alarmgruppen</nz-form-label>
-			<nz-form-control>
-				<krd-autocomplete
-					[formControl]="alertGroupControl"
-					[searchFields]="['name']"
-					[options]="
-						(possibleAlertGroupSelectionsService.allPossibleEntitiesToSelect$
-							| async) ?? []
-					"
-					[labelFn]="alertGroupLabelFn"
-				>
-					<ng-template
-						krdAutocompleteOptionTmpl
-						let-alertGroup
-						[list]="
-							(possibleAlertGroupSelectionsService.allPossibleEntitiesToSelect$
-								| async) ?? []
-						"
+		@let possibleEntitiesToSelect =
+			(possibleAlertGroupSelectionsService.allPossibleEntitiesToSelect$
+				| async) ?? [];
+
+		<krd-autocomplete
+			[formControl]="alertGroupControl"
+			[searchFields]="['name']"
+			[options]="possibleEntitiesToSelect"
+			[labelFn]="alertGroupLabelFn"
+		>
+			<ng-template
+				krdAutocompleteOptionTmpl
+				let-alertGroup
+				[list]="possibleEntitiesToSelect"
+			>
+				<span class="name">{{ alertGroup.name }}</span>
+				@if (
+					alertGroup.assignment?.__typename === 'EntityRescueStationAssignment'
+				) {
+					<small>Zuordnung: {{ $any(alertGroup.assignment).name }}</small>
+				} @else if (
+					alertGroup.assignment?.__typename === 'EntityOperationAssignment'
+				) {
+					<small
+						>Zuordnung:
+						{{ $any(alertGroup.assignment).operation.alarmKeyword }}
+						{{ $any(alertGroup.assignment).operation.sign }}</small
 					>
-						<div class="result-item">
-							<span class="name">{{ alertGroup.name }}</span>
-							@if (
-								alertGroup.assignment?.__typename ===
-								'EntityRescueStationAssignment'
-							) {
-								<small>Zuordnung: {{ $any(alertGroup.assignment).name }}</small>
-							} @else if (
-								alertGroup.assignment?.__typename ===
-								'EntityOperationAssignment'
-							) {
-								<small
-									>Zuordnung:
-									{{ $any(alertGroup.assignment).operation.alarmKeyword }}
-									{{ $any(alertGroup.assignment).operation.sign }}</small
-								>
-							}
-						</div>
-					</ng-template>
-				</krd-autocomplete>
-			</nz-form-control>
-		</nz-form-item>
+				}
+			</ng-template>
+		</krd-autocomplete>
+
 		@if (formArray().length) {
 			<nz-card [nzBodyStyle]="{ padding: 'calc(var(--base-spacing) / 2)' }">
 				<div class="selections">
@@ -105,13 +89,12 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 		}
 	`,
 	styles: `
-		:host {
-			display: flex;
-			flex-direction: column;
-		}
-
 		.selections:empty {
 			margin-top: 0;
+		}
+
+		.name {
+			margin-right: calc(var(--base-spacing) / 2);
 		}
 
 		.selections {
@@ -124,10 +107,6 @@ import { AlertGroupSelectionComponent } from './alert-group-selection.component'
 
 		nz-card {
 			margin-top: calc(var(--base-spacing) / 2);
-		}
-
-		nz-form-item {
-			margin-bottom: 0;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

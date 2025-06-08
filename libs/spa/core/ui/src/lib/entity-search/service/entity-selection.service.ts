@@ -15,6 +15,9 @@ export abstract class EntitySelectionService<
 	protected abstract query: TypedDocumentNode<TQuery>;
 	protected abstract queryName: keyof TQuery;
 
+	// Optional filter to apply on the entities that can be selected.
+	protected filter?: (entity: TEntity) => boolean;
+
 	private readonly entityIdsSelected = new Set<string>();
 	private readonly gqlService = inject(GraphqlService);
 	private readonly selectionChangedSubject$ = new Subject<void>();
@@ -25,13 +28,16 @@ export abstract class EntitySelectionService<
 			this.gqlService
 				.queryOnce$<TQuery>(this.query) // query everytime and embrace the cache of the graphql service
 				.pipe(
-					map((data) =>
-						data[this.queryName].filter(
-							({ id }) => !this.entityIdsSelected.has(id),
-						),
-					),
+					map((data) => {
+						return data[this.queryName].filter(
+							(entity) =>
+								!this.entityIdsSelected.has(entity.id) &&
+								(this.filter ? this.filter(entity) : true),
+						);
+					}),
 				),
 		),
+
 		shareReplay({ bufferSize: 1, refCount: true }),
 	);
 
