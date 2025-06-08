@@ -114,9 +114,14 @@ import { OperationDescriptionTextareaComponent } from '../operation-detail/descr
 
 			<div nz-row>
 				<div nz-col nzSpan="24">
-					<krd-alert-group-selections
-						[formArray]="formGroup().controls.alertGroups"
-					/>
+					<nz-form-item>
+						<nz-form-label>Alarmgruppen</nz-form-label>
+						<nz-form-control>
+							<krd-alert-group-selections
+								[formArray]="formGroup().controls.alertGroups"
+							/>
+						</nz-form-control>
+					</nz-form-item>
 				</div>
 			</div>
 		</ng-container>

@@ -16,9 +16,12 @@ export function makeUnitInput(unit: Unit | string): UnitInput {
 	}
 }
 
-export function getProtocolPayloadFromForm(
+export function getProtocolPayloadIfFormValid(
 	formGroup: ProtocolCommunicationDetailsFormGroup,
 ): BaseCreateMessageInput | null {
+	if (formGroup.invalid) {
+		return null;
+	}
 	const protocolValue = formGroup.getRawValue();
 	return {
 		sender: makeUnitInput(protocolValue.sender),
