@@ -56,10 +56,7 @@ import {
 			</div>
 			<div class="group">
 				<button nz-button nzType="primary" (click)="openRescueStationModal()">
-					RW ein-/nachmelden
-				</button>
-				<button nz-tooltip="RW an-/ab-/ummelden" nz-button nzType="primary">
-					RW ummelden
+					Rettungswache melden
 				</button>
 			</div>
 
