@@ -49,21 +49,21 @@ export class DeploymentAssignmentService {
 	): Promise<void> {
 		const assignedToOperation: { unitId: string; opId: string }[] = [];
 
-		for (const unit of unitIds) {
-			const assignment =
-				await this.deploymentAssignmentRepository.getAssignment(
-					orgId,
-					unit,
-					uow,
-				);
+		const assignments =
+			await this.deploymentAssignmentRepository.getAssignments(
+				orgId,
+				unitIds,
+				uow,
+			);
+
+		for (const [unitId, assignment] of Object.entries(assignments)) {
 			if (assignment && assignment instanceof OperationDeploymentEntity) {
 				assignedToOperation.push({
-					unitId: unit,
-					opId: assignment.operation.id,
+					unitId,
+					opId: assignment.id,
 				});
 			}
 		}
-
 		if (assignedToOperation.length > 0) {
 			throw new UnitsAssignedToOperationException(assignedToOperation);
 		}

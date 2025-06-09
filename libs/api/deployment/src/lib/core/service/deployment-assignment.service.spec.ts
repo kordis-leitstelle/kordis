@@ -2,6 +2,7 @@ import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { OperationDeploymentEntity } from '../entity/operation-deplyoment.entity';
+import { RescueStationDeploymentEntity } from '../entity/rescue-station-deployment.entity';
 import { UnitsAssignedToOperationException } from '../exception/units-assigned-to-operation.exception';
 import {
 	DEPLOYMENT_ASSIGNMENT_REPOSITORY,
@@ -112,21 +113,14 @@ describe('DeploymentAssignmentService', () => {
 			const orgId = 'orgId';
 			const unitIds = ['unitId1', 'unitId2'];
 
-			mockDeploymentAssignmentRepository.getAssignment.mockResolvedValue(null);
+			mockDeploymentAssignmentRepository.getAssignments.mockResolvedValue({
+				unitId1: { name: 'RW 1' } as RescueStationDeploymentEntity,
+				unitId2: { name: 'RW 2' } as RescueStationDeploymentEntity,
+			});
 
 			await expect(
 				service.assertNoActiveOperationAssignment(unitIds, orgId),
 			).resolves.not.toThrow();
-
-			expect(
-				mockDeploymentAssignmentRepository.getAssignment,
-			).toHaveBeenCalledTimes(2);
-			expect(
-				mockDeploymentAssignmentRepository.getAssignment,
-			).toHaveBeenCalledWith(orgId, 'unitId1', undefined);
-			expect(
-				mockDeploymentAssignmentRepository.getAssignment,
-			).toHaveBeenCalledWith(orgId, 'unitId2', undefined);
 		});
 
 		it('should throw UnitsAssignedToOperationException when units are assigned to an operation', async () => {
@@ -135,23 +129,14 @@ describe('DeploymentAssignmentService', () => {
 			const operationDeployment = new OperationDeploymentEntity();
 			operationDeployment.operation = { id: 'opId' } as any;
 
-			mockDeploymentAssignmentRepository.getAssignment
-				.mockResolvedValueOnce(null)
-				.mockResolvedValueOnce(operationDeployment);
+			mockDeploymentAssignmentRepository.getAssignments.mockResolvedValueOnce({
+				unitId1: null,
+				unitId2: operationDeployment,
+			});
 
 			await expect(
 				service.assertNoActiveOperationAssignment(unitIds, orgId),
 			).rejects.toThrow(UnitsAssignedToOperationException);
-
-			expect(
-				mockDeploymentAssignmentRepository.getAssignment,
-			).toHaveBeenCalledTimes(2);
-			expect(
-				mockDeploymentAssignmentRepository.getAssignment,
-			).toHaveBeenCalledWith(orgId, 'unitId1', undefined);
-			expect(
-				mockDeploymentAssignmentRepository.getAssignment,
-			).toHaveBeenCalledWith(orgId, 'unitId2', undefined);
 		});
 	});
 });
