@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { createMock } from '@golevelup/ts-jest';
 
-import { AlertGroup, Unit } from '@kordis/shared/model';
+import { AlertGroup, BaseCreateMessageInput, Unit } from '@kordis/shared/model';
 import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import {
-	ProtocolMessageData,
 	RescueStationData,
 	RescueStationEditService,
 } from './rescue-station-edit.service';
@@ -23,10 +22,16 @@ const RESCUE_STATION_DATA: RescueStationData = Object.freeze({
 	],
 });
 
-const PROTOCOL_MESSAGE_DATA: ProtocolMessageData = Object.freeze({
+const PROTOCOL_MESSAGE_DATA: BaseCreateMessageInput = Object.freeze({
 	channel: 'TestChannel',
-	sender: 'SenderUnit',
-	recipient: { id: 'unitId' } as Unit,
+	sender: {
+		name: 'SenderUnit',
+		type: 'UNKNOWN_UNIT',
+	},
+	recipient: {
+		id: 'unitId',
+		type: 'REGISTERED_UNIT',
+	},
 });
 
 const EXPECTED_ARGS = Object.freeze({
@@ -95,7 +100,7 @@ describe('RescueStationEditService', () => {
 	});
 
 	it('should sign off without protocol args', () => {
-		service.update$(RESCUE_STATION_DATA, undefined).subscribe();
+		service.update$(RESCUE_STATION_DATA, null).subscribe();
 
 		expect(graphqlServiceMock.mutate$).toHaveBeenCalledWith(expect.anything(), {
 			...EXPECTED_ARGS,

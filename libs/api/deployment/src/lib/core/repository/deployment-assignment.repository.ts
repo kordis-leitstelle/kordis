@@ -1,11 +1,10 @@
 import { DbSessionProvider } from '@kordis/api/shared';
 
 import {
+	BaseDeploymentEntity,
 	DeploymentAlertGroup,
 	DeploymentUnit,
 } from '../entity/deployment.entity';
-import { OperationDeploymentEntity } from '../entity/operation-deplyoment.entity';
-import { RescueStationDeploymentEntity } from '../entity/rescue-station-deployment.entity';
 
 export const DEPLOYMENT_ASSIGNMENT_REPOSITORY = Symbol(
 	'DEPLOYMENT_ASSIGNMENT_REPOSITORY',
@@ -15,7 +14,14 @@ export interface DeploymentAssignmentRepository {
 	getAssignment(
 		orgId: string,
 		entityId: string,
-	): Promise<RescueStationDeploymentEntity | OperationDeploymentEntity | null>;
+		uow?: DbSessionProvider,
+	): Promise<BaseDeploymentEntity | null>;
+
+	getAssignments(
+		orgId: string,
+		entityIds: string[],
+		uow?: DbSessionProvider | undefined,
+	): Promise<Record<string, BaseDeploymentEntity | null>>;
 
 	removeAssignmentsOfDeployments(
 		orgId: string,

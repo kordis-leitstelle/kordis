@@ -10,14 +10,13 @@ import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzDividerComponent } from 'ng-zorro-antd/divider';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { operation } from 'retry';
 import { map } from 'rxjs';
 
 import { Operation, Query } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 import {
 	ProtocolCommunicationDetailsComponent,
-	getProtocolPayloadFromForm,
+	getProtocolPayloadIfFormValid,
 	makeProtocolCommunicationDetailsForm,
 } from '@kordis/spa/feature/protocol';
 
@@ -116,9 +115,7 @@ export class EndOperationModalComponent {
 				`,
 				{
 					operationId: this.selectedOperation()?.id,
-					protocol: this.protocolForm.valid
-						? getProtocolPayloadFromForm(this.protocolForm)
-						: null,
+					protocol: getProtocolPayloadIfFormValid(this.protocolForm),
 				},
 			)
 			.subscribe({
@@ -136,6 +133,4 @@ export class EndOperationModalComponent {
 					),
 			});
 	}
-
-	protected readonly operation = operation;
 }

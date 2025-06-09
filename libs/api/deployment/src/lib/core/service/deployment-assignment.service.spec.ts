@@ -1,6 +1,9 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { OperationDeploymentEntity } from '../entity/operation-deplyoment.entity';
+import { RescueStationDeploymentEntity } from '../entity/rescue-station-deployment.entity';
+import { UnitsAssignedToOperationException } from '../exception/units-assigned-to-operation.exception';
 import {
 	DEPLOYMENT_ASSIGNMENT_REPOSITORY,
 	DeploymentAssignmentRepository,
@@ -18,6 +21,8 @@ describe('DeploymentAssignmentService', () => {
 	const mockUnitAssignmentRepository = createMock<UnitAssignmentRepository>();
 
 	beforeEach(async () => {
+		jest.clearAllMocks();
+
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				DeploymentAssignmentService,
@@ -101,5 +106,37 @@ describe('DeploymentAssignmentService', () => {
 		expect(
 			mockDeploymentAssignmentRepository.removeAssignmentsOfDeployment,
 		).toHaveBeenCalledWith(orgId, deploymentId, undefined);
+	});
+
+	describe('assertNoActiveOperationAssignment', () => {
+		it('should pass when no units are assigned to an operation', async () => {
+			const orgId = 'orgId';
+			const unitIds = ['unitId1', 'unitId2'];
+
+			mockDeploymentAssignmentRepository.getAssignments.mockResolvedValue({
+				unitId1: { name: 'RW 1' } as RescueStationDeploymentEntity,
+				unitId2: { name: 'RW 2' } as RescueStationDeploymentEntity,
+			});
+
+			await expect(
+				service.assertNoActiveOperationAssignment(unitIds, orgId),
+			).resolves.not.toThrow();
+		});
+
+		it('should throw UnitsAssignedToOperationException when units are assigned to an operation', async () => {
+			const orgId = 'orgId';
+			const unitIds = ['unitId1', 'unitId2'];
+			const operationDeployment = new OperationDeploymentEntity();
+			operationDeployment.operation = { id: 'opId' } as any;
+
+			mockDeploymentAssignmentRepository.getAssignments.mockResolvedValueOnce({
+				unitId1: null,
+				unitId2: operationDeployment,
+			});
+
+			await expect(
+				service.assertNoActiveOperationAssignment(unitIds, orgId),
+			).rejects.toThrow(UnitsAssignedToOperationException);
+		});
 	});
 });

@@ -7,7 +7,7 @@ import {
 	GetRescueStationDeploymentQuery,
 	RescueStationDeploymentViewModel,
 } from '@kordis/api/deployment';
-import { BaseCreateMessageArgs } from '@kordis/api/protocol';
+import { ProtocolMessageArgs } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -27,21 +27,14 @@ export class RescueStationResolver {
 	async updateSignedInRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
-		@Args('protocolMessageData', {
-			nullable: true,
-			type: () => BaseCreateMessageArgs,
-		})
-		protocolMessageData: BaseCreateMessageArgs | null,
+		@Args() { protocolMessage }: ProtocolMessageArgs,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
-			const protocolPayload = protocolMessageData
-				? await protocolMessageData.asTransformedPayload()
-				: null;
 			await this.commandBus.execute(
 				new LaunchUpdateSignedInRescueStationProcessCommand(
 					reqUser,
 					rescueStationData,
-					protocolPayload,
+					protocolMessage ? await protocolMessage.asTransformedPayload() : null,
 				),
 			);
 			return this.queryBus.execute(
@@ -60,14 +53,14 @@ export class RescueStationResolver {
 	async signOffRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationId') rescueStationId: string,
-		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageArgs,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
 				new LaunchSignOffProcessCommand(
 					reqUser,
 					rescueStationId,
-					await protocolMessageData.asTransformedPayload(),
+					protocolMessage ? await protocolMessage.asTransformedPayload() : null,
 				),
 			);
 			return this.queryBus.execute(
@@ -86,14 +79,14 @@ export class RescueStationResolver {
 	async signInRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
-		@Args('protocolMessageData') protocolMessageData: BaseCreateMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageArgs,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
 				new LaunchSignOnProcessCommand(
 					reqUser,
 					rescueStationData,
-					await protocolMessageData.asTransformedPayload(),
+					protocolMessage ? await protocolMessage.asTransformedPayload() : null,
 				),
 			);
 			return this.queryBus.execute(

@@ -7,6 +7,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 
 import { GlobalSearchComponent } from '@kordis/spa/core/misc';
+import { RescueStationEditModalComponent } from '@kordis/spa/feature/deployment';
 import {
 	CreateOngoingOperationModalComponent,
 	EndOperationModalComponent,
@@ -54,9 +55,8 @@ import {
 				</button>
 			</div>
 			<div class="group">
-				<button nz-button nzType="primary">RW ein-/nachmelden</button>
-				<button nz-tooltip="RW an-/ab-/ummelden" nz-button nzType="primary">
-					RW ummelden
+				<button nz-button nzType="primary" (click)="openRescueStationModal()">
+					Rettungswache melden
 				</button>
 			</div>
 
@@ -117,6 +117,15 @@ export class ActionBarComponent {
 	openEndOperationModal(): void {
 		this.modalService.create({
 			nzContent: EndOperationModalComponent,
+			nzFooter: null,
+			nzNoAnimation: true,
+			nzWidth: 550,
+		});
+	}
+
+	openRescueStationModal(): void {
+		this.modalService.create({
+			nzContent: RescueStationEditModalComponent,
 			nzFooter: null,
 			nzNoAnimation: true,
 			nzWidth: 550,

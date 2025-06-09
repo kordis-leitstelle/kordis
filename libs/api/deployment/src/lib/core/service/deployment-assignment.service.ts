@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { DbSessionProvider } from '@kordis/api/shared';
 
+import { OperationDeploymentEntity } from '../entity/operation-deplyoment.entity';
+import { UnitsAssignedToOperationException } from '../exception/units-assigned-to-operation.exception';
 import {
 	DEPLOYMENT_ASSIGNMENT_REPOSITORY,
 	DeploymentAssignmentRepository,
@@ -23,7 +25,7 @@ export class DeploymentAssignmentService {
 	async removeAssignmentsOfDeployment(
 		orgId: string,
 		deploymentId: string,
-		uow?: DbSessionProvider | undefined,
+		uow?: DbSessionProvider,
 	): Promise<void> {
 		// first remove all assignments
 		await this.deploymentAssignmentRepository.removeAssignmentsOfDeployment(
@@ -31,6 +33,40 @@ export class DeploymentAssignmentService {
 			deploymentId,
 			uow,
 		);
+	}
+
+	/**
+	 * Asserts that no units are currently assigned to an operation.
+	 * @param unitIds The unit ids to check for assignments.
+	 * @param orgId The organization id.
+	 * @param uow An optional unit of work.
+	 * @throws UnitsAssignedToOperationException if any of the units are assigned to an operation.
+	 */
+	async assertNoActiveOperationAssignment(
+		unitIds: string[],
+		orgId: string,
+		uow?: DbSessionProvider,
+	): Promise<void> {
+		const assignedToOperation: { unitId: string; opId: string }[] = [];
+
+		const assignments =
+			await this.deploymentAssignmentRepository.getAssignments(
+				orgId,
+				unitIds,
+				uow,
+			);
+
+		for (const [unitId, assignment] of Object.entries(assignments)) {
+			if (assignment && assignment instanceof OperationDeploymentEntity) {
+				assignedToOperation.push({
+					unitId,
+					opId: assignment.id,
+				});
+			}
+		}
+		if (assignedToOperation.length > 0) {
+			throw new UnitsAssignedToOperationException(assignedToOperation);
+		}
 	}
 
 	/**
@@ -62,11 +98,7 @@ export class DeploymentAssignmentService {
 		}
 
 		// first remove all assignments
-		await this.deploymentAssignmentRepository.removeAssignmentsOfDeployment(
-			orgId,
-			deploymentId,
-			uow,
-		);
+		await this.removeAssignmentsOfDeployment(orgId, deploymentId, uow);
 
 		// remove all alert group assignments of the units, example: alertgroup A is assigned away from a deployment, but leaves behind units, these need to be unassigned from the alert group
 		await this.unitAssignmentRepository.removeAssignmentsFromAlertGroups(

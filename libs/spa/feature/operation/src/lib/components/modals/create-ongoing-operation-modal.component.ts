@@ -28,7 +28,7 @@ import {
 } from '@kordis/spa/core/ui';
 import {
 	ProtocolCommunicationDetailsComponent,
-	getProtocolPayloadFromForm,
+	getProtocolPayloadIfFormValid,
 	makeProtocolCommunicationDetailsForm,
 } from '@kordis/spa/feature/protocol';
 
@@ -177,9 +177,9 @@ export class CreateOngoingOperationModalComponent {
 					operation: getOperationPayloadFromForm(
 						this.formGroup.controls.operation,
 					),
-					protocolMessage: this.formGroup.controls.protocol.valid
-						? getProtocolPayloadFromForm(this.formGroup.controls.protocol)
-						: null,
+					protocolMessage: getProtocolPayloadIfFormValid(
+						this.formGroup.controls.protocol,
+					),
 				},
 			)
 			.pipe(map((result) => result.createOngoingOperation))
