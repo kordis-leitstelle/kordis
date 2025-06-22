@@ -43,7 +43,9 @@
 				<td class="message">
 					@switch (entry.payload.__typename) {
 						@case ('CommunicationMessagePayload') {
-							{{ entry.payload.message }}
+							<krd-protocol-message prefix="Meldung">
+								{{ entry.payload.message }}
+							</krd-protocol-message>
 						}
 						@case ('RescueStationMessagePayload') {
 							<krd-rescue-station-message
@@ -56,13 +58,29 @@
 							/>
 						}
 						@case ('RescueStationSignOffMessagePayload') {
-							Rettungswache {{ entry.payload.rescueStationName }} ausgemeldet.
+							<krd-protocol-message prefix="Ausmeldung">
+								{{ entry.payload.rescueStationName }}
+							</krd-protocol-message>
 						}
 						@case ('OperationStartedMessagePayload') {
 							<krd-start-operation-message [message]="entry.payload" />
 						}
+						@case ('OperationInvolvementsUpdatedMessagePayload') {
+							<krd-protocol-message prefix="Zuordnungen">
+								{{ entry.payload.operationSign }}
+								-
+								<krd-operation-assignments-message
+									[assignedUnits]="entry.payload.assignedUnits"
+									[assignedAlertGroups]="entry.payload.assignedAlertGroups"
+								/>
+							</krd-protocol-message>
+						}
 						@case ('OperationEndedMessagePayload') {
-							Einsatz {{ entry.payload.operationSign }} beendet.
+							<krd-protocol-message
+								prefix="Einsatzende
+								{{ entry.payload.operationSign }}"
+							>
+							</krd-protocol-message>
 						}
 						@default {
 							{{ entry.__typename }}

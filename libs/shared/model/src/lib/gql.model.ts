@@ -49,6 +49,11 @@ export type AlertGroupsFilter = {
 	ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+export type AssignedAlertGroup = {
+	alertGroupId: Scalars['String']['input'];
+	assignedUnitIds: Array<Scalars['String']['input']>;
+};
+
 export type BBox = {
 	__typename?: 'BBox';
 	bottomRight: Coordinate;
@@ -239,6 +244,8 @@ export type Mutation = {
 	setCurrentAlertGroupUnits: AlertGroup;
 	signInRescueStation: RescueStationDeployment;
 	signOffRescueStation: RescueStationDeployment;
+	/** Updates the involvements of an ongoing operation with a protocol entry. */
+	updateOngoingOperationInvolvements: Scalars['Boolean']['output'];
 	updateOperationBaseData: Operation;
 	updateOperationInvolvements: Operation;
 	updateOrganizationGeoSettings: OrganizationEntity;
@@ -323,6 +330,12 @@ export type MutationSignOffRescueStationArgs = {
 	rescueStationId: Scalars['String']['input'];
 };
 
+export type MutationUpdateOngoingOperationInvolvementsArgs = {
+	involvements: UpdateOngoingAssignmentsInput;
+	operationId: Scalars['ID']['input'];
+	protocolMessage?: InputMaybe<BaseCreateMessageInput>;
+};
+
 export type MutationUpdateOperationBaseDataArgs = {
 	data: UpdateOperationBaseDataInput;
 	id: Scalars['ID']['input'];
@@ -386,14 +399,6 @@ export type OperationAlertGroupInvolvement = {
 	__typename?: 'OperationAlertGroupInvolvement';
 	alertGroup: AlertGroup;
 	unitInvolvements: Array<OperationUnitInvolvement>;
-};
-
-export type OperationAssignmentsUpdatedMessagePayload = {
-	__typename?: 'OperationAssignmentsUpdatedMessagePayload';
-	assignedAlertGroups: Array<OperationMessageAssignedAlertGroup>;
-	assignedUnits: Array<OperationMessageAssignedUnit>;
-	operationId: Scalars['String']['output'];
-	operationSign: Scalars['String']['output'];
 };
 
 export type OperationBaseAddress = {
@@ -464,6 +469,29 @@ export type OperationFilterInput = {
 export type OperationInvolvementTimeInput = {
 	end?: InputMaybe<Scalars['DateTime']['input']>;
 	start: Scalars['DateTime']['input'];
+};
+
+export type OperationInvolvementsUpdatedMessage = {
+	__typename?: 'OperationInvolvementsUpdatedMessage';
+	communicationDetails?: Maybe<CommunicationDetails>;
+	createdAt: Scalars['DateTime']['output'];
+	id: Scalars['ID']['output'];
+	orgId: Scalars['String']['output'];
+	payload: OperationInvolvementsUpdatedMessagePayload;
+	producer: ProducerUnion;
+	/** The id of the related entity (e.g. operation, unit...) which is the subject of the protocol entry */
+	referenceId?: Maybe<Scalars['String']['output']>;
+	searchableText: Scalars['String']['output'];
+	time: Scalars['DateTime']['output'];
+	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type OperationInvolvementsUpdatedMessagePayload = {
+	__typename?: 'OperationInvolvementsUpdatedMessagePayload';
+	assignedAlertGroups: Array<OperationMessageAssignedAlertGroup>;
+	assignedUnits: Array<OperationMessageAssignedUnit>;
+	operationId: Scalars['String']['output'];
+	operationSign: Scalars['String']['output'];
 };
 
 export type OperationLocation = {
@@ -626,6 +654,7 @@ export type ProtocolEntryEdge = {
 export type ProtocolEntryUnion =
 	| CommunicationMessage
 	| OperationEndedMessage
+	| OperationInvolvementsUpdatedMessage
 	| OperationStartedMessage
 	| RescueStationSignOffMessage
 	| RescueStationSignOnMessage
@@ -906,6 +935,11 @@ export type UnitsFilter = {
 export type UnknownUnit = {
 	__typename?: 'UnknownUnit';
 	name: Scalars['String']['output'];
+};
+
+export type UpdateOngoingAssignmentsInput = {
+	assignedAlertGroups: Array<AssignedAlertGroup>;
+	assignedUnitIds: Array<Scalars['String']['input']>;
 };
 
 export type UpdateOperationAlertGroupInvolvementInput = {

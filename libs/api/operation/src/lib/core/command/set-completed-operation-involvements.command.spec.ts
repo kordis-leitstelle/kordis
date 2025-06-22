@@ -64,7 +64,9 @@ describe('SetCompletedOperationInvolvementsHandler', () => {
 
 		await handler.execute(command);
 
-		expect(mockInvolvementService.setUnitInvolvements).toHaveBeenCalledWith(
+		expect(
+			mockInvolvementService.setUnitInvolvementsOfCompletedOperation,
+		).toHaveBeenCalledWith(
 			'org1',
 			'op1',
 			command.unitInvolvements,

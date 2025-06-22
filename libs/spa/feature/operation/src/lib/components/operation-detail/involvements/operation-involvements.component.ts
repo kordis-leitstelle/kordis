@@ -23,6 +23,7 @@ import {
 	PossibleUnitSelectionsService,
 } from '@kordis/spa/core/ui';
 
+import { UNIT_INVOLVEMENTS_QUERY } from '../../../helper/unit-involvement.query';
 import { BaseOperationTabComponent } from '../base-operation-tab.component';
 import { OperationAlertGroupInvolvementsFormComponent } from './form/alert-group/operation-alert-group-involvements-form.component';
 import { OperationInvolvementsFormComponent } from './form/unit/operation-unit-involvements-form.component';
@@ -33,6 +34,7 @@ import {
 import { InvolvementOperationTimeState } from './involvement-operation-time.state';
 
 const INVOLVEMENT_FRAGMENT = gql`
+	${UNIT_INVOLVEMENTS_QUERY}
 	fragment OperationUnitInvolvements on Operation {
 		id
 		start
@@ -48,19 +50,6 @@ const INVOLVEMENT_FRAGMENT = gql`
 			unitInvolvements {
 				...UnitInvolvement
 			}
-		}
-	}
-
-	fragment UnitInvolvement on OperationUnitInvolvement {
-		involvementTimes {
-			start
-			end
-		}
-		isPending
-		unit {
-			id
-			callSign
-			name
 		}
 	}
 `;

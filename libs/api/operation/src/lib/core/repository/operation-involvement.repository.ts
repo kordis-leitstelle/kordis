@@ -110,6 +110,18 @@ export interface OperationInvolvementsRepository {
 	): Promise<UnitInvolvement | undefined>;
 
 	/**
+	 * Finds all involvements of units without an end time or pending state in an operation.
+	 * @param orgId The organization ID.
+	 * @param operationId The operation ID.
+	 * @param uow Optional unit of work for transactional consistency.
+	 */
+	findOperationOngoingInvolvements(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<UnitInvolvement[]>;
+
+	/**
 	 * Finds an involvement of a pending unit.
 	 * @param orgId The organization ID.
 	 * @param unitId The unit ID.
@@ -136,6 +148,12 @@ export interface OperationInvolvementsRepository {
 		alertGroupId: string | null,
 		uow?: DbSessionProvider,
 	): Promise<UnitInvolvement | undefined>;
+
+	findOperationInvolvements(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<UnitInvolvement[]>;
 
 	/**
 	 * Adds a involvement time range with a start date to a pending unit's involvement in an operation.

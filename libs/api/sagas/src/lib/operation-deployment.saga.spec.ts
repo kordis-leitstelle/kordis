@@ -69,17 +69,29 @@ describe('OperationDeploymentSaga', () => {
 	it('should update assignments of an ongoing operation deployment', async () => {
 		const events$ = of(
 			new OngoingOperationInvolvementsUpdatedEvent('org1', 'operation1'),
+			new OngoingOperationInvolvementsUpdatedEvent('org1', 'operation1'),
+			new OngoingOperationInvolvementsUpdatedEvent('org1', 'operation1'),
 		);
 
 		queryBus.execute.mockResolvedValue({
 			id: 'operation1',
 			orgId: 'org1',
 			processState: OperationProcessState.OnGoing,
-			unitInvolvements: [{ unit: { id: 'unit1' } }],
+			unitInvolvements: [{ unit: { id: 'unit1' }, isPending: true }],
 			alertGroupInvolvements: [
 				{
 					alertGroup: { id: 'alertGroup1' },
-					unitInvolvements: [{ unit: { id: 'unit1' } }],
+					unitInvolvements: [
+						{
+							unit: { id: 'unit1' },
+							involvementTimes: [{ start: new Date(), end: null }],
+						},
+						{
+							// is not currently involved so should not be in the command
+							unit: { id: 'unit2' },
+							involvementTimes: [{ start: new Date(), end: new Date() }],
+						},
+					],
 				},
 			],
 		});
@@ -91,6 +103,7 @@ describe('OperationDeploymentSaga', () => {
 			[{ alertGroupId: 'alertGroup1', unitIds: ['unit1'] }],
 		);
 
+		// should only create 1 command from the 3 events, as it gets throttled
 		await expect(
 			lastValueFrom(
 				saga.ongoingOperationInvolvementsChanged(events$).pipe(toArray()),

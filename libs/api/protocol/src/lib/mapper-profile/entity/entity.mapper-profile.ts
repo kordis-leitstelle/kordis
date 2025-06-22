@@ -19,7 +19,7 @@ import {
 } from '../../core/entity/partials/producer-partial.entity';
 import { CommunicationMessage } from '../../core/entity/protocol-entries/communication-message.entity';
 import { OperationEndedMessage } from '../../core/entity/protocol-entries/operation/operation-ended-message.entity';
-import { OperationAssignmentsUpdatedMessage } from '../../core/entity/protocol-entries/operation/operation-involvements-updated-message.entity';
+import { OperationInvolvementsUpdatedMessage } from '../../core/entity/protocol-entries/operation/operation-involvements-updated-message.entity';
 import { OperationStartedMessage } from '../../core/entity/protocol-entries/operation/operation-started-message.entity';
 import {
 	CommunicationDetails,
@@ -29,8 +29,8 @@ import { RescueStationSignOffMessage } from '../../core/entity/protocol-entries/
 import { RescueStationSignOnMessage } from '../../core/entity/protocol-entries/rescue-station/rescue-station-sign-on-message.entity';
 import { RescueStationUpdateMessage } from '../../core/entity/protocol-entries/rescue-station/rescue-station-update-message.entity';
 import { CommunicationMessageDocument } from '../../infra/schema/communication/communication-message.schema';
-import { OperationAssignmentsUpdatedMessageDocument } from '../../infra/schema/operation/operation-assignments-updated-message.schema';
 import { OperationEndedMessageDocument } from '../../infra/schema/operation/operation-ended-message.schema';
+import { OperationInvolvementsUpdatedMessageDocument } from '../../infra/schema/operation/operation-involvements-updated-message.schema';
 import { OperationStartedMessageDocument } from '../../infra/schema/operation/operation-started-message.schema';
 import {
 	ProducerType,
@@ -142,8 +142,8 @@ export class EntityMapperProfile extends Base {
 			createMap(mapper, OperationEndedMessageDocument, OperationEndedMessage);
 			createMap(
 				mapper,
-				OperationAssignmentsUpdatedMessageDocument,
-				OperationAssignmentsUpdatedMessage,
+				OperationInvolvementsUpdatedMessageDocument,
+				OperationInvolvementsUpdatedMessage,
 			);
 		};
 	}

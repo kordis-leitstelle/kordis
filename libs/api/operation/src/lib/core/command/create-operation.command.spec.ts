@@ -160,7 +160,9 @@ describe('CreateOperationHandler', () => {
 			},
 			expect.anything(),
 		);
-		expect(mockUnitInvolvementService.setUnitInvolvements).toHaveBeenCalledWith(
+		expect(
+			mockUnitInvolvementService.setUnitInvolvementsOfCompletedOperation,
+		).toHaveBeenCalledWith(
 			'org1',
 			'op1',
 			[

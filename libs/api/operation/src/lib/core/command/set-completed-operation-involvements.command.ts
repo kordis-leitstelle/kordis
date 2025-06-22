@@ -52,7 +52,7 @@ export class SetCompletedOperationInvolvementsHandler
 				throw new OperationNotCompletedException();
 			}
 
-			await this.unitInvolvementService.setUnitInvolvements(
+			await this.unitInvolvementService.setUnitInvolvementsOfCompletedOperation(
 				command.orgId,
 				command.operationId,
 				command.unitInvolvements,

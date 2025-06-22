@@ -4,3 +4,4 @@ export * from './delete-operation.command';
 export * from './start-pending-unit-involvement.command';
 export * from './set-completed-operation-involvements.command';
 export * from './update-operation-base-data.command';
+export * from './update-ongoing-operation-involvements.command';

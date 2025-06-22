@@ -28,7 +28,7 @@ export class OperationInvolvementService {
 		First, removes all involvements of an operations, then verifies that a unit is not involved in another operation (as pending or matching with involvement time) and creates new involvements.
 		If involvement times are intercepting with another operation or a unit without an end time is added and it is currently somewhere pending, an exception is thrown!
 	 */
-	async setUnitInvolvements(
+	async setUnitInvolvementsOfCompletedOperation(
 		orgId: string,
 		operationId: string,
 		unitInvolvements: SetUnitInvolvementDto[],
@@ -184,7 +184,7 @@ export class OperationInvolvementService {
 			);
 		if (involvement) {
 			// remove pending involvement if no involvement times (there is no need to keep the unit)
-			if (involvement.involvementTimes.length === 0) {
+			if (involvement.isPending) {
 				await this.involvementsRepository.removeInvolvement(
 					orgId,
 					involvement.unitId,

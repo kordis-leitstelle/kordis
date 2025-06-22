@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CreateCommunicationMessageHandler } from './core/command/create-communication-message.command';
 import { RescueStationMessageFactory } from './core/command/helper/rescue-station-message.factory';
 import { CreateOperationEndedMessageHandler } from './core/command/operation/create-operation-ended-message.command';
+import { CreateOperationInvolvementsUpdatedMessageHandler } from './core/command/operation/create-operation-involvements-updated-message.command';
 import { CreateOperationStartedMessageHandler } from './core/command/operation/create-operation-started-message.command';
 import { CreateRescueStationSignOffMessageHandler } from './core/command/rescue-station/create-rescue-station-sign-off-message.command';
 import { CreateRescueStationSignOnMessageHandler } from './core/command/rescue-station/create-rescue-station-sign-on-message.command';
@@ -19,8 +20,8 @@ import {
 } from './infra/controller/protocol-entry.resolver';
 import { ImplProtocolEntryRepository } from './infra/repository/protocol-entry.repository';
 import { CommunicationMessageSchema } from './infra/schema/communication/communication-message.schema';
-import { OperationAssignmentsUpdatedMessageSchema } from './infra/schema/operation/operation-assignments-updated-message.schema';
 import { OperationEndedMessageSchema } from './infra/schema/operation/operation-ended-message.schema';
+import { OperationInvolvementsUpdatedMessageSchema } from './infra/schema/operation/operation-involvements-updated-message.schema';
 import { OperationStartedMessageSchema } from './infra/schema/operation/operation-started-message.schema';
 import {
 	ProtocolEntryBaseDocument,
@@ -57,13 +58,14 @@ const MAPPER_PROFILES = [
 ];
 const COMMAND_HANDLERS = [
 	CreateCommunicationMessageHandler,
-	CreateOperationStartedMessageHandler,
+	CreateOperationInvolvementsUpdatedMessageHandler,
 	CreateOperationEndedMessageHandler,
+	CreateOperationStartedMessageHandler,
 	CreateRescueStationSignOffMessageHandler,
 	CreateRescueStationSignOnMessageHandler,
 	CreateRescueStationUpdateMessageHandler,
-	GetProtocolEntriesHandler,
 	GetByUnitInvolvementsHandler,
+	GetProtocolEntriesHandler,
 ];
 const RESOLVERS = [
 	CommunicationMessageResolver,
@@ -101,7 +103,7 @@ const RESOLVERS = [
 					},
 					{
 						name: ProtocolEntryType.OPERATION_ASSIGNMENTS_UPDATED_ENTRY,
-						schema: OperationAssignmentsUpdatedMessageSchema,
+						schema: OperationInvolvementsUpdatedMessageSchema,
 					},
 					{
 						name: ProtocolEntryType.OPERATION_ENDED_ENTRY,

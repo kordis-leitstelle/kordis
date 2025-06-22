@@ -183,7 +183,7 @@ export class CreateOperationHandler
 		};
 
 		// set unit involvements with the involvement times and the pending status
-		await this.operationInvolvementService.setUnitInvolvements(
+		await this.operationInvolvementService.setUnitInvolvementsOfCompletedOperation(
 			cmd.requestUser.organizationId,
 			operationId,
 			cmd.assignedUnitIds.map((unitId) => ({

@@ -7,6 +7,7 @@ import {
 	DeleteOperationHandler,
 	SetCompletedOperationInvolvementsHandler,
 	StartPendingUnitInvolvementHandler,
+	UpdateOngoingOperationInvolvementsHandler,
 	UpdateOperationBaseDataHandler,
 } from '../core/command';
 import { EndOngoingOperationHandler } from '../core/command/end-ongoing-operation.command';
@@ -82,11 +83,12 @@ const PROVIDERS = [
 const COMMAND_HANDLERS = [
 	ArchiveOperationHandler,
 	CreateOperationHandler,
-	EndOngoingOperationHandler,
 	DeleteOperationHandler,
-	StartPendingUnitInvolvementHandler,
-	UpdateOperationBaseDataHandler,
+	EndOngoingOperationHandler,
 	SetCompletedOperationInvolvementsHandler,
+	StartPendingUnitInvolvementHandler,
+	UpdateOngoingOperationInvolvementsHandler,
+	UpdateOperationBaseDataHandler,
 ];
 const QUERY_HANDLERS = [
 	GetOperationByIdHandler,

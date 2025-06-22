@@ -173,6 +173,28 @@ const OPERATION_STARTED_FRAGMENT = gql`
 	}
 `;
 
+const OPERATION_INVOLVEMENTS_UPDATED_FRAGMENT = gql`
+	fragment OperationInvolvementsUpdatedMessageFragment on OperationInvolvementsUpdatedMessage {
+		${DEFAULT_FIELDS}
+		payload {
+			__typename
+			operationId
+			operationSign
+			assignedAlertGroups {
+				alertGroupName
+				assignedUnits {
+					unitSign
+					unitName
+				}
+			}
+			assignedUnits {
+				unitSign
+				unitName
+			}
+		}
+	}
+`;
+
 const OPERATION_ENDED_FRAGMENT = gql`
 	fragment OperationEndedMessageFragment on OperationEndedMessage {
 		${DEFAULT_FIELDS}
@@ -190,6 +212,7 @@ export const PROTOCOL_ENTRY_FRAGMENTS = gql`
 	${RESCUE_STATION_UPDATE_FRAGMENT}
 	${RESCUE_STATION_SIGN_OFF_FRAGMENT}
 	${OPERATION_STARTED_FRAGMENT}
+	${OPERATION_INVOLVEMENTS_UPDATED_FRAGMENT}
 	${OPERATION_ENDED_FRAGMENT}
 `;
 
@@ -210,7 +233,10 @@ export const PROTOCOL_ENTRY_FRAGMENTS_FIELDS = `
 		... on OperationStartedMessage {
 			...OperationStartedMessageFragment
 		}
-			... on OperationEndedMessage {
+		... on OperationInvolvementsUpdatedMessage {
+			...OperationInvolvementsUpdatedMessageFragment
+		}
+		... on OperationEndedMessage {
 			...OperationEndedMessageFragment
 		}
 `;
