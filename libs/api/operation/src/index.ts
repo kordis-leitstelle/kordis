@@ -11,3 +11,4 @@ export { OngoingOperationInvolvementsUpdatedEvent } from './lib/core/event/ongoi
 export { OPERATION_DATA_LOADER } from './lib/operations.data-loader';
 export { GetOperationIdOfPendingUnitQuery } from './lib/core/query/get-operation-id-of-pending-unit.query';
 export { StartPendingUnitInvolvementCommand } from './lib/core/command/start-pending-unit-involvement.command';
+export { UpdateOngoingOperationInvolvementsCommand } from './lib/core/command/update-ongoing-operation-involvements.command';

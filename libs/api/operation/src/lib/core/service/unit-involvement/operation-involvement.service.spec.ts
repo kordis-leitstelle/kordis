@@ -66,7 +66,7 @@ describe('OperationInvolvementService', () => {
 			undefined,
 		);
 
-		await service.setUnitInvolvements(
+		await service.setUnitInvolvementsOfCompletedOperation(
 			orgId,
 			operationId,
 			unitInvolvements,
@@ -121,7 +121,7 @@ describe('OperationInvolvementService', () => {
 		} as any);
 
 		await expect(
-			service.setUnitInvolvements(
+			service.setUnitInvolvementsOfCompletedOperation(
 				orgId,
 				operationId,
 				unitInvolvements,
@@ -153,7 +153,7 @@ describe('OperationInvolvementService', () => {
 		);
 
 		await expect(
-			service.setUnitInvolvements(
+			service.setUnitInvolvementsOfCompletedOperation(
 				orgId,
 				operationId,
 				unitInvolvements,

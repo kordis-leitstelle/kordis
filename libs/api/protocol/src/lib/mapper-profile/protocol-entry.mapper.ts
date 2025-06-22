@@ -4,15 +4,15 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { CommunicationMessage } from '../core/entity/protocol-entries/communication-message.entity';
 import { OperationEndedMessage } from '../core/entity/protocol-entries/operation/operation-ended-message.entity';
-import { OperationAssignmentsUpdatedMessage } from '../core/entity/protocol-entries/operation/operation-involvements-updated-message.entity';
+import { OperationInvolvementsUpdatedMessage } from '../core/entity/protocol-entries/operation/operation-involvements-updated-message.entity';
 import { OperationStartedMessage } from '../core/entity/protocol-entries/operation/operation-started-message.entity';
 import { ProtocolEntryBase } from '../core/entity/protocol-entries/protocol-entry.entity';
 import { RescueStationSignOffMessage } from '../core/entity/protocol-entries/rescue-station/rescue-station-sign-off-message.entity';
 import { RescueStationSignOnMessage } from '../core/entity/protocol-entries/rescue-station/rescue-station-sign-on-message.entity';
 import { RescueStationUpdateMessage } from '../core/entity/protocol-entries/rescue-station/rescue-station-update-message.entity';
 import { CommunicationMessageDocument } from '../infra/schema/communication/communication-message.schema';
-import { OperationAssignmentsUpdatedMessageDocument } from '../infra/schema/operation/operation-assignments-updated-message.schema';
 import { OperationEndedMessageDocument } from '../infra/schema/operation/operation-ended-message.schema';
+import { OperationInvolvementsUpdatedMessageDocument } from '../infra/schema/operation/operation-involvements-updated-message.schema';
 import { OperationStartedMessageDocument } from '../infra/schema/operation/operation-started-message.schema';
 import { ProtocolEntryBaseDocument } from '../infra/schema/protocol-entry-base.schema';
 import { ProtocolEntryType } from '../infra/schema/protocol-entry-type.enum';
@@ -51,8 +51,8 @@ export const ENTITY_CONSTRUCTORS: {
 		entity: OperationEndedMessage,
 	},
 	[ProtocolEntryType.OPERATION_ASSIGNMENTS_UPDATED_ENTRY]: {
-		document: OperationAssignmentsUpdatedMessageDocument,
-		entity: OperationAssignmentsUpdatedMessage,
+		document: OperationInvolvementsUpdatedMessageDocument,
+		entity: OperationInvolvementsUpdatedMessage,
 	},
 });
 
@@ -65,8 +65,8 @@ export const DOCUMENT_CONSTRUCTORS: {
 	[RescueStationUpdateMessage.name]: RescueStationUpdateMessageDocument,
 	[OperationStartedMessage.name]: OperationStartedMessageDocument,
 	[OperationEndedMessage.name]: OperationEndedMessageDocument,
-	[OperationAssignmentsUpdatedMessage.name]:
-		OperationAssignmentsUpdatedMessageDocument,
+	[OperationInvolvementsUpdatedMessage.name]:
+		OperationInvolvementsUpdatedMessageDocument,
 });
 
 @Injectable()

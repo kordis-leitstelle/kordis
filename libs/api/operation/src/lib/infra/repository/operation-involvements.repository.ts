@@ -22,6 +22,35 @@ export class OperationInvolvementsRepositoryImpl
 		@Inject(getMapperToken()) private readonly mapper: Mapper,
 	) {}
 
+	async findOperationInvolvements(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<UnitInvolvement[]> {
+		const query = this.operationInvolvementModel.find({
+			orgId,
+			operation: new Types.ObjectId(operationId),
+			isDeleted: false,
+		});
+		const res = await runDbOperation(query, uow);
+		return res.map((doc) => this.mapOperationInvolvementToModel(doc));
+	}
+
+	async findOperationOngoingInvolvements(
+		orgId: string,
+		operationId: string,
+		uow?: DbSessionProvider,
+	): Promise<UnitInvolvement[]> {
+		const query = this.operationInvolvementModel.find({
+			orgId,
+			operation: new Types.ObjectId(operationId),
+			$or: [{ 'involvementTimes.end': null }, { isPending: true }],
+			isDeleted: false,
+		});
+		const res = await runDbOperation(query, uow);
+		return res.map((doc) => this.mapOperationInvolvementToModel(doc));
+	}
+
 	async findOperationInvolvement(
 		orgId: string,
 		operationId: string,

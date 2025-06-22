@@ -15,7 +15,7 @@ import {
 } from './operation-message.value-objects';
 
 @ObjectType()
-export class OperationAssignmentsUpdatedMessagePayload {
+export class OperationInvolvementsUpdatedMessagePayload {
 	@Field()
 	@AutoMap()
 	@IsMongoId()
@@ -42,8 +42,8 @@ export class OperationAssignmentsUpdatedMessagePayload {
 }
 
 @ObjectType()
-export class OperationAssignmentsUpdatedMessage extends ProtocolEntryBase {
-	@Field(() => OperationAssignmentsUpdatedMessagePayload)
+export class OperationInvolvementsUpdatedMessage extends ProtocolEntryBase {
+	@Field(() => OperationInvolvementsUpdatedMessagePayload)
 	@AutoMap()
-	declare payload: OperationAssignmentsUpdatedMessagePayload;
+	declare payload: OperationInvolvementsUpdatedMessagePayload;
 }

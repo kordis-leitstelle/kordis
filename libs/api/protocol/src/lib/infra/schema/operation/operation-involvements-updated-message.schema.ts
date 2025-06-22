@@ -9,7 +9,7 @@ import {
 } from './operation-assignment-message.schema';
 
 @Schema({ _id: false })
-export class OperationAssignmentsUpdatedMessagePayloadDocument {
+export class OperationInvolvementsUpdatedMessagePayloadDocument {
 	@Prop()
 	@AutoMap()
 	operationId: string;
@@ -28,13 +28,13 @@ export class OperationAssignmentsUpdatedMessagePayloadDocument {
 }
 
 @Schema()
-export class OperationAssignmentsUpdatedMessageDocument extends ProtocolEntryBaseDocument {
+export class OperationInvolvementsUpdatedMessageDocument extends ProtocolEntryBaseDocument {
 	override type = ProtocolEntryType.OPERATION_ASSIGNMENTS_UPDATED_ENTRY;
 
 	@Prop()
 	@AutoMap()
-	declare payload: OperationAssignmentsUpdatedMessagePayloadDocument;
+	declare payload: OperationInvolvementsUpdatedMessagePayloadDocument;
 }
 
-export const OperationAssignmentsUpdatedMessageSchema =
-	SchemaFactory.createForClass(OperationAssignmentsUpdatedMessageDocument);
+export const OperationInvolvementsUpdatedMessageSchema =
+	SchemaFactory.createForClass(OperationInvolvementsUpdatedMessageDocument);

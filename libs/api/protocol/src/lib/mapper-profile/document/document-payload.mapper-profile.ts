@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { CommunicationMessagePayload } from '../../core/entity/protocol-entries/communication-message.entity';
 import { OperationEndedMessagePayload } from '../../core/entity/protocol-entries/operation/operation-ended-message.entity';
-import { OperationAssignmentsUpdatedMessagePayload } from '../../core/entity/protocol-entries/operation/operation-involvements-updated-message.entity';
+import { OperationInvolvementsUpdatedMessagePayload } from '../../core/entity/protocol-entries/operation/operation-involvements-updated-message.entity';
 import {
 	OperationMessageAssignedAlertGroup,
 	OperationMessageAssignedUnit,
@@ -25,8 +25,8 @@ import {
 	OperationMessageAssignedAlertGroupDocument,
 	OperationMessageAssignedUnitDocument,
 } from '../../infra/schema/operation/operation-assignment-message.schema';
-import { OperationAssignmentsUpdatedMessagePayloadDocument } from '../../infra/schema/operation/operation-assignments-updated-message.schema';
 import { OperationEndedMessagePayloadDocument } from '../../infra/schema/operation/operation-ended-message.schema';
+import { OperationInvolvementsUpdatedMessagePayloadDocument } from '../../infra/schema/operation/operation-involvements-updated-message.schema';
 import {
 	OperationStartedMessageLocationDocument,
 	OperationStartedMessagePayloadDocument,
@@ -74,8 +74,8 @@ export class ProtocolDocumentPayloadMapperProfiler extends AutomapperProfile {
 			);
 			createMap(
 				mapper,
-				OperationAssignmentsUpdatedMessagePayload,
-				OperationAssignmentsUpdatedMessagePayloadDocument,
+				OperationInvolvementsUpdatedMessagePayload,
+				OperationInvolvementsUpdatedMessagePayloadDocument,
 			);
 			createMap(
 				mapper,

@@ -6,8 +6,8 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { MessageUnit } from '../../entity/partials/unit-partial.entity';
 import {
-	OperationAssignmentsUpdatedMessage,
-	OperationAssignmentsUpdatedMessagePayload,
+	OperationInvolvementsUpdatedMessage,
+	OperationInvolvementsUpdatedMessagePayload,
 } from '../../entity/protocol-entries/operation/operation-involvements-updated-message.entity';
 import { ProtocolEntryCreatedEvent } from '../../event/protocol-entry-created.event';
 import {
@@ -23,7 +23,7 @@ import {
 } from '../helper/message-assignments.helper';
 import { setProtocolEntryBaseFromCommandHelper } from '../helper/set-protocol-entry-base-from-command.helper';
 
-export class CreateOperationAssignmentsUpdatedMessageCommand
+export class CreateOperationInvolvementsUpdatedMessageCommand
 	implements BaseCreateProtocolEntryCommand
 {
 	constructor(
@@ -43,12 +43,12 @@ export class CreateOperationAssignmentsUpdatedMessageCommand
 	) {}
 }
 
-@CommandHandler(CreateOperationAssignmentsUpdatedMessageCommand)
-export class CreateOperationAssignmentsUpdatedMessageHandler
-	implements ICommandHandler<CreateOperationAssignmentsUpdatedMessageCommand>
+@CommandHandler(CreateOperationInvolvementsUpdatedMessageCommand)
+export class CreateOperationInvolvementsUpdatedMessageHandler
+	implements ICommandHandler<CreateOperationInvolvementsUpdatedMessageCommand>
 {
 	private readonly logger: KordisLogger = new Logger(
-		CreateOperationAssignmentsUpdatedMessageHandler.name,
+		CreateOperationInvolvementsUpdatedMessageHandler.name,
 	);
 
 	constructor(
@@ -58,9 +58,9 @@ export class CreateOperationAssignmentsUpdatedMessageHandler
 	) {}
 
 	async execute(
-		cmd: CreateOperationAssignmentsUpdatedMessageCommand,
+		cmd: CreateOperationInvolvementsUpdatedMessageCommand,
 	): Promise<void> {
-		let msg = new OperationAssignmentsUpdatedMessage();
+		let msg = new OperationInvolvementsUpdatedMessage();
 		setProtocolEntryBaseFromCommandHelper(cmd, msg);
 		msg.payload = this.getPayloadFromCommand(cmd);
 		msg.searchableText = this.generateSearchableText(cmd.assignmentsData);
@@ -79,8 +79,8 @@ export class CreateOperationAssignmentsUpdatedMessageHandler
 
 	private getPayloadFromCommand({
 		assignmentsData,
-	}: CreateOperationAssignmentsUpdatedMessageCommand): OperationAssignmentsUpdatedMessagePayload {
-		const payload = new OperationAssignmentsUpdatedMessagePayload();
+	}: CreateOperationInvolvementsUpdatedMessageCommand): OperationInvolvementsUpdatedMessagePayload {
+		const payload = new OperationInvolvementsUpdatedMessagePayload();
 		payload.operationId = assignmentsData.operationId;
 		payload.operationSign = assignmentsData.operationSign;
 		setAssignmentsOnPayload(
@@ -92,7 +92,7 @@ export class CreateOperationAssignmentsUpdatedMessageHandler
 	}
 
 	private generateSearchableText(
-		assignmentsData: CreateOperationAssignmentsUpdatedMessageCommand['assignmentsData'],
+		assignmentsData: CreateOperationInvolvementsUpdatedMessageCommand['assignmentsData'],
 	): string {
 		const assignmentsStr = generateSearchableAssignmentsText(
 			assignmentsData.assignedUnits,

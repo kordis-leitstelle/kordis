@@ -1,6 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, IEvent, QueryBus, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, map, switchMap, tap } from 'rxjs';
+import {
+	Observable,
+	groupBy,
+	map,
+	mergeMap,
+	switchMap,
+	tap,
+	throttleTime,
+} from 'rxjs';
 
 import {
 	CreateOperationDeploymentCommand,
@@ -62,6 +70,13 @@ export class OperationDeploymentSaga {
 	): Observable<ICommand> =>
 		events$.pipe(
 			ofType(OngoingOperationInvolvementsUpdatedEvent),
+			groupBy((event) => event.operationId),
+			// as this event also gets called for a single unit change, we throttle it and emit only the last event for an operation
+			mergeMap((group) =>
+				group.pipe(
+					throttleTime(500, undefined, { leading: false, trailing: true }),
+				),
+			),
 			switchMap((event) =>
 				this.queryBus.execute<GetOperationByIdQuery, OperationViewModel>(
 					new GetOperationByIdQuery(event.orgId, event.operationId),
@@ -73,15 +88,42 @@ export class OperationDeploymentSaga {
 					new SetOperationDeploymentAssignmentsCommand(
 						operation.orgId,
 						operation.id,
-						operation.unitInvolvements.map(
-							(involvement) => involvement.unit.id,
+						operation.unitInvolvements.reduce((acc, involvement) => {
+							if (
+								involvement.isPending ||
+								involvement.involvementTimes.at(-1)?.end === null
+							)
+								acc.push(involvement.unit.id);
+							return acc;
+						}, [] as string[]),
+						operation.alertGroupInvolvements.reduce(
+							(acc, involvement) => {
+								const unitIds = involvement.unitInvolvements.reduce(
+									(acc, involvement) => {
+										if (
+											involvement.isPending ||
+											involvement.involvementTimes.at(-1)?.end === null
+										)
+											acc.push(involvement.unit.id);
+										return acc;
+									},
+									[] as string[],
+								);
+
+								// if we have any unit in the alert group, the alert group should be shown in the deployments
+								if (unitIds.length > 0) {
+									acc.push({
+										alertGroupId: involvement.alertGroup.id,
+										unitIds,
+									});
+								}
+								return acc;
+							},
+							[] as {
+								alertGroupId: string;
+								unitIds: string[];
+							}[],
 						),
-						operation.alertGroupInvolvements.map((involvement) => ({
-							alertGroupId: involvement.alertGroup.id,
-							unitIds: involvement.unitInvolvements.map(
-								(unitInvolvement) => unitInvolvement.unit.id,
-							),
-						})),
 					),
 			),
 			tap((event) =>
