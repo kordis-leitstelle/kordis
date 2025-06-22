@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -10,16 +9,15 @@ import {
 	NonNullableFormBuilder,
 	ReactiveFormsModule,
 } from '@angular/forms';
-import { NzAlertComponent } from 'ng-zorro-antd/alert';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzDividerComponent } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { Observable, combineLatest, map, startWith } from 'rxjs';
+import { map } from 'rxjs';
 
-import { Mutation, Unit } from '@kordis/shared/model';
+import { Mutation } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 import { markInvalidFormControlsAsDirty } from '@kordis/spa/core/misc';
 import {
@@ -36,6 +34,7 @@ import {
 	getOperationPayloadFromForm,
 	makeCreateOperationForm,
 } from '../../helper/create-operation-form.helper';
+import { AlreadyInvolvedUnitsAlertComponent } from './already-involved-units-alert.component';
 import { CreateOperationFormComponent } from './create-operation-form.component';
 
 @Component({
@@ -60,25 +59,10 @@ import { CreateOperationFormComponent } from './create-operation-form.component'
 				[formGroup]="formGroup.controls.operation"
 			/>
 
-			@let alreadyAssignedUnits =
-				(alreadyOperationAssignedUnits$ | async) ?? [];
-			@if (alreadyAssignedUnits.length > 0) {
-				<ng-template #alreadyAssignedUnitsTmpl>
-					Folgende Einheiten sind bereits einem Einsatz zugeordnet und werden
-					rausgelöst:<br />
-					<ul>
-						@for (unit of alreadyAssignedUnits; track unit.id) {
-							<li>
-								{{ unit.callSign }} <small>{{ unit.name }}</small> -
-								{{ $any(unit.assignment).operation.alarmKeyword }}
-								{{ $any(unit.assignment).operation.sign }}
-							</li>
-						}
-					</ul>
-				</ng-template>
-
-				<nz-alert nzType="warning" [nzMessage]="alreadyAssignedUnitsTmpl" />
-			}
+			<krd-already-involved-units-alert
+				[unitsControl]="formGroup.controls.operation.controls.units"
+				[alertGroupsControl]="formGroup.controls.operation.controls.alertGroups"
+			/>
 
 			<div nz-row>
 				<div class="action-btns" nz-col nzSpan="24">
@@ -98,8 +82,6 @@ import { CreateOperationFormComponent } from './create-operation-form.component'
 	`,
 	styleUrl: './create-operation-modal.css',
 	imports: [
-		AsyncPipe,
-		NzAlertComponent,
 		ProtocolCommunicationDetailsComponent,
 		NzDividerComponent,
 		CreateOperationFormComponent,
@@ -108,6 +90,7 @@ import { CreateOperationFormComponent } from './create-operation-form.component'
 		FormsModule,
 		NzFormModule,
 		ReactiveFormsModule,
+		AlreadyInvolvedUnitsAlertComponent,
 	],
 	providers: [
 		PossibleUnitSelectionsService,
@@ -121,28 +104,6 @@ export class CreateOngoingOperationModalComponent {
 		protocol: makeProtocolCommunicationDetailsForm(this.fb),
 		operation: makeCreateOperationForm(this.fb, true),
 	});
-	readonly alreadyOperationAssignedUnits$: Observable<Unit[]> = combineLatest([
-		this.formGroup.controls.operation.controls.units.valueChanges.pipe(
-			map((units) =>
-				units.filter(
-					(unit) => unit.assignment?.__typename === 'EntityOperationAssignment',
-				),
-			),
-			startWith([]),
-		),
-		this.formGroup.controls.operation.controls.alertGroups.valueChanges.pipe(
-			map((alertGroups) =>
-				alertGroups
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					.flatMap((group) => group.assignedUnits!)
-					.filter(
-						(unit) =>
-							unit.assignment?.__typename === 'EntityOperationAssignment',
-					),
-			),
-			startWith([]),
-		),
-	]).pipe(map(([units, alertGroupUnits]) => [...units, ...alertGroupUnits]));
 	readonly isLoading = signal(false);
 
 	private readonly gqlService = inject(GraphqlService);

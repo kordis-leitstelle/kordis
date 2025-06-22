@@ -11,6 +11,7 @@ import { RescueStationEditModalComponent } from '@kordis/spa/feature/deployment'
 import {
 	CreateOngoingOperationModalComponent,
 	EndOperationModalComponent,
+	OperationInvolvementsModalComponent,
 } from '@kordis/spa/feature/operation';
 
 @Component({
@@ -37,26 +38,18 @@ import {
 				<button nz-button nzType="primary" (click)="openEndOperationModal()">
 					Einsatz beenden
 				</button>
-			</div>
-			<div class="group">
 				<button
+					(click)="openOperationInvolvementsModal()"
 					nz-tooltip="Einheit zu einem laufenden Einsatz zuordnen"
 					nz-button
 					nzType="primary"
 				>
-					Einheit zuordnen
-				</button>
-				<button
-					nz-tooltip="Einheit aus einem laufenden Einsatz rauslösen"
-					nz-button
-					nzType="primary"
-				>
-					Einheit rauslösen
+					Einsatz Zuordnungen
 				</button>
 			</div>
 			<div class="group">
 				<button nz-button nzType="primary" (click)="openRescueStationModal()">
-					Rettungswache melden
+					Rettungswachen
 				</button>
 			</div>
 
@@ -126,6 +119,15 @@ export class ActionBarComponent {
 	openRescueStationModal(): void {
 		this.modalService.create({
 			nzContent: RescueStationEditModalComponent,
+			nzFooter: null,
+			nzNoAnimation: true,
+			nzWidth: 550,
+		});
+	}
+
+	openOperationInvolvementsModal(): void {
+		this.modalService.create({
+			nzContent: OperationInvolvementsModalComponent,
 			nzFooter: null,
 			nzNoAnimation: true,
 			nzWidth: 550,

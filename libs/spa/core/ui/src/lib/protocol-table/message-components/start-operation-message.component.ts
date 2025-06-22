@@ -1,49 +1,31 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { OperationStartedMessagePayload } from '@kordis/shared/model';
+
+import { OperationAssignmentsMessageComponent } from './operation-assignments-message.component';
+import { ProtocolMessageComponent } from './protocol-message.component';
 
 @Component({
 	selector: 'krd-start-operation-message',
 	template: `
-		<b>Einsatz {{ message().operationSign }}</b>
-		{{ message().alarmKeyword }}
-		@if (message().location.name) {
-			{{ message().location.name }}
-		}
-		@if (message().location.street) {
-			{{ message().location.street }}
-		}
-		- Einheiten:
-		@for (
-			alertGroup of message().assignedAlertGroups;
-			track alertGroup.alertGroupId;
-			let last = $last
-		) {
-			{{ alertGroup.alertGroupName }}
-			(
-			@for (unit of alertGroup.assignedUnits; track unit.unitId) {
-				{{ unit.unitSign }}
+		<krd-protocol-message prefix="Einsatzbeginn">
+			{{ message().operationSign }} - {{ message().alarmKeyword }} -
+			@if (message().location.name) {
+				{{ message().location.name }}
 			}
-			)
-			@if (
-				(last && message().assignedUnits.length > 0) ||
-				(!last && message().assignedAlertGroups.length > 1)
-			) {
-				,
+			@if (message().location.street) {
+				{{ message().location.street }}
 			}
-		}
-		@for (
-			unit of message().assignedUnits;
-			track unit.unitId;
-			let last = $last
-		) {
-			{{ unit.unitSign }}
-			@if (!last && message().assignedUnits.length > 1) {
-				,
-			}
-		}
+			-
+			<krd-operation-assignments-message
+				[assignedAlertGroups]="message().assignedAlertGroups"
+				[assignedUnits]="message().assignedUnits"
+			/>
+		</krd-protocol-message>
 	`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [OperationAssignmentsMessageComponent, ProtocolMessageComponent],
 })
 export class StartOperationMessageComponent {
-	message = input.required<OperationStartedMessagePayload>();
+	readonly message = input.required<OperationStartedMessagePayload>();
 }
