@@ -78,7 +78,7 @@
     "jest-environment-node": "^29.7.0",
     "jest-preset-angular": "14.5.5",
     "lcov-result-merger": "^5.0.1",
-    "mongo-migrate-ts": "^1.6.2",
+    "mongo-migrate-ts": "^2.0.0",
     "nx": "21.1.2",
     "playwright": "^1.49.1",
     "prettier": "3.5.3",
