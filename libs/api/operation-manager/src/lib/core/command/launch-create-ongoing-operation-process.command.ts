@@ -5,6 +5,7 @@ import {
 	ICommandHandler,
 } from '@nestjs/cqrs';
 
+import { CreateAlertForOperationCommand } from '@kordis/api/alerting';
 import {
 	CreateOperationCommand,
 	OperationViewModel,
@@ -47,6 +48,11 @@ export class LaunchCreateOngoingOperationProcessCommand {
 			recipient: MessageUnit;
 			channel: string;
 		} | null,
+		readonly alertData: {
+			alertGroupIds: string[];
+			description: string;
+			hasPriority: boolean;
+		} | null,
 	) {}
 }
 
@@ -62,8 +68,9 @@ export class LaunchCreateOngoingOperationProcessHandler
 
 	async execute({
 		operationData,
-		protocolData,
 		requestUser,
+		protocolData,
+		alertData,
 	}: LaunchCreateOngoingOperationProcessCommand): Promise<OperationViewModel> {
 		const operation: OperationViewModel = await this.commandBus.execute(
 			new CreateOperationCommand(
@@ -76,6 +83,18 @@ export class LaunchCreateOngoingOperationProcessHandler
 				operationData.assignedAlertGroups,
 			),
 		);
+
+		if (alertData) {
+			await this.commandBus.execute(
+				new CreateAlertForOperationCommand(
+					alertData.alertGroupIds,
+					alertData.description,
+					operation,
+					alertData.hasPriority,
+					requestUser.organizationId,
+				),
+			);
+		}
 
 		this.eventBus.publish(
 			new OngoingOperationCreatedEvent(requestUser.organizationId, operation),

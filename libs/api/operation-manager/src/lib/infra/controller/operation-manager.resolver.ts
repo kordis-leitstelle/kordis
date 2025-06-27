@@ -3,7 +3,7 @@ import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
 
 import { RequestUser } from '@kordis/api/auth';
 import { OperationViewModel } from '@kordis/api/operation';
-import { ProtocolMessageArgs } from '@kordis/api/protocol';
+import { ProtocolMessageInput } from '@kordis/api/protocol';
 import {
 	PresentableValidationException,
 	ValidationException,
@@ -13,7 +13,10 @@ import { AuthUser } from '@kordis/shared/model';
 import { LaunchChangeOngoingOperationInvolvementsCommand } from '../../core/command/launch-change-ongoing-operation-involvements.command';
 import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { CreateOngoingOperationInput } from './create-ongoing-operation.input';
+import {
+	CreateOngoingOperationArgs,
+	OperationAlertArgs,
+} from './create-ongoing-operation.args';
 import { UpdateOngoingOperationInvolvementsArgs } from './update-ongoing-involvements.args';
 
 @Resolver()
@@ -25,8 +28,9 @@ export class OperationManagerResolver {
 	})
 	async createOngoingOperation(
 		@RequestUser() reqUser: AuthUser,
-		@Args() { protocolMessage }: ProtocolMessageArgs,
-		@Args('operation') operation: CreateOngoingOperationInput,
+		@Args() { protocolMessage }: ProtocolMessageInput,
+		@Args('operation') operation: CreateOngoingOperationArgs,
+		@Args('alertData', { defaultValue: null }) alertData?: OperationAlertArgs,
 	): Promise<OperationViewModel> {
 		try {
 			return await this.commandBus.execute(
@@ -34,6 +38,7 @@ export class OperationManagerResolver {
 					reqUser,
 					operation,
 					protocolMessage ? await protocolMessage.asTransformedPayload() : null,
+					alertData ?? null,
 				),
 			);
 		} catch (error) {
@@ -56,7 +61,7 @@ export class OperationManagerResolver {
 		@RequestUser() reqUser: AuthUser,
 		@Args()
 		{ operationId, involvements }: UpdateOngoingOperationInvolvementsArgs,
-		@Args() { protocolMessage }: ProtocolMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageInput,
 	): Promise<boolean> {
 		await this.commandBus.execute(
 			new LaunchChangeOngoingOperationInvolvementsCommand(
@@ -77,7 +82,7 @@ export class OperationManagerResolver {
 	async endOngoingOperation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('operationId', { type: () => ID }) operationId: string,
-		@Args() { protocolMessage }: ProtocolMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageInput,
 	): Promise<boolean> {
 		await this.commandBus.execute(
 			new LaunchEndOperationProcessCommand(
