@@ -1,5 +1,4 @@
 export * from './lib/infra/unit.module';
-export * from './lib/sagas/units-sagas.module';
 export * from './lib/infra/unit.view-model';
 export * from './lib/infra/alert-group.view-model';
 export { GetUnitsByIdsQuery } from './lib/core/query/get-units-by-ids.query';
@@ -8,3 +7,8 @@ export { GetAlertGroupsByIdsQuery } from './lib/core/query/get-alert-groups-by-i
 export { UnitStatusUpdatedEvent } from './lib/core/event/unit-status-updated.event';
 export { UNITS_DATA_LOADER } from './lib/data-loader/units.data-loader';
 export { ALERT_GROUPS_DATA_LOADER } from './lib/data-loader/alert-groups.data-loader';
+export { ALLOWED_PERSISTENT_UNIT_STATUS } from './lib/core/entity/status.type';
+export { UnitEntity } from './lib/core/entity/unit.entity';
+export { GetUnitByRCSIDQuery } from './lib/core/query/get-unit-by-rcs-id.query';
+export { UnitNotFoundException } from './lib/core/exception/unit-not-found.exception';
+export { UpdateUnitStatusCommand } from './lib/core/command/update-unit-status.command';

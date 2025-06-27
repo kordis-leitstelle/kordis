@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ProtocolEntryBase } from '../entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../entity/protocol-entries/protocol-entry.entity';
 import {
 	PROTOCOL_ENTRY_REPOSITORY,
 	ProtocolEntryRepository,

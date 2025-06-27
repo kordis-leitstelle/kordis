@@ -54,19 +54,23 @@ describe('CreateCommunicationMessageCommand', () => {
 
 		const command = new CreateCommunicationMessageCommand(
 			time,
-			sender,
-			recipient,
+			{
+				sender,
+				recipient,
+				channel,
+			},
 			message,
-			channel,
 			authUser,
 		);
 
 		const expectedCommMsg = plainToInstance(CommunicationMessage, {
-			sender,
-			recipient,
+			communicationDetails: {
+				sender,
+				recipient,
+				channel,
+			},
 			time,
 			searchableText: message,
-			channel,
 			payload: plainToInstance(CommunicationMessagePayload, { message }),
 			producer: plainToInstance(UserProducer, {
 				userId: authUser.id,

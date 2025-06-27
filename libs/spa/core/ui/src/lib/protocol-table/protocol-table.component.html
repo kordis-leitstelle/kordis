@@ -27,18 +27,25 @@
 				>
 					{{ entry.time | krdProtocolEntryTime }}
 				</td>
-				<td class="sender">
-					<krd-unit-chip [unit]="entry.sender" />
-				</td>
-				<td class="recipient">
-					@if (entry.recipient) {
-						<krd-unit-chip [unit]="entry.recipient" />
-					}
-				</td>
+				@if (entry.communicationDetails) {
+					<td class="sender">
+						<krd-unit-chip [unit]="entry.communicationDetails.sender" />
+					</td>
+					<td class="recipient">
+						@if (entry.communicationDetails.recipient) {
+							<krd-unit-chip [unit]="entry.communicationDetails.recipient" />
+						}
+					</td>
+				} @else {
+					<td class="sender"></td>
+					<td class="recipient"></td>
+				}
 				<td class="message">
 					@switch (entry.payload.__typename) {
 						@case ('CommunicationMessagePayload') {
-							{{ entry.payload.message }}
+							<krd-protocol-message prefix="Meldung">
+								{{ entry.payload.message }}
+							</krd-protocol-message>
 						}
 						@case ('RescueStationMessagePayload') {
 							<krd-rescue-station-message
@@ -51,14 +58,37 @@
 							/>
 						}
 						@case ('RescueStationSignOffMessagePayload') {
-							Rettungswache Ausmeldung: {{ entry.payload.rescueStationName }}
+							<krd-protocol-message prefix="Ausmeldung">
+								{{ entry.payload.rescueStationName }}
+							</krd-protocol-message>
+						}
+						@case ('OperationStartedMessagePayload') {
+							<krd-start-operation-message [message]="entry.payload" />
+						}
+						@case ('OperationInvolvementsUpdatedMessagePayload') {
+							<krd-protocol-message prefix="Zuordnungen">
+								{{ entry.payload.operationSign }}
+								-
+								<krd-operation-assignments-message
+									[assignedUnits]="entry.payload.assignedUnits"
+									[assignedAlertGroups]="entry.payload.assignedAlertGroups"
+								/>
+							</krd-protocol-message>
+						}
+						@case ('OperationEndedMessagePayload') {
+							<krd-protocol-message
+								prefix="Einsatzende
+								{{ entry.payload.operationSign }}"
+							>
+							</krd-protocol-message>
 						}
 						@default {
+							{{ entry.__typename }}
 							{{ entry.searchableText }}
 						}
 					}
 				</td>
-				<td class="channel">{{ entry.channel }}</td>
+				<td class="channel">{{ entry.communicationDetails?.channel ?? '' }}</td>
 			</tr>
 		}
 		<tr #sentinel></tr>

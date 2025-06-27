@@ -5,7 +5,10 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Model, Types } from 'mongoose';
 
-import { mockModelMethodResult } from '@kordis/api/test-helpers';
+import {
+	mockModelMethodResult,
+	mockModelMethodResults,
+} from '@kordis/api/test-helpers';
 
 import { OperationInvolvementDocument } from '../schema/operation-involvement.schema';
 import { OperationInvolvementsRepositoryImpl } from './operation-involvements.repository';
@@ -68,6 +71,63 @@ describe('OperationInvolvementsRepositoryImpl', () => {
 			alertGroupId,
 			isPending: false,
 		});
+	});
+
+	it('should find ongoing involvements for an operation', async () => {
+		const orgId = 'org1';
+		const operationId = '67af349ae5b393f66fc51851';
+
+		const mockInvolvements = [
+			{
+				orgId,
+				operation: new Types.ObjectId(operationId),
+				unitId: 'unit1',
+				alertGroupId: 'alert1',
+				involvementTimes: [{ start: new Date(), end: null }],
+				isPending: false,
+				isDeleted: false,
+			},
+			{
+				orgId,
+				operation: new Types.ObjectId(operationId),
+				unitId: 'unit2',
+				alertGroupId: null,
+				involvementTimes: [],
+				isPending: true,
+				isDeleted: false,
+			},
+		];
+
+		mockModelMethodResults(mockModel, mockInvolvements, 'find');
+
+		const result = await repository.findOperationOngoingInvolvements(
+			orgId,
+			operationId,
+		);
+
+		expect(mockModel.find).toHaveBeenCalledWith({
+			orgId,
+			operation: new Types.ObjectId(operationId),
+			$or: [{ 'involvementTimes.end': null }, { isPending: true }],
+			isDeleted: false,
+		});
+
+		expect(result).toEqual([
+			{
+				unitId: 'unit1',
+				operationId,
+				involvementTimes: mockInvolvements[0].involvementTimes,
+				alertGroupId: 'alert1',
+				isPending: false,
+			},
+			{
+				unitId: 'unit2',
+				operationId,
+				involvementTimes: [],
+				alertGroupId: null,
+				isPending: true,
+			},
+		]);
 	});
 
 	it('should remove all pending involvements', async () => {

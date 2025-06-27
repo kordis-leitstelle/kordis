@@ -69,8 +69,8 @@ describe('OperationManagerResolver', () => {
 
 			const result = await operationManagerResolver.createOngoingOperation(
 				reqUser,
+				{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 				operationArgs,
-				MOCK_BASE_CREATE_MESSAGE_ARGS,
 				{
 					alertGroupIds: ['alertGroupId'],
 					description: 'somewhere',
@@ -101,8 +101,8 @@ describe('OperationManagerResolver', () => {
 			await expect(
 				operationManagerResolver.createOngoingOperation(
 					reqUser,
+					{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 					operationArgs,
-					MOCK_BASE_CREATE_MESSAGE_ARGS,
 				),
 			).rejects.toThrow(PresentableValidationException);
 		});
@@ -116,12 +116,10 @@ describe('OperationManagerResolver', () => {
 		const result = await operationManagerResolver.endOngoingOperation(
 			reqUser,
 			'someId',
-			MOCK_BASE_CREATE_MESSAGE_ARGS,
+			{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 		);
 
-		expect(result).toEqual({
-			id: 'someId',
-		});
+		expect(result).toEqual(true);
 		expect(mockCommandBus.execute).toHaveBeenCalledWith(
 			new LaunchEndOperationProcessCommand(
 				reqUser,

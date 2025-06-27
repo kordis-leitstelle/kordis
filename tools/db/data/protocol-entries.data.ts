@@ -2,7 +2,6 @@ import {
 	RescueStationMessageAssignedUnit,
 	RescueStationMessagePayload,
 } from 'libs/api/protocol/src/lib/core/entity/protocol-entries/rescue-station/rescue-station-message-payload.entity';
-import { ProtocolEntryType } from 'libs/api/protocol/src/lib/infra/schema/protocol-entry-type';
 import { RescueStationSignOffMessageDocument } from 'libs/api/protocol/src/lib/infra/schema/rescue-station/rescue-station-sign-off-message.schema';
 import { RescueStationSignOnMessageDocument } from 'libs/api/protocol/src/lib/infra/schema/rescue-station/rescue-station-sign-on-message.schema';
 import { RescueStationUpdateMessageDocument } from 'libs/api/protocol/src/lib/infra/schema/rescue-station/rescue-station-updated-message.schema';
@@ -13,6 +12,7 @@ import {
 	ProducerType,
 	UserProducerDocument,
 } from '../../../libs/api/protocol/src/lib/infra/schema/producer-partial.schema';
+import { ProtocolEntryType } from '../../../libs/api/protocol/src/lib/infra/schema/protocol-entry-type.enum';
 import { UnitType } from '../../../libs/api/protocol/src/lib/infra/schema/unit-partial.schema';
 import {
 	getAlertGroupByName,
@@ -105,17 +105,19 @@ const collectionData = {
 			_id: new Types.ObjectId('66846ba41af826ce7c50c3a4'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			channel: 'D',
+			communicationDetails: {
+				channel: 'D',
+				recipient: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('MRB Greif 5'),
+				},
+				sender: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('ATV'),
+				},
+			},
 			payload: { message: 'Test' },
 			producer: getUserAsProducer('testuser'),
-			recipient: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('MRB Greif 5'),
-			},
-			sender: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('ATV'),
-			},
 			searchableText: 'Test',
 			time: getRandomDateFromLastSevenDays(),
 			type: ProtocolEntryType.COMMUNICATION_MESSAGE_ENTRY,
@@ -125,21 +127,23 @@ const collectionData = {
 			_id: new Types.ObjectId('6696c4bddfe9fcb08c639c78'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			channel: 'D',
+			communicationDetails: {
+				channel: 'D',
+				recipient: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('MRB Greif 5'),
+				},
+				sender: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('RW Wittenbergen'),
+				},
+			},
 			payload: getRescueStationMessagePayload(
 				'DLRG Einsatzzentrale HH',
 				[],
 				['MRB Greif 5', 'ATV'],
 			),
 			producer: getUserAsProducer('testuser'),
-			recipient: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('MRB Greif 5'),
-			},
-			sender: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
-			},
 			searchableText:
 				'anmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0 stärke 1/2/3/6 MRB Greif 5, ATV',
 			time: getRandomDateFromLastSevenDays(),
@@ -150,7 +154,17 @@ const collectionData = {
 			_id: new Types.ObjectId('6696c4c2181d71124b056e80'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			channel: 'D',
+			communicationDetails: {
+				channel: 'D',
+				recipient: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('MRB Greif 5'),
+				},
+				sender: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('RW Wittenbergen'),
+				},
+			},
 			payload: getRescueStationMessagePayload(
 				'DLRG Einsatzzentrale HH',
 				['SEG Altona'],
@@ -158,14 +172,6 @@ const collectionData = {
 				{ leaders: 1, helpers: 3, subLeaders: 6 },
 			),
 			producer: getUserAsProducer('testuser'),
-			recipient: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('MRB Greif 5'),
-			},
-			sender: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
-			},
 			searchableText:
 				'nachmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0 stärke 1/3/6/10 SEG Altona MRB Greif 5',
 			time: getRandomDateFromLastSevenDays(),
@@ -176,17 +182,19 @@ const collectionData = {
 			_id: new Types.ObjectId('6696c4c669af565692a0f030'),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			channel: 'D',
+			communicationDetails: {
+				channel: 'D',
+				recipient: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('MRB Greif 5'),
+				},
+				sender: {
+					type: UnitType.REGISTERED_UNIT,
+					unitId: getUnitIdAsStringByName('RW Wittenbergen'),
+				},
+			},
 			payload: getRescueStationInformation('DLRG Einsatzzentrale HH'),
 			producer: getUserAsProducer('testuser'),
-			recipient: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('MRB Greif 5'),
-			},
-			sender: {
-				type: UnitType.REGISTERED_UNIT,
-				unitId: getUnitIdAsStringByName('RW Wittenbergen'),
-			},
 			searchableText:
 				'ausmeldung rettungswache DLRG Einsatzzentrale HH HH 10/0',
 			time: getRandomDateFromLastSevenDays(),

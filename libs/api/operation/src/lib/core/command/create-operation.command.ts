@@ -1,5 +1,6 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { plainToInstance } from 'class-transformer';
 
 import type { KordisLogger } from '@kordis/api/observability';
 import {
@@ -12,6 +13,7 @@ import { AuthUser } from '@kordis/shared/model';
 import { PresentableUnitsNotUniqueException } from '../../infra/exception/presentable-units-not-unique.exception';
 import { OperationProcessState } from '../entity/operation-process-state.enum';
 import { OperationEntity } from '../entity/operation.entity';
+import { OperationLocation } from '../entity/operation.value-objects';
 import { OperationCreatedEvent } from '../event/operation-created.event';
 import { CreateOperationDto } from '../repository/dto/create-operation.dto';
 import {
@@ -131,7 +133,7 @@ export class CreateOperationHandler
 		dto.processState = dto.end
 			? OperationProcessState.COMPLETED
 			: OperationProcessState.ON_GOING;
-		dto.location = command.location;
+		dto.location = plainToInstance(OperationLocation, command.location);
 		return dto;
 	}
 
@@ -181,7 +183,7 @@ export class CreateOperationHandler
 		};
 
 		// set unit involvements with the involvement times and the pending status
-		await this.operationInvolvementService.setUnitInvolvements(
+		await this.operationInvolvementService.setUnitInvolvementsOfCompletedOperation(
 			cmd.requestUser.organizationId,
 			operationId,
 			cmd.assignedUnitIds.map((unitId) => ({

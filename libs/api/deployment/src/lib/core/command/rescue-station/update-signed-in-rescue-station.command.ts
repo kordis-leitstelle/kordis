@@ -42,6 +42,17 @@ export class UpdateSignedInRescueStationHandler
 
 	async execute(command: UpdateSignedInRescueStationCommand): Promise<void> {
 		await this.uow.asTransaction(async (uow) => {
+			// verify no active operation assignment for assigend rescuestations
+			await this.deploymentAssignmentService.assertNoActiveOperationAssignment(
+				[
+					...command.assignedUnitIds,
+					...command.assignedAlertGroups.flatMap(
+						(alertGroup) => alertGroup.unitIds,
+					),
+				],
+				command.orgId,
+				uow,
+			);
 			await this.deploymentAssignmentService.setAssignmentsOfDeployment(
 				command.orgId,
 				command.rescueStationId,

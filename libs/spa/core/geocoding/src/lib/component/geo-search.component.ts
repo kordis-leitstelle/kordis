@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -42,7 +42,6 @@ import { GeoSearchService } from '../service/geo-search.service';
 @Component({
 	selector: 'krd-geo-search',
 	imports: [
-		CommonModule,
 		FormsModule,
 		NzAutocompleteComponent,
 		NzAutocompleteOptionComponent,
@@ -50,6 +49,7 @@ import { GeoSearchService } from '../service/geo-search.service';
 		NzInputDirective,
 		NzNoAnimationDirective,
 		ReactiveFormsModule,
+		AsyncPipe,
 	],
 	providers: [
 		{
@@ -73,7 +73,9 @@ import { GeoSearchService } from '../service/geo-search.service';
 
 		<nz-autocomplete nzNoAnimation #geoAutocomplete nzWidth="400">
 			@for (result of searchResults$ | async; track $index) {
-				<nz-auto-option [nzLabel]="result.address[field()]" [nzValue]="result"
+				<nz-auto-option
+					[nzLabel]="field() ? result.address[field()!] : undefined"
+					[nzValue]="result"
 					>{{ result.displayValue }}
 				</nz-auto-option>
 			}
@@ -82,11 +84,11 @@ import { GeoSearchService } from '../service/geo-search.service';
 })
 export class GeoSearchComponent extends ControlValueAccessorBase {
 	/*
-	 * The field to display in the autocomplete and set as the value if selected
+	 * The field to display in the autocomplete and set as the value if selected, if not set, the value will be reset after selection
 	 */
-	readonly field = input.required<keyof GeoAddress>();
+	readonly field = input<keyof GeoAddress | null>(null);
 	readonly placeholder = input<string>('');
-	readonly size = input<'small' | 'default'>('default');
+	readonly size = input<'small' | 'large' | 'default'>('default');
 	/*
 	 * The types of search to perform, possible options are:
 	 * 1. `address` - shows a match with all address properties
@@ -121,15 +123,10 @@ export class GeoSearchComponent extends ControlValueAccessorBase {
 		if (typeof value === 'string') {
 			this.onChange(value);
 		} else {
-			// if the result has the field present, set the value, otherwise reset the value
-			const fieldValue = value.address[this.field()];
-			if (fieldValue) {
-				this.onChange(fieldValue);
-			} else {
-				this.onChange('');
-			}
-
+			const fieldValue = this.field() ? value.address[this.field()!] || '' : '';
+			this.writeValue(fieldValue || ''); // if we have a field, we want to set the value after selection
 			this.resultSelected.emit(value);
+			this.geoSearchSubject$.next(''); // reset search results after selection
 		}
 	}
 

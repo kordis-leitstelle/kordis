@@ -1,4 +1,10 @@
-import { Component, inject, input, signal } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	inject,
+	input,
+	signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
@@ -35,6 +41,9 @@ import { NoteIndicatorComponent } from '../note-indicator.component';
 			[nzPopoverTitle]="unit().callSign + ' - ' + unit().name"
 			[nzPopoverContent]="notePopoverContent"
 			nzPopoverTrigger="click"
+			[nzBodyStyle]="{
+				padding: 'var(--base-spacing)',
+			}"
 		>
 			<div class="header-row">
 				<span>
@@ -52,12 +61,6 @@ import { NoteIndicatorComponent } from '../note-indicator.component';
 	`,
 	styles: `
 		nz-card {
-			.ant-card-body {
-				display: flex;
-				flex-direction: column;
-				padding: calc(var(--base-spacing) / 2) var(--base-spacing);
-			}
-
 			.header-row {
 				display: flex;
 				justify-content: space-between;
@@ -78,6 +81,7 @@ import { NoteIndicatorComponent } from '../note-indicator.component';
 			cursor: pointer;
 		}
 	`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentUnitComponent {
 	readonly unit = input.required<Unit>();

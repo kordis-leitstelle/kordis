@@ -24,7 +24,7 @@ export class LaunchSignOnProcessCommand {
 			sender: MessageUnit;
 			recipient: MessageUnit;
 			channel: string;
-		},
+		} | null,
 	) {}
 }
 
@@ -70,10 +70,8 @@ export class LaunchSignOnProcessHandler
 		await this.commandBus.execute(
 			new CreateRescueStationSignOnMessageCommand(
 				new Date(),
-				communicationMessageData.sender,
-				communicationMessageData.recipient,
+				communicationMessageData,
 				rsDetails,
-				communicationMessageData.channel,
 				reqUser,
 			),
 		);

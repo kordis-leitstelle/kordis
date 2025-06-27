@@ -1,4 +1,5 @@
 import { createMock } from '@golevelup/ts-jest';
+import { EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DbSessionProvider } from '@kordis/api/shared';
@@ -27,6 +28,10 @@ describe('OperationInvolvementService', () => {
 				{
 					provide: OPERATION_INVOLVEMENT_REPOSITORY,
 					useValue: mockInvolvementsRepository,
+				},
+				{
+					provide: EventBus,
+					useValue: createMock(),
 				},
 			],
 		}).compile();
@@ -61,7 +66,7 @@ describe('OperationInvolvementService', () => {
 			undefined,
 		);
 
-		await service.setUnitInvolvements(
+		await service.setUnitInvolvementsOfCompletedOperation(
 			orgId,
 			operationId,
 			unitInvolvements,
@@ -116,7 +121,7 @@ describe('OperationInvolvementService', () => {
 		} as any);
 
 		await expect(
-			service.setUnitInvolvements(
+			service.setUnitInvolvementsOfCompletedOperation(
 				orgId,
 				operationId,
 				unitInvolvements,
@@ -148,7 +153,7 @@ describe('OperationInvolvementService', () => {
 		);
 
 		await expect(
-			service.setUnitInvolvements(
+			service.setUnitInvolvementsOfCompletedOperation(
 				orgId,
 				operationId,
 				unitInvolvements,

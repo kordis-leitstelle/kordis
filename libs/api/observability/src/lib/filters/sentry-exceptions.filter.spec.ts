@@ -7,17 +7,26 @@ import { PresentableException } from '@kordis/api/shared';
 
 import { SentryExceptionsFilter } from './sentry-exceptions.filter';
 
+import SpyInstance = jest.SpyInstance;
+
+jest.mock('@sentry/node', () => {
+	return {
+		__esModule: true,
+		addBreadcrumb: jest.fn(),
+		captureExceptionMock: jest.fn(),
+		...jest.requireActual('@sentry/node'),
+	};
+});
+
 describe('SentryExceptionsFilter', () => {
 	let sentryExceptionsFilter: SentryExceptionsFilter;
-	let addBreadcrumbMock: jest.Mock;
-	let captureExceptionMock: jest.Mock;
+	let addBreadcrumbSpy: SpyInstance;
+	let captureExceptionSpy: SpyInstance;
 	let logger: DeepMocked<Logger>;
 
 	beforeEach(async () => {
-		addBreadcrumbMock = jest.fn();
-		captureExceptionMock = jest.fn();
-		(Sentry.addBreadcrumb as jest.Mock) = addBreadcrumbMock;
-		(Sentry.captureException as jest.Mock) = captureExceptionMock;
+		addBreadcrumbSpy = jest.spyOn(Sentry, 'addBreadcrumb');
+		captureExceptionSpy = jest.spyOn(Sentry, 'captureException');
 		logger = createMock<Logger>();
 
 		const moduleRef = await Test.createTestingModule({
@@ -53,7 +62,7 @@ describe('SentryExceptionsFilter', () => {
 			code: 'code',
 			stack: expect.any(String),
 		});
-		expect(captureExceptionMock).not.toHaveBeenCalled();
+		expect(captureExceptionSpy).not.toHaveBeenCalled();
 	});
 
 	it('should capture a non-presentable exception as an error', () => {
@@ -61,8 +70,8 @@ describe('SentryExceptionsFilter', () => {
 
 		sentryExceptionsFilter.catch(exception);
 
-		expect(captureExceptionMock).toHaveBeenCalledTimes(1);
-		expect(captureExceptionMock).toHaveBeenCalledWith(exception, {
+		expect(captureExceptionSpy).toHaveBeenCalledTimes(1);
+		expect(captureExceptionSpy).toHaveBeenCalledWith(exception, {
 			level: 'error',
 		});
 		expect(logger.error).toHaveBeenCalledTimes(1);
@@ -73,6 +82,6 @@ describe('SentryExceptionsFilter', () => {
 				exception,
 			},
 		);
-		expect(addBreadcrumbMock).not.toHaveBeenCalled();
+		expect(addBreadcrumbSpy).not.toHaveBeenCalled();
 	});
 });

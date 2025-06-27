@@ -7,8 +7,8 @@ import { AuthUser } from '@kordis/shared/model';
 import { UserProducer } from '../../entity/partials/producer-partial.entity';
 import { UnknownUnit } from '../../entity/partials/unit-partial.entity';
 import {
-	OperationAssignmentsUpdatedMessage,
-	OperationAssignmentsUpdatedMessagePayload,
+	OperationInvolvementsUpdatedMessage,
+	OperationInvolvementsUpdatedMessagePayload,
 } from '../../entity/protocol-entries/operation/operation-involvements-updated-message.entity';
 import {
 	OperationMessageAssignedAlertGroup,
@@ -21,12 +21,12 @@ import {
 	AssignedUnit,
 } from '../helper/message-assignments.helper';
 import {
-	CreateOperationAssignmentsUpdatedMessageCommand,
-	CreateOperationAssignmentsUpdatedMessageHandler,
-} from './create-operation-assignments-updated-message.command';
+	CreateOperationInvolvementsUpdatedMessageCommand,
+	CreateOperationInvolvementsUpdatedMessageHandler,
+} from './create-operation-involvements-updated-message.command';
 
 describe('CreateOperationAssignmentsUpdatedMessageCommand', () => {
-	let handler: CreateOperationAssignmentsUpdatedMessageHandler;
+	let handler: CreateOperationInvolvementsUpdatedMessageHandler;
 	const repositoryMock = createMock<ProtocolEntryRepository>();
 	const eventBusMock = createMock<EventBus>();
 
@@ -35,7 +35,7 @@ describe('CreateOperationAssignmentsUpdatedMessageCommand', () => {
 	});
 
 	beforeEach(() => {
-		handler = new CreateOperationAssignmentsUpdatedMessageHandler(
+		handler = new CreateOperationInvolvementsUpdatedMessageHandler(
 			repositoryMock,
 			eventBusMock,
 		);
@@ -75,23 +75,25 @@ describe('CreateOperationAssignmentsUpdatedMessageCommand', () => {
 			],
 		};
 
-		const command = new CreateOperationAssignmentsUpdatedMessageCommand(
-			sender,
-			recipient,
-			channel,
+		const command = new CreateOperationInvolvementsUpdatedMessageCommand(
 			time,
+			{
+				sender,
+				recipient,
+				channel,
+			},
 			assignmentsData,
 			authUser,
 		);
 
-		const expectedMsg = plainToInstance(OperationAssignmentsUpdatedMessage, {
+		const expectedMsg = plainToInstance(OperationInvolvementsUpdatedMessage, {
 			channel,
 			sender,
 			recipient,
 			time,
 			searchableText:
 				'einsatz operation-sign zuordnungen geändert einheiten einheiten Unit1 (Unit1-Sign), Unit2 (Unit2-Sign) alarm gruppen AlertGroup',
-			payload: plainToInstance(OperationAssignmentsUpdatedMessagePayload, {
+			payload: plainToInstance(OperationInvolvementsUpdatedMessagePayload, {
 				operationId: assignmentsData.operationId,
 				operationSign: assignmentsData.operationSign,
 				assignedAlertGroups: [

@@ -31,28 +31,28 @@ describe('ProtocolEntryTimePipe', () => {
 	});
 
 	it('should return relative day for "$difference"', () => {
-		expect(pipe.transform(today)).toContain('Heute');
+		expect(pipe.transform(today.toISOString())).toContain('Heute');
 
-		expect(pipe.transform(new Date(today.getTime() - oneDayInMs))).toContain(
-			'Gestern',
-		);
+		expect(
+			pipe.transform(new Date(today.getTime() - oneDayInMs).toISOString()),
+		).toContain('Gestern');
 	});
 
 	it('should return the weekday for dates 2-6 days ago', () => {
 		const twoDaysAgo = new Date(today.getTime() - 2 * oneDayInMs);
-		expect(pipe.transform(twoDaysAgo)).toContain(
+		expect(pipe.transform(twoDaysAgo.toISOString())).toContain(
 			twoDaysAgo.toLocaleString(undefined, { weekday: 'long' }),
 		);
 
 		const sixDaysAgo = new Date(today.getTime() - 6 * oneDayInMs);
-		expect(pipe.transform(sixDaysAgo)).toContain(
+		expect(pipe.transform(sixDaysAgo.toISOString())).toContain(
 			sixDaysAgo.toLocaleString(undefined, { weekday: 'long' }),
 		);
 	});
 
 	it('should return the day and month for dates 7-365 days ago', () => {
 		const sevenDaysAgo = new Date(today.getTime() - 7 * oneDayInMs);
-		expect(pipe.transform(sevenDaysAgo)).toContain(
+		expect(pipe.transform(sevenDaysAgo.toISOString())).toContain(
 			sevenDaysAgo.toLocaleString(undefined, {
 				day: '2-digit',
 				month: '2-digit',
@@ -60,7 +60,7 @@ describe('ProtocolEntryTimePipe', () => {
 		);
 
 		const oneYearAgo = new Date(today.getTime() - 365 * oneDayInMs);
-		expect(pipe.transform(oneYearAgo)).toContain(
+		expect(pipe.transform(oneYearAgo.toISOString())).toContain(
 			oneYearAgo.toLocaleString(undefined, {
 				day: '2-digit',
 				month: '2-digit',
@@ -70,7 +70,7 @@ describe('ProtocolEntryTimePipe', () => {
 
 	it('should return full date for date more than a year ago', () => {
 		const moreThanOneYearAgo = new Date(today.getTime() - 366 * oneDayInMs);
-		expect(pipe.transform(moreThanOneYearAgo)).toContain(
+		expect(pipe.transform(moreThanOneYearAgo.toISOString())).toContain(
 			moreThanOneYearAgo.toLocaleString(undefined, {
 				day: '2-digit',
 				month: '2-digit',

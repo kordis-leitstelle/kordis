@@ -14,7 +14,7 @@ export class UpdateOperationDto {
 	@AutoMap()
 	start: Date;
 
-	@AutoMap()
+	@AutoMap(() => Date)
 	end?: Date | null;
 
 	@AutoMap()

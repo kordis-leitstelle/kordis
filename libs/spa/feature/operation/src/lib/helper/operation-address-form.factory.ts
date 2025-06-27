@@ -6,7 +6,7 @@ import {
 	Validators,
 } from '@angular/forms';
 
-export type OperationLocationForm = FormGroup<{
+export type OperationLocationFormGroup = FormGroup<{
 	address: FormGroup<{
 		name: FormControl<string>;
 		postalCode: FormControl<string>;
@@ -25,7 +25,7 @@ export function makeOperationLocationForm(
 		address: ValidatorFn[];
 		coordinate: ValidatorFn[];
 	}> = {},
-): OperationLocationForm {
+): OperationLocationFormGroup {
 	return fb.group({
 		address: fb.group(
 			{

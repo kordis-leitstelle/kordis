@@ -60,10 +60,12 @@ describe('CommunicationMessageResolver', () => {
 			expect.objectContaining({
 				time: fakeTime,
 				requestUser: user,
-				sender: expect.objectContaining({ name: sender.name }),
-				recipient: expect.objectContaining({ unit: { id: recipient.id } }),
+				protocolData: {
+					sender: expect.objectContaining({ name: sender.name }),
+					recipient: expect.objectContaining({ unit: { id: recipient.id } }),
+					channel,
+				},
 				message,
-				channel,
 			}),
 		);
 

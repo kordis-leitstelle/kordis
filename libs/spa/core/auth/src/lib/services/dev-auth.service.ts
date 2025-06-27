@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 
@@ -14,12 +15,15 @@ import { AuthService } from './auth-service';
 export class DevAuthService implements AuthService {
 	readonly isAuthenticated$: Observable<boolean>;
 	readonly user$: Observable<AuthUser | null>;
+	readonly user: Signal<AuthUser | null>;
+
 	readonly token$: Observable<string | null>;
 	private readonly tokenSubject$ = new BehaviorSubject<string | null>(null);
 	private readonly userSubject$ = new BehaviorSubject<AuthUser | null>(null);
 
 	constructor(private readonly router: Router) {
 		this.user$ = this.userSubject$.asObservable();
+		this.user = toSignal(this.user$, { initialValue: null });
 		this.isAuthenticated$ = this.user$.pipe(map((user) => !!user));
 		this.token$ = this.tokenSubject$.asObservable();
 

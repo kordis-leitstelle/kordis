@@ -39,42 +39,49 @@ describe('CreateRescueStationSignOffMessageHandler', () => {
 		const expectedMessage = plainToInstance(RescueStationSignOffMessage, {
 			orgId: 'organizationId',
 			time: sendingTime,
-			sender: plainToInstance(RegisteredUnit, {
-				unit: { id: 'knownSenderUnit' },
-			}),
-			recipient: plainToInstance(UnknownUnit, { name: 'unknownReceivingUnit' }),
-			channel: 'channel',
+			communicationDetails: {
+				sender: plainToInstance(RegisteredUnit, {
+					unit: { id: 'knownSenderUnit' },
+				}),
+				recipient: plainToInstance(UnknownUnit, {
+					name: 'unknownReceivingUnit',
+				}),
+				channel: 'channel',
+			},
 			producer: plainToInstance(UserProducer, {
 				userId: 'userId',
 				firstName: 'firstName',
 				lastName: 'lastName',
 			}),
 			payload: plainToClass(RescueStationSignOffMessagePayload, {
-				rescueStationId: 'rescueStationId',
+				rescueStationId: '67d5cd788589e9f157b9cd0f',
 				rescueStationName: 'rescueStationName',
 				rescueStationCallSign: 'rescueStationCallSign',
 			}),
+			referenceId: '67d5cd788589e9f157b9cd0f',
 			searchableText: `ausmeldung rettungswache rescueStationName rescueStationCallSign`,
 		});
 		(expectedMessage as any).createdAt = expect.any(Date);
 
 		mockRepository.create.mockResolvedValueOnce(expectedMessage);
 
-		const res = await handler.execute(
+		await handler.execute(
 			new CreateRescueStationSignOffMessageCommand(
 				sendingTime,
-				plainToInstance(RegisteredUnit, {
-					unit: { id: 'knownSenderUnit' },
-				}),
-				plainToInstance(UnknownUnit, {
-					name: 'unknownReceivingUnit',
-				}),
 				{
-					id: 'rescueStationId',
+					sender: plainToInstance(RegisteredUnit, {
+						unit: { id: 'knownSenderUnit' },
+					}),
+					recipient: plainToInstance(UnknownUnit, {
+						name: 'unknownReceivingUnit',
+					}),
+					channel: 'channel',
+				},
+				{
+					id: '67d5cd788589e9f157b9cd0f',
 					name: 'rescueStationName',
 					callSign: 'rescueStationCallSign',
 				},
-				'channel',
 				{
 					id: 'userId',
 					organizationId: 'organizationId',
@@ -85,7 +92,6 @@ describe('CreateRescueStationSignOffMessageHandler', () => {
 		);
 
 		expect(mockRepository.create).toHaveBeenCalledWith(expectedMessage);
-		expect(res).toEqual(expectedMessage);
 		expect(mockEventBus.publish).toHaveBeenCalledWith(
 			expect.objectContaining({
 				protocolEntry: expectedMessage,

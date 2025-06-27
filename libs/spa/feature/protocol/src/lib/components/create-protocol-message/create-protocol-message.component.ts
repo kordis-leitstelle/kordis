@@ -1,8 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	inject,
+	output,
 	signal,
 	viewChild,
 } from '@angular/core';
@@ -13,11 +15,20 @@ import {
 } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
-import { ProtocolClient } from '../../services/protocol.client';
+import { Unit, UnitInput } from '@kordis/shared/model';
+import {
+	AutocompleteComponent,
+	AutocompleteOptionTemplateDirective,
+	PossibleUnitSelectionsService,
+	UnitOptionComponent,
+} from '@kordis/spa/core/ui';
+
+import { CHANNELS, DEFAULT_CHANNEL } from '../../channels';
+import { ensureSingleUnitSelectionPipe } from '../../services/ensure-single-unit.pipe';
 
 @Component({
 	selector: 'krd-create-protocol-message',
@@ -25,214 +36,119 @@ import { ProtocolClient } from '../../services/protocol.client';
 		NzButtonModule,
 		NzFormModule,
 		NzInputModule,
-		NzPopoverDirective,
 		NzSelectModule,
 		ReactiveFormsModule,
+		NzIconModule,
+		AutocompleteComponent,
+		UnitOptionComponent,
+		AutocompleteOptionTemplateDirective,
+		AsyncPipe,
 	],
-	template: `
-		<div>
-			<div
-				nz-form
-				nzLayout="inline"
-				[formGroup]="validateForm"
-				class="create-form"
-			>
-				<nz-form-item class="unit-input">
-					<nz-form-control nzErrorTip="Absender benötigt!">
-						<input
-							formControlName="sender"
-							nz-input
-							required
-							placeholder="Von"
-						/>
-					</nz-form-control>
-				</nz-form-item>
-				<nz-form-item class="unit-input">
-					<nz-form-control nzErrorTip="Empfänger benötigt!">
-						<input
-							formControlName="recipient"
-							nz-input
-							required
-							placeholder="An"
-							(keydown)="onRecipientKeyDown($event)"
-						/>
-					</nz-form-control>
-				</nz-form-item>
-				<nz-form-item class="channel-input">
-					<nz-form-control nzErrorTip="Kanal benötigt">
-						<nz-select formControlName="channel">
-							@for (channel of channels; track channel.value) {
-								<nz-option
-									[nzValue]="channel.value"
-									[nzLabel]="channel.label"
-								/>
-							}
-						</nz-select>
-					</nz-form-control>
-				</nz-form-item>
-				<button
-					class="message-btn"
-					nz-button
-					nzType="primary"
-					nz-popover
-					nzPopoverTitle="Nachricht hinzufügen"
-					[(nzPopoverVisible)]="messagePopoverVisible"
-					nzPopoverTrigger="click"
-					[nzPopoverContent]="messagePopover"
-					[disabled]="validateForm.invalid"
-				>
-					Nachricht
-				</button>
-			</div>
-
-			<!-- <div class='actions'>
-				<div class='group'>
-					<button nz-button nzType='primary' nzDanger>
-						Neuer Einsatz
-					</button>
-					<button nz-button nzType='primary'>
-						Einsatz beenden
-					</button>
-				</div>
-				<div class='group'>
-					<button nz-tooltip='Einheit zu einem laufenden Einsatz zuordnen' nz-button nzType='primary'>
-						Einheit zuordnen
-					</button>
-					<button nz-tooltip='Einheit aus einem laufenden Einsatz rauslösen' nz-button nzType='primary'>
-						Einheit rauslösen
-					</button>
-				</div>
-				<div class='group'>
-					<button nz-button nzType='primary'>
-						RW ein-/nachmelden
-					</button>
-					<button nz-tooltip='RW an-/ab-/ummelden' nz-button nzType='primary'>
-						RW ummelden
-					</button>
-				</div>
-			</div> -->
-		</div>
-
-		<ng-template #messagePopover>
-			<div nz-form nzLayout="inline">
-				<nz-form-item>
-					<input
-						nz-input
-						#messageInput
-						(keydown)="onMessageKeyDown($event)"
-						class="message-input"
-					/>
-				</nz-form-item>
-				<nz-form-item>
-					<button nz-button nzType="primary" (click)="addProtocolMessage()">
-						Absenden
-					</button>
-				</nz-form-item>
-			</div>
-		</ng-template>
-	`,
+	templateUrl: `./create-protocol-message.component.html`,
 	styles: `
-		.create-form {
-			display: flex;
-			padding: 0 var(--base-spacing);
-
-			.unit-input {
-				flex: 3;
+		.form {
+			display: grid;
+			grid-template-columns: 3fr 3fr 7fr 2fr 1fr;
+			gap: 8px;
+			button {
+				width: 100%;
 			}
-
-			.channel-input {
-				flex: 2;
+			.ant-form-item {
+				margin-bottom: 0;
 			}
-
-			.message-btn {
-				flex: 3;
-			}
-		}
-
-		.actions {
-			display: flex;
-			gap: var(--base-spacing);
-
-			.group {
-				margin: 0 var(--base-spacing);
-			}
-		}
-
-		.message-input {
-			width: 300px;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateProtocolMessageComponent {
-	readonly channels = Object.freeze([
-		{
-			value: 'D',
-			label: 'Digital',
-			default: true,
-		},
-		{
-			value: 'T',
-			label: 'Telefon',
-			default: false,
-		},
-		{
-			value: '1',
-			label: 'DLRG-Kanal 1',
-			default: false,
-		},
-		{
-			value: '2',
-			label: 'DLRG-Kanal 2',
-			default: false,
-		},
-		{
-			value: '3',
-			label: 'DLRG-Kanal 3',
-			default: false,
-		},
-	]);
-	readonly messagePopoverVisible = signal(false);
-	validateForm = inject(NonNullableFormBuilder).group({
-		sender: ['', Validators.required],
-		recipient: ['', Validators.required],
-		channel: [
-			this.channels.find((channel) => channel.default)?.value ?? '',
+	readonly channels = CHANNELS;
+	readonly labelFn = (unit: Unit): string => unit.callSign;
+	readonly messageSubmit = output<{
+		sender: Unit | string;
+		recipient: Unit | string;
+		channel: string;
+		message: string;
+	}>();
+
+	readonly unitService = inject(PossibleUnitSelectionsService);
+	readonly units = signal<Unit[]>([]);
+	readonly recipientInput =
+		viewChild<AutocompleteComponent<Unit>>('recipientInput');
+	readonly msgInput = viewChild<ElementRef>('msgInput');
+	private readonly fb = inject(NonNullableFormBuilder);
+	public messageForm = this.fb.group({
+		sender: this.fb.control<Unit | string | undefined>(
+			undefined,
 			Validators.required,
-		],
+		),
+		recipient: this.fb.control<Unit | string | undefined>(
+			undefined,
+			Validators.required,
+		),
+		message: this.fb.control<string>('', Validators.required),
+		channel: this.fb.control<string>(DEFAULT_CHANNEL, Validators.required),
 	});
-	private readonly messageInput = viewChild<ElementRef>('messageInput');
-	private readonly client = inject(ProtocolClient);
 
-	onRecipientKeyDown($event: KeyboardEvent): void {
-		if ($event.key === 'Tab' && this.validateForm.valid) {
-			$event.preventDefault();
-			this.messagePopoverVisible.set(true);
-			setTimeout(() => this.messageInput()?.nativeElement.focus());
-		}
-	}
+	constructor() {
+		this.messageForm.controls.sender.valueChanges
+			.pipe(ensureSingleUnitSelectionPipe(this.unitService))
+			.subscribe(() => setTimeout(() => this.recipientInput()?.focus()));
 
-	onMessageKeyDown($event: KeyboardEvent): void {
-		if ($event.key === 'Enter') {
-			this.addProtocolMessage();
-		}
+		this.messageForm.controls.recipient.valueChanges
+			.pipe(ensureSingleUnitSelectionPipe(this.unitService))
+			.subscribe(() =>
+				setTimeout(() => this.msgInput()?.nativeElement.focus()),
+			);
 	}
 
 	addProtocolMessage(): void {
-		const formValue = this.validateForm.getRawValue();
-		this.client.addMessageAsync({
-			sender: {
-				type: 'UNKNOWN_UNIT',
-				name: formValue.sender,
-			},
-			recipient: {
-				type: 'UNKNOWN_UNIT',
-				name: formValue.recipient,
-			},
+		if (this.messageForm.invalid) {
+			return;
+		}
+		const formValue = this.messageForm.getRawValue();
+
+		// checking presence of sender and recipient is necessary for type inference
+		if (this.messageForm.invalid || !formValue.sender || !formValue.recipient) {
+			return;
+		}
+
+		this.messageSubmit.emit({
+			sender: formValue.sender,
+			recipient: formValue.recipient,
 			channel: formValue.channel,
-			message: this.messageInput()?.nativeElement.value,
+			message: formValue.message,
 		});
-		this.validateForm.reset();
-		this.messagePopoverVisible.set(false);
+
+		const defaultChannel =
+			this.channels.find((channel) => channel.default)?.value ?? '';
+
+		// Reset with default values
+		this.messageForm.reset({
+			sender: undefined,
+			recipient: undefined,
+			message: '',
+			channel: defaultChannel,
+		});
+
+		// Mark form controls as pristine and untouched
+		this.messageForm.markAsPristine();
+		this.messageForm.markAsUntouched();
+
+		this.msgInput()?.nativeElement.blur();
+
+		this.unitService.resetSelections();
+	}
+
+	private generateUnitInput(unit: Unit | string): UnitInput {
+		if (typeof unit === 'string') {
+			return {
+				type: 'UNKNOWN_UNIT',
+				name: unit,
+			};
+		}
+		return {
+			type: 'REGISTERED_UNIT',
+			id: unit.id,
+		};
 	}
 }

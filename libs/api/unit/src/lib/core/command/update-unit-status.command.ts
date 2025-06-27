@@ -13,7 +13,7 @@ export class UpdateUnitStatusCommand {
 	constructor(
 		readonly orgId: string,
 		readonly unitId: string,
-		readonly status: PersistentUnitStatus,
+		readonly status: PersistentUnitStatus | null,
 		readonly receivedAt: Date,
 		readonly source: string,
 	) {}

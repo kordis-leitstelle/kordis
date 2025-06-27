@@ -23,6 +23,7 @@ import {
 	PossibleUnitSelectionsService,
 } from '@kordis/spa/core/ui';
 
+import { UNIT_INVOLVEMENTS_QUERY } from '../../../helper/unit-involvement.query';
 import { BaseOperationTabComponent } from '../base-operation-tab.component';
 import { OperationAlertGroupInvolvementsFormComponent } from './form/alert-group/operation-alert-group-involvements-form.component';
 import { OperationInvolvementsFormComponent } from './form/unit/operation-unit-involvements-form.component';
@@ -33,6 +34,7 @@ import {
 import { InvolvementOperationTimeState } from './involvement-operation-time.state';
 
 const INVOLVEMENT_FRAGMENT = gql`
+	${UNIT_INVOLVEMENTS_QUERY}
 	fragment OperationUnitInvolvements on Operation {
 		id
 		start
@@ -48,19 +50,6 @@ const INVOLVEMENT_FRAGMENT = gql`
 			unitInvolvements {
 				...UnitInvolvement
 			}
-		}
-	}
-
-	fragment UnitInvolvement on OperationUnitInvolvement {
-		involvementTimes {
-			start
-			end
-		}
-		isPending
-		unit {
-			id
-			callSign
-			name
 		}
 	}
 `;
@@ -86,7 +75,7 @@ const INVOLVEMENT_FRAGMENT = gql`
 			justify-content: center;
 
 			nz-empty {
-				.ant-empty-image {
+				::ng-deep .ant-empty-image {
 					height: unset;
 				}
 			}
@@ -189,6 +178,22 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 		this.possibleAlertGroupSelectionsService.markAsSelected(alertGroup);
 	}
 
+	deleteAlertGroupUnit(
+		alertGroup: AlertGroup,
+		unit: Unit,
+		index: number,
+	): void {
+		const alertGroupControl =
+			this.control.controls.alertGroupInvolvements.controls.find(
+				(v) => v.controls.alertGroup.value.id === alertGroup.id,
+			);
+		if (!alertGroupControl) {
+			throw new Error('Alert group component not found');
+		}
+		alertGroupControl.controls.unitInvolvements.removeAt(index);
+		this.possibleUnitSelectionsService.unmarkAsSelected(unit);
+	}
+
 	protected override setValue(operation: Operation): void {
 		this.markInvolvementsAsSelected(operation);
 
@@ -226,8 +231,8 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 				isPending: false,
 				involvementTimes: [
 					{
-						start: this.operationTimeState.operationStart,
-						end: this.operationTimeState.operationEnd,
+						start: this.operationTimeState.operationStart.toISOString(),
+						end: this.operationTimeState.operationEnd?.toISOString(),
 					},
 				],
 			}),

@@ -1,17 +1,17 @@
-.form {
+form {
 	display: flex;
 	flex-direction: column;
 	gap: var(--base-spacing);
+	margin-top: var(--base-spacing);
+}
 
-	.form-item {
-		display: flex;
-		flex-direction: column;
-	}
+nz-form-item {
+	margin-bottom: var(--base-spacing);
+}
 
-	textarea {
-		height: 55px;
-		resize: none;
-	}
+textarea {
+	height: 55px;
+	resize: none;
 }
 
 .actions {
@@ -29,12 +29,13 @@
 
 nz-card {
 	margin-bottom: calc(var(--base-spacing) / 2);
-
-	.ant-card-body {
-		padding: var(--base-spacing);
-	}
 }
 
 nz-alert {
 	margin-top: calc(var(--base-spacing) / 2);
+}
+
+nz-select {
+	width: 100%;
+	height: 100%;
 }

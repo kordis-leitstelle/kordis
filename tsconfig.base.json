@@ -27,6 +27,7 @@
 			"@kordis/api/rescue-station-manager": [
 				"libs/api/rescue-station-manager/src/index.ts"
 			],
+			"@kordis/api/sagas": ["libs/api/sagas/src/index.ts"],
 			"@kordis/api/shared": ["libs/api/shared/src/index.ts"],
 			"@kordis/api/test-helpers": ["libs/api/test-helpers/src/index.ts"],
 			"@kordis/api/tetra": ["libs/api/tetra/src/index.ts"],
@@ -52,7 +53,8 @@
 				"libs/spa/feature/protocol/src/index.ts"
 			],
 			"@kordis/spa/view/auth": ["libs/spa/view/auth/src/index.ts"],
-			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"]
+			"@kordis/spa/view/dashboard": ["libs/spa/view/dashboard/src/index.ts"],
+			"@kordis/spa/view/map": ["libs/spa/view/map/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

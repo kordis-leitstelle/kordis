@@ -1,3 +1,5 @@
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
 :host {
 	--row-bg-color: rgba(
 		250,
@@ -50,5 +52,12 @@ nz-table.krd-small-table {
 
 	.empty-result {
 		text-align: center;
+	}
+}
+
+/* Map related styles */
+.no-padding-popup {
+	.maplibregl-popup-content {
+		padding: 0;
 	}
 }

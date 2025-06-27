@@ -4,131 +4,54 @@ import {
 	inject,
 	signal,
 } from '@angular/core';
-import {
-	FormArray,
-	FormControl,
-	NonNullableFormBuilder,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
-import { NzAlertComponent } from 'ng-zorro-antd/alert';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
-import {
-	NzFormControlComponent,
-	NzFormDirective,
-	NzFormItemComponent,
-} from 'ng-zorro-antd/form';
+import { NzDividerComponent } from 'ng-zorro-antd/divider';
+import { NzFormDirective } from 'ng-zorro-antd/form';
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { map } from 'rxjs';
 
-import { CreateOperationInput, Mutation, Unit } from '@kordis/shared/model';
+import { Mutation } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
+import { markInvalidFormControlsAsDirty } from '@kordis/spa/core/misc';
 import {
-	DateMaskInputComponent,
-	alertGroupMinUnitsValidator,
-	markInvalidFormControlsAsDirty,
-} from '@kordis/spa/core/misc';
-import {
-	AlertGroupAssignmentFormGroup,
-	AlertGroupSelectionsComponent,
 	PossibleAlertGroupSelectionsService,
 	PossibleUnitSelectionsService,
-	UnitSelectionOptionComponent,
-	UnitsSelectionComponent,
 } from '@kordis/spa/core/ui';
 
-import { makeOperationLocationForm } from '../../helper/operation-address-form.factory';
-import { dateNotInPastValidator } from '../../validator/date-not-in-past.validator';
-import { nameOrStreetRequiredValidator } from '../../validator/name-or-street-required.validator';
-import { startBeforeEndValidator } from '../../validator/start-before-end.validator';
-import { OperationAlarmKeywordSelectComponent } from '../operation-detail/base-data/form/operation-alarm-keyword-select.component';
-import { OperationLocationFormComponent } from '../operation-detail/base-data/form/operation-location-form.component';
-import { OperationDescriptionTextareaComponent } from '../operation-detail/description/operation-description-textarea.component';
+import {
+	getOperationPayloadFromForm,
+	makeCreateOperationForm,
+} from '../../helper/create-operation-form.helper';
+import { CreateOperationFormComponent } from './create-operation-form.component';
 
 @Component({
 	selector: 'krd-create-operation-modal',
 	imports: [
-		AlertGroupSelectionsComponent,
 		NzButtonComponent,
 		NzColDirective,
-		NzFormControlComponent,
+		NzDividerComponent,
 		NzFormDirective,
-		NzFormItemComponent,
 		NzRowDirective,
-		OperationAlarmKeywordSelectComponent,
-		OperationDescriptionTextareaComponent,
-		OperationLocationFormComponent,
 		ReactiveFormsModule,
-		UnitsSelectionComponent,
-		DateMaskInputComponent,
-		NzAlertComponent,
-		UnitSelectionOptionComponent,
+		CreateOperationFormComponent,
 	],
 	providers: [
 		PossibleUnitSelectionsService,
 		PossibleAlertGroupSelectionsService,
 	],
 	templateUrl: `./create-operation-modal.component.html`,
-	styles: `
-		.action-btns {
-			display: flex;
-			justify-content: flex-end;
-		}
-
-		.alert-container {
-			margin: calc(var(--base-spacing) / 2) 0;
-		}
-	`,
+	styleUrl: './create-operation-modal.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateOperationModalComponent {
-	readonly isLoading = signal(false);
-	readonly #modal = inject(NzModalRef);
 	private readonly fb = inject(NonNullableFormBuilder);
-	readonly formGroup = this.fb.group(
-		{
-			start: this.fb.control(new Date(), [
-				Validators.required,
-				dateNotInPastValidator,
-			]),
-			end: this.fb.control<Date | null>(null, [
-				Validators.required,
-				dateNotInPastValidator,
-			]),
-			location: makeOperationLocationForm(this.fb, {
-				address: [nameOrStreetRequiredValidator],
-			}),
-			alarmKeyword: this.fb.control('', Validators.required),
-			description: this.fb.control(''),
-			units: this.fb.control<Unit[]>([]),
-			alertGroups: this.fb.array<AlertGroupAssignmentFormGroup>(
-				[],
-				alertGroupMinUnitsValidator,
-			),
-		},
-		{
-			validators: [
-				startBeforeEndValidator,
-				(formGroup) => {
-					const units = formGroup.get('units') as FormControl<Unit[]>;
-					const alertGroups = formGroup.get(
-						'alertGroups',
-					) as FormArray<AlertGroupAssignmentFormGroup>;
-					if (units.value.length === 0 && alertGroups.length === 0) {
-						units.setErrors({ noUnitsOrAlertGroups: true });
-						alertGroups.setErrors({ noUnitsOrAlertGroups: true });
-						return { noUnitsOrAlertGroups: true };
-					}
-					units.setErrors(null);
-					alertGroups.setErrors(null);
+	readonly formGroup = makeCreateOperationForm(this.fb);
+	readonly isLoading = signal(false);
 
-					return null;
-				},
-			],
-		},
-	);
-
+	readonly #modal = inject(NzModalRef);
 	private readonly gqlService = inject(GraphqlService);
 	private readonly notificationService = inject(NzNotificationService);
 
@@ -139,6 +62,7 @@ export class CreateOperationModalComponent {
 		}
 
 		this.isLoading.set(true);
+
 		this.gqlService
 			.mutate$<{
 				createOperation: Mutation['createOperation'];
@@ -152,18 +76,19 @@ export class CreateOperationModalComponent {
 					}
 				`,
 				{
-					input: this.getPayloadFromForm(),
+					input: getOperationPayloadFromForm(this.formGroup),
 				},
 			)
+			.pipe(map((result) => result.createOperation))
 			.subscribe({
-				next: ({ createOperation }) => {
+				next: (operation) => {
 					this.notificationService.success(
 						'Einsatz erstellt',
-						`Der Einsatz wurde mit der Einsatznummer ${createOperation.sign} erstellt.`,
+						`Der Einsatz wurde mit der Einsatznummer ${operation.sign} erstellt.`,
 						{ nzPlacement: 'topRight' },
 					);
 					this.#modal.destroy({
-						operationId: createOperation.id,
+						operationId: operation.id,
 					});
 				},
 				error: () =>
@@ -173,31 +98,5 @@ export class CreateOperationModalComponent {
 					),
 			})
 			.add(() => this.isLoading.set(false));
-	}
-
-	private getPayloadFromForm(): CreateOperationInput {
-		const formData = this.formGroup.getRawValue();
-
-		return {
-			start: formData.start,
-			end: formData.end,
-			alarmKeyword: formData.alarmKeyword,
-			location: {
-				...formData.location,
-				coordinate:
-					formData.location?.coordinate?.lat &&
-					formData.location?.coordinate?.lon
-						? {
-								lat: formData.location.coordinate.lat,
-								lon: formData.location.coordinate.lon,
-							}
-						: null,
-			},
-			assignedUnitIds: formData.units.map((unit) => unit.id),
-			assignedAlertGroups: formData.alertGroups.map((assignment) => ({
-				alertGroupId: assignment.alertGroup.id,
-				assignedUnitIds: assignment.assignedUnits.map((unit) => unit.id),
-			})),
-		};
 	}
 }

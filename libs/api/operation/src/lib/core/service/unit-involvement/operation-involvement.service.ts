@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventBus } from '@nestjs/cqrs';
 
 import { DbSessionProvider } from '@kordis/api/shared';
 
+import { OngoingOperationInvolvementsUpdatedEvent } from '../../event/ongoing-operation-involvements-updated.event';
 import { UnitAlreadyInvolvedException } from '../../exceptions/unit-already-involved.exception';
 import {
 	CreateUnitInvolvementDto,
@@ -18,6 +20,7 @@ export class OperationInvolvementService {
 	constructor(
 		@Inject(OPERATION_INVOLVEMENT_REPOSITORY)
 		private readonly involvementsRepository: OperationInvolvementsRepository,
+		private readonly eventBus: EventBus,
 	) {}
 
 	/*
@@ -25,7 +28,7 @@ export class OperationInvolvementService {
 		First, removes all involvements of an operations, then verifies that a unit is not involved in another operation (as pending or matching with involvement time) and creates new involvements.
 		If involvement times are intercepting with another operation or a unit without an end time is added and it is currently somewhere pending, an exception is thrown!
 	 */
-	async setUnitInvolvements(
+	async setUnitInvolvementsOfCompletedOperation(
 		orgId: string,
 		operationId: string,
 		unitInvolvements: SetUnitInvolvementDto[],
@@ -99,7 +102,7 @@ export class OperationInvolvementService {
 				uow,
 			);
 		} else {
-			// unit was not involved in the operation, so we need to release it from possible ongoing operations and  add it as a pending unit
+			// unit was not involved in the operation, so we need to release it from possible ongoing operations and add it as a pending unit
 			await this.releaseUnitFromPossibleForeignOperation(
 				orgId,
 				unitId,
@@ -151,6 +154,7 @@ export class OperationInvolvementService {
 		start: Date,
 		uow?: DbSessionProvider,
 	): Promise<void> {
+		let changedOperationID: string | undefined;
 		// has the unit an active involvement?
 		let involvement =
 			await this.involvementsRepository.findByUnitInvolvementTimeRange(
@@ -170,7 +174,7 @@ export class OperationInvolvementService {
 				start,
 				uow,
 			);
-			return;
+			changedOperationID = involvement.operationId;
 		}
 		// has a pending involvement?
 		involvement =
@@ -180,7 +184,7 @@ export class OperationInvolvementService {
 			);
 		if (involvement) {
 			// remove pending involvement if no involvement times (there is no need to keep the unit)
-			if (involvement.involvementTimes.length === 0) {
+			if (involvement.isPending) {
 				await this.involvementsRepository.removeInvolvement(
 					orgId,
 					involvement.unitId,
@@ -199,6 +203,13 @@ export class OperationInvolvementService {
 					uow,
 				);
 			}
+			changedOperationID = involvement.operationId;
+		}
+
+		if (changedOperationID) {
+			this.eventBus.publish(
+				new OngoingOperationInvolvementsUpdatedEvent(orgId, changedOperationID),
+			);
 		}
 	}
 

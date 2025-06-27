@@ -2,20 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 import {
+	BaseCreateMessageInput,
 	Mutation,
 	MutationSignInRescueStationArgs,
 	Unit,
-	UnitInput,
 } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 
 import { AlertGroupAssignment } from '../component/alert-group-assignment.model';
-
-export interface ProtocolMessageData {
-	sender: Unit | string;
-	recipient: Unit | string;
-	channel: string;
-}
 
 export interface RescueStationData {
 	rescueStationId: string;
@@ -37,18 +31,18 @@ export class RescueStationEditService {
 
 	signIn$(
 		rescueStationData: RescueStationData,
-		protocolMessageData: ProtocolMessageData,
+		protocolMessageData: BaseCreateMessageInput | null,
 	): Observable<void> {
 		return this.gqlService
 			.mutate$<{ signInRescueStation: Mutation['signInRescueStation'] }>(
 				gql`
 					mutation (
 						$rescueStationData: UpdateRescueStationInput!
-						$protocolMessageData: BaseCreateMessageInput!
+						$protocolMessageData: BaseCreateMessageInput
 					) {
 						signInRescueStation(
 							rescueStationData: $rescueStationData
-							protocolMessageData: $protocolMessageData
+							protocolMessage: $protocolMessageData
 						) {
 							id
 						}
@@ -56,7 +50,7 @@ export class RescueStationEditService {
 				`,
 				{
 					rescueStationData: this.rescueStationDataToArgs(rescueStationData),
-					protocolMessageData: this.protocolDataToArgs(protocolMessageData),
+					protocolMessageData,
 				},
 			)
 			.pipe(map(() => undefined));
@@ -64,7 +58,7 @@ export class RescueStationEditService {
 
 	update$(
 		rescueStationData: RescueStationData,
-		protocolMessageData?: ProtocolMessageData,
+		protocolMessageData: BaseCreateMessageInput | null,
 	): Observable<void> {
 		return this.gqlService
 			.mutate$(
@@ -75,7 +69,7 @@ export class RescueStationEditService {
 					) {
 						updateSignedInRescueStation(
 							rescueStationData: $rescueStationData
-							protocolMessageData: $protocolMessageData
+							protocolMessage: $protocolMessageData
 						) {
 							id
 						}
@@ -83,9 +77,7 @@ export class RescueStationEditService {
 				`,
 				{
 					rescueStationData: this.rescueStationDataToArgs(rescueStationData),
-					protocolMessageData: protocolMessageData
-						? this.protocolDataToArgs(protocolMessageData)
-						: null,
+					protocolMessageData,
 				},
 			)
 			.pipe(map(() => undefined));
@@ -93,17 +85,17 @@ export class RescueStationEditService {
 
 	signOff$(
 		rescueStationId: string,
-		protocolMessageData: ProtocolMessageData,
+		protocolMessageData: BaseCreateMessageInput | null,
 	): Observable<void> {
 		return this.gqlService
 			.mutate$(
 				gql`
 					mutation (
 						$rescueStationId: String!
-						$protocolMessageData: BaseCreateMessageInput!
+						$protocolMessageData: BaseCreateMessageInput
 					) {
 						signOffRescueStation(
-							protocolMessageData: $protocolMessageData
+							protocolMessage: $protocolMessageData
 							rescueStationId: $rescueStationId
 						) {
 							id
@@ -113,7 +105,7 @@ export class RescueStationEditService {
 				`,
 				{
 					rescueStationId,
-					protocolMessageData: this.protocolDataToArgs(protocolMessageData),
+					protocolMessageData,
 				},
 			)
 			.pipe(map(() => undefined));
@@ -132,21 +124,5 @@ export class RescueStationEditService {
 				unitIds: assignment.assignedUnits.map((unit) => unit.id),
 			})),
 		};
-	}
-
-	private protocolDataToArgs(
-		payload: ProtocolMessageData,
-	): MutationSignInRescueStationArgs['protocolMessageData'] {
-		return {
-			...payload,
-			sender: this.unitToUnitInput(payload.sender),
-			recipient: this.unitToUnitInput(payload.recipient),
-		};
-	}
-
-	private unitToUnitInput(unit: Unit | string): UnitInput {
-		return typeof unit === 'string'
-			? { name: unit, type: 'UNKNOWN_UNIT' }
-			: { id: unit.id, type: 'REGISTERED_UNIT' };
 	}
 }

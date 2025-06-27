@@ -8,14 +8,14 @@ import {
 	ValidateNested,
 } from 'class-validator';
 
-import { ProtocolMessageEntryBase } from '../protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../protocol-entry.entity';
 import {
 	OperationMessageAssignedAlertGroup,
 	OperationMessageAssignedUnit,
 } from './operation-message.value-objects';
 
 @ObjectType()
-export class OperationAssignmentsUpdatedMessagePayload {
+export class OperationInvolvementsUpdatedMessagePayload {
 	@Field()
 	@AutoMap()
 	@IsMongoId()
@@ -42,8 +42,8 @@ export class OperationAssignmentsUpdatedMessagePayload {
 }
 
 @ObjectType()
-export class OperationAssignmentsUpdatedMessage extends ProtocolMessageEntryBase {
-	@Field(() => OperationAssignmentsUpdatedMessagePayload)
+export class OperationInvolvementsUpdatedMessage extends ProtocolEntryBase {
+	@Field(() => OperationInvolvementsUpdatedMessagePayload)
 	@AutoMap()
-	payload: OperationAssignmentsUpdatedMessagePayload;
+	declare payload: OperationInvolvementsUpdatedMessagePayload;
 }

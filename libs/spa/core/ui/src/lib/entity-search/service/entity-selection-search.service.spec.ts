@@ -5,9 +5,9 @@ import { of } from 'rxjs';
 import { GraphqlService } from '@kordis/spa/core/graphql';
 
 import { IEntitySearchEngine } from './entity-search.service';
-import { EntitySelectionSearchService } from './entity-selection-search.service';
+import { EntitySelectionService } from './entity-selection.service';
 
-class TestEntitySelectionService extends EntitySelectionSearchService<
+class TestEntitySelectionService extends EntitySelectionService<
 	{ id: string; name: string },
 	{
 		testEntities: { id: string; name: string }[];
@@ -20,7 +20,7 @@ class TestEntitySelectionService extends EntitySelectionSearchService<
 }
 
 describe('EntitySelectionSearchService', () => {
-	let service: EntitySelectionSearchService<
+	let service: EntitySelectionService<
 		{ id: string; name: string },
 		{
 			testEntities: { id: string; name: string }[];
@@ -66,15 +66,4 @@ describe('EntitySelectionSearchService', () => {
 				done();
 			});
 		}));
-
-	it('should filter search', async () => {
-		service.markAsSelected({ id: '1', name: 'Entity 1' });
-		(service as any).searchService.search.mockReturnValue([
-			{ id: '1', name: 'Entity 1' },
-			{ id: '2', name: 'Entity 2' },
-		]);
-		await expect(service.searchAllPossibilities('query')).resolves.toEqual([
-			{ id: '2', name: 'Entity 2' },
-		]);
-	});
 });

@@ -1,13 +1,11 @@
 {
 	"migrations": [
 		{
-			"cli": "nx",
-			"version": "20.4.0-beta.1",
-			"requires": { "@angular/core": ">=19.1.0" },
-			"description": "Update the @angular/cli package version to ~19.1.0.",
-			"factory": "./src/migrations/update-20-4-0/update-angular-cli",
-			"package": "@nx/angular",
-			"name": "update-angular-cli-version-19-1-0"
+			"version": "21.1.0-beta.2",
+			"description": "Adds **/nx-rules.mdc and **/nx.instructions.md to .gitignore if not present",
+			"implementation": "./src/migrations/update-21-1-0/add-gitignore-entry",
+			"package": "nx",
+			"name": "21-1-0-add-ignore-entries-for-nx-rule-files"
 		}
 	]
 }

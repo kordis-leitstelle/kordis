@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { ArgsType, Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { IsMongoId, ValidateNested } from 'class-validator';
 
@@ -24,4 +24,16 @@ export class UpdateOngoingAssignmentsInput {
 	@Type(() => AssignedAlertGroup)
 	@ValidateNested({ each: true })
 	assignedAlertGroups: AssignedAlertGroup[];
+}
+
+@ArgsType()
+export class UpdateOngoingOperationInvolvementsArgs {
+	@Field(() => ID)
+	@IsMongoId()
+	operationId: string;
+
+	@Field(() => UpdateOngoingAssignmentsInput)
+	@Type(() => UpdateOngoingAssignmentsInput)
+	@ValidateNested()
+	involvements: UpdateOngoingAssignmentsInput;
 }

@@ -39,18 +39,22 @@ describe('CreateRescueStationSignOnMessageHandler', () => {
 		const expectedMessage = plainToInstance(RescueStationSignOnMessage, {
 			orgId: 'organizationId',
 			time: sendingTime,
-			sender: plainToInstance(RegisteredUnit, {
-				unit: { id: 'knownSenderUnit' },
-			}),
-			recipient: plainToInstance(UnknownUnit, { name: 'unknownReceivingUnit' }),
-			channel: 'channel',
+			communicationDetails: {
+				sender: plainToInstance(RegisteredUnit, {
+					unit: { id: 'knownSenderUnit' },
+				}),
+				recipient: plainToInstance(UnknownUnit, {
+					name: 'unknownReceivingUnit',
+				}),
+				channel: 'channel',
+			},
 			producer: plainToInstance(UserProducer, {
 				userId: 'userId',
 				firstName: 'firstName',
 				lastName: 'lastName',
 			}),
 			payload: plainToClass(RescueStationMessagePayload, {
-				rescueStationId: 'rescueStationId',
+				rescueStationId: '67d5d4190ec10cfb4c0aa78b',
 				rescueStationName: 'rescueStationName',
 				rescueStationCallSign: 'rescueStationCallSign',
 				strength: {
@@ -71,23 +75,27 @@ describe('CreateRescueStationSignOnMessageHandler', () => {
 					},
 				],
 			}),
+			referenceId: '67d5d4190ec10cfb4c0aa78b',
 			searchableText: `anmeldung rettungswache rescueStationName rescueStationCallSign stärke 1/1/1/3 einheiten unitName1 unitCallSign1 alarmgruppen alertGroupName unitName2 unitCallSign2`,
 		});
 		(expectedMessage as any).createdAt = expect.any(Date);
 
 		mockRepository.create.mockResolvedValueOnce(expectedMessage);
 
-		const res = await handler.execute(
+		await handler.execute(
 			new CreateRescueStationSignOnMessageCommand(
 				sendingTime,
-				plainToInstance(RegisteredUnit, {
-					unit: { id: 'knownSenderUnit' },
-				}),
-				plainToInstance(UnknownUnit, {
-					name: 'unknownReceivingUnit',
-				}),
 				{
-					id: 'rescueStationId',
+					sender: plainToInstance(RegisteredUnit, {
+						unit: { id: 'knownSenderUnit' },
+					}),
+					recipient: plainToInstance(UnknownUnit, {
+						name: 'unknownReceivingUnit',
+					}),
+					channel: 'channel',
+				},
+				{
+					id: '67d5d4190ec10cfb4c0aa78b',
 					name: 'rescueStationName',
 					callSign: 'rescueStationCallSign',
 					strength: {
@@ -108,7 +116,6 @@ describe('CreateRescueStationSignOnMessageHandler', () => {
 						},
 					],
 				},
-				'channel',
 				{
 					id: 'userId',
 					organizationId: 'organizationId',
@@ -119,7 +126,6 @@ describe('CreateRescueStationSignOnMessageHandler', () => {
 		);
 
 		expect(mockRepository.create).toHaveBeenCalledWith(expectedMessage);
-		expect(res).toEqual(expectedMessage);
 		expect(mockEventBus.publish).toHaveBeenCalledWith(
 			expect.objectContaining({
 				protocolEntry: expectedMessage,

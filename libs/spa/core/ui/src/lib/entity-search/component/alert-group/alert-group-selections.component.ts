@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -10,47 +11,69 @@ import {
 import {
 	FormArray,
 	FormControl,
-	FormGroup,
 	NonNullableFormBuilder,
+	ReactiveFormsModule,
 } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import {
-	NzFormControlComponent,
-	NzFormItemComponent,
-} from 'ng-zorro-antd/form';
-import { NzColDirective } from 'ng-zorro-antd/grid';
+import { NzFormModule } from 'ng-zorro-antd/form';
 
-import { AlertGroup, Unit } from '@kordis/shared/model';
+import { AlertGroup } from '@kordis/shared/model';
+import { AlertGroupAssignmentFormGroup } from '@kordis/spa/core/misc';
 
 import { PossibleAlertGroupSelectionsService } from '../../service/alert-group-selection.service';
 import { PossibleUnitSelectionsService } from '../../service/unit-selection.service';
-import { AlertGroupAutocompleteComponent } from './alert-group-autocomplete.component';
+import {
+	AutocompleteComponent,
+	AutocompleteOptionTemplateDirective,
+} from '../autocomplete.component';
 import { AlertGroupSelectionComponent } from './alert-group-selection.component';
-
-export type AlertGroupAssignmentFormGroup = FormGroup<{
-	alertGroup: FormControl<AlertGroup>;
-	assignedUnits: FormControl<Unit[]>;
-}>;
 
 @Component({
 	selector: 'krd-alert-group-selections',
 	imports: [
-		AlertGroupAutocompleteComponent,
 		AlertGroupSelectionComponent,
+		AsyncPipe,
+		AutocompleteComponent,
+		AutocompleteOptionTemplateDirective,
 		NzCardComponent,
-		NzFormControlComponent,
-		NzFormItemComponent,
-		NzColDirective,
+		NzFormModule,
+		ReactiveFormsModule,
 	],
 	template: `
-		<nz-form-item>
-			<nz-form-label>Alarmgruppen</nz-form-label>
-			<nz-form-control>
-				<krd-alert-group-autocomplete (selected)="addAlertGroup($event)" />
-			</nz-form-control>
-		</nz-form-item>
+		@let possibleEntitiesToSelect =
+			(possibleAlertGroupSelectionsService.allPossibleEntitiesToSelect$
+				| async) ?? [];
+
+		<krd-autocomplete
+			[formControl]="alertGroupControl"
+			[searchFields]="['name']"
+			[options]="possibleEntitiesToSelect"
+			[labelFn]="alertGroupLabelFn"
+		>
+			<ng-template
+				krdAutocompleteOptionTmpl
+				let-alertGroup
+				[list]="possibleEntitiesToSelect"
+			>
+				<span class="name">{{ alertGroup.name }}</span>
+				@if (
+					alertGroup.assignment?.__typename === 'EntityRescueStationAssignment'
+				) {
+					<small>Zuordnung: {{ $any(alertGroup.assignment).name }}</small>
+				} @else if (
+					alertGroup.assignment?.__typename === 'EntityOperationAssignment'
+				) {
+					<small
+						>Zuordnung:
+						{{ $any(alertGroup.assignment).operation.alarmKeyword }}
+						{{ $any(alertGroup.assignment).operation.sign }}</small
+					>
+				}
+			</ng-template>
+		</krd-autocomplete>
+
 		@if (formArray().length) {
-			<nz-card>
+			<nz-card [nzBodyStyle]="{ padding: 'calc(var(--base-spacing) / 2)' }">
 				<div class="selections">
 					@for (
 						alertGroupAssignment of formArray().controls;
@@ -66,13 +89,12 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 		}
 	`,
 	styles: `
-		:host {
-			display: flex;
-			flex-direction: column;
-		}
-
 		.selections:empty {
 			margin-top: 0;
+		}
+
+		.name {
+			margin-right: calc(var(--base-spacing) / 2);
 		}
 
 		.selections {
@@ -84,15 +106,7 @@ export type AlertGroupAssignmentFormGroup = FormGroup<{
 		}
 
 		nz-card {
-			.ant-card-body {
-				padding: calc(var(--base-spacing) / 2);
-			}
-
 			margin-top: calc(var(--base-spacing) / 2);
-		}
-
-		nz-form-item {
-			margin-bottom: 0;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,9 +117,12 @@ export class AlertGroupSelectionsComponent {
 	readonly alertGroupSelectionElements = viewChildren(
 		AlertGroupSelectionComponent,
 	);
-	private readonly possibleAlertGroupSelectionsService = inject(
+	readonly possibleAlertGroupSelectionsService = inject(
 		PossibleAlertGroupSelectionsService,
 	);
+	readonly alertGroupLabelFn = (alertGroup: AlertGroup): string =>
+		alertGroup.name;
+
 	private readonly possibleUnitSelectionsService = inject(
 		PossibleUnitSelectionsService,
 		{
@@ -114,6 +131,8 @@ export class AlertGroupSelectionsComponent {
 	);
 	private readonly fb = inject(NonNullableFormBuilder);
 	private readonly cd = inject(ChangeDetectorRef);
+
+	readonly alertGroupControl = new FormControl<AlertGroup | null>(null);
 
 	constructor() {
 		effect(() => {
@@ -125,6 +144,13 @@ export class AlertGroupSelectionsComponent {
 						value.alertGroup,
 					),
 				);
+		});
+
+		this.alertGroupControl.valueChanges.subscribe((alertGroup) => {
+			if (alertGroup) {
+				this.addAlertGroup(alertGroup);
+				this.alertGroupControl.setValue(null, { emitEvent: false });
+			}
 		});
 	}
 

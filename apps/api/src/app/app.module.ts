@@ -9,16 +9,14 @@ import * as path from 'path';
 
 import { AlertingModule } from '@kordis/api/alerting';
 import { AuthModule } from '@kordis/api/auth';
-import {
-	DeploymentModule,
-	OperationDeploymentSagaModule,
-} from '@kordis/api/deployment';
+import { DeploymentModule } from '@kordis/api/deployment';
 import { ObservabilityModule } from '@kordis/api/observability';
-import { OperationModule, OperationSagaModule } from '@kordis/api/operation';
+import { OperationModule } from '@kordis/api/operation';
 import { OperationManagerModule } from '@kordis/api/operation-manager';
 import { OrganizationModule } from '@kordis/api/organization';
 import { ProtocolModule } from '@kordis/api/protocol';
 import { RescueStationManagerModule } from '@kordis/api/rescue-station-manager';
+import { SagasModule } from '@kordis/api/sagas';
 import {
 	DataLoaderContainer,
 	DataLoaderContextProvider,
@@ -28,7 +26,7 @@ import {
 	getMongoEncrKmsFromConfig,
 } from '@kordis/api/shared';
 import { TetraModule } from '@kordis/api/tetra';
-import { UnitModule, UnitsSagaModule } from '@kordis/api/unit';
+import { UnitModule } from '@kordis/api/unit';
 import { UsersModule } from '@kordis/api/user';
 
 import { AppService } from './app.service';
@@ -47,11 +45,6 @@ const FEATURE_MODULES = [
 	OperationManagerModule,
 	DeploymentModule,
 	RescueStationManagerModule,
-];
-const SAGA_MODULES = [
-	UnitsSagaModule,
-	OperationSagaModule,
-	OperationDeploymentSagaModule,
 ];
 const UTILITY_MODULES = [
 	SharedKernel,
@@ -83,6 +76,9 @@ const UTILITY_MODULES = [
 					...ctx,
 					loadersProvider: new DataLoaderContextProvider(dataLoaderContainer),
 				}),
+				buildSchemaOptions: {
+					dateScalarMode: 'isoDate',
+				},
 			}),
 			inject: [ConfigService, DataLoaderContainer],
 		}),
@@ -119,7 +115,7 @@ const UTILITY_MODULES = [
 		}),
 		...UTILITY_MODULES,
 		...FEATURE_MODULES,
-		...SAGA_MODULES,
+		SagasModule,
 	],
 	providers: [AppService],
 	controllers: [GraphqlSubscriptionsController, HealthCheckController],

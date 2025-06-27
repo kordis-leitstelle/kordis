@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { ProtocolEntryMapper } from '../../mapper-profile/protocol-entry.mapper';
 import { ProtocolEntryBaseDocument } from '../schema/protocol-entry-base.schema';
 import { ImplProtocolEntryRepository } from './protocol-entry.repository';
@@ -42,8 +42,12 @@ describe('ProtocolEntryRepositoryImpl', () => {
 		);
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it('should create a protocol entry', async () => {
-		mapper.map.mockReturnValue({} as any);
+		mapper.mapDocumentToEntity.mockReturnValue({} as any);
 
 		const modelSpy = mockModelMethodResult(
 			protocolEntryModel,
@@ -80,7 +84,7 @@ describe('ProtocolEntryRepositoryImpl', () => {
 			exec: jest.fn().mockResolvedValue([{}, {}]),
 		};
 		jest.spyOn(protocolEntryModel, 'find').mockReturnValue(queryMockFn as any);
-		mapper.map.mockReturnValue({} as any);
+		mapper.mapEntityToDocument.mockReturnValue({} as any);
 
 		const result = await repository.getProtocolEntries(
 			'org-id',

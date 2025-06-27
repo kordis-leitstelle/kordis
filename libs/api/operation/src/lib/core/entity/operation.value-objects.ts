@@ -46,6 +46,7 @@ export class OperationLocationAddress extends OperationBaseAddress {
 		message: 'Eine Straße oder Name fehlt.',
 		always: true,
 	})
+	@AutoMap()
 	@IsString({ always: true })
 	@Field()
 	name: string;

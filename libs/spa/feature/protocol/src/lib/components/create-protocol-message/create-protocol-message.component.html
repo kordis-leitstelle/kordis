@@ -1,0 +1,81 @@
+<form
+	#form
+	nz-form
+	[formGroup]="messageForm"
+	(submit)="addProtocolMessage()"
+	class="form"
+>
+	@let selectableUnits =
+		(unitService.allPossibleEntitiesToSelect$ | async) ?? [];
+	<nz-form-item>
+		<nz-form-control nzErrorTip="Absender benötigt!">
+			<krd-autocomplete
+				[labelFn]="labelFn"
+				[options]="selectableUnits"
+				formControlName="sender"
+				[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+				placeholder="Von"
+				[dropdownWidth]="250"
+				allowCustomValues
+				selectOnBlur
+			>
+				<ng-template
+					krdAutocompleteOptionTmpl
+					[list]="selectableUnits"
+					let-unit
+				>
+					<krd-unit-option [unit]="unit" />
+				</ng-template>
+			</krd-autocomplete>
+		</nz-form-control>
+	</nz-form-item>
+	<nz-form-item>
+		<nz-form-control nzErrorTip="Empfänger benötigt!">
+			<krd-autocomplete
+				#recipientInput
+				[labelFn]="labelFn"
+				[options]="selectableUnits"
+				formControlName="recipient"
+				[searchFields]="['callSign', 'name', 'callSignAbbreviation']"
+				placeholder="An"
+				[dropdownWidth]="250"
+				allowCustomValues
+				selectOnBlur
+			>
+				<ng-template
+					krdAutocompleteOptionTmpl
+					[list]="selectableUnits"
+					let-unit
+				>
+					<krd-unit-option [unit]="unit" />
+				</ng-template>
+			</krd-autocomplete>
+		</nz-form-control>
+	</nz-form-item>
+	<nz-form-item class="message-input">
+		<input
+			#msgInput
+			nz-input
+			formControlName="message"
+			required
+			placeholder="Nachricht"
+		/>
+	</nz-form-item>
+	<nz-form-item>
+		<nz-form-control nzErrorTip="Kanal benötigt">
+			<nz-select formControlName="channel">
+				@for (channel of channels; track channel.value) {
+					<nz-option [nzValue]="channel.value" [nzLabel]="channel.label" />
+				}
+			</nz-select>
+		</nz-form-control>
+	</nz-form-item>
+	<button
+		nz-button
+		nzType="primary"
+		type="submit"
+		[disabled]="messageForm.invalid"
+	>
+		<nz-icon nzType="plus" nzTheme="outline" />
+	</button>
+</form>

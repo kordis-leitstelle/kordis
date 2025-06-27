@@ -5,7 +5,7 @@ import {
 	PageInfo,
 } from 'nestjs-graphql-connection';
 
-import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../../core/entity/protocol-entries/protocol-entry.entity';
 import { ProtocolEntryConnection } from '../view-model/protocol-entry.connection';
 import { ProtocolEntryEdge } from '../view-model/protocol-entry.edge';
 

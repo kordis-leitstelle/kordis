@@ -12,9 +12,12 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 import { ProtocolEntryUnion } from '@kordis/shared/model';
 
+import { OperationAssignmentsMessageComponent } from './message-components/operation-assignments-message.component';
+import { ProtocolMessageComponent } from './message-components/protocol-message.component';
+import { RescueStationMessageComponent } from './message-components/rescue-station-message.component';
+import { StartOperationMessageComponent } from './message-components/start-operation-message.component';
 import { NzTableFullHeightDirective } from './nz-table-full-height.directive';
 import { ProtocolEntryTimePipe } from './protocol-entry-time/protocol-entry-time.pipe';
-import { RescueStationMessageComponent } from './rescue-station-message.component';
 import { UnitChipComponent } from './unit-chip/unit-chip.component';
 
 @Component({
@@ -25,7 +28,11 @@ import { UnitChipComponent } from './unit-chip/unit-chip.component';
 		NzToolTipModule,
 		ProtocolEntryTimePipe,
 		UnitChipComponent,
+		StartOperationMessageComponent,
 		RescueStationMessageComponent,
+		ProtocolMessageComponent,
+		OperationAssignmentsMessageComponent,
+		OperationAssignmentsMessageComponent,
 	],
 	templateUrl: './protocol-table.component.html',
 	styleUrl: './protocol-table.component.css',

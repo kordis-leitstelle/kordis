@@ -7,6 +7,7 @@ import { Model, Types } from 'mongoose';
 import { DbSessionProvider, runDbOperation } from '@kordis/api/shared';
 
 import {
+	BaseDeploymentEntity,
 	DeploymentAlertGroup,
 	DeploymentUnit,
 } from '../../../core/entity/deployment.entity';
@@ -19,6 +20,7 @@ import {
 	UnitAssignmentDocument,
 } from '../../schema/deployment-assignment.schema';
 import { DeploymentType } from '../../schema/deployment-type.enum';
+import { DeploymentDocumentContract } from '../../schema/deployment.schema';
 import { OperationDeploymentDocument } from '../../schema/operation-deployment.schema';
 import { RescueStationDeploymentDocument } from '../../schema/rescue-station-deployment.schema';
 import { DeploymentAlertGroupAggregate } from '../deployment/abstract-deployment.repository';
@@ -64,47 +66,84 @@ export class DeploymentAssignmentRepositoryImpl
 	async getAssignment(
 		orgId: string,
 		entityId: string,
-	): Promise<RescueStationDeploymentEntity | OperationDeploymentEntity | null> {
-		const assignments = await this.deploymentAssignmentModel
-			.aggregate([
-				{
-					$match: {
-						orgId,
-						entityId,
-					},
+		uow?: DbSessionProvider,
+	): Promise<BaseDeploymentEntity | null> {
+		const query = this.deploymentAssignmentModel.aggregate([
+			{
+				$match: {
+					orgId,
+					entityId,
 				},
-				{
-					$lookup: {
-						from: 'deployments',
-						localField: 'deploymentId',
-						foreignField: '_id',
-						as: 'deployment',
-					},
+			},
+			{
+				$lookup: {
+					from: 'deployments',
+					localField: 'deploymentId',
+					foreignField: '_id',
+					as: 'deployment',
 				},
-			])
-			.exec();
+			},
+		]);
+		const assignments = await runDbOperation(query, uow);
 
 		if (assignments.length > 0 && assignments[0].deployment.length > 0) {
-			const assignment = assignments[0].deployment[0];
-			switch (assignment.type) {
-				case DeploymentType.RESCUE_STATION:
-					return this.mapper.map(
-						assignment,
-						RescueStationDeploymentDocument,
-						RescueStationDeploymentEntity,
-					);
-				case DeploymentType.OPERATION:
-					return this.mapper.map(
-						assignment,
-						OperationDeploymentDocument,
-						OperationDeploymentEntity,
-					);
-				default:
-					return null;
-			}
+			return this.mapDeploymentDocToEntity(assignments[0].deployment[0]);
 		}
 
 		return null;
+	}
+
+	/*
+	 * Get assignment of a unit or alert group.
+	 * @param orgId The organization id.
+	 * @param entityId The id of the unit or the alert group.
+	 */
+	async getAssignments(
+		orgId: string,
+		entityIds: string[],
+		uow?: DbSessionProvider | undefined,
+	): Promise<Record<string, BaseDeploymentEntity | null>> {
+		const query = this.deploymentAssignmentModel.aggregate([
+			{
+				$match: {
+					orgId,
+					entityId: { $in: entityIds },
+				},
+			},
+			{
+				$lookup: {
+					from: 'deployments',
+					localField: 'deploymentId',
+					foreignField: '_id',
+					as: 'deployment',
+				},
+			},
+			{
+				$unwind: {
+					path: '$deployment',
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+			{
+				$project: {
+					deployment: 1,
+					entityId: 1,
+				},
+			},
+		]);
+
+		const res = await runDbOperation(query, uow);
+
+		return res.reduce(
+			(acc, item) => {
+				acc[item.entityId] = item.deployment
+					? this.mapDeploymentDocToEntity(item)
+					: null;
+
+				return acc;
+			},
+			{} as Record<string, BaseDeploymentEntity | null>,
+		);
 	}
 
 	/*
@@ -245,5 +284,26 @@ export class DeploymentAssignmentRepositoryImpl
 		);
 
 		await runDbOperation(operation, uow);
+	}
+
+	private mapDeploymentDocToEntity(
+		assignment: DeploymentDocumentContract,
+	): BaseDeploymentEntity | null {
+		switch (assignment.type) {
+			case DeploymentType.RESCUE_STATION:
+				return this.mapper.map(
+					assignment,
+					RescueStationDeploymentDocument,
+					RescueStationDeploymentEntity,
+				);
+			case DeploymentType.OPERATION:
+				return this.mapper.map(
+					assignment,
+					OperationDeploymentDocument,
+					OperationDeploymentEntity,
+				);
+			default:
+				return null;
+		}
 	}
 }

@@ -13,7 +13,7 @@ import { NZ_I18N, de_DE } from 'ng-zorro-antd/i18n';
 
 import { AuthModule, DevAuthModule } from '@kordis/spa/core/auth';
 import { GeocodingModule } from '@kordis/spa/core/geocoding';
-import { GraphqlModule } from '@kordis/spa/core/graphql';
+import { provideGraphQL } from '@kordis/spa/core/graphql';
 import { SHARED_TOKENS } from '@kordis/spa/core/misc';
 import {
 	NoopObservabilityModule,
@@ -39,10 +39,6 @@ registerLocaleData(de);
 					environment.oauth.discoveryDocumentUrl,
 				)
 			: DevAuthModule.forRoot(),
-		GraphqlModule.forRoot(
-			environment.apiUrl + '/graphql',
-			environment.apiUrl + '/graphql-stream',
-		),
 		environment.sentryKey
 			? SentryObservabilityModule.forRoot(
 					environment.sentryKey,
@@ -64,6 +60,10 @@ registerLocaleData(de);
 		{ provide: NZ_I18N, useValue: de_DE },
 		{ provide: SHARED_TOKENS.API_URL, useValue: environment.apiUrl },
 		provideHttpClient(withInterceptorsFromDi()),
+		provideGraphQL(
+			environment.apiUrl + '/graphql',
+			environment.apiUrl + '/graphql-stream',
+		),
 	],
 })
 export class AppModule {}

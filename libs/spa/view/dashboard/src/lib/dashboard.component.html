@@ -2,17 +2,18 @@
 	<nz-header>
 		<div class="logo">Kordis</div>
 		<div>
+			@let user = user$ | async;
 			<nz-avatar
 				[nzDropdownMenu]="userMenu"
 				nz-dropdown
-				nzText="{{ (user$ | async)?.firstName?.slice(0, 1) }}{{
-					(user$ | async)?.lastName?.slice(0, 1)
+				nzText="{{ user?.firstName?.slice(0, 1) }}{{
+					user?.lastName?.slice(0, 1)
 				}}"
 			/>
 			<nz-dropdown-menu #userMenu="nzDropdownMenu">
 				<ul nz-menu>
 					<li nz-menu-item nzDisabled>
-						{{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
+						{{ user?.firstName }} {{ user?.lastName }}
 					</li>
 					<li (click)="logout()" nz-menu-item>Abmelden</li>
 					<li nz-menu-divider></li>
@@ -24,14 +25,17 @@
 		</div>
 	</nz-header>
 	<nz-content>
-		<div class="protocol">
-			<krd-protocol-view />
-		</div>
-		<div class="operations">
-			<krd-operations />
-		</div>
-		<div class="deployments">
+		<section class="action-bar-section">
+			<krd-action-bar />
+		</section>
+		<section class="deployments-section">
 			<krd-deployments />
-		</div>
+		</section>
+		<section class="protocol-section">
+			<krd-protocol-view />
+		</section>
+		<section class="operation-section">
+			<krd-operations />
+		</section>
 	</nz-content>
 </nz-layout>

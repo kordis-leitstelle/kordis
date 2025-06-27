@@ -5,15 +5,13 @@ import { AlertGroup, Query } from '@kordis/shared/model';
 import { gql } from '@kordis/spa/core/graphql';
 
 import { ASSIGNMENTS_FIELDS } from './assignments.fragment';
-import { EntitySearchEngine } from './entity-search.service';
-import { EntitySelectionSearchService } from './entity-selection-search.service';
-import { alertGroupMatchesByName } from './match-strategies';
+import { EntitySelectionService } from './entity-selection.service';
 
 /*
 	This service handles the selection of alert groups in a context where a unit can only be selected once.
  */
 @Injectable()
-export class PossibleAlertGroupSelectionsService extends EntitySelectionSearchService<
+export class PossibleAlertGroupSelectionsService extends EntitySelectionService<
 	AlertGroup,
 	{ alertGroups: Query['alertGroups'] }
 > {
@@ -42,5 +40,4 @@ export class PossibleAlertGroupSelectionsService extends EntitySelectionSearchSe
 		}
 	`;
 	protected queryName = 'alertGroups' as const;
-	protected searchService = new EntitySearchEngine(alertGroupMatchesByName);
 }

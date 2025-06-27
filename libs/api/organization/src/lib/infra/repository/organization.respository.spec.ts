@@ -3,21 +3,17 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/ts-jest';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { plainToInstance } from 'class-transformer';
 import { Model, Types } from 'mongoose';
 
 import {
-	Coordinate,
 	Mutable,
 	SharedKernel,
 	UNIT_OF_WORK_SERVICE,
 } from '@kordis/api/shared';
 import { mockModelMethodResult } from '@kordis/api/test-helpers';
 
-import {
-	BBox,
-	OrganizationEntity,
-	OrganizationGeoSettings,
-} from '../../core/entity/organization.entity';
+import { OrganizationEntity } from '../../core/entity/organization.entity';
 import {
 	OrganizationProfile,
 	OrganizationValueObjectsProfile,
@@ -85,6 +81,12 @@ describe('ImplOrganizationRepository', () => {
 					lon: 9.993682,
 					lat: 53.551086,
 				},
+				mapLayers: [],
+				mapStyles: {
+					streetUrl: 'street',
+					satelliteUrl: 'satellite',
+					darkUrl: 'dark',
+				},
 			};
 			const createdAt = new Date();
 			const updatedAt = new Date();
@@ -97,25 +99,22 @@ describe('ImplOrganizationRepository', () => {
 			orgDoc.createdAt = createdAt;
 			orgDoc.updatedAt = updatedAt;
 
-			const mappedOrg: Mutable<OrganizationEntity> = new OrganizationEntity();
-			mappedOrg.id = orgId;
-			mappedOrg.orgId = orgId;
-			mappedOrg.name = orgName;
-			mappedOrg.geoSettings = new OrganizationGeoSettings();
-			mappedOrg.geoSettings.bbox = new BBox();
-			mappedOrg.geoSettings.bbox.bottomRight = new Coordinate();
-			mappedOrg.geoSettings.bbox.bottomRight.lat =
-				geoSettings.bbox.bottomRight.lat;
-			mappedOrg.geoSettings.bbox.bottomRight.lon =
-				geoSettings.bbox.bottomRight.lon;
-			mappedOrg.geoSettings.bbox.topLeft = new Coordinate();
-			mappedOrg.geoSettings.bbox.topLeft.lat = geoSettings.bbox.topLeft.lat;
-			mappedOrg.geoSettings.bbox.topLeft.lon = geoSettings.bbox.topLeft.lon;
-			mappedOrg.geoSettings.centroid = new Coordinate();
-			mappedOrg.geoSettings.centroid.lat = geoSettings.centroid.lat;
-			mappedOrg.geoSettings.centroid.lon = geoSettings.centroid.lon;
-			mappedOrg.createdAt = createdAt;
-			mappedOrg.updatedAt = updatedAt;
+			const mappedOrg: Mutable<OrganizationEntity> = plainToInstance(
+				OrganizationEntity,
+				{
+					id: orgId,
+					orgId: orgId,
+					name: orgName,
+					geoSettings: {
+						bbox: geoSettings.bbox,
+						centroid: geoSettings.centroid,
+						mapLayers: geoSettings.mapLayers,
+						mapStyles: geoSettings.mapStyles,
+					},
+					createdAt: createdAt,
+					updatedAt: updatedAt,
+				},
+			);
 
 			mockModelMethodResult(organizationModel, orgDoc, 'findById');
 

@@ -1,4 +1,4 @@
-import { ProtocolEntryBase } from '../entity/protocol-entries/protocol-entry-base.entity';
+import { ProtocolEntryBase } from '../entity/protocol-entries/protocol-entry.entity';
 
 export const PROTOCOL_ENTRY_REPOSITORY = Symbol('ProtocolEntryRepository');
 
