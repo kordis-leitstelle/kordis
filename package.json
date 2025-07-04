@@ -121,7 +121,7 @@
     "@sentry/node": "^9.17.0",
     "@sentry/opentelemetry-node": "^7.114.0",
     "@sentry/profiling-node": "^9.17.0",
-    "angular-oauth2-oidc": "^19.0.0",
+    "angular-oauth2-oidc": "^20.0.0",
     "apollo-angular": "^10.0.3",
     "axios": "1.10.0",
     "class-transformer": "^0.5.1",
