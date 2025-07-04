@@ -49,7 +49,7 @@ export class BaseCreateMessageArgs {
 
 // We have this type, since with direct use of an input type, nullable fields will not work as expected (cannot be instantiated as the correct type).
 @ArgsType()
-export class ProtocolMessageArgs {
+export class ProtocolMessageInput {
 	@Field(() => BaseCreateMessageArgs, { nullable: true })
 	@Type(() => BaseCreateMessageArgs)
 	@ValidateNested()

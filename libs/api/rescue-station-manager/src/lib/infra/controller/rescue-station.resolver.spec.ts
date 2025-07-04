@@ -6,7 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { DeploymentNotFoundException } from '@kordis/api/deployment';
 import {
 	BaseCreateMessageArgs,
-	ProtocolMessageArgs,
+	ProtocolMessageInput,
 	UnitInput,
 } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
@@ -17,7 +17,7 @@ import { LaunchSignOnProcessCommand } from '../../core/command/launch-sign-on-pr
 import { LaunchUpdateSignedInRescueStationProcessCommand } from '../../core/command/launch-update-signed-in-rescue-station-process.command';
 import { RescueStationResolver } from './rescue-station.resolver';
 
-const PROTOCOL_ARGS_DATA: ProtocolMessageArgs = {
+const PROTOCOL_ARGS_DATA: ProtocolMessageInput = {
 	protocolMessage: plainToInstance(BaseCreateMessageArgs, {
 		sender: plainToInstance(UnitInput, {
 			type: 'REGISTERED_UNIT',

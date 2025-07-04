@@ -7,7 +7,7 @@ import {
 	GetRescueStationDeploymentQuery,
 	RescueStationDeploymentViewModel,
 } from '@kordis/api/deployment';
-import { ProtocolMessageArgs } from '@kordis/api/protocol';
+import { ProtocolMessageInput } from '@kordis/api/protocol';
 import { PresentableNotFoundException } from '@kordis/api/shared';
 import { AuthUser } from '@kordis/shared/model';
 
@@ -27,7 +27,7 @@ export class RescueStationResolver {
 	async updateSignedInRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
-		@Args() { protocolMessage }: ProtocolMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageInput,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
@@ -53,7 +53,7 @@ export class RescueStationResolver {
 	async signOffRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationId') rescueStationId: string,
-		@Args() { protocolMessage }: ProtocolMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageInput,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(
@@ -79,7 +79,7 @@ export class RescueStationResolver {
 	async signInRescueStation(
 		@RequestUser() reqUser: AuthUser,
 		@Args('rescueStationData') rescueStationData: UpdateRescueStationInput,
-		@Args() { protocolMessage }: ProtocolMessageArgs,
+		@Args() { protocolMessage }: ProtocolMessageInput,
 	): Promise<RescueStationDeploymentViewModel> {
 		try {
 			await this.commandBus.execute(

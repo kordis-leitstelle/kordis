@@ -14,7 +14,7 @@ import { AuthUser } from '@kordis/shared/model';
 
 import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
-import { CreateOngoingOperationInput } from './create-ongoing-operation.input';
+import { CreateOngoingOperationArgs } from './create-ongoing-operation.args';
 import { OperationManagerResolver } from './operation-manager.resolver';
 
 describe('OperationManagerResolver', () => {
@@ -41,7 +41,7 @@ describe('OperationManagerResolver', () => {
 	} as AuthUser;
 
 	describe('createOngoingOperation', () => {
-		const operationArgs: CreateOngoingOperationInput = {
+		const operationArgs: CreateOngoingOperationArgs = {
 			start: new Date(),
 			alarmKeyword: 'THWAY',
 			location: {
@@ -71,6 +71,11 @@ describe('OperationManagerResolver', () => {
 				reqUser,
 				{ protocolMessage: MOCK_BASE_CREATE_MESSAGE_ARGS },
 				operationArgs,
+				{
+					alertGroupIds: ['alertGroupId'],
+					description: 'somewhere',
+					hasPriority: false,
+				},
 			);
 
 			expect(result).toEqual({
@@ -81,6 +86,11 @@ describe('OperationManagerResolver', () => {
 					reqUser,
 					operationArgs,
 					TRANSFORMED_MOCK_BASE_CREATE_MESSAGE_ARGS,
+					{
+						alertGroupIds: ['alertGroupId'],
+						description: 'somewhere',
+						hasPriority: false,
+					},
 				),
 			);
 		});
