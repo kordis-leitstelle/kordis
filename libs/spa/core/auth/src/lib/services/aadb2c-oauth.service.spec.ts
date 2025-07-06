@@ -13,7 +13,7 @@ describe('AADB2COAuthService', () => {
 		service: AADB2COAuthService,
 		providers: [
 			mockProvider(OAuthService, {
-				// eslint-disable-next-line rxjs/finnish,rxjs/suffix-subjects
+				// eslint-disable-next-line @smarttools/rxjs/finnish,@smarttools/rxjs/suffix-subjects
 				events: mockEventSubject$,
 			}),
 		],
@@ -54,7 +54,7 @@ describe('AADB2COAuthService', () => {
 			emails: ['testmail', 'irrelevant testmail'],
 		});
 
-		jest.spyOn(mockOauth, 'hasValidAccessToken').mockResolvedValueOnce(true); // isAuthenticated$ => true trigger
+		jest.spyOn(mockOauth, 'hasValidAccessToken').mockReturnValueOnce(true); // isAuthenticated$ => true trigger
 
 		mockEventSubject$.next({} as OAuthEvent);
 

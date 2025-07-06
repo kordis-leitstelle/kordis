@@ -17,7 +17,7 @@ export class OperationActionsService {
 	private readonly apiUrl = inject(SHARED_TOKENS.API_URL);
 	private readonly notificationService = inject(NzNotificationService);
 
-	// eslint-disable-next-line rxjs/finnish
+	// eslint-disable-next-line @smarttools/rxjs/finnish
 	deleteOperation(operationId: string): Observable<boolean> {
 		return this.gqlService
 			.mutate$(
@@ -48,7 +48,7 @@ export class OperationActionsService {
 			);
 	}
 
-	// eslint-disable-next-line rxjs/finnish
+	// eslint-disable-next-line @smarttools/rxjs/finnish
 	archiveOperation(operationId: string): Observable<boolean> {
 		return this.gqlService
 			.mutate$(
@@ -101,7 +101,7 @@ export class OperationActionsService {
 			);
 	}
 
-	// eslint-disable-next-line rxjs/finnish
+	// eslint-disable-next-line @smarttools/rxjs/finnish
 	createAndOpenPdf(operationId: string): Observable<void> {
 		return this.http
 			.get(`${this.apiUrl}/operation/${operationId}.pdf`, {

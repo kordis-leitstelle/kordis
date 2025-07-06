@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
 	FormArray,
 	FormControl,
@@ -55,18 +55,16 @@ const PATIENT_QUERY_FIELDS = `
 })
 export class OperationPatientsComponent extends BaseOperationTabComponent {
 	readonly formArray: FormArray<PatientFormGroup>;
+	private readonly fb: NonNullableFormBuilder;
 
-	constructor(
-		private readonly fb: NonNullableFormBuilder,
-		iconService: NzIconService,
-	) {
-		iconService.addIcon(
+	constructor() {
+		inject(NzIconService).addIcon(
 			PlusCircleOutline,
 			MinusCircleOutline,
 			DeleteOutline,
 			PlusOutline,
 		);
-
+		const fb = inject(NonNullableFormBuilder);
 		const _control = fb.array<PatientFormGroup>([]);
 
 		super(
@@ -94,6 +92,7 @@ export class OperationPatientsComponent extends BaseOperationTabComponent {
 			_control,
 		);
 
+		this.fb = fb;
 		this.formArray = _control;
 	}
 

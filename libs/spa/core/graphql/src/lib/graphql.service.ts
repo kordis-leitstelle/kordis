@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
 import { Apollo, QueryRef } from 'apollo-angular';
 import { Observable, map } from 'rxjs';
@@ -12,7 +12,7 @@ export type QueryReturnType<TData> = {
 	providedIn: 'root',
 })
 export class GraphqlService {
-	constructor(private readonly apollo: Apollo) {}
+	private readonly apollo = inject(Apollo);
 
 	queryOnce$<TData = unknown>(
 		query: DocumentNode,

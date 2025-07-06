@@ -1,4 +1,4 @@
-import { Injectable, Signal } from '@angular/core';
+import { Injectable, Signal, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
@@ -24,10 +24,10 @@ export class AADB2COAuthService implements AuthService {
 		false,
 	);
 
-	constructor(
-		private readonly oauthService: OAuthService,
-		private readonly router: Router,
-	) {
+	private readonly oauthService = inject(OAuthService);
+	private readonly router = inject(Router);
+
+	constructor() {
 		this.isAuthenticated$ = this.isAuthenticatedSubject$
 			.asObservable()
 			.pipe(distinctUntilChanged());

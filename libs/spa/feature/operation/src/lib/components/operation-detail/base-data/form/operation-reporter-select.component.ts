@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -27,7 +26,6 @@ const REPORTER_TYPES = Object.freeze([
 @Component({
 	selector: 'krd-reporter-select',
 	imports: [
-		CommonModule,
 		FormsModule,
 		NzNoAnimationDirective,
 		NzOptionComponent,

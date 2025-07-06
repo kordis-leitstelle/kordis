@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
@@ -141,6 +141,7 @@ import { DevAuthService } from '../services/dev-auth.service';
 	],
 })
 export class DevLoginComponent {
+	private readonly fb = inject(FormBuilder);
 	readonly customClaimsForm = this.fb.nonNullable.group({
 		id: ['', Validators.required],
 		firstName: ['', Validators.required],
@@ -152,11 +153,8 @@ export class DevLoginComponent {
 
 	readonly usernames = TEST_USERS.map((u) => u.userName);
 
-	constructor(
-		@Inject(AUTH_SERVICE) private readonly devAuthService: DevAuthService,
-		private readonly fb: FormBuilder,
-		private readonly router: Router,
-	) {}
+	private readonly devAuthService = inject<DevAuthService>(AUTH_SERVICE);
+	private readonly router = inject(Router);
 
 	loginAsTestuser(id: number): void {
 		this.devAuthService.setSession(TEST_USERS[id]);

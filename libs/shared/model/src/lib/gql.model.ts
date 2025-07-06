@@ -109,7 +109,7 @@ export type CoordinateInput = {
 	lon: Scalars['Float']['input'];
 };
 
-export type CreateOngoingOperationInput = {
+export type CreateOngoingOperationArgs = {
 	alarmKeyword: Scalars['String']['input'];
 	assignedAlertGroups: Array<CreateOperationInvolvedAlertGroupInput>;
 	assignedUnitIds: Array<Scalars['String']['input']>;
@@ -277,7 +277,8 @@ export type MutationCreateCommunicationMessageArgs = {
 };
 
 export type MutationCreateOngoingOperationArgs = {
-	operation: CreateOngoingOperationInput;
+	alertData: OperationAlertArgs;
+	operation: CreateOngoingOperationArgs;
 	protocolMessage?: InputMaybe<BaseCreateMessageInput>;
 };
 
@@ -393,6 +394,12 @@ export type Operation = {
 	start: Scalars['DateTime']['output'];
 	unitInvolvements: Array<OperationUnitInvolvement>;
 	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type OperationAlertArgs = {
+	alertGroupIds: Array<Scalars['String']['input']>;
+	description: Scalars['String']['input'];
+	hasPriority: Scalars['Boolean']['input'];
 };
 
 export type OperationAlertGroupInvolvement = {

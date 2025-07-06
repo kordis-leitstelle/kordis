@@ -4,7 +4,7 @@ import {
 	HttpInterceptor,
 	HttpRequest,
 } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, first } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ import { DevAuthService } from '../services/dev-auth.service';
 
 @Injectable()
 export class DevAuthInterceptor implements HttpInterceptor {
-	constructor(@Inject(AUTH_SERVICE) private authService: DevAuthService) {}
+	private readonly authService = inject<DevAuthService>(AUTH_SERVICE);
 
 	intercept(
 		req: HttpRequest<unknown>,
