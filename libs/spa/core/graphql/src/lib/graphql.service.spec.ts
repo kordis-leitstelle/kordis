@@ -1,3 +1,4 @@
+import { TestBed } from '@angular/core/testing';
 import {
 	ApolloQueryResult,
 	DocumentNode,
@@ -15,7 +16,10 @@ describe('GraphqlService', () => {
 
 	beforeEach(() => {
 		apolloMock = createMock<Apollo>();
-		graphqlService = new GraphqlService(apolloMock);
+		TestBed.configureTestingModule({
+			providers: [GraphqlService, { provide: Apollo, useValue: apolloMock }],
+		});
+		graphqlService = TestBed.inject(GraphqlService);
 	});
 
 	it('should call apollo.query and return the response', async () => {
@@ -45,7 +49,7 @@ describe('GraphqlService', () => {
 		const variables = {};
 
 		const queryRefMock = createMock<QueryRef<unknown>>({
-			// eslint-disable-next-line rxjs/finnish
+			// eslint-disable-next-line @smarttools/rxjs/finnish
 			valueChanges: of({ data: { foo: 'bar' }, errors: null }),
 			refetch: jest
 				.fn()

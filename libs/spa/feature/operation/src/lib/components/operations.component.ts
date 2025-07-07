@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -39,7 +39,6 @@ import { OperationSelectComponent } from './operation-select.component';
 @Component({
 	selector: 'krd-operations',
 	imports: [
-		CommonModule,
 		OperationDetailComponent,
 		NzIconDirective,
 		OperationSelectComponent,
@@ -78,8 +77,8 @@ export class OperationsComponent {
 		operations: Operation[];
 	}>;
 
-	constructor(iconService: NzIconService) {
-		iconService.addIcon(
+	constructor() {
+		inject(NzIconService).addIcon(
 			PlusOutline,
 			DeleteOutline,
 			FileZipOutline,

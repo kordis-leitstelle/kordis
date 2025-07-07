@@ -9,6 +9,7 @@ import {
 	computed,
 	contentChild,
 	forwardRef,
+	inject,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -30,8 +31,7 @@ import { ControlValueAccessorBase } from '@kordis/spa/core/misc';
 export class AutocompleteOptionTemplateDirective<TContext> {
 	// type token, so we get type hints for the context variable
 	readonly list = input.required<TContext[]>();
-
-	constructor(public templateRef: TemplateRef<{ $implicit: TContext }>) {}
+	readonly templateRef = inject(TemplateRef);
 
 	static ngTemplateContextGuard<TContext>(
 		dir: AutocompleteOptionTemplateDirective<TContext>,

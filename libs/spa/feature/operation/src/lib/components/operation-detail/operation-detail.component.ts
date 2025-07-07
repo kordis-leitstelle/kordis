@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
 	NzTabComponent,
 	NzTabDirective,
-	NzTabSetComponent,
+	NzTabsComponent,
 } from 'ng-zorro-antd/tabs';
 
 import { TabsFormStateService } from '../../service/tabs-form-state.service';
@@ -20,16 +20,16 @@ import { OperationProtocolComponent } from './protocol/operation-protocol.compon
 		FormStateIndicatorComponent,
 		NzTabComponent,
 		NzTabDirective,
-		NzTabSetComponent,
 		OperationBaseDataComponent,
 		OperationCategoriesComponent,
 		OperationDescriptionComponent,
 		OperationInvolvementsComponent,
 		OperationPatientsComponent,
 		OperationProtocolComponent,
+		NzTabsComponent,
 	],
 	template: `
-		<nz-tabset [nzAnimated]="false" nzSize="small">
+		<nz-tabs [nzAnimated]="false" nzSize="small">
 			<nz-tab [nzTitle]="baseDataTitle">
 				<ng-template #baseDataTitle>
 					<div class="tab-title">
@@ -104,7 +104,7 @@ import { OperationProtocolComponent } from './protocol/operation-protocol.compon
 					<krd-operation-protocol />
 				</ng-template>
 			</nz-tab>
-		</nz-tabset>
+		</nz-tabs>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	styles: `
@@ -114,7 +114,7 @@ import { OperationProtocolComponent } from './protocol/operation-protocol.compon
 			gap: calc(var(--base-spacing) / 2);
 		}
 
-		nz-tabset {
+		nz-tabs {
 			height: 100%;
 			display: flex;
 			flex-direction: column;

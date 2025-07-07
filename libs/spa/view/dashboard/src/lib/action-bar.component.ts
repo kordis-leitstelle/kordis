@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
@@ -17,7 +16,6 @@ import {
 @Component({
 	selector: 'krd-action-bar',
 	imports: [
-		CommonModule,
 		GlobalSearchComponent,
 		NzButtonComponent,
 		NzIconModule,

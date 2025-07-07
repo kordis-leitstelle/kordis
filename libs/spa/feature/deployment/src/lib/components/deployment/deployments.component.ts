@@ -73,8 +73,8 @@ export class DeploymentsComponent {
 		},
 	);
 
-	constructor(iconService: NzIconService) {
-		iconService.addIcon(
+	constructor() {
+		inject(NzIconService).addIcon(
 			InfoCircleOutline,
 			UndoOutline,
 			EditOutline,

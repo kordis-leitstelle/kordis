@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -27,7 +26,6 @@ export type OperationBaseDataFormGroup = FormGroup<OperationBaseDataForm>;
 @Component({
 	selector: 'krd-operation-base-data-form',
 	imports: [
-		CommonModule,
 		DateMaskInputComponent,
 		NzColDirective,
 		NzFormModule,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
@@ -51,12 +51,10 @@ import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
 })
 export class AuthComponent {
 	readonly hasAuthError$: Observable<boolean>;
-
-	constructor(
-		activatedRoute: ActivatedRoute,
-		@Inject(AUTH_SERVICE) private readonly authService: AuthService,
-	) {
-		this.hasAuthError$ = activatedRoute.queryParams.pipe(
+	private readonly authService: AuthService = inject(AUTH_SERVICE);
+	private readonly activatedRoute = inject(ActivatedRoute);
+	constructor() {
+		this.hasAuthError$ = this.activatedRoute.queryParams.pipe(
 			map((params) => !!params['error']),
 			takeUntilDestroyed(),
 		);

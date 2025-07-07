@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -40,7 +39,6 @@ export type UnitInvolvementFormGroup = FormGroup<{
 @Component({
 	selector: 'krd-operation-unit-involvement-times',
 	imports: [
-		CommonModule,
 		NzTableModule,
 		ReactiveFormsModule,
 		NzFormItemComponent,

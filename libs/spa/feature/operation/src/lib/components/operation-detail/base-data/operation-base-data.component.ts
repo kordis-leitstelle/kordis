@@ -2,6 +2,7 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	inject,
 } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { debounce, map, pipe, timer } from 'rxjs';
@@ -63,10 +64,11 @@ const KEYS_TO_DEBOUNCE: ReadonlySet<keyof OperationBaseDataForm> = new Set<
 export class OperationBaseDataComponent extends BaseOperationTabComponent {
 	readonly formGroup: OperationBaseDataFormGroup;
 
-	constructor(
-		private readonly fb: NonNullableFormBuilder,
-		private readonly cd: ChangeDetectorRef,
-	) {
+	private readonly fb: NonNullableFormBuilder;
+	private readonly cd = inject(ChangeDetectorRef);
+
+	constructor() {
+		const fb = inject(NonNullableFormBuilder);
 		const _formGroup = fb.group(
 			{
 				start: fb.control(new Date(), [
@@ -133,7 +135,7 @@ export class OperationBaseDataComponent extends BaseOperationTabComponent {
 				}),
 			),
 		);
-
+		this.fb = fb;
 		this.formGroup = _formGroup;
 	}
 

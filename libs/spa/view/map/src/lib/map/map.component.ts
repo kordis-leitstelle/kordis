@@ -119,8 +119,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 		draggable: true,
 	});
 
-	constructor(iconService: NzIconService) {
-		iconService.addIcon(BarsOutline, AimOutline);
+	constructor() {
+		inject(NzIconService).addIcon(BarsOutline, AimOutline);
 
 		toObservable(this.layerService.activeStyle)
 			.pipe(skip(1), takeUntilDestroyed())

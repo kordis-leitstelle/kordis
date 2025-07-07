@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
 	FormControl,
 	NonNullableFormBuilder,
@@ -23,8 +23,8 @@ import { OperationDescriptionTextareaComponent } from './operation-description-t
 export class OperationDescriptionComponent extends BaseOperationTabComponent {
 	readonly descriptionControl: FormControl<string>;
 
-	constructor(fb: NonNullableFormBuilder) {
-		const _control = fb.control('');
+	constructor() {
+		const _control = inject(NonNullableFormBuilder).control('');
 		super(
 			'description',
 			gql`

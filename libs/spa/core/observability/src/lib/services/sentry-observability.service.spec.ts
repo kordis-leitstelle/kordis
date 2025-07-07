@@ -3,6 +3,7 @@ import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 // @formatter:off
 import * as SentryAngularIvy from '@sentry/angular';
 
+import { Role } from '@kordis/shared/model';
 import { AUTH_SERVICE, DevAuthService } from '@kordis/spa/core/auth';
 
 import { SentryObservabilityService } from './sentry-observability.service';
@@ -58,6 +59,8 @@ describe('SentryObservabilityService', () => {
 			firstName: 'firstname',
 			lastName: 'lastname',
 			email: 'testmail',
+			role: Role.ORGANIZATION_ADMIN,
+			organizationId: 'org-1',
 		});
 		expect(sentrySetUser).toHaveBeenCalledTimes(2);
 		expect(sentrySetUser).toHaveBeenCalledWith({

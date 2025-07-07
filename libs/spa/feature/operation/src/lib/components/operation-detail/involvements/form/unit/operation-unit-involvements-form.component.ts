@@ -214,8 +214,9 @@ export class OperationInvolvementsFormComponent implements OnDestroy {
 
 	private readonly cleanupSubject$ = new Subject<void>();
 
-	constructor(nzIconService: NzIconService, cd: ChangeDetectorRef) {
-		nzIconService.addIcon(WarningOutline, InfoCircleOutline);
+	constructor() {
+		inject(NzIconService).addIcon(WarningOutline, InfoCircleOutline);
+		const cd = inject(ChangeDetectorRef);
 
 		effect(() => {
 			this.cleanupSubject$.next();

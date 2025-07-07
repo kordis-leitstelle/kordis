@@ -1,6 +1,7 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	inject,
 	input,
 	model,
 } from '@angular/core';
@@ -76,7 +77,7 @@ export class DeploymentNotePopupComponent {
 	readonly note = model.required<string>();
 	readonly isLoading = input(false);
 
-	constructor(iconService: NzIconService) {
-		iconService.addIcon(CloseOutline);
+	constructor() {
+		inject(NzIconService).addIcon(CloseOutline);
 	}
 }

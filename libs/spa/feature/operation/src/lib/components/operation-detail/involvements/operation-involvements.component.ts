@@ -103,8 +103,9 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 	);
 	private readonly cd = inject(ChangeDetectorRef);
 	private readonly operationTimeState = inject(InvolvementOperationTimeState);
-
-	constructor(private readonly formFactory: InvolvementFormFactory) {
+	private readonly formFactory: InvolvementFormFactory;
+	constructor() {
+		const formFactory = inject(InvolvementFormFactory);
 		const _control = formFactory.createForm();
 
 		super(
@@ -147,6 +148,7 @@ export class OperationInvolvementsComponent extends BaseOperationTabComponent<In
 			})),
 		);
 
+		this.formFactory = formFactory;
 		this.recheckValidityOnChange();
 	}
 

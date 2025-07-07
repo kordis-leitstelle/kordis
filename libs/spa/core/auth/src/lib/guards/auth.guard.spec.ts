@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import {
 	ActivatedRouteSnapshot,
-	NavigationExtras,
 	Router,
 	RouterStateSnapshot,
 } from '@angular/router';
@@ -21,12 +20,7 @@ describe('AuthGuard', () => {
 			isAuthenticated$: isAuthenticatedSubject$.asObservable(),
 		});
 		routerMock = createMock<Router>({
-			async navigate(
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				commands: unknown[],
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				extras?: NavigationExtras,
-			): Promise<boolean> {
+			async navigate(): Promise<boolean> {
 				return true;
 			},
 		});

@@ -16,11 +16,7 @@ type MaptilerFeature = {
 })
 export class GeoSearchService {
 	private readonly mapTilerKey = inject(MAP_TILER_KEY);
-	private readonly httpClient: HttpClient;
-
-	constructor(handler: HttpBackend) {
-		this.httpClient = new HttpClient(handler); // new client to avoid auth interceptors leading to cors errors
-	}
+	private readonly httpClient = new HttpClient(inject(HttpBackend));
 
 	search(query: string, types?: string[]): Observable<GeoSearchResult[]> {
 		if (!query) {
