@@ -2,7 +2,7 @@ import { AlarmBuilder, DiveraClient } from 'divera247-api-unofficial';
 
 import { OperationViewModel } from '@kordis/api/operation';
 
-import { AlertGroupDiveraCOnfig } from '../../../core/entity/alert-group-config.entity';
+import { AlertGroupDiveraConfig } from '../../../core/entity/alert-group-config.entity';
 import { DiveraOrgConfig } from '../../../core/entity/alert-org-config.entity';
 import { DiveraRequestFailedError } from '../../error/divera-request-failed.error';
 import { AlertingProviders } from '../../schema/alerting-org-config.schema';
@@ -12,13 +12,12 @@ export class DiveraProvider implements AlertingProvider {
 	readonly provider = AlertingProviders.DIVERA;
 
 	async alertWithOperation(
-		alertGroupConfigs: AlertGroupDiveraCOnfig[],
+		alertGroupConfigs: AlertGroupDiveraConfig[],
 		operation: OperationViewModel,
 		hasPriority: boolean,
 		config: DiveraOrgConfig,
 	): Promise<void> {
 		const client = new DiveraClient(config.token);
-
 		let alarmBuilder = new AlarmBuilder()
 			.address(this.getAddress(operation.location))
 			.details(operation.alarmKeyword, operation.description)

@@ -13,6 +13,8 @@ import { AuthUser } from '@kordis/shared/model';
 import { LaunchChangeOngoingOperationInvolvementsCommand } from '../../core/command/launch-change-ongoing-operation-involvements.command';
 import { LaunchCreateOngoingOperationProcessCommand } from '../../core/command/launch-create-ongoing-operation-process.command';
 import { LaunchEndOperationProcessCommand } from '../../core/command/launch-end-operation-process.command';
+import { AlertFailedError } from '../../core/exception/alert-failed.error';
+import { AlertFailedPresentableError } from '../exceptions/alert-failed.error';
 import {
 	CreateOngoingOperationArgs,
 	OperationAlertArgs,
@@ -30,7 +32,8 @@ export class OperationManagerResolver {
 		@RequestUser() reqUser: AuthUser,
 		@Args() { protocolMessage }: ProtocolMessageInput,
 		@Args('operation') operation: CreateOngoingOperationArgs,
-		@Args('alertData', { defaultValue: null }) alertData?: OperationAlertArgs,
+		@Args('alertData', { defaultValue: null, nullable: true })
+		alertData?: OperationAlertArgs,
 	): Promise<OperationViewModel> {
 		try {
 			return await this.commandBus.execute(
@@ -47,6 +50,8 @@ export class OperationManagerResolver {
 					'Die Einsatzdaten enthalten invalide Werte.',
 					error,
 				);
+			} else if (error instanceof AlertFailedError) {
+				throw new AlertFailedPresentableError();
 			}
 
 			throw error;

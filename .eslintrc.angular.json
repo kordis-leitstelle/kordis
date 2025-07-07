@@ -10,7 +10,8 @@
 				"@smarttools/rxjs/finnish": "error",
 				"@smarttools/rxjs/no-exposed-subjects": "error",
 				"@smarttools/rxjs/no-subject-value": "error",
-				"@smarttools/rxjs/suffix-subjects": "error"
+				"@smarttools/rxjs/suffix-subjects": "error",
+				"@smarttools/rxjs/no-implicit-any-catch": "warn"
 			}
 		}
 	]

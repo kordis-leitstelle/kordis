@@ -1,13 +1,13 @@
 import { AutoMap } from '@automapper/classes';
 
-export type AlertGroupConfig = AlertGroupDiveraCOnfig;
+export type AlertGroupConfig = AlertGroupDiveraConfig;
 
 export class BaseAlertGroupConfig {
 	@AutoMap()
 	alertGroupId: string;
 }
 
-export class AlertGroupDiveraCOnfig extends BaseAlertGroupConfig {
+export class AlertGroupDiveraConfig extends BaseAlertGroupConfig {
 	@AutoMap()
 	diveraGroupId: string;
 }

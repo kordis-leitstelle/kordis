@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { ALERT_SERVICE } from './core/alert.service';
+import { CreateAlertForOperationCommandHandler } from './core/command/create-alert-for-operation.command';
 import { ALERT_GROUP_CONFIG_REPOSITORY } from './core/repo/alert-group-config.repository';
 import { ALERT_ORG_CONFIG_REPOSITORY } from './core/repo/alert-org-config.repository';
 import { AlertGroupConfigProfile } from './infra/mapper/alert-group-config.mapper';
@@ -20,6 +21,7 @@ import {
 	DiveraConfigSchema,
 } from './infra/schema/alerting-org-config.schema';
 import { DiveraProvider } from './infra/service/alert-provider/divera.provider';
+import { MockAlertingProvider } from './infra/service/alert-provider/mock.provider';
 import { AlertingFacade } from './infra/service/alerting.facade';
 
 @Module({
@@ -63,10 +65,15 @@ import { AlertingFacade } from './infra/service/alerting.facade';
 		AlertGroupConfigProfile,
 		AlertOrgConfigProfile,
 		DiveraProvider,
+		MockAlertingProvider,
+		CreateAlertForOperationCommandHandler,
 		{
 			provide: 'ALERT_PROVIDERS',
-			useFactory: (divera: DiveraProvider) => [divera],
-			inject: [DiveraProvider],
+			useFactory: (divera: DiveraProvider, mock: MockAlertingProvider) => [
+				divera,
+				mock,
+			],
+			inject: [DiveraProvider, MockAlertingProvider],
 		},
 	],
 })

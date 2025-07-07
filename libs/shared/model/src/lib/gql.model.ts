@@ -277,7 +277,7 @@ export type MutationCreateCommunicationMessageArgs = {
 };
 
 export type MutationCreateOngoingOperationArgs = {
-	alertData: OperationAlertArgs;
+	alertData?: InputMaybe<OperationAlertArgs>;
 	operation: CreateOngoingOperationArgs;
 	protocolMessage?: InputMaybe<BaseCreateMessageInput>;
 };
