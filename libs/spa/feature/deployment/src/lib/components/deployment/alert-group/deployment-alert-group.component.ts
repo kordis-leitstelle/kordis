@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 
@@ -8,7 +7,7 @@ import { DeploymentUnitComponent } from '../unit/deployment-unit.component';
 
 @Component({
 	selector: 'krd-deployment-alert-group',
-	imports: [CommonModule, DeploymentUnitComponent, NzCardComponent],
+	imports: [DeploymentUnitComponent, NzCardComponent],
 	template: `
 		<nz-card
 			[nzBodyStyle]="{

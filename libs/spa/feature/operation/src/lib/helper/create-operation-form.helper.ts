@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 
 import {
-	CreateOngoingOperationInput,
+	CreateOngoingOperationArgs,
 	CreateOperationInput,
 	Unit,
 } from '@kordis/shared/model';
@@ -74,7 +74,7 @@ export function makeCreateOperationForm(
 
 export function getOperationPayloadFromForm(
 	formGroup: CreateOperationFormGroup,
-): CreateOperationInput | CreateOngoingOperationInput {
+): CreateOperationInput | CreateOngoingOperationArgs {
 	const formData = formGroup.getRawValue();
 	const end = formData.end?.toISOString();
 	return {

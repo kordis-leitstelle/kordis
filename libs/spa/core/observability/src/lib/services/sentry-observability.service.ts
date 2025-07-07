@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { setUser as sentrySetUser } from '@sentry/angular';
 
 import { AUTH_SERVICE, AuthService } from '@kordis/spa/core/auth';
@@ -13,7 +13,8 @@ export const OBSERVABILITY_SERVICE = new InjectionToken<ObservabilityService>(
 
 @Injectable()
 export class SentryObservabilityService implements ObservabilityService {
-	constructor(@Inject(AUTH_SERVICE) private readonly authService: AuthService) {
+	private readonly authService: AuthService = inject(AUTH_SERVICE);
+	constructor() {
 		this.subscribeToUserChanges();
 	}
 

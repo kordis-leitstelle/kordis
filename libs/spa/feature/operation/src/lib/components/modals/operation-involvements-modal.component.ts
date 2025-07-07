@@ -14,13 +14,7 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { filter, first, map, tap, withLatestFrom } from 'rxjs';
 
-import {
-	AlertGroup,
-	DeploymentAlertGroup,
-	Operation,
-	Query,
-	Unit,
-} from '@kordis/shared/model';
+import { AlertGroup, Operation, Query, Unit } from '@kordis/shared/model';
 import { GraphqlService, gql } from '@kordis/spa/core/graphql';
 import {
 	AlertGroupAssignmentFormGroup,

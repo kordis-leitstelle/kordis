@@ -13,7 +13,7 @@ describe('UpdateService', () => {
 	beforeEach(() => {
 		windowSpy = jest.spyOn(window, 'confirm');
 		swUpdateMock = createMock<SwUpdate>({
-			// eslint-disable-next-line rxjs/finnish
+			// eslint-disable-next-line @smarttools/rxjs/finnish
 			versionUpdates: versionUpdateSubject$.asObservable(),
 		});
 		TestBed.configureTestingModule({

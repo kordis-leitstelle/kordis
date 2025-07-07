@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { InfoCircleOutline } from '@ant-design/icons-angular/icons';
 import { NzIconDirective, NzIconService } from 'ng-zorro-antd/icon';
 import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
@@ -17,7 +17,7 @@ import { NzTooltipDirective } from 'ng-zorro-antd/tooltip';
 export class NoteIndicatorComponent {
 	readonly note = input.required<string>();
 
-	constructor(iconService: NzIconService) {
-		iconService.addIcon(InfoCircleOutline);
+	constructor() {
+		inject(NzIconService).addIcon(InfoCircleOutline);
 	}
 }

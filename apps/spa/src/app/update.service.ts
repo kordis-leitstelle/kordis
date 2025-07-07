@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SwUpdate, type VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs';
 
@@ -6,10 +6,10 @@ import { filter } from 'rxjs';
 	providedIn: 'root',
 })
 export class UpdateService {
-	constructor(swUpdate: SwUpdate) {
+	constructor() {
 		// todo: create an interval to check for updates
-		swUpdate.versionUpdates
-			.pipe(
+		inject(SwUpdate)
+			.versionUpdates.pipe(
 				filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
 				filter(() => this.askForUpdatePermission()),
 			)

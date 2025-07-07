@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -27,7 +26,6 @@ import { OperationCategorySelectComponent } from './operation-category-select.co
 @Component({
 	selector: 'krd-operation-category-table',
 	imports: [
-		CommonModule,
 		NzButtonComponent,
 		NzCheckboxComponent,
 		NzIconDirective,
@@ -60,7 +58,8 @@ export class OperationCategoryTableComponent implements OnDestroy {
 
 	private readonly cleanupSubject$ = new Subject<void>();
 
-	constructor(cd: ChangeDetectorRef) {
+	constructor() {
+		const cd = inject(ChangeDetectorRef);
 		effect(() => {
 			this.cleanupSubject$.next();
 

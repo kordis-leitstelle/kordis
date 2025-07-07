@@ -5,12 +5,12 @@
 				"project": ["./tsconfig*.json"]
 			},
 			"files": ["*.ts"],
-			"extends": ["plugin:rxjs/recommended"],
+			"extends": ["plugin:@smarttools/rxjs/recommended-legacy"],
 			"rules": {
-				"rxjs/finnish": "error",
-				"rxjs/no-exposed-subjects": "error",
-				"rxjs/no-subject-value": "error",
-				"rxjs/suffix-subjects": "error"
+				"@smarttools/rxjs/finnish": "error",
+				"@smarttools/rxjs/no-exposed-subjects": "error",
+				"@smarttools/rxjs/no-subject-value": "error",
+				"@smarttools/rxjs/suffix-subjects": "error"
 			}
 		}
 	]

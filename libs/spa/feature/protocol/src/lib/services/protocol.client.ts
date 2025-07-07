@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, map, tap } from 'rxjs';
 
@@ -25,9 +25,9 @@ export class ProtocolClient {
 	private readonly query: QueryReturnType<{
 		protocolEntries: Query['protocolEntries'];
 	}>;
-
-	constructor(private readonly gqlService: GraphqlService) {
-		this.query = gqlService.query(GET_PROTOCOL_ENTRIES_QUERY, {
+	private readonly gqlService = inject(GraphqlService);
+	constructor() {
+		this.query = this.gqlService.query(GET_PROTOCOL_ENTRIES_QUERY, {
 			after: null,
 			before: null,
 		});

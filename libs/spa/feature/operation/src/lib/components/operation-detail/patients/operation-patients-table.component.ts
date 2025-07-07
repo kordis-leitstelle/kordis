@@ -44,15 +44,16 @@ export class OperationPatientsTableComponent implements OnDestroy {
 	expendedRow = -1;
 
 	private readonly fb = inject(NonNullableFormBuilder);
+	private readonly cd = inject(ChangeDetectorRef);
 	private readonly cleanupSubject$ = new Subject<void>();
 
-	constructor(cd: ChangeDetectorRef) {
+	constructor() {
 		effect(() => {
 			this.cleanupSubject$.next();
 
 			this.formArray()
 				.valueChanges.pipe(takeUntil(this.cleanupSubject$))
-				.subscribe(() => cd.detectChanges());
+				.subscribe(() => this.cd.detectChanges());
 		});
 	}
 

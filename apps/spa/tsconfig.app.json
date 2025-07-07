@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"outDir": "../../dist/out-tsc",
 		"types": [],
-		"useDefineForClassFields": false
+		"useDefineForClassFields": false,
+		"moduleResolution": "bundler"
 	},
 	"files": ["src/main.ts"],
 	"include": ["src/**/*.d.ts", "../../reset.d.ts"],

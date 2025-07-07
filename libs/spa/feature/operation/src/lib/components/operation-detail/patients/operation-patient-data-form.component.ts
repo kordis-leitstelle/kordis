@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -16,7 +15,6 @@ import { PatientFormGroup } from './operation-patients.component';
 @Component({
 	selector: 'krd-operation-patient-data-form',
 	imports: [
-		CommonModule,
 		GeoSearchComponent,
 		NzColDirective,
 		NzFormModule,

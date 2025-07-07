@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
 	FormArray,
 	FormControl,
@@ -38,8 +38,9 @@ type CategoryFormGroup = FormGroup<{
 })
 export class OperationCategoriesComponent extends BaseOperationTabComponent {
 	readonly formArray: FormArray<CategoryFormGroup>;
-
-	constructor(private readonly fb: NonNullableFormBuilder) {
+	private readonly fb: NonNullableFormBuilder;
+	constructor() {
+		const fb = inject(NonNullableFormBuilder);
 		const _control = fb.array<CategoryFormGroup>([]);
 
 		super(
@@ -65,6 +66,7 @@ export class OperationCategoriesComponent extends BaseOperationTabComponent {
 		);
 
 		this.formArray = _control;
+		this.fb = fb;
 	}
 
 	protected override setValue({ categories }: Operation): void {

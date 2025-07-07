@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
@@ -36,7 +35,6 @@ const TYPES = Object.freeze([
 		},
 	],
 	imports: [
-		CommonModule,
 		FormsModule,
 		NzNoAnimationDirective,
 		NzOptionComponent,

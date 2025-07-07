@@ -5,6 +5,7 @@ import {
 	OnDestroy,
 	OnInit,
 	Renderer2,
+	inject,
 } from '@angular/core';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { Subject } from 'rxjs';
@@ -18,12 +19,12 @@ export class NzTableFullHeightDirective implements OnInit, OnDestroy {
 	private observer: ResizeObserver;
 	private resizeSubject$ = new Subject<void>();
 
-	constructor(
-		private element: ElementRef,
-		private table: NzTableComponent<unknown>,
-		private cd: ChangeDetectorRef,
-		private render2: Renderer2,
-	) {
+	private readonly element = inject(ElementRef);
+	private readonly table = inject(NzTableComponent);
+	private readonly cd = inject(ChangeDetectorRef);
+	private readonly render2 = inject(Renderer2);
+
+	constructor() {
 		this.observer = new ResizeObserver(() => this.resizeSubject$.next());
 		this.resizeSubject$
 			.pipe(debounceTime(200))
