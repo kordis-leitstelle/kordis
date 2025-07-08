@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 
 import { OperationViewModel } from '@kordis/api/operation';
 
-import { AlertGroupDiveraCOnfig } from '../../core/entity/alert-group-config.entity';
+import { AlertGroupDiveraConfig } from '../../core/entity/alert-group-config.entity';
 import { DiveraOrgConfig } from '../../core/entity/alert-org-config.entity';
 import {
 	ALERT_GROUP_CONFIG_REPOSITORY,
@@ -65,12 +65,12 @@ describe('AlertingFacade', () => {
 				id: 'group1',
 				alertGroupId: 'alertGroup1',
 				diveraGroupId: 'diveraGroup1',
-			} as AlertGroupDiveraCOnfig,
+			} as AlertGroupDiveraConfig,
 			{
 				id: 'group2',
 				alertGroupId: 'alertGroup2',
 				diveraGroupId: 'diveraGroup2',
-			} as AlertGroupDiveraCOnfig,
+			} as AlertGroupDiveraConfig,
 		];
 		mockAlertGroupConfigRepo.getAlertGroupConfigs.mockResolvedValue(
 			mockAlertGroupConfigs,

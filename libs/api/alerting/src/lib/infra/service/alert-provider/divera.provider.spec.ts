@@ -1,9 +1,10 @@
 import { createMock } from '@golevelup/ts-jest';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AlarmBuilder, DiveraClient } from 'divera247-api-unofficial';
 
 import { OperationViewModel } from '@kordis/api/operation';
 
-import { AlertGroupDiveraCOnfig } from '../../../core/entity/alert-group-config.entity';
+import { AlertGroupDiveraConfig } from '../../../core/entity/alert-group-config.entity';
 import { DiveraOrgConfig } from '../../../core/entity/alert-org-config.entity';
 import { DiveraRequestFailedError } from '../../error/divera-request-failed.error';
 import { DiveraProvider } from './divera.provider';
@@ -29,11 +30,11 @@ describe('DiveraProvider', () => {
 
 	describe('alertWithOperation', () => {
 		it('should send an alarm successfully', async () => {
-			const alertGroupConfigs: AlertGroupDiveraCOnfig[] = [
+			const alertGroupConfigs: AlertGroupDiveraConfig[] = [
 				{
 					diveraGroupId: '123', // Changed to string
 					alertGroupId: 'test-group',
-				} as AlertGroupDiveraCOnfig,
+				} as AlertGroupDiveraConfig,
 			];
 			const operation: OperationViewModel = {
 				location: { address: { name: 'Test', street: 'Street', city: 'City' } },
@@ -78,11 +79,11 @@ describe('DiveraProvider', () => {
 		});
 
 		it('should throw DiveraRequestFailedError if the request fails', async () => {
-			const alertGroupConfigs: AlertGroupDiveraCOnfig[] = [
+			const alertGroupConfigs: AlertGroupDiveraConfig[] = [
 				{
 					diveraGroupId: '123', // Changed to string
 					alertGroupId: 'test-group',
-				} as AlertGroupDiveraCOnfig,
+				} as AlertGroupDiveraConfig,
 			];
 			const operation: OperationViewModel = {
 				location: { address: { name: 'Test', street: 'Street', city: 'City' } },

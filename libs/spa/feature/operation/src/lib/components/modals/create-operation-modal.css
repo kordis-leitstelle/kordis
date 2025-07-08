@@ -1,11 +1,16 @@
 .action-btns {
 	display: flex;
 	justify-content: end;
+	margin-top: var(--base-spacing);
 }
+
 .ant-divider-horizontal {
+	margin: var(--base-spacing) / 2 0;
+}
+.ant-divider-horizontal:first-child {
 	margin: var(--base-spacing) 0;
 }
 
-nz-alert {
-	margin-bottom: var(--base-spacing);
+nz-select {
+	width: 100%;
 }

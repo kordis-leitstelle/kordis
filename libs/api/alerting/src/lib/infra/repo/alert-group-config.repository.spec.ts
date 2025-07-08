@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 
 import { mockModelMethodResults } from '@kordis/api/test-helpers';
 
-import { AlertGroupDiveraCOnfig } from '../../core/entity/alert-group-config.entity';
+import { AlertGroupDiveraConfig } from '../../core/entity/alert-group-config.entity';
 import { AlertGroupConfigProfile } from '../mapper/alert-group-config.mapper';
 import {
 	AlertGroupConfigBaseDocument,
@@ -86,6 +86,6 @@ describe('AlertGroupConfigRepositoryImpl', () => {
 				orgId: 'org1',
 			},
 		]);
-		expect(result[0]).toBeInstanceOf(AlertGroupDiveraCOnfig);
+		expect(result[0]).toBeInstanceOf(AlertGroupDiveraConfig);
 	});
 });

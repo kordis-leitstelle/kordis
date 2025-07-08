@@ -5,6 +5,7 @@ import { BaseDocument } from '@kordis/api/shared';
 
 export enum AlertingProviders {
 	DIVERA = 'DIVERA',
+	MOCK = 'MOCK',
 }
 
 @Schema({
