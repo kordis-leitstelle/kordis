@@ -17,6 +17,7 @@ import {
 import { AuthUser } from '@kordis/shared/model';
 
 import { OngoingOperationCreatedEvent } from '../event/ongoing-operation-created.event';
+import { AlertFailedError } from '../exception/alert-failed.error';
 import { UnitsPopulateService } from '../service/units-populate.service';
 
 export class LaunchCreateOngoingOperationProcessCommand {
@@ -85,15 +86,19 @@ export class LaunchCreateOngoingOperationProcessHandler
 		);
 
 		if (alertData) {
-			await this.commandBus.execute(
-				new CreateAlertForOperationCommand(
-					alertData.alertGroupIds,
-					alertData.description,
-					operation,
-					alertData.hasPriority,
-					requestUser.organizationId,
-				),
-			);
+			try {
+				await this.commandBus.execute(
+					new CreateAlertForOperationCommand(
+						alertData.alertGroupIds,
+						alertData.description,
+						operation,
+						alertData.hasPriority,
+						requestUser.organizationId,
+					),
+				);
+			} catch {
+				throw new AlertFailedError();
+			}
 		}
 
 		this.eventBus.publish(

@@ -3,7 +3,7 @@ import { IsString } from 'class-validator';
 
 import { BaseEntityModel } from '@kordis/api/shared';
 
-export type ProviderConfigs = DiveraOrgConfig;
+export type ProviderConfigs = DiveraOrgConfig | 'MOCK';
 
 export class DiveraOrgConfig extends BaseEntityModel {
 	@AutoMap()

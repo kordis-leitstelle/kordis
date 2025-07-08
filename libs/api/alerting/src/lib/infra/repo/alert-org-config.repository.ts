@@ -8,7 +8,10 @@ import { ProviderConfigs } from '../../core/entity/alert-org-config.entity';
 import { AlertOrgConfigRepository } from '../../core/repo/alert-org-config.repository';
 import { ConfigNotFoundError } from '../error/config-not-found.error';
 import { mapOrgConfig } from '../mapper/alert-org-config.mapper';
-import { AlertOrgConfigBaseDocument } from '../schema/alerting-org-config.schema';
+import {
+	AlertOrgConfigBaseDocument,
+	AlertingProviders,
+} from '../schema/alerting-org-config.schema';
 
 @Injectable()
 export class AlertOrgConfigRepositoryImpl implements AlertOrgConfigRepository {
@@ -23,6 +26,9 @@ export class AlertOrgConfigRepositoryImpl implements AlertOrgConfigRepository {
 
 		if (!res) {
 			throw new ConfigNotFoundError(orgId);
+		}
+		if (res.type === AlertingProviders.MOCK) {
+			return 'MOCK';
 		}
 		return mapOrgConfig(res, this.mapper);
 	}

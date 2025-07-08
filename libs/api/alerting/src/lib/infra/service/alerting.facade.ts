@@ -63,6 +63,8 @@ export class AlertingFacade implements AlertService {
 		const config = await this.configRepo.findByOrgId(orgId);
 		if (config instanceof DiveraOrgConfig) {
 			return [this.providers[AlertingProviders.DIVERA], config];
+		} else if (config === 'MOCK') {
+			return [this.providers[AlertingProviders.MOCK], config];
 		}
 		throw new Error('Unknown Alerting Provider');
 	}

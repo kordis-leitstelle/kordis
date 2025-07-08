@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { BaseMapperProfile } from '@kordis/api/shared';
 
-import { AlertGroupDiveraCOnfig } from '../../core/entity/alert-group-config.entity';
+import { AlertGroupDiveraConfig } from '../../core/entity/alert-group-config.entity';
 import {
 	AlertGroupConfigBaseDocument,
 	AlertGroupDiveraConfigDocument,
@@ -19,7 +19,7 @@ export class AlertGroupConfigProfile extends BaseMapperProfile {
 
 	override get profile() {
 		return (mapper: Mapper): void => {
-			createMap(mapper, AlertGroupDiveraConfigDocument, AlertGroupDiveraCOnfig);
+			createMap(mapper, AlertGroupDiveraConfigDocument, AlertGroupDiveraConfig);
 		};
 	}
 }
@@ -28,13 +28,15 @@ export class AlertGroupConfigProfile extends BaseMapperProfile {
 export async function mapAlertGroupConfigs(
 	alertGroupConfigs: AlertGroupConfigBaseDocument[],
 	mapper: Mapper,
-): Promise<AlertGroupDiveraCOnfig[]> {
-	if (alertGroupConfigs[0].type === AlertingProviders.DIVERA) {
+): Promise<AlertGroupDiveraConfig[]> {
+	if (alertGroupConfigs[0]?.type === AlertingProviders.DIVERA) {
 		return mapper.mapArrayAsync(
 			alertGroupConfigs,
 			AlertGroupDiveraConfigDocument,
-			AlertGroupDiveraCOnfig,
+			AlertGroupDiveraConfig,
 		);
+	} else if (alertGroupConfigs.length === 0) {
+		return [];
 	} else {
 		throw new Error('Unknown alerting provider');
 	}
