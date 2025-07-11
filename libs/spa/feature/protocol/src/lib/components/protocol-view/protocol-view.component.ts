@@ -34,7 +34,7 @@ import { CreateProtocolMessageComponent } from '../create-protocol-message/creat
 			height: 100%;
 			display: flex;
 			flex-direction: column;
-
+			gap: var(--base-spacing);
 			.table-view {
 				flex-grow: 1;
 				overflow-y: auto;
