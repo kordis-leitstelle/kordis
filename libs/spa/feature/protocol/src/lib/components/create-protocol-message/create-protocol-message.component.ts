@@ -50,9 +50,11 @@ import { ensureSingleUnitSelectionPipe } from '../../services/ensure-single-unit
 			display: grid;
 			grid-template-columns: 3fr 3fr 7fr 2fr 1fr;
 			gap: 8px;
+
 			button {
 				width: 100%;
 			}
+
 			.ant-form-item {
 				margin-bottom: 0;
 			}
