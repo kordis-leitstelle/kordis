@@ -17,12 +17,12 @@ import { OrganizationEntity } from '../../core/entity/organization.entity';
 import {
 	OrganizationProfile,
 	OrganizationValueObjectsProfile,
-} from '../organization.mapper-profile';
+} from '../mapper/organization.mapper-profile';
 import { OrganizationDocument } from '../schema/organization.schema';
-import { ImplOrganizationRepository } from './organization.repository';
+import { OrganizationRepositoryImpl } from './organization.repository';
 
 describe('ImplOrganizationRepository', () => {
-	let repository: ImplOrganizationRepository;
+	let repository: OrganizationRepositoryImpl;
 	let organizationModel: Model<OrganizationDocument>;
 
 	beforeEach(async () => {
@@ -34,7 +34,7 @@ describe('ImplOrganizationRepository', () => {
 				}),
 			],
 			providers: [
-				ImplOrganizationRepository,
+				OrganizationRepositoryImpl,
 				OrganizationProfile,
 				OrganizationValueObjectsProfile,
 				{
@@ -47,8 +47,8 @@ describe('ImplOrganizationRepository', () => {
 			.useValue(null)
 			.compile();
 
-		repository = moduleRef.get<ImplOrganizationRepository>(
-			ImplOrganizationRepository,
+		repository = moduleRef.get<OrganizationRepositoryImpl>(
+			OrganizationRepositoryImpl,
 		);
 		organizationModel = moduleRef.get<Model<OrganizationDocument>>(
 			getModelToken(OrganizationDocument.name),

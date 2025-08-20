@@ -8,7 +8,7 @@ import { OrganizationEntity } from '../../core/entity/organization.entity';
 import { OrganizationRepository } from '../../core/repository/organization.repository';
 import { OrganizationDocument } from '../schema/organization.schema';
 
-export class ImplOrganizationRepository implements OrganizationRepository {
+export class OrganizationRepositoryImpl implements OrganizationRepository {
 	constructor(
 		@InjectModel(OrganizationDocument.name)
 		private readonly organizationModel: Model<OrganizationDocument>,

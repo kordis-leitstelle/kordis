@@ -190,6 +190,19 @@ export type FurtherAttribute = {
 	value: Scalars['String']['output'];
 };
 
+export type GeoFeature = {
+	__typename?: 'GeoFeature';
+	city: Scalars['String']['output'];
+	coordinate: Coordinate;
+	createdAt: Scalars['DateTime']['output'];
+	id: Scalars['ID']['output'];
+	name: Scalars['String']['output'];
+	orgId: Scalars['String']['output'];
+	postalCode: Scalars['String']['output'];
+	street: Scalars['String']['output'];
+	updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
 export type InvolvementTime = {
 	__typename?: 'InvolvementTime';
 	end?: Maybe<Scalars['DateTime']['output']>;
@@ -671,6 +684,7 @@ export type Query = {
 	__typename?: 'Query';
 	alertGroup: AlertGroup;
 	alertGroups: Array<AlertGroup>;
+	geoFeatures: Array<GeoFeature>;
 	operation: Operation;
 	operationDeployments: Array<OperationDeployment>;
 	operations: Array<Operation>;

@@ -11,14 +11,14 @@ import {
 	MapStyles as MapStylesEntity,
 	OrganizationEntity,
 	OrganizationGeoSettings as OrganizationGeoSettingsEntity,
-} from '../core/entity/organization.entity';
+} from '../../core/entity/organization.entity';
 import {
 	BBox as BBoxDocument,
 	MapLayer as MapLayerDocument,
 	MapStyles as MapStylesDocument,
 	OrganizationDocument,
 	OrganizationGeoSettings as OrganizationGeoSettingsDocument,
-} from './schema/organization.schema';
+} from '../schema/organization.schema';
 
 @Injectable()
 export class OrganizationValueObjectsProfile extends AutomapperProfile {
