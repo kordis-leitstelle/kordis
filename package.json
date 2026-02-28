@@ -80,7 +80,7 @@
     "mongo-migrate-ts": "^2.0.0",
     "nx": "21.2.2",
     "playwright": "^1.49.1",
-    "prettier": "3.7.3",
+    "prettier": "3.8.1",
     "semantic-release": "^24.2.0",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
