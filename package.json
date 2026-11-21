@@ -131,7 +131,7 @@
     "graphql-sse": "^2.5.4",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.2.0",
-    "maplibre-gl": "^5.5.0",
+    "maplibre-gl": "^6.0.0",
     "mongodb-client-encryption": "^6.4.0",
     "mongoose": "^8.14.2",
     "nestjs-graphql-connection": "^1.1.1",
